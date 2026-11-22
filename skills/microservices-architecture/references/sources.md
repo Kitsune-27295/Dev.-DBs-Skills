@@ -1,0 +1,14 @@
+# Sources for the microservices-architecture skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | James Lewis and Martin Fowler, "Microservices: a definition of this new architectural term" (2014-03-25), https://martinfowler.com/articles/microservices.html | The nine defining characteristics: (1) Componentization via Services (out-of-process, independently deployable), (2) Organized around Business Capabilities (Conway's Law), (3) Products not Projects ("you build it, you run it"), (4) Smart endpoints and dumb pipes (HTTP / lightweight messaging, no ESB), (5) Decentralized Governance & consumer-driven contracts, (6) Decentralized Data Management (private DB per service, eventual consistency / compensating operations instead of 2PC), (7) Infrastructure Automation (CI/CD), (8) Design for failure (circuit breakers, bulkheads, monitoring), (9) Evolutionary Design. Sidebar warning: "Synchronous calls considered harmful." |
+| 2 | Martin Fowler, "Microservices Resource Guide", https://martinfowler.com/microservices/ | Curated synthesis of microservice benefits (strong module boundaries, independent deployment, technology diversity) vs. the **Microservice Premium** (distribution cost, eventual consistency, operational complexity) and required prerequisites (rapid provisioning, basic monitoring, rapid application deployment). |
+| 3 | Chris Richardson, "A pattern language for microservices", https://microservices.io/patterns/ | Taxonomy of microservice patterns across Decomposition (by business capability, by subdomain), Data Management (Database per Service, Shared database anti-pattern, Saga, API Composition, CQRS, Domain Event, Event Sourcing), Transactional Messaging (Transactional Outbox, Transaction Log Tailing, Polling Publisher), Testing (Consumer-Driven Contract Test, Service Component Test), and Observability (Distributed Tracing, Correlation ID, Health Check API). |
+| 4 | Chris Richardson, "Pattern: Microservice Architecture", https://microservices.io/patterns/microservices.html | Alignment with DORA metrics, Team Topologies (loosely coupled cross-functional teams owning subdomains), and the Assemblage design process; explicit breakdown of benefits, drawbacks, and the two core design challenges: defining good service boundaries and designing distributed operations across services using Sagas, CQRS, and API Composition. |
+
+## Notes on disagreements and nuances across sources
+
+- **How big is a microservice?** Lewis & Fowler (Source 1) and Richardson (Source 4) both reject lines-of-code metrics or "two-pizza team" size as a rigid rule, emphasizing instead that a service should be sized around a cohesive business capability / DDD subdomain that a single team can understand, test, and deploy independently.
