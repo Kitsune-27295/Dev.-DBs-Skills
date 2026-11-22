@@ -1,0 +1,55 @@
+-- Target: SQL Server 2019 (15.x). Same query as the sql2022 pack: every object it reads exists on 2019.
+-- Target permissions: on 2019 the DMVs and DMFs it reads need VIEW SERVER STATE (2022 split this into narrower ones).
+-- Waits accumulated since the last restart (sys.dm_os_wait_stats), without the benign waits
+-- (exclusion list by Paul Randal and Glenn Berry). Read-only: a SELECT over the DMV.
+-- pctOfTotal is computed over all non-benign waits, not only the 30 shown.
+WITH w AS (
+    SELECT
+        ws.wait_type,
+        ws.waiting_tasks_count,
+        ws.wait_time_ms,
+        ws.max_wait_time_ms,
+        ws.signal_wait_time_ms
+    FROM sys.dm_os_wait_stats AS ws
+    WHERE ws.waiting_tasks_count > 0
+      AND ws.wait_type NOT IN (
+    N'BROKER_EVENTHANDLER', N'BROKER_RECEIVE_WAITFOR', N'BROKER_TASK_STOP',
+    N'BROKER_TO_FLUSH', N'BROKER_TRANSMITTER', N'CHECKPOINT_QUEUE', N'CHKPT',
+    N'CLR_AUTO_EVENT', N'CLR_MANUAL_EVENT', N'CLR_SEMAPHORE', N'CXCONSUMER',
+    N'DBMIRROR_DBM_EVENT', N'DBMIRROR_EVENTS_QUEUE', N'DBMIRROR_WORKER_QUEUE',
+    N'DBMIRRORING_CMD', N'DIRTY_PAGE_POLL', N'DISPATCHER_QUEUE_SEMAPHORE', N'EXECSYNC',
+    N'FSAGENT', N'FT_IFTS_SCHEDULER_IDLE_WAIT', N'FT_IFTSHC_MUTEX', N'HADR_CLUSAPI_CALL',
+    N'HADR_FILESTREAM_IOMGR_IOCOMPLETION', N'HADR_LOGCAPTURE_WAIT',
+    N'HADR_NOTIFICATION_DEQUEUE', N'HADR_TIMER_TASK', N'HADR_WORK_QUEUE',
+    N'KSOURCE_WAKEUP', N'LAZYWRITER_SLEEP', N'LOGMGR_QUEUE', N'MEMORY_ALLOCATION_EXT',
+    N'ONDEMAND_TASK_QUEUE', N'PARALLEL_REDO_DRAIN_WORKER', N'PARALLEL_REDO_LOG_CACHE',
+    N'PARALLEL_REDO_TRAN_LIST', N'PARALLEL_REDO_WORKER_SYNC',
+    N'PARALLEL_REDO_WORKER_WAIT_WORK', N'PREEMPTIVE_OS_FLUSHFILEBUFFERS',
+    N'PREEMPTIVE_XE_GETTARGETSTATE', N'PVS_PREALLOCATE', N'PWAIT_ALL_COMPONENTS_INITIALIZED',
+    N'PWAIT_DIRECTLOGCONSUMER_GETNEXT', N'PWAIT_EXTENSIBILITY_CLEANUP_TASK',
+    N'QDS_PERSIST_TASK_MAIN_LOOP_SLEEP', N'QDS_ASYNC_QUEUE',
+    N'QDS_CLEANUP_STALE_QUERIES_TASK_MAIN_LOOP_SLEEP', N'QDS_SHUTDOWN_QUEUE',
+    N'REDO_THREAD_PENDING_WORK', N'REQUEST_FOR_DEADLOCK_SEARCH', N'RESOURCE_QUEUE',
+    N'SERVER_IDLE_CHECK', N'SLEEP_BPOOL_FLUSH', N'SLEEP_DBSTARTUP', N'SLEEP_DCOMSTARTUP',
+    N'SLEEP_MASTERDBREADY', N'SLEEP_MASTERMDREADY', N'SLEEP_MASTERUPGRADED',
+    N'SLEEP_MSDBSTARTUP', N'SLEEP_SYSTEMTASK', N'SLEEP_TASK', N'SLEEP_TEMPDBSTARTUP',
+    N'SNI_HTTP_ACCEPT', N'SOS_WORK_DISPATCHER', N'SP_SERVER_DIAGNOSTICS_SLEEP',
+    N'SQLTRACE_BUFFER_FLUSH', N'SQLTRACE_INCREMENTAL_FLUSH_SLEEP', N'SQLTRACE_WAIT_ENTRIES',
+    N'STARTUP_DEPENDENCY_MANAGER', N'VDI_CLIENT_OTHER', N'WAIT_FOR_RESULTS', N'WAITFOR',
+    N'WAITFOR_TASKSHUTDOWN', N'WAIT_XTP_RECOVERY', N'WAIT_XTP_HOST_WAIT',
+    N'WAIT_XTP_OFFLINE_CKPT_NEW_LOG', N'WAIT_XTP_CKPT_CLOSE', N'XE_DISPATCHER_JOIN',
+    N'XE_DISPATCHER_WAIT', N'XE_LIVE_TARGET_TVF', N'XE_TIMER_EVENT'
+      )
+)
+SELECT TOP (30)
+    CAST(w.wait_type AS NVARCHAR(60)) AS waitType,
+    w.waiting_tasks_count AS waitingTasks,
+    w.wait_time_ms AS waitTimeMs,
+    w.max_wait_time_ms AS maxWaitTimeMs,
+    w.signal_wait_time_ms AS signalWaitTimeMs,
+    w.wait_time_ms - w.signal_wait_time_ms AS resourceWaitTimeMs,
+    CAST(100.0 * w.wait_time_ms / NULLIF(SUM(w.wait_time_ms) OVER (), 0) AS DECIMAL(18,2)) AS pctOfTotal,
+    CAST(100.0 * w.signal_wait_time_ms / NULLIF(w.wait_time_ms, 0) AS DECIMAL(18,2)) AS pctSignal,
+    CAST(w.wait_time_ms * 1.0 / NULLIF(w.waiting_tasks_count, 0) AS DECIMAL(18,2)) AS avgWaitMs
+FROM w
+ORDER BY w.wait_time_ms DESC, w.wait_type
