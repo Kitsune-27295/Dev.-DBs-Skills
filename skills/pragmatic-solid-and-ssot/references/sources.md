@@ -1,0 +1,17 @@
+# Sources — Pragmatic SOLID, SSOT & Abstraction Discipline
+
+Every URL below was checked during skill authoring (2026-11-22).
+
+| Source | Retrieved status | What it contributed to `SKILL.md` |
+|---|---|---|
+| [The Pragmatic Programmer (20th Anniv.) — DRY: The Evils of Duplication (PDF)](https://media.pragprog.com/titles/tpp20/dry.pdf) | 200 OK | Core definition of DRY as Single Source of Knowledge/Intent (not code lines), imposed vs. inadvertent vs. inter-developer duplication, and Meyer's Uniform Access Principle. |
+| [Martin Fowler — BoundedContext](https://martinfowler.com/bliki/BoundedContext.html) | 200 OK | Why shared terms are polysemic across contexts and why a single unified domain model across bounded contexts causes coupling rather than reuse. |
+| [Robert C. Martin — SOLID Relevance](https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html) | 200 OK | Relevance of SOLID at module/component boundaries across OO, functional, and modern languages. |
+| [Robert C. Martin — The Single Responsibility Principle](https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleResponsibilityPrinciple.html) → canonical URL [SingleReponsibilityPrinciple.html](https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html) | 404 on requested slug (`SingleResponsibilityPrinciple.html`); 200 OK on canonical author slug (`SingleReponsibilityPrinciple.html`, missing `s`) | Actor/stakeholder-based definition of SRP ("one reason to change = one actor") rather than "one method/thing per class". |
+| [Robert C. Martin — The Open Closed Principle](https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html) | 200 OK | Plugin/boundary separation so stable business policy does not get edited for every new integration/variant. |
+| [Robert C. Martin — Interface Considered Harmful](https://blog.cleancoder.com/uncle-bob/2015/01/08/InterfaceConsideredHarmful.html) | 200 OK | Guardrail against gratuitous `IFoo`/`Foo` boilerplate interfaces when only one implementation exists and dynamic/duck-typed or seam-free dispatch suffices. |
+| [Martin Fowler — Yagni](https://martinfowler.com/bliki/Yagni.html) | 200 OK | Complementary evolutionary minimalism framing (detailed cost model cross-referenced to `yagni-evolutionary-architecture`). |
+| [Martin Fowler — RuleOfThree](https://martinfowler.com/bliki/RuleOfThree.html) | 404 (not present on `martinfowler.com/bliki/` at retrieval time) | *Rule of Three* origin (Don Roberts, quoted in Fowler's *Refactoring*, and discussed in Kent C. Dodds's AHA article); no bliki-specific quote fabricated from this URL. |
+| [Sandi Metz — The Wrong Abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction) | 200 OK | "Duplication is far cheaper than the wrong abstraction" and the concrete recovery sequence (re-inline into callers, prune parameters, re-evaluate). |
+| [Kent C. Dodds — AHA Programming](https://kentcdodds.com/blog/aha-programming) | 200 OK | Avoid Hasty Abstractions: optimize for change over premature DRY/WET dogma, combined with Rule of Three intuition. |
+| [Harvard Kempner Institute — Software Design Principles](https://handbook.eng.kempnerinstitute.harvard.edu/s2_swe_for_research/software_design_principles.html) | 200 OK | KISS, Pure Core + Thin I/O Wrapper, Composition over Inheritance, and fail-fast boundary clarity. |

@@ -36,9 +36,14 @@ PACK = (
     "agent-skills-context-engineering", "twelve-factor-cloud-native", "circuit-breaker-retry-telemetry",
     "parallel-change-expand-contract", "yagni-evolutionary-architecture",
     "agentic-rag-architecture", "testing-pyramid-and-shapes",
-    # Architecture Documentation, Diagrams & Contracts (4)
+    # Architecture Documentation, Diagrams & Contracts (5)
     "c4-model-architecture", "adr-architecture", "arc42-api-contracts-architecture",
-    "diataxis-documentation-architecture",
+    "diataxis-documentation-architecture", "mermaid",
+    # Code Design, SSOT & Type-Safe Domain Modeling (3)
+    "pragmatic-solid-and-ssot", "defensive-domain-modeling", "codebase-design",
+    # AI Engineering Workflow — Matt Pocock Pack (8)
+    "setup-matt-pocock-skills", "grill-me", "grilling", "to-spec", "to-tickets",
+    "implement", "tdd", "code-review",
 )
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
