@@ -1,12 +1,139 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **65 Agent Skills** (Claude Code, Antigravity IDE, Codex, Cursor) cobrindo **Arquitetura & Design de Software (27 skills)**, **Cloud-Native, Resiliência, Evolução & IA (7 skills)**, **Documentação, Diagramas & Contratos (5 skills)**, **Workflow de Engenharia & Construção — Matt Pocock Pack (8 skills)**, **Fundamentos de Engenharia & Segurança (7 skills)**, **Fundamentos & Governança de Bancos de Dados (8 skills)** e **Diagnósticos de Motores SQL em Produção (3 skills)**.
+Catálogo unificado de **65 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
 
-Todas as skills são autocontidas, sem dependências externas, testadas por `check_skills.py` e verificadas contra `MANIFEST.sha256`.
+---
+
+## O que este projeto faz
+
+Reúne num único pacote verificável **65 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
+
+- **Arquitetura & Design de Software (27 skills):** estilos arquiteturais (Hexagonal, Clean, Layered, Modular Monolith, Microservices, EDA, CQRS, Event Sourcing, Vertical Slice, BFF, Micro-Frontends, Microkernel, Actor Model/Space-Based), DDD estratégico, SSOT/SOLID pragmático, modelagem defensiva e módulos profundos.
+- **Cloud-Native, Resiliência, Evolução & IA (7 skills):** 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering.
+- **Documentação, Diagramas & Contratos (5 skills):** ADRs, arc42 + OpenAPI/AsyncAPI, C4 Model, Diátaxis e Mermaid.
+- **Workflow de Engenharia — Matt Pocock Pack (8 skills):** fluxo ponta a ponta (`setup-matt-pocock-skills` → `grill-me` / `grilling` → `to-spec` → `to-tickets` → `implement` + `tdd` → `code-review`), com invocação autónoma pelo modelo liberada para execuções completas de ponta a ponta.
+- **Fundamentos de Engenharia & Segurança (7 skills):** auditoria geral, proteção anti-client-trust, *race conditions*, idempotência, refatoração incremental em camadas, testes de integração com DB real e auditoria de segurança.
+- **Bancos de Dados & Governança (8 skills):** auditoria em 7 frentes, exposição e RLS, *backup & restore drill*, controlo de custos, transações ACID, *constraints* de esquema, *migrations* e performance (`EXPLAIN ANALYZE`).
+- **Diagnósticos de Motores SQL em Produção (3 skills):** 80 scripts só de leitura para PostgreSQL (16–18), SQL Server (2019–2025) e SQLite (3.49–3.53).
+
+## Por que usar este repositório
+
+- **Zero dependências externas em runtime:** tanto o servidor MCP em Node.js ESM ([bin/mcp-server.mjs](bin/mcp-server.mjs)) como os scripts CLI ([install_skills.py](install_skills.py) e [check_skills.py](check_skills.py)) usam exclusivamente bibliotecas padrão.
+- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 65 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
+- **Integridade verificada por SHA-256 e validação estática:** cada ficheiro em `skills/` possui hash registado em [MANIFEST.sha256](MANIFEST.sha256) e passa por validação de frontmatter, links relativos e referências cruzadas.
+- **Portabilidade multi-agente:** funciona com `.claude/skills`, `.agents/skills` (Antigravity), `.codex/skills`, `.cursor/skills` e diretórios globais (`~/.claude/skills`, `~/.gemini/config/skills`).
+
+---
+
+## Início Rápido (Getting Started)
+
+> **Pré-requisitos:** **Node.js >= 18** para o servidor MCP (ou `npx skills`), e/ou **Python 3.9+** para os scripts locais.
+
+### 1. Ligar via MCP direto do GitHub (sem clonar)
+
+**Claude Code:**
+
+```bash
+claude mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
+```
+
+**Codex CLI:**
+
+```bash
+codex mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
+```
+
+**Antigravity IDE (`mcp_config.json`), Cursor, Windsurf ou Claude Desktop:**
+
+```json
+{
+  "mcpServers": {
+    "dev-dbs-skills": {
+      "command": "npx",
+      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
+    }
+  }
+}
+```
+
+**VS Code (`.vscode/mcp.json`):**
+
+```json
+{
+  "servers": {
+    "dev-dbs-skills": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
+    }
+  }
+}
+```
+
+**Execução MCP a partir de um clone local:**
+
+```json
+{
+  "mcpServers": {
+    "dev-dbs-skills": {
+      "command": "node",
+      "args": ["/caminho/para/Dev.-DBs-Skills/bin/mcp-server.mjs"]
+    }
+  }
+}
+```
+
+Depois de ligado, basta pedir ao agente no chat:
+- *"Lista ou pesquisa skills de arquitetura/SQL neste MCP e aplica `hexagonal-architecture`."*
+- *"Usa `install_skills` para instalar `grill-me`, `to-spec` e `tdd` neste projeto para o Antigravity/Claude."*
+
+### 2. Instalar via CLI sem servidor MCP
+
+**Script Python incluído ([install_skills.py](install_skills.py)):**
+
+```bash
+# Instalar todas as 65 skills no projeto atual (./.claude/skills)
+python install_skills.py --project .
+
+# Instalar globalmente no utilizador (~/.claude/skills)
+python install_skills.py --user
+
+# Instalar num diretório específico (ex.: Antigravity global ou .agents/skills do projeto)
+python install_skills.py --target ~/.gemini/config/skills
+
+# Pré-visualizar ou sobrescrever skills modificadas
+python install_skills.py --target ~/.gemini/config/skills --dry-run
+python install_skills.py --target ~/.gemini/config/skills --force
+```
+
+**CLI `npx skills` (alvo explícito de agentes):**
+
+```bash
+# Global apenas para Claude Code e Antigravity IDE (evite -a '*')
+npx skills add Kitsune-27295/Dev.-DBs-Skills -g -a claude,antigravity --copy -y
+
+# Apenas uma skill específica
+npx skills add Kitsune-27295/Dev.-DBs-Skills -g -a claude,antigravity -s 'hexagonal-architecture' --copy -y
+```
+
+---
+
+## Como o Servidor MCP Funciona
+
+Implementado em [src/mcp-core.mjs](src/mcp-core.mjs) e exposto em [bin/mcp-server.mjs](bin/mcp-server.mjs) (compatível com MCP `2024-11-05`, `2025-03-26` e `2025-06-18`):
+
+| Superfície MCP | Identificadores | O que faz |
+|---|---|---|
+| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 65 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
+| **Tools — Instalação & Auditoria** | `install_skills`, `check_installed_skills` | Copia 1, várias ou todas (`["*"]`) as skills para `claude`, `antigravity`, `agents`, `codex`, `cursor` ou `target_dir`, verifica hashes SHA-256 em [MANIFEST.sha256](MANIFEST.sha256) e valida links/frontmatter. |
+| **Resources** | `skill://index.json`, `skill://{name}/{+path}` | Expõe o catálogo JSON completo e qualquer ficheiro interno via URI `skill://`. |
+| **Prompts** | Todas as 65 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
 
 ---
 
 ## Catálogo Completo (65 Skills)
+
+Use o menu **Outline** do GitHub para saltar diretamente entre secções, ou pesquise pelo nome exato abaixo.
 
 | # | Categoria | Skill | Descrição (1 linha) |
 |---|---|---|---|
@@ -78,109 +205,19 @@ Todas as skills são autocontidas, sem dependências externas, testadas por `che
 
 ---
 
-## Uso e Instalação via MCP (Model Context Protocol)
+## Validação e Testes
 
-O repositório expõe um servidor MCP *stdio* sem dependências externas (`bin/mcp-server.mjs`, Node.js >= 18) que permite **usar as 65 skills diretamente em tempo real** (via *Tools*, *Resources* `skill://` e *Prompts*) **e instalá-las localmente** no projeto ou na máquina com verificação SHA-256 contra `MANIFEST.sha256`.
-
-### Ligar o servidor MCP direto do GitHub (sem clonar manualmente)
-
-**Claude Code:**
+Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 
 ```bash
-claude mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
-```
-
-**Antigravity IDE (`mcp_config.json`), Cursor, Windsurf ou Claude Desktop:**
-
-```json
-{
-  "mcpServers": {
-    "dev-dbs-skills": {
-      "command": "npx",
-      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
-    }
-  }
-}
-```
-
-**VS Code (`.vscode/mcp.json`):**
-
-```json
-{
-  "servers": {
-    "dev-dbs-skills": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
-    }
-  }
-}
-```
-
-**Codex CLI:**
-
-```bash
-codex mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
-```
-
-**Execução a partir de um clone local:**
-
-```json
-{
-  "mcpServers": {
-    "dev-dbs-skills": {
-      "command": "node",
-      "args": ["/caminho/para/Dev.-DBs-Skills/bin/mcp-server.mjs"]
-    }
-  }
-}
-```
-
-### Capacidades expostas pelo servidor MCP
-
-| Superfície MCP | O que oferece | Para que serve |
-|---|---|---|
-| **Tools** (`list_skills`, `search_skills`, `get_skill`, `read_skill_file`) | Descoberta leve e leitura sob demanda de `SKILL.md`, `references/sources.md` e scripts `.sql` | **Usar** qualquer skill sem carregar as 65 de uma vez (*progressive disclosure*) |
-| **Tools** (`install_skills`, `check_installed_skills`) | Instala 1, várias ou todas as 65 skills em `.claude/skills`, `.agents/skills`, `.codex/skills`, `.cursor/skills` ou diretório global (`~/.claude/skills`, `~/.gemini/config/skills`, etc.), com `dry_run`, `force` e validação SHA-256 | **Instalar e validar** skills localmente por pedido ao agente |
-| **Resources** (`skill://index.json`, `skill://{name}/{+path}`) | Índice JSON das 65 skills e leitura direta por URI `skill://` | Clientes e frameworks que consomem *skills* como recursos MCP |
-| **Prompts** (`prompts/list`, `prompts/get`) | Cada uma das 65 skills exposta como *prompt* com argumento opcional `context` | Invocar qualquer skill diretamente via seletor de *prompts*/*slash* do cliente |
-
----
-
-## Instalação e Validação (CLI)
-
-### Opção A — Script Python incluído (Windows, macOS ou Linux, biblioteca padrão Python 3.9+)
-
-```bash
-# Instalar no projeto atual (./.claude/skills)
-python install_skills.py --project .
-
-# Instalar globalmente no utilizador (~/.claude/skills)
-python install_skills.py --user
-
-# Instalar em qualquer diretório de skills (ex.: ~/.gemini/config/skills ou .agents/skills)
-python install_skills.py --target ~/.gemini/config/skills
-
-# Opções: --dry-run (apenas mostra), --force (atualiza skills existentes que diferem)
-```
-
-### Opção B — CLI `npx skills` (seguindo o protocolo de agentes específicos)
-
-```bash
-# Global (apenas para Claude Code e Antigravity IDE — nunca usar -a '*')
-npx skills add Kitsune-27295/Dev.-DBs-Skills -g -a claude,antigravity --copy -y
-
-# Apenas uma skill específica
-npx skills add Kitsune-27295/Dev.-DBs-Skills -g -a claude,antigravity -s 'hexagonal-architecture' --copy -y
-```
-
-### Validação de integridade do pacote
-
-```bash
+# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 65 skills
 python check_skills.py skills
+
+# 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
+node --test test/mcp-server.test.mjs
 ```
 
-O script `check_skills.py` valida que todas as 65 pastas possuem frontmatter YAML válido (`name` igual à pasta, `description` <= 1024 caracteres), que todos os links Markdown relativos (incluindo `references/sources.md` e scripts `.sql`) existem no disco e que todas as referências cruzadas entre skills estão íntegras.
+> Em Windows PowerShell com política restrita para scripts `.ps1`, use `node --test test/mcp-server.test.mjs`, `npm.cmd test` ou `npx.cmd -y github:Kitsune-27295/Dev.-DBs-Skills`.
 
 ---
 
@@ -188,11 +225,11 @@ O script `check_skills.py` valida que todas as 65 pastas possuem frontmatter YAM
 
 ```text
 Dev.-DBs-Skills/
-├── README.md               # Catálogo completo das 65 skills, guia MCP e instalação CLI
-├── NOTICE.md               # Créditos, origens e notas sobre fontes
+├── README.md               # Documentação principal, catálogo e guia MCP/CLI
+├── NOTICE.md               # Créditos, licenças upstream e notas sobre fontes
 ├── MANIFEST.sha256         # Hashes SHA-256 de todos os ficheiros em skills/
 ├── package.json            # Empacotamento Node ESM (npx -y github:Kitsune-27295/Dev.-DBs-Skills)
-├── .gitattributes          # Garante finais LF para binários/scripts entre Windows e Linux/macOS
+├── .gitattributes          # Finais LF garantidos para binários e scripts
 ├── bin/
 │   └── mcp-server.mjs      # Entrada stdio JSON-RPC 2.0 do servidor MCP
 ├── src/
@@ -268,3 +305,11 @@ Dev.-DBs-Skills/
     ├── vertical-slice-architecture/
     └── yagni-evolutionary-architecture/
 ```
+
+---
+
+## Ajuda, Manutenção e Contribuição
+
+- **Ajuda e problemas:** consulte [NOTICE.md](NOTICE.md) e o ficheiro `references/sources.md` dentro de cada skill para fontes primárias, ou abra um registo em [GitHub Issues](https://github.com/Kitsune-27295/Dev.-DBs-Skills/issues).
+- **Manutenção e licença:** mantido por [@Kitsune-27295](https://github.com/Kitsune-27295), distribuído sob licença MIT ([package.json](package.json)) e com atribuições detalhadas em [NOTICE.md](NOTICE.md).
+- **Como contribuir:** ao adicionar ou alterar qualquer ficheiro em `skills/`, atualize [MANIFEST.sha256](MANIFEST.sha256), o catálogo acima e a lista `PACK` em [check_skills.py](check_skills.py), validando tudo com `python check_skills.py skills` e `node --test test/mcp-server.test.mjs`.
