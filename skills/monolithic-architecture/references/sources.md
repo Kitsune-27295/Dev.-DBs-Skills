@@ -1,0 +1,13 @@
+# Sources for the monolithic-architecture skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Martin Fowler, "Monolith First" (2015-06-03), https://martinfowler.com/bliki/MonolithFirst.html | Empirical observation (*claim*: almost all successful microservice stories started with a monolith that got too big and was broken up, while systems built as microservices from scratch ended up in serious trouble); the **Microservice Premium**; YAGNI and cycle-time priority in early stages; difficulty of drawing stable Bounded Context boundaries upfront; much easier cross-boundary refactoring inside a monolith; three evolution paths (modular monolith decomposition, peeling off microservices at the edges while leaving a quiescent core monolith, or Sacrificial Architecture replacement). |
+| 2 | Microsoft .NET Architecture Guide, "Common web application architectures — What is a monolithic application?", https://learn.microsoft.com/pt-pt/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures | Definition of a monolithic application as behaviorally self-contained in its own process and deployed as a single unit; horizontal scaling by duplicating the entire application across multiple servers/VMs/containers; distinction between "All-in-one" single-project monoliths and internally layered monoliths; containerizing monoliths with Docker. |
+| 3 | AWS Compare, "What's the Difference Between Monolithic and Microservices Architecture?", https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/ | Side-by-side comparison across development process (simpler startup, unified codebase), deployment (single executable/directory vs. independent services), debugging (end-to-end tracing within one environment vs. distributed tracing), modifications (tight coupling risk if poorly structured), and scaling (whole-application replication vs. granular component scaling); decision criteria based on application size, team competency, and infrastructure maturity. |
+
+## Notes on disagreements and nuances across sources
+
+- **Monolith First vs. Starting with Microservices:** Fowler (Source 1) notes a minority counter-argument (e.g., Stefan Tilkov) that starting with microservices habituates teams to small-team service boundaries early, particularly when replacing a legacy system whose domain boundaries are already well known. However, both Fowler and AWS (Source 3) converge on recommending a monolith when team distributed-systems experience is limited or domain boundaries are still evolving.
