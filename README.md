@@ -78,7 +78,76 @@ Todas as skills são autocontidas, sem dependências externas, testadas por `che
 
 ---
 
-## Instalação e Validação
+## Uso e Instalação via MCP (Model Context Protocol)
+
+O repositório expõe um servidor MCP *stdio* sem dependências externas (`bin/mcp-server.mjs`, Node.js >= 18) que permite **usar as 65 skills diretamente em tempo real** (via *Tools*, *Resources* `skill://` e *Prompts*) **e instalá-las localmente** no projeto ou na máquina com verificação SHA-256 contra `MANIFEST.sha256`.
+
+### Ligar o servidor MCP direto do GitHub (sem clonar manualmente)
+
+**Claude Code:**
+
+```bash
+claude mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
+```
+
+**Antigravity IDE (`mcp_config.json`), Cursor, Windsurf ou Claude Desktop:**
+
+```json
+{
+  "mcpServers": {
+    "dev-dbs-skills": {
+      "command": "npx",
+      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
+    }
+  }
+}
+```
+
+**VS Code (`.vscode/mcp.json`):**
+
+```json
+{
+  "servers": {
+    "dev-dbs-skills": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "github:Kitsune-27295/Dev.-DBs-Skills"]
+    }
+  }
+}
+```
+
+**Codex CLI:**
+
+```bash
+codex mcp add dev-dbs-skills -- npx -y github:Kitsune-27295/Dev.-DBs-Skills
+```
+
+**Execução a partir de um clone local:**
+
+```json
+{
+  "mcpServers": {
+    "dev-dbs-skills": {
+      "command": "node",
+      "args": ["/caminho/para/Dev.-DBs-Skills/bin/mcp-server.mjs"]
+    }
+  }
+}
+```
+
+### Capacidades expostas pelo servidor MCP
+
+| Superfície MCP | O que oferece | Para que serve |
+|---|---|---|
+| **Tools** (`list_skills`, `search_skills`, `get_skill`, `read_skill_file`) | Descoberta leve e leitura sob demanda de `SKILL.md`, `references/sources.md` e scripts `.sql` | **Usar** qualquer skill sem carregar as 65 de uma vez (*progressive disclosure*) |
+| **Tools** (`install_skills`, `check_installed_skills`) | Instala 1, várias ou todas as 65 skills em `.claude/skills`, `.agents/skills`, `.codex/skills`, `.cursor/skills` ou diretório global (`~/.claude/skills`, `~/.gemini/config/skills`, etc.), com `dry_run`, `force` e validação SHA-256 | **Instalar e validar** skills localmente por pedido ao agente |
+| **Resources** (`skill://index.json`, `skill://{name}/{+path}`) | Índice JSON das 65 skills e leitura direta por URI `skill://` | Clientes e frameworks que consomem *skills* como recursos MCP |
+| **Prompts** (`prompts/list`, `prompts/get`) | Cada uma das 65 skills exposta como *prompt* com argumento opcional `context` | Invocar qualquer skill diretamente via seletor de *prompts*/*slash* do cliente |
+
+---
+
+## Instalação e Validação (CLI)
 
 ### Opção A — Script Python incluído (Windows, macOS ou Linux, biblioteca padrão Python 3.9+)
 
@@ -119,10 +188,18 @@ O script `check_skills.py` valida que todas as 65 pastas possuem frontmatter YAM
 
 ```text
 Dev.-DBs-Skills/
-├── README.md               # Catálogo completo das 65 skills e guia de instalação
+├── README.md               # Catálogo completo das 65 skills, guia MCP e instalação CLI
 ├── NOTICE.md               # Créditos, origens e notas sobre fontes
 ├── MANIFEST.sha256         # Hashes SHA-256 de todos os ficheiros em skills/
-├── install_skills.py       # Instalador idempotente com verificação SHA-256
+├── package.json            # Empacotamento Node ESM (npx -y github:Kitsune-27295/Dev.-DBs-Skills)
+├── .gitattributes          # Garante finais LF para binários/scripts entre Windows e Linux/macOS
+├── bin/
+│   └── mcp-server.mjs      # Entrada stdio JSON-RPC 2.0 do servidor MCP
+├── src/
+│   └── mcp-core.mjs        # Catálogo, pesquisa, instalação SHA-256, validação e handlers MCP
+├── test/
+│   └── mcp-server.test.mjs # Testes automatizados do servidor MCP (node --test)
+├── install_skills.py       # Instalador idempotente Python com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
 └── skills/                 # As 65 skills autocontidas
     ├── actor-model-space-based-architecture/
