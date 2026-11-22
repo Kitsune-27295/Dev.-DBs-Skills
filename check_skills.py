@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check that a folder of skills is intact. Standard library only; reads nothing outside the folder you pass.
 
-    python check_skills.py <skills folder>          # e.g. .claude/skills or ~/.claude/skills
+    python check_skills.py <skills folder>          # e.g. skills, .claude/skills or ~/.claude/skills
 
 For every `<folder>/SKILL.md` it checks: front matter present, `name` equal to the folder name and a valid name,
 a non-empty `description` (at most 1024 characters), every relative Markdown link resolving inside the skill folder,
@@ -14,11 +14,21 @@ import pathlib
 import re
 import sys
 
-PACK = ("fundamentals-audit", "race-condition-fix", "idempotency-fix", "never-trust-the-client",
-        "security-audit", "layered-refactor", "integration-tests",
-        "database-audit", "database-exposure", "backup-restore-drill", "database-cost-guard", "transaction-fix",
-        "schema-and-constraints", "migrations-and-environments", "query-performance",
-        "sql-server-diagnostics", "postgres-diagnostics", "sqlite-diagnostics")
+PACK = (
+    # Engineering & Security Fundamentals (7)
+    "fundamentals-audit", "race-condition-fix", "idempotency-fix", "never-trust-the-client",
+    "security-audit", "layered-refactor", "integration-tests",
+    # Database Fundamentals & Governance (8)
+    "database-audit", "database-exposure", "backup-restore-drill", "database-cost-guard", "transaction-fix",
+    "schema-and-constraints", "migrations-and-environments", "query-performance",
+    # Database Engine Diagnostics (3)
+    "sql-server-diagnostics", "postgres-diagnostics", "sqlite-diagnostics",
+    # Software Architecture Styles & Patterns (13)
+    "hexagonal-architecture", "layered-n-tier-architecture", "mvc-architecture", "clean-architecture",
+    "monolithic-architecture", "modular-monolith-architecture", "microservices-architecture",
+    "serverless-architecture", "event-driven-architecture", "cqrs-pattern", "event-sourcing-pattern",
+    "bff-pattern", "micro-frontends-architecture",
+)
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
 BACKTICK = re.compile(r"`([a-z0-9-]+)`")
@@ -27,7 +37,7 @@ MAX_DESCRIPTION = 1024
 
 def front_matter(text: str) -> dict[str, str] | None:
     """Top-level `key: value` pairs of the leading `---` block (nested keys are ignored on purpose)."""
-    text = text.lstrip("﻿")
+    text = text.lstrip("\ufeff")
     if not text.startswith("---"):
         return None
     parts = text.split("---", 2)
