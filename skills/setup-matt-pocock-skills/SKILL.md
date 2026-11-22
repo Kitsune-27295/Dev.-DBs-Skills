@@ -1,7 +1,6 @@
 ---
 name: setup-matt-pocock-skills
-description: "Configure this repo for the engineering workflow skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of to-spec, to-tickets, implement, or code-review."
-disable-model-invocation: true
+description: "Configure a repo for the engineering workflow skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Use before first use of to-spec, to-tickets, implement, or code-review when docs/agents/ is missing."
 ---
 
 # Setup Matt Pocock's Skills

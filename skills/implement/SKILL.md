@@ -1,7 +1,6 @@
 ---
 name: implement
-description: "Implement a piece of work based on a spec or set of tickets using TDD at pre-agreed seams and two-axis code review."
-disable-model-invocation: true
+description: "Implement a piece of work based on a spec or set of tickets using TDD at pre-agreed seams and two-axis code review. Use when executing tickets or specs in the engineering workflow."
 ---
 
 Implement the work described by the user in the spec or tickets.

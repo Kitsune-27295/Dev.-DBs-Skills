@@ -1,14 +1,13 @@
 ---
 name: to-tickets
-description: Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).
-disable-model-invocation: true
+description: "Break a plan, spec, or conversation into tracer-bullet vertical-slice tickets, each declaring its blocking edges, published to the configured tracker or local .scratch/. Use after to-spec or when decomposing a feature into deliverable slices."
 ---
 
 # To Tickets
 
 Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage label vocabulary should have been provided to you (`docs/agents/issue-tracker.md`). If not, tell the user to run `setup-matt-pocock-skills` (or use local `.scratch/<feature-slug>/issues/` if working locally).
+The issue tracker and triage label vocabulary should have been provided to you (`docs/agents/issue-tracker.md`). If not, prompt to run `setup-matt-pocock-skills` or use local `.scratch/<feature-slug>/issues/` directly when working locally or autonomously.
 
 ## Process
 
@@ -58,7 +57,7 @@ Ask the user:
 - Are the blocking edges correct: does each ticket only depend on tickets that genuinely gate it?
 - Should any tickets be merged or split further?
 
-Iterate until the user approves the breakdown.
+Iterate until the user approves the breakdown (unless running an autonomous end-to-end workflow at the user's request, in which case proceed directly to publishing once slices and blocking edges are verified).
 
 ### 5. Publish the tickets to the configured tracker
 

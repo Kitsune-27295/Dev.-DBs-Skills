@@ -1,12 +1,11 @@
 ---
 name: to-spec
-description: "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed."
-disable-model-invocation: true
+description: "Turn the current conversation, plan, or requirements into a structured spec and publish it to the project issue tracker (or local .scratch/). Use after planning or grilling to synthesize agreed decisions without re-interviewing."
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-The issue tracker and domain docs layout should have been configured (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`). If not, tell the user to run `setup-matt-pocock-skills` (or fall back to local markdown under `.scratch/<feature-slug>/spec.md` only if the user prefers local specs without setup).
+The issue tracker and domain docs layout should have been configured (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`). If not, either ask the user to run `setup-matt-pocock-skills` or fall back to local markdown under `.scratch/<feature-slug>/spec.md` (use `.scratch/` automatically during an autonomous end-to-end run when no tracker is configured).
 
 ## Process
 
@@ -14,7 +13,7 @@ The issue tracker and domain docs layout should have been configured (`docs/agen
 
 2. **Sketch testing seams:** Sketch out the seams at which you're going to test the feature (using `codebase-design` vocabulary: **module**, **interface**, **seam**). Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can. The fewer seams across the codebase, the better — the ideal number is one. Where deciding between unit, DB-backed route integration, or contract seams, align with `testing-pyramid-and-shapes` and `integration-tests`.
 
-Check with the user that these seams match their expectations (and note what each seam catches and what it misses).
+Check with the user that these seams match their expectations (and note what each seam catches and what it misses); if the user requested an autonomous end-to-end workflow, document the chosen seams directly in the spec and proceed.
 
 3. **Write & publish:** Write the spec using the template below, then publish it to the project issue tracker (GitHub, GitLab, or `.scratch/<feature-slug>/spec.md`). Apply the `ready-for-agent` triage label when using a tracker with triage labels — no need for additional triage.
 
