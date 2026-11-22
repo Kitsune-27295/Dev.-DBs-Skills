@@ -1,0 +1,13 @@
+# Sources for the cqrs-pattern skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Martin Fowler, "Command Query Separation" (2005-12-05), https://martinfowler.com/bliki/CommandQuerySeparation.html | Bertrand Meyer's foundational CQS principle (*Object-Oriented Software Construction*): divide an object's methods sharply into **Queries** (return a result, do not change observable state, free of side effects) and **Commands / Modifiers** (change state, do not return a value); pragmatic exceptions (e.g., popping a stack) and confidence in calling queries anywhere without side effects. |
+| 2 | Martin Fowler, "CQRS" (2011-07-14), https://martinfowler.com/bliki/CQRS.html | Greg Young's extension of CQS from method level to separate object/data models for Commands and Queries; strict warning that CQRS is a minority pattern that should only be used inside a specific DDD **Bounded Context**, never the whole system by default (*claim*: the majority of CQRS uses Fowler encountered ran into serious difficulties by applying it where CRUD or a simple **ReportingDatabase** was better suited); two valid drivers: complex domain models where command/query overlap is low, and high-performance systems with large read/write disparity. |
+| 3 | Microsoft Azure Architecture Center, "CQRS pattern" (EN & PT-PT), https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs and https://learn.microsoft.com/pt-pt/azure/architecture/patterns/cqrs | Asymmetry problems in traditional CRUD (data mismatch, lock contention, performance bottlenecks, security overlap); task-based commands ("Book hotel room") vs. CRUD updates; **Separate models in a single data store** vs. **Separate models in different data stores** (materialized views updated via events); eventual consistency and synchronization challenges; how and when to combine CQRS with Event Sourcing. |
+
+## Notes on disagreements and nuances across sources
+
+- **Single-Database CQRS vs. Dual-Database CQRS:** Microsoft (Source 3) explicitly documents two valid tiers of CQRS: separating the read and write models in code over a single relational store (e.g., separate SQL views or thin read queries vs. transactional write tables) and separating them across distinct physical data stores. Fowler (Source 2) also notes that when only a handful of analytical queries are slow, a **ReportingDatabase** is often simpler than full CQRS. This skill enforces a progressive ladder: Method CQS -> Single-Store CQRS (or Reporting DB) -> Dual-Store CQRS only when proven necessary.
