@@ -23,11 +23,20 @@ PACK = (
     "schema-and-constraints", "migrations-and-environments", "query-performance",
     # Database Engine Diagnostics (3)
     "sql-server-diagnostics", "postgres-diagnostics", "sqlite-diagnostics",
-    # Software Architecture Styles & Patterns (13)
+    # Software Architecture Styles & Patterns (22)
     "hexagonal-architecture", "layered-n-tier-architecture", "mvc-architecture", "clean-architecture",
     "monolithic-architecture", "modular-monolith-architecture", "microservices-architecture",
     "serverless-architecture", "event-driven-architecture", "cqrs-pattern", "event-sourcing-pattern",
-    "bff-pattern", "micro-frontends-architecture",
+    "bff-pattern", "micro-frontends-architecture", "vertical-slice-architecture", "screaming-architecture",
+    "package-by-feature-component", "repository-root-monorepo-architecture", "microkernel-plugin-architecture",
+    "pipes-and-filters-pattern", "actor-model-space-based-architecture", "saga-transactional-outbox-pattern",
+    "soa-vs-microservices-architecture",
+    # Cloud-Native, Resilience, Evolution & AI (5)
+    "twelve-factor-cloud-native", "circuit-breaker-retry-telemetry", "parallel-change-expand-contract",
+    "agentic-rag-architecture", "testing-pyramid-and-shapes",
+    # Architecture Documentation, Diagrams & Contracts (4)
+    "c4-model-architecture", "adr-architecture", "arc42-api-contracts-architecture",
+    "diataxis-documentation-architecture",
 )
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")

@@ -1,0 +1,13 @@
+# Sources for the pipes-and-filters-pattern skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Microsoft Azure Architecture Center, "Pipes and Filters pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/pipes-and-filters | Decomposition of monolithic sequential processing into modular, typically **stateless** **Filters** connected by **Pipes**; composition and reuse across pipelines; choice between running filters in a single process vs. deploying them separately with message queues for independent scaling and compute-intensive hardware isolation; key issues and considerations: **complexity** (distributed latency/serialization overhead), **reliability** (preventing data loss on filter crash via queue pipes), **idempotency** (handling redelivered messages after partial failure), **poison messages** (dead-lettering bad inputs), and **context/state** management; pairing with Competing Consumers and Claim-Check patterns. |
+| 2 | Microsoft Azure Well-Architected Framework, "Architecture design patterns that support reliability", https://learn.microsoft.com/en-us/azure/well-architected/reliability/design-patterns | Reliability role of **Pipes and Filters** (isolating malfunctions to individual modular pipeline components), **Claim-Check** (offloading large payloads from message buses to blob storage), **Competing Consumers** (parallel scaling of queue stages), **Queue-Based Load Leveling** (buffering bursty loads between stages), **Circuit Breaker**, and **Retry**. |
+| 3 | Ilya Hardzeenka, Software Architecture Guild, "Architecture Styles — Pipeline Architecture", https://software-architecture-guild.com/guide/architecture/fundamentals/architecture-styles/#pipeline-architecture | Taxonomy of the four pipeline components (**Pump / Data Source**, **Filter**, **Pipe**, **Sink**); unidirectional transformation flow and applicability to compilers, Unix shells, and ETL data streams. |
+
+## Notes on disagreements and nuances across sources
+
+- **In-Process Pipeline vs. Distributed Cloud Pipeline:** Source 3 treats Pipeline (Pipes and Filters) primarily as a monolithic/in-process architectural style (like Unix pipes or compiler passes), whereas Sources 1 and 2 show that the exact same pattern applies across distributed cloud queues when individual filters require independent scaling or fault isolation. This skill unifies both and instructs engineers to start in-process and only promote a pipe to a distributed queue when a stage's scaling or reliability profile requires it.

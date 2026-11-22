@@ -1,73 +1,64 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **31 Agent Skills** (Claude Code, Antigravity IDE, Codex, Cursor) cobrindo **Arquitetura de Software & Padrões Arquiteturais (13 skills)**, **Fundamentos de Engenharia & Segurança (7 skills)**, **Fundamentos & Governança de Bancos de Dados (8 skills)** e **Diagnósticos de Motores SQL em Produção (3 skills)**.
+Catálogo unificado de **49 Agent Skills** (Claude Code, Antigravity IDE, Codex, Cursor) cobrindo **Arquitetura de Software & Padrões Arquiteturais (22 skills)**, **Cloud-Native, Resiliência, Evolução & IA (5 skills)**, **Documentação Arquitetural, Diagramação & Contratos (4 skills)**, **Fundamentos de Engenharia & Segurança (7 skills)**, **Fundamentos & Governança de Bancos de Dados (8 skills)** e **Diagnósticos de Motores SQL em Produção (3 skills)**.
 
 Todas as skills são autocontidas, sem dependências externas, testadas por `check_skills.py` e verificadas contra `MANIFEST.sha256`.
 
 ---
 
-## 1. Arquitetura de Software & Padrões Arquiteturais (13 Skills)
+## Catálogo Completo (49 Skills)
 
-Cada skill arquitetural documenta o vocabulário canónico, invariantes e regras de direção de dependências, ordem de construção (*test-first*), estratégia de testes por camada/componente, quando compensa (*vs.* quando é sobre-engenharia), erros comuns a intercetar em code review e `references/sources.md` com as fontes primárias (Martin Fowler, Robert C. Martin, Sam Newman, Alistair Cockburn, Chris Richardson, Kamil Grzybek, Oskar Dudycz, Cam Jackson, Michael Geers, Microsoft Azure Architecture Center, AWS Architecture, Marco Tulio Valente).
-
-| Skill | Estilo / Padrão | Para quê | Fontes Canónicas (`references/sources.md`) |
+| # | Categoria | Skill | Descrição (1 linha) |
 |---|---|---|---|
-| [`hexagonal-architecture`](skills/hexagonal-architecture/SKILL.md) | Hexagonal (Ports & Adapters) | Isolar o domínio e casos de uso de qualquer tecnologia externa através de *driver ports* (inbound), *driven ports* (outbound), adaptadores intercambiáveis e *composition root* único | Cockburn / Garrido de Paz, Valente, AWS Prescriptive Guidance, Netflix Tech Blog, Hombergs, Baeldung |
-| [`layered-n-tier-architecture`](skills/layered-n-tier-architecture/SKILL.md) | Arquitetura em Camadas (Layered / N-Tier) | Separar camadas lógicas (*Presentation*, *Business*, *Data Access*) de camadas físicas (*Tiers*), escolher comunicação estrita vs. relaxada e evitar *layer sinkholes* | Microsoft Azure Architecture Center (N-tier EN/PT), Valente (*Eng. Soft. Moderna* Cap. 7), .NET Web Architectures |
-| [`mvc-architecture`](skills/mvc-architecture/SKILL.md) | MVC (Model-View-Controller) | Aplicar *Separated Presentation* e *Humble View*, mantendo regras de negócio no *Model*, coordenação fina no *Controller* e projeção sem lógica na *View* / *ViewModel* | Martin Fowler (*GUI Architectures*, *PoEAA MVC*), MDN Web Docs, Valente |
-| [`clean-architecture`](skills/clean-architecture/SKILL.md) | Clean Architecture (Arquitetura Limpa) | Organizar o sistema nos 4 círculos concêntricos (*Entities*, *Use Cases*, *Interface Adapters*, *Frameworks & Drivers*) sob a *Dependency Rule* (dependências só apontam para dentro) | Robert C. Martin (*The Clean Architecture*), Valente (*SoftEngBook*), Jason Taylor (`CleanArchitecture`), Microsoft .NET |
-| [`monolithic-architecture`](skills/monolithic-architecture/SKILL.md) | Monolítica Tradicional | Aplicar a estratégia *Monolith First*, organizar um único artefacto de deploy com transações ACID locais e escalar horizontalmente com processos *stateless* antes de pagar o *Microservice Premium* | Martin Fowler (*Monolith First*), Microsoft .NET Architecture Guide, AWS Monolithic vs. Microservices |
-| [`modular-monolith-architecture`](skills/modular-monolith-architecture/SKILL.md) | Monólito Modular (DDD) | Particionar um único deploy em módulos verticais autónomos (*Bounded Contexts*) com tipos internos encapsulados, *schemas* de BD isolados (zero `JOIN`s entre módulos) e eventos *in-process* via *Outbox* | Kamil Grzybek (`modular-monolith-with-ddd`), Spring Modulith Reference Docs, Fowler |
-| [`microservices-architecture`](skills/microservices-architecture/SKILL.md) | Microsserviços | Desenhar serviços com deploy independente organizados por capacidade de negócio (*Subdomains*), BD privada por serviço, *Sagas*, *Transactional Outbox* e testes de contrato (*Consumer-Driven Contracts*) | James Lewis & Martin Fowler (*Microservices*), Chris Richardson (`microservices.io` pattern language) |
-| [`serverless-architecture`](skills/serverless-architecture/SKILL.md) | Serverless (FaaS & BaaS) | Construir funções *stateless* orientadas a eventos (*FaaS*) + serviços geridos (*BaaS*), gerindo *cold starts*, limites de execução, *connection pooling*, idempotência, DLQs e permissões IAM mínimas | Mike Roberts (*Serverless Architectures*), Badri Janakiraman, AWS Well-Architected Serverless Applications Lens |
-| [`event-driven-architecture`](skills/event-driven-architecture/SKILL.md) | Event-Driven (Orientada a Eventos) | Desacoplar produtores e consumidores via *Pub/Sub* ou *Event Streaming*, distinguindo *Event Notification*, *Event-Carried State Transfer*, *Event Sourcing* e *CQRS* sem cair em comandos passivo-agressivos | Martin Fowler (*What do you mean by "Event-Driven"?*), Microsoft Azure Architecture Center (EN/PT), Valente |
-| [`cqrs-pattern`](skills/cqrs-pattern/SKILL.md) | CQRS & CQS | Segregar o modelo de escrita (*Commands* orientados a tarefas) do modelo de leitura (*Queries* projetadas direto para DTOs) dentro de um *Bounded Context* (em BD única ou BDs separadas) | Martin Fowler (*CQRS*, *Command Query Separation*), Microsoft Azure Architecture Center (EN/PT) |
-| [`event-sourcing-pattern`](skills/event-sourcing-pattern/SKILL.md) | Event Sourcing | Persistir cada mudança de estado como sequência imutável (*append-only*) de eventos de domínio, reconstituir agregados (`decide` vs. `apply` puro), controlo de concorrência otimista, *upcasting*, *snapshots* e GDPR | Martin Fowler (*Event Sourcing*), Microsoft Azure Architecture Center, Chris Richardson, Oskar Dudycz (`EventSourcing.NetCore`) |
-| [`bff-pattern`](skills/bff-pattern/SKILL.md) | BFF (Backend for Frontend) | Criar um *Edge Backend* dedicado por experiência de utilizador (Web, Mobile, Voz/IoT) gerido pela própria equipa de frontend (Lei de Conway), agregando chamadas em paralelo com degradação graciosa | Sam Newman (*Backends For Frontends*), Microsoft Azure Architecture Center, Chris Richardson (*API Gateway / BFF*) |
-| [`micro-frontends-architecture`](skills/micro-frontends-architecture/SKILL.md) | Micro-frontends | Decompor um *Frontend Monolith* em fatias verticais de negócio com deploy independente em *runtime* (JS / Module Federation, Web Components, Server-Side Includes), isolamento de CSS/estado e comunicação via URL/DOM | Cam Jackson (*Micro Frontends* / Fowler), Michael Geers (`micro-frontends.org`), Microsoft .NET Composite UI |
-
----
-
-## 2. Fundamentos de Engenharia de Software & Segurança (7 Skills)
-
-Auditorias só de leitura e procedimentos cirúrgicos de correção test-first:
-
-| Skill | Para quê | Modelo / esforço recomendado |
-|---|---|---|
-| [`fundamentals-audit`](skills/fundamentals-audit/SKILL.md) | Audita os cinco fundamentos de uma vez (só leitura), escreve `AUDIT.md` e indica qual correção rodar primeiro; guarda a ordem e as regras de segurança que as outras citam | opus / high |
-| [`security-audit`](skills/security-audit/SKILL.md) | Auditoria de segurança só de leitura: isolamento de tenant, permissão só no navegador, IDOR, chaves expostas (inclui histórico do git), XSS; relatório com `arquivo:linha` e rascunhos de issues | opus / high |
-| [`integration-tests`](skills/integration-tests/SKILL.md) | Cobre os fluxos críticos com testes de rota contra banco de teste real, a partir de frases de comportamento aprovadas; regra de ouro: nunca apagar, pular ou afrouxar teste | sonnet / high |
-| [`never-trust-the-client`](skills/never-trust-the-client/SKILL.md) | Retira regras, segredos e políticas de acesso do cliente e coloca no servidor (relatório primeiro, uma correção por vez) | sonnet / high |
-| [`race-condition-fix`](skills/race-condition-fix/SKILL.md) | Corrige leia-decida-grave no banco (`UNIQUE`, atualização atómica, trava de linha) e prova com teste de requisições simultâneas | sonnet / high |
-| [`idempotency-fix`](skills/idempotency-fix/SKILL.md) | Webhook e pagamento com um só efeito por evento: verificação de assinatura, tabela de eventos processados e chave de idempotência | sonnet / high |
-| [`layered-refactor`](skills/layered-refactor/SKILL.md) | Divide um arquivo gigante que mistura UI, regras e dados em camadas separadas sem mudar comportamento, com testes de caracterização | sonnet / high |
-
----
-
-## 3. Fundamentos, Custo & Governança de Bancos de Dados (8 Skills)
-
-| Skill | Para quê | Modelo / esforço recomendado |
-|---|---|---|
-| [`database-audit`](skills/database-audit/SKILL.md) | Audita o banco em sete frentes de uma vez (só leitura), escreve `DB-AUDIT.md`, dá a ordem de execução e orienta qual banco usar | opus / high |
-| [`database-exposure`](skills/database-exposure/SKILL.md) | Verifica porta do banco aberta, chaves e senhas (inclui histórico do git), quem lê e escreve tabela por tabela e políticas frouxas (RLS/Firebase); relatório primeiro | opus / high |
-| [`backup-restore-drill`](skills/backup-restore-drill/SKILL.md) | Backup diário fora do servidor com retenção, teste real de restauração em outro banco comparando contagens e roteiro de recuperação | sonnet / high |
-| [`database-cost-guard`](skills/database-cost-guard/SKILL.md) | Banco cobrado por uso: encontra consultas em laço (`N+1`), listeners e paginação por offset, estima o custo com 10x mais utilizadores e define limite de gastos | sonnet / high |
-| [`transaction-fix`](skills/transaction-fix/SKILL.md) | Operação que grava em várias tabelas vira tudo-ou-nada (transação ACID), mantendo chamadas externas fora da transação e provando com teste de falha forçada | sonnet / high |
-| [`schema-and-constraints`](skills/schema-and-constraints/SKILL.md) | O banco recusa dado ruim: dinheiro exato, `timestamptz`, chaves estrangeiras, `NOT NULL`, `UNIQUE`, `CHECK`; conta as linhas que já violam antes de migrar | sonnet / high |
-| [`migrations-and-environments`](skills/migrations-and-environments/SKILL.md) | Migrations numeradas sob controlo de versão com baseline e checagem de drift, desenvolvimento separado de produção e utilizador da app com privilégio mínimo | sonnet / high |
-| [`query-performance`](skills/query-performance/SKILL.md) | Consultas lentas: `EXPLAIN ANALYZE`, índices em falta (inclusive em chaves estrangeiras), eliminação de `N+1` e paginação por cursor medindo antes e depois | sonnet / high |
-
----
-
-## 4. Diagnósticos de Motores de Banco de Dados (3 Skills)
-
-Coleções de consultas SQL só de leitura, organizadas por versão do motor:
-
-| Skill | Para quê | Modelo / esforço recomendado |
-|---|---|---|
-| [`sql-server-diagnostics`](skills/sql-server-diagnostics/SKILL.md) | 30 consultas só de leitura para SQL Server por versão (2019, 2022, 2025; 31 na 2025), com guias do que muda em cada versão e script de verificação `check_versions.py` | sonnet / high |
-| [`postgres-diagnostics`](skills/postgres-diagnostics/SKILL.md) | 31 consultas só de leitura para PostgreSQL 16, 17 e 18 (bloat, wraparound, conexões, locks, `pg_stat_statements`, WAL, replicação, índices) com tabela das diferenças entre versões | sonnet / high |
-| [`sqlite-diagnostics`](skills/sqlite-diagnostics/SKILL.md) | 19 consultas só de leitura para SQLite (`integrity_check`, `foreign_key_check`, esquema, tamanho por tabela/índice, chaves estrangeiras sem índice, `AUTOINCREMENT`), testadas em 3.49 e 3.53 | sonnet / high |
+| 1 | Arquitetura de Software | [`actor-model-space-based-architecture`](skills/actor-model-space-based-architecture/SKILL.md) | Sistemas concorrentes/distribuídos stateful com Actor Model (Akka, Orleans, Erlang/OTP) e Space-Based Architecture (In-Memory Data Grids). |
+| 2 | Arquitetura de Software | [`bff-pattern`](skills/bff-pattern/SKILL.md) | Edge Backend dedicado por experiência de cliente (Web, Mobile, IoT) alinhado à equipa de frontend e agregando chamadas downstream. |
+| 3 | Arquitetura de Software | [`clean-architecture`](skills/clean-architecture/SKILL.md) | Quatro círculos concêntricos (*Entities*, *Use Cases*, *Interface Adapters*, *Frameworks*) sob a *Dependency Rule* apontando para dentro. |
+| 4 | Arquitetura de Software | [`cqrs-pattern`](skills/cqrs-pattern/SKILL.md) | Separação entre modelos de escrita (*Commands*) e leitura (*Queries*) com projeções síncronas ou eventuais num *Bounded Context*. |
+| 5 | Arquitetura de Software | [`event-driven-architecture`](skills/event-driven-architecture/SKILL.md) | Produtores, brokers e consumidores via *Pub/Sub* ou *Event Streaming*, distinguindo *Event Notification*, *ECST*, *Event Sourcing* e *CQRS*. |
+| 6 | Arquitetura de Software | [`event-sourcing-pattern`](skills/event-sourcing-pattern/SKILL.md) | Persistência *append-only* de eventos de domínio, *fold* (`decide`/`apply`), concorrência otimista, *snapshots*, *upcasting* e GDPR. |
+| 7 | Arquitetura de Software | [`hexagonal-architecture`](skills/hexagonal-architecture/SKILL.md) | *Ports & Adapters* isolando domínio e casos de uso com *driver/driven ports*, adaptadores substituíveis e *composition root* único. |
+| 8 | Arquitetura de Software | [`layered-n-tier-architecture`](skills/layered-n-tier-architecture/SKILL.md) | Separação de camadas lógicas (*Layers*) e físicas (*Tiers*), comunicação estrita vs. relaxada e prevenção de *layer sinkholes*. |
+| 9 | Arquitetura de Software | [`micro-frontends-architecture`](skills/micro-frontends-architecture/SKILL.md) | Fatias verticais de UI com deploy independente em *runtime* (Module Federation, Web Components, SSI) e isolamento de CSS/estado. |
+| 10 | Arquitetura de Software | [`microkernel-plugin-architecture`](skills/microkernel-plugin-architecture/SKILL.md) | Núcleo mínimo (*Core System*) extensível por plug-ins independentes via contratos versionados, registro e isolamento/sandbox. |
+| 11 | Arquitetura de Software | [`microservices-architecture`](skills/microservices-architecture/SKILL.md) | Serviços com deploy independente por subdomínio de negócio, BD privada por serviço, *Sagas*, *Outbox* e testes de contrato. |
+| 12 | Arquitetura de Software | [`modular-monolith-architecture`](skills/modular-monolith-architecture/SKILL.md) | Deploy único particionado em *Bounded Contexts* encapsulados, *schemas* de BD isolados e eventos *in-process* via *Outbox*. |
+| 13 | Arquitetura de Software | [`monolithic-architecture`](skills/monolithic-architecture/SKILL.md) | Estratégia *Monolith First* com deploy único, transações ACID locais e escala horizontal *stateless* antes do *Microservice Premium*. |
+| 14 | Arquitetura de Software | [`mvc-architecture`](skills/mvc-architecture/SKILL.md) | *Separated Presentation* e *Humble View*, mantendo regras no *Model*, coordenação fina no *Controller* e projeção passiva na *View*. |
+| 15 | Arquitetura de Software | [`package-by-feature-component`](skills/package-by-feature-component/SKILL.md) | Organização de módulos por funcionalidade ou componente (*Common Closure Principle*) com encapsulamento *package-private*. |
+| 16 | Arquitetura de Software | [`pipes-and-filters-pattern`](skills/pipes-and-filters-pattern/SKILL.md) | Workflows sequenciais em filtros *stateless* reutilizáveis ligados por *pipes*, com *backpressure*, idempotência e *poison-message routing*. |
+| 17 | Arquitetura de Software | [`repository-root-monorepo-architecture`](skills/repository-root-monorepo-architecture/SKILL.md) | Layout raiz de repositórios, escolha *Monorepo vs. Polyrepo*, convenções Go/TS (`cmd/`, `internal/`, `apps/`, `packages/`) e `CODEOWNERS`. |
+| 18 | Arquitetura de Software | [`saga-transactional-outbox-pattern`](skills/saga-transactional-outbox-pattern/SKILL.md) | Transações distribuídas via *Sagas* (Coreografia vs. Orquestração, *Pivot*, compensação) e *Transactional Outbox* + *Inbox* idempotente. |
+| 19 | Arquitetura de Software | [`screaming-architecture`](skills/screaming-architecture/SKILL.md) | Diretórios de topo e pacotes que revelam o domínio de negócio e casos de uso em vez do framework ou ORM utilizado. |
+| 20 | Arquitetura de Software | [`serverless-architecture`](skills/serverless-architecture/SKILL.md) | Funções *stateless* (*FaaS*) + serviços geridos (*BaaS*) controlando *cold starts*, *pooling*, idempotência, DLQs e IAM mínimo. |
+| 21 | Arquitetura de Software | [`soa-vs-microservices-architecture`](skills/soa-vs-microservices-architecture/SKILL.md) | Comparação estrutural e regras de migração entre SOA corporativo (ESB, dados partilhados) e Microsserviços (*smart endpoints, dumb pipes*). |
+| 22 | Arquitetura de Software | [`vertical-slice-architecture`](skills/vertical-slice-architecture/SKILL.md) | Código organizado por fatia de requisição/funcionalidade (*REPR*/MediatR), eliminando camadas pass-through e respeitando o eixo de acoplamento. |
+| 23 | Cloud-Native, Resiliência & IA | [`agentic-rag-architecture`](skills/agentic-rag-architecture/SKILL.md) | Escolha do nível mínimo de complexidade em sistemas de IA (Direct Call, Workflow, Single/Multi-Agent), *tool contracts* (ACI), RAG híbrido e avaliação. |
+| 24 | Cloud-Native, Resiliência & IA | [`circuit-breaker-retry-telemetry`](skills/circuit-breaker-retry-telemetry/SKILL.md) | *Circuit Breaker* (*Closed/Open/Half-Open*), *exponential backoff* com *jitter*, *Bulkhead*, *Fallback* e observabilidade unificada OpenTelemetry. |
+| 25 | Cloud-Native, Resiliência & IA | [`parallel-change-expand-contract`](skills/parallel-change-expand-contract/SKILL.md) | Migrações de esquema e contratos sem *downtime* em produção através das três fases discretas: *Expand*, *Transition* e *Contract*. |
+| 26 | Cloud-Native, Resiliência & IA | [`testing-pyramid-and-shapes`](skills/testing-pyramid-and-shapes/SKILL.md) | Estratégia de testes automatizados comparando *Test Pyramid*, *Testing Trophy* e *Testing Honeycomb* com rácios, contratos e anti-padrões. |
+| 27 | Cloud-Native, Resiliência & IA | [`twelve-factor-cloud-native`](skills/twelve-factor-cloud-native/SKILL.md) | Metodologia 12-Factor e extensões modernas 15-Factor (API-first, telemetria, zero-trust) para cargas portáteis e *stateless* em nuvem/containers. |
+| 28 | Documentação & Contratos | [`adr-architecture`](skills/adr-architecture/SKILL.md) | Registo imutável de decisões arquiteturais significativas (Nygard, MADR, Y-Statements) com alternativas, trade-offs e *superseding* em Git. |
+| 29 | Documentação & Contratos | [`arc42-api-contracts-architecture`](skills/arc42-api-contracts-architecture/SKILL.md) | Documentação arquitetural nas 12 secções do template *arc42* integrada com contratos *contract-first* em OpenAPI 3.x e AsyncAPI 3.x. |
+| 30 | Documentação & Contratos | [`c4-model-architecture`](skills/c4-model-architecture/SKILL.md) | Diagramação hierárquica C4 (*System Context*, *Container*, *Component*, *Code* + *Deployment/Dynamic*) com checklist de notação e Mermaid/Structurizr. |
+| 31 | Documentação & Contratos | [`diataxis-documentation-architecture`](skills/diataxis-documentation-architecture/SKILL.md) | Organização de documentação técnica nos 4 quadrantes *Diátaxis* (*Tutorials*, *How-to Guides*, *Reference*, *Explanation*) sem contaminação cruzada. |
+| 32 | Fundamentos de Engenharia & Segurança | [`fundamentals-audit`](skills/fundamentals-audit/SKILL.md) | Auditoria só de leitura dos 5 fundamentos (testes de integração, confiança no cliente, race conditions, idempotência, separação), gerando `AUDIT.md`. |
+| 33 | Fundamentos de Engenharia & Segurança | [`idempotency-fix`](skills/idempotency-fix/SKILL.md) | Webhooks e pagamentos com efeito único por evento via verificação de assinatura, tabela de eventos processados e chave de idempotência. |
+| 34 | Fundamentos de Engenharia & Segurança | [`integration-tests`](skills/integration-tests/SKILL.md) | Testes de integração de rota contra banco real a partir de frases de comportamento aprovadas e regra de ouro de nunca enfraquecer testes. |
+| 35 | Fundamentos de Engenharia & Segurança | [`layered-refactor`](skills/layered-refactor/SKILL.md) | Decomposição incremental de ficheiros monolíticos (UI + regras + dados) em camadas separadas com testes de caracterização a cada passo. |
+| 36 | Fundamentos de Engenharia & Segurança | [`never-trust-the-client`](skills/never-trust-the-client/SKILL.md) | Migração de regras de negócio, preços, permissões e segredos do cliente para o servidor e revisão de políticas de acesso (RLS). |
+| 37 | Fundamentos de Engenharia & Segurança | [`race-condition-fix`](skills/race-condition-fix/SKILL.md) | Correção de *read-decide-write* no banco (`UNIQUE`, update atómico, row lock) comprovada por testes de requisições simultâneas. |
+| 38 | Fundamentos de Engenharia & Segurança | [`security-audit`](skills/security-audit/SKILL.md) | Auditoria de segurança só de leitura: isolamento de tenant, autorização client-side, IDOR, segredos no histórico git e XSS. |
+| 39 | Bancos de Dados & Governança | [`backup-restore-drill`](skills/backup-restore-drill/SKILL.md) | Rotina de backup diário off-server com retenção, teste real de restauração comparando contagens de linhas e runbook de desastre. |
+| 40 | Bancos de Dados & Governança | [`database-audit`](skills/database-audit/SKILL.md) | Auditoria só de leitura em 7 frentes de banco de dados (exposição, backups, custo, transações, esquema, migrations, performance) em `DB-AUDIT.md`. |
+| 41 | Bancos de Dados & Governança | [`database-cost-guard`](skills/database-cost-guard/SKILL.md) | Contenção de custos em bancos cobrados por leitura/escrita: detecção de `N+1`, listeners, paginação por offset, projeção 10x e limites de gasto. |
+| 42 | Bancos de Dados & Governança | [`database-exposure`](skills/database-exposure/SKILL.md) | Verificação de portas abertas, credenciais vazadas (incluindo git), exposição de API pública e políticas permissivas (RLS/Firebase/grants). |
+| 43 | Bancos de Dados & Governança | [`migrations-and-environments`](skills/migrations-and-environments/SKILL.md) | Migrations numeradas em controlo de versão com *baseline*, checagem de *drift*, isolamento dev/prod e utilizador de privilégio mínimo. |
+| 44 | Bancos de Dados & Governança | [`query-performance`](skills/query-performance/SKILL.md) | Otimização de queries lentas com `EXPLAIN ANALYZE`, índices em FKs, remoção de `N+1` e paginação por cursor com medição antes/depois. |
+| 45 | Bancos de Dados & Governança | [`schema-and-constraints`](skills/schema-and-constraints/SKILL.md) | Integridade no próprio esquema: dinheiro exato, `timestamptz`, FKs, `NOT NULL`, `UNIQUE`, `CHECK` e contagem de violações prévias à migração. |
+| 46 | Bancos de Dados & Governança | [`transaction-fix`](skills/transaction-fix/SKILL.md) | Envolvimento de escritas multi-tabela em transações ACID tudo-ou-nada, mantendo chamadas externas fora da transação e testando falhas forçadas. |
+| 47 | Diagnósticos de Motores SQL | [`postgres-diagnostics`](skills/postgres-diagnostics/SKILL.md) | 31 scripts só de leitura para PostgreSQL 16, 17 e 18 (bloat, wraparound, locks, `pg_stat_statements`, WAL, replicação, índices). |
+| 48 | Diagnósticos de Motores SQL | [`sql-server-diagnostics`](skills/sql-server-diagnostics/SKILL.md) | 30 scripts só de leitura para SQL Server 2019, 2022 e 2025 (DMVs, wait stats, índices, deadlocks, backups, HA, segurança). |
+| 49 | Diagnósticos de Motores SQL | [`sqlite-diagnostics`](skills/sqlite-diagnostics/SKILL.md) | 19 scripts só de leitura para SQLite 3.49 e 3.53 (`integrity_check`, `foreign_key_check`, tamanho, FKs sem índice, `AUTOINCREMENT`). |
 
 ---
 
@@ -104,7 +95,7 @@ npx skills add Kitsune-27295/Dev.-DBs-Skills -g -a claude,antigravity -s 'hexago
 python check_skills.py skills
 ```
 
-O script `check_skills.py` valida que todas as 31 pastas possuem frontmatter YAML válido (`name` igual à pasta, `description` <= 1024 caracteres), que todos os links Markdown relativos (incluindo `references/sources.md` e scripts `.sql`) existem no disco e que todas as referências cruzadas entre skills estão íntegras.
+O script `check_skills.py` valida que todas as 49 pastas possuem frontmatter YAML válido (`name` igual à pasta, `description` <= 1024 caracteres), que todos os links Markdown relativos (incluindo `references/sources.md` e scripts `.sql`) existem no disco e que todas as referências cruzadas entre skills estão íntegras.
 
 ---
 
@@ -112,19 +103,26 @@ O script `check_skills.py` valida que todas as 31 pastas possuem frontmatter YAM
 
 ```text
 Dev.-DBs-Skills/
-├── README.md               # Catálogo completo e guia de instalação
+├── README.md               # Catálogo completo das 49 skills e guia de instalação
 ├── NOTICE.md               # Créditos, origens e notas sobre fontes
 ├── MANIFEST.sha256         # Hashes SHA-256 de todos os ficheiros em skills/
 ├── install_skills.py       # Instalador idempotente com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
-└── skills/                 # As 31 skills autocontidas
+└── skills/                 # As 49 skills autocontidas
+    ├── actor-model-space-based-architecture/
+    ├── adr-architecture/
+    ├── agentic-rag-architecture/
+    ├── arc42-api-contracts-architecture/
     ├── backup-restore-drill/
     ├── bff-pattern/
+    ├── c4-model-architecture/
+    ├── circuit-breaker-retry-telemetry/
     ├── clean-architecture/
     ├── cqrs-pattern/
     ├── database-audit/
     ├── database-cost-guard/
     ├── database-exposure/
+    ├── diataxis-documentation-architecture/
     ├── event-driven-architecture/
     ├── event-sourcing-pattern/
     ├── fundamentals-audit/
@@ -134,19 +132,30 @@ Dev.-DBs-Skills/
     ├── layered-n-tier-architecture/
     ├── layered-refactor/
     ├── micro-frontends-architecture/
+    ├── microkernel-plugin-architecture/
     ├── microservices-architecture/
     ├── migrations-and-environments/
     ├── modular-monolith-architecture/
     ├── monolithic-architecture/
     ├── mvc-architecture/
     ├── never-trust-the-client/
+    ├── package-by-feature-component/
+    ├── parallel-change-expand-contract/
+    ├── pipes-and-filters-pattern/
     ├── postgres-diagnostics/
     ├── query-performance/
     ├── race-condition-fix/
+    ├── repository-root-monorepo-architecture/
+    ├── saga-transactional-outbox-pattern/
     ├── schema-and-constraints/
+    ├── screaming-architecture/
     ├── security-audit/
     ├── serverless-architecture/
+    ├── soa-vs-microservices-architecture/
     ├── sql-server-diagnostics/
     ├── sqlite-diagnostics/
-    └── transaction-fix/
+    ├── testing-pyramid-and-shapes/
+    ├── transaction-fix/
+    ├── twelve-factor-cloud-native/
+    └── vertical-slice-architecture/
 ```
