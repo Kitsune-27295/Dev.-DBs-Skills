@@ -23,7 +23,8 @@ PACK = (
     "schema-and-constraints", "migrations-and-environments", "query-performance",
     # Database Engine Diagnostics (3)
     "sql-server-diagnostics", "postgres-diagnostics", "sqlite-diagnostics",
-    # Software Architecture Styles & Patterns (22)
+    # Software Architecture Styles & Patterns (24)
+    "architecture-decision-trees-tradeoffs", "ddd-domain-heuristics-debiasing",
     "hexagonal-architecture", "layered-n-tier-architecture", "mvc-architecture", "clean-architecture",
     "monolithic-architecture", "modular-monolith-architecture", "microservices-architecture",
     "serverless-architecture", "event-driven-architecture", "cqrs-pattern", "event-sourcing-pattern",
@@ -31,8 +32,9 @@ PACK = (
     "package-by-feature-component", "repository-root-monorepo-architecture", "microkernel-plugin-architecture",
     "pipes-and-filters-pattern", "actor-model-space-based-architecture", "saga-transactional-outbox-pattern",
     "soa-vs-microservices-architecture",
-    # Cloud-Native, Resilience, Evolution & AI (5)
-    "twelve-factor-cloud-native", "circuit-breaker-retry-telemetry", "parallel-change-expand-contract",
+    # Cloud-Native, Resilience, Evolution & AI (7)
+    "agent-skills-context-engineering", "twelve-factor-cloud-native", "circuit-breaker-retry-telemetry",
+    "parallel-change-expand-contract", "yagni-evolutionary-architecture",
     "agentic-rag-architecture", "testing-pyramid-and-shapes",
     # Architecture Documentation, Diagrams & Contracts (4)
     "c4-model-architecture", "adr-architecture", "arc42-api-contracts-architecture",

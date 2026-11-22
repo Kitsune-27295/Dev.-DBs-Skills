@@ -1,0 +1,50 @@
+---
+name: yagni-evolutionary-architecture
+description: Use when evaluating whether to build speculative abstractions, future-proofing layers, or distributed scale early — applying Martin Fowler's YAGNI four-cost model (Build, Delay, Carry, Repair), Evolutionary Design enabling practices ("Is Design Dead?"), Design Stamina Hypothesis (Design Payoff Line), and Sacrificial Architecture (design for ~10x, plan to rewrite before ~100x).
+---
+
+# YAGNI & Evolutionary Architecture
+
+One idea: **never build speculative features or future-proofing abstractions today for tomorrow's guessed needs — instead, keep the codebase simple and malleable through automated tests, CI, and continuous refactoring so you can evolve cleanly (or gracefully sacrifice components) when real scale and requirements arrive**. Sources and their claims: [references/sources.md](references/sources.md).
+
+## Vocabulary (Martin Fowler)
+
+| Term | Meaning | Test sentence |
+|---|---|---|
+| YAGNI ("You Aren't Gonna Need It") | do not build a **presumptive feature** or speculative abstraction before it is actually needed for current use | "if no live caller uses this hook or flag today, delete or defer it" |
+| Presumptive Feature | code or parameterization added now strictly for a presumed future capability not yet exposed or needed | "untested hooks built 'just in case' incur ongoing carry cost from day one" |
+| Enabling Practices (`Is Design Dead?`) | **Self-Testing Code**, **Continuous Integration**, and disciplined **Refactoring** that flatten the exponential cost-of-change curve | "without tests and refactoring, YAGNI degenerates into reckless 'code-and-fix'" |
+| Design Payoff Line (`Design Stamina Hypothesis`) | cumulative-delivery crossover point beyond which good design beats "no-design" hacking in net delivery speed | "Fowler estimates this crossover arrives in *weeks, not months* (`*claim*`)" |
+| Sacrificial Architecture | deliberately building an early system or module cleanly enough to move fast *and* expecting to discard/replace it when growth exceeds ~10x | "modular boundaries make sacrificing an obsolete layer painless later" |
+
+## The 4 Costs of Ignoring YAGNI (Fowler)
+
+Even when building speculative code feels "cheap right now", every presumptive feature incurs up to four compounding costs:
+
+1. **Cost of Build:** Effort spent analyzing, coding, and testing a capability that may never be used (Fowler cites Kohavi et al.'s finding that roughly **⅔** of carefully analyzed features failed to improve target metrics `*claim*`).
+2. **Cost of Delay (Opportunity Cost):** Time spent building future capability delays shipping high-value current features and learning from real users.
+3. **Cost of Carry:** Speculative abstractions and dead branches increase cognitive load, debugging time, and modification friction for *every* feature built between today and the day (if ever) the guess pays off.
+4. **Cost of Repair:** When the future requirement finally arrives, domain understanding and libraries have evolved — meaning the pre-built abstraction usually guessed wrong and must be reworked (`Technical Debt`) anyway.
+
+> **Decision Test — *"Imagine the Refactoring"*:** Before adding an abstraction or extension point for a future case, mentally sketch how you would refactor the simple version into the generalized one when the second real use case actually arrives. If refactoring later is straightforward (or cheap once tests exist), **defer it**. Only do up-front prep when it adds virtually **zero complexity** now while preventing massive rework later (e.g., error codes in a lookup table rather than hardcoded copy).
+
+## What YAGNI Is NOT (Boundary Conditions)
+
+- **YAGNI does NOT skip clean design, tests, CI, or refactoring:** Effort that makes code *easier to understand and modify* (renaming, eliminating duplication, modular boundaries, `integration-tests`) **enables** YAGNI and **is never a violation of it**.
+- **YAGNI ≠ Zero Starting Architecture:** Establish a clean initial skeleton (`monolithic-architecture`, basic data persistence when multi-user data needs are obvious, clear internal module boundaries), while keeping decisions **reversible** (*Enrico Zaninotto's Reversibility principle*) and deferring premature distribution (`microservices-architecture`).
+- **Simple Design Priorities (Kent Beck, in order):** (1) Runs all the tests; (2) No duplication; (3) Reveals intention clearly; (4) Fewest classes/methods. Never mistake "clever" premature patterns (16 GoF patterns in 32 lines) for simplicity.
+- **Will to Design & Metric Trap:** Design happens only when someone keeps deleting dead code and refactoring mess early. Healthy refactoring *deletes* code steadily.
+
+## Design Stamina Hypothesis vs. Sacrificial Architecture
+
+- **Above the Design Payoff Line (Nearly all real products, > weeks):** Neglecting internal quality ("we must skip cleanup to hit next month's launch") creates an illusory short-term boost followed by crippling slowdowns. Keep internal modularity and tests strong from week one.
+- **Below the Design Payoff Line / High Uncertainty Prototypes:** A **Sacrificial Architecture** (`monolithic-architecture` over distributed microservices) optimizes for *fast product discovery* while keeping **internal module boundaries clean** so you can later replace an individual module rather than rewriting the whole codebase.
+- **Jeff Dean's Order-of-Magnitude Rule (`*claim*`):** *"Design for ~10x current needs, plan to rewrite before ~100x"* — building 100x distributed machinery on day one slows 1x iteration to a crawl and solves the wrong scaling bottlenecks.
+- **Avoid Sunk-Cost / Accounting Lock-In:** Expect the team that built version 1 to decide calmly when to retire it (unlike a new team blindly hating legacy code it never understood), and challenge enterprise amortization accounting that punishes replacing obsolete software.
+
+## Mistakes to Catch
+
+- **Using "YAGNI" as an Excuse for Zero Tests or Tangled Code:** Skipping refactoring and tests flattens *nothing* — the exponential change curve will punish the next feature.
+- **Speculative Generalization ("Rule of One"):** Creating abstract base factories, plugin buses, multi-tenant routers, or message queues for a single concrete requirement. Wait for real variations (Rule of Three or concrete pain) before generalizing.
+- **Building Unrequested Distributed Infrastructure ("100x on Day 1"):** Adopting Kubernetes, Kafka, Event Sourcing, and 12 microservices for an unproven domain instead of a modular `monolithic-architecture` ready to evolve.
+- **Stagnant Codebases Where Nothing Is Ever Deleted:** Growing code monotonically with abandoned flags, unused interfaces, and backward-compatibility shims because nobody dares remove obsolete paths.
