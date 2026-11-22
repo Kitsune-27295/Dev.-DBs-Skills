@@ -1,0 +1,15 @@
+# Sources for the layered-n-tier-architecture skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Microsoft Azure Architecture Center, "N-tier architecture style" (EN & PT-PT), https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier and https://learn.microsoft.com/pt-pt/azure/architecture/guide/architecture-styles/n-tier | Distinction between logical layers and physical tiers; downward-only dependency rule (higher layer calls lower layer, never the reverse); strict vs. relaxed communication models (latency/overhead vs. coupling trade-off); direct calls vs. asynchronous messaging queues between tiers; WAF, caching, subnet isolation, and VM/cloud migration applicability. |
+| 2 | Microsoft Azure Architecture Center, "Architecture styles", https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/ | Taxonomy comparing N-tier with Web-Queue-Worker, Microservices, and Event-Driven styles; architecture styles as design constraints with explicit benefit/challenge trade-offs independent of specific vendor technologies. |
+| 3 | Marco Tulio Valente, *Engenharia de Software Moderna*, Cap. 7 "Arquitetura", https://engsoftmoderna.info/cap7.html | Three-layer architecture (Interface/Apresentação, Lógica de Negócio, Persistência/Acesso a Dados); unidirectional top-down dependencies; comparison between single-tier and multi-tier (client-server and 3-tier web) deployment topologies; warnings against architectural anti-patterns where boundaries erode over time. |
+| 4 | Microsoft .NET Architecture Guide, "Common web application architectures", https://learn.microsoft.com/pt-pt/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures | Traditional N-Layer organization (UI -> Business Logic -> Data Access) inside a single deployable unit vs. all-in-one projects; database-centric dependency direction of traditional N-Layer (Business depends on Data Access) contrasted with Clean/Hexagonal dependency inversion. |
+
+## Notes on disagreements and nuances across sources
+
+- **Dependency direction at the bottom:** Sources 1, 3, and 4 note that in traditional Layered/N-Tier architecture, the Business Logic layer depends downward on the Data Access layer (`UI -> Business -> Data`). Source 4 explicitly contrasts this with Clean/Hexagonal Architecture, where Data Access is inverted to depend inward on the Business/Application core. This skill documents the traditional downward N-Layer rule and directs readers to `hexagonal-architecture` or `clean-architecture` when domain-centric dependency inversion is needed.
+- **Strict vs. Relaxed layers:** Source 1 explicitly treats both strict (closed) and relaxed (open) communication models as valid contractual choices, noting that strict increases latency/indirection while relaxed increases coupling.
