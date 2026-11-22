@@ -1,0 +1,21 @@
+# Sources for the hexagonal-architecture skill
+
+Retrieved 2026-11-22. Statements below are the sources' claims, summarised; a claim marked *claim* is the author's own measurement or opinion, not verified here.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Garrido de Paz, "Ports and Adapters Pattern", https://jmgarridopaz.github.io/content/hexagonalarchitecture.html (site: https://jmgarridopaz.github.io/) | Definitions of hexagon, driver and driven actors (repository vs recipient), ports named "for ...ing", adapters, composition root, Configurable Dependency, symmetry and asymmetry, misconceptions (no mandated layers; ports are inside the hexagon), pros and cons, when to use, the four-step implementation order, Nat Pryce's test terminology. Cockburn (2005) coined the pattern. |
+| 2 | Valente, "A13 - Arquitetura Hexagonal", https://engsoftmoderna.info/artigos/arquitetura-hexagonal.html | Inbound ports (services the system offers) and outbound ports (services it requires) live in the inner hexagon; adapters in the outer one; several adapters per port; domain classes must not depend on infrastructure. |
+| 3 | AWS Prescriptive Guidance, "Hexagonal architecture pattern", https://docs.aws.amazon.com/pt_br/prescriptive-guidance/latest/cloud-design-patterns/hexagonal-architecture.html | Intent, applicability, DDD fit, testability, maintenance overhead and latency trade-offs; adapter only justified when inputs or outputs vary. Sample: https://github.com/aws-samples/aws-lambda-domain-model-sample |
+| 4 | Netflix Technology Blog, "Ready for changes with Hexagonal Architecture" (2020), https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749 | Entities, repositories, interactors; data sources and transport as adapters; dependencies point inward; a data source swap done with a one-line configuration change (*claim*: JSON API to GraphQL in 2 hours); three test layers (interactors most, data sources few, integration one success and one failure per action); (*claim*: about 3000 specs in 100 s). |
+| 5 | Hombergs, "Hexagonal Architecture with Java and Spring", https://reflectoring.io/spring-hexagonal/ (code: https://github.com/thombergs/buckpal) | Domain objects, use cases as first-class, input port implemented by the use case, output port shaped by the use case (Dependency Inversion), validation inside the command object, worth-it analysis (CRUD: overhead; rich rules: pays off). |
+| 6 | Baeldung, "Hexagonal Architecture, DDD, and Spring", https://www.baeldung.com/hexagonal-architecture-ddd-spring | Application / domain / infrastructure split, aggregate root keeps its own invariants, domain service wired manually in the infrastructure layer, swapping persistence and swapping REST for CLI without touching the domain, no technology annotations on domain objects. |
+| 7 | Garrido de Paz, BlueZone, https://github.com/jmgarridopaz/bluezone | Reference app: driver adapters (Web UI, CLI), driven ports (rate repository, ticket repository, payment service), adapters selected per port from a properties file at startup. |
+| 8 | Medina Montenegro, hexagonal-spring-ref-app, https://github.com/emedina/hexagonal-spring-ref-app | Module per area (application-core with domain, application, input and output ports; adapters; assembly), command and query handlers, in-memory repositories as swappable adapters, ArchUnit architecture tests that enforce the dependency rules. |
+| 9 | Cod3r, arq-hexagonal-simplificada, https://github.com/cod3rcursos/arq-hexagonal-simplificada | Minimal TypeScript example: a `core` module with the use cases and an `adapters` module with the port implementations. |
+
+Contradictions and gaps noted while reading:
+
+- Source 1 says the pattern prescribes no layers; sources 2, 5 and 6 draw layers or concentric hexagons. The skill follows source 1 for the rules and treats layers as a free choice inside the hexagon.
+- Sources 5 and 6 let a use case or domain service implement the driver port directly; source 1 says the same. Source 6 calls the domain service an adapter of the port; the skill keeps the stricter reading (the use case implements the driver port, adapters drive it).
+- Costs are argued, not measured, in every source (complexity, indirection, mapping, build time). Numbers in source 4 are the authors' own.
