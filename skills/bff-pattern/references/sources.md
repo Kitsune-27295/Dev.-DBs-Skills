@@ -1,0 +1,13 @@
+# Sources for the bff-pattern skill
+
+Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+
+| # | Source | What the skill takes from it |
+|---|---|---|
+| 1 | Sam Newman, "Pattern: Backends For Frontends — Single-purpose Edge Services for UIs and external parties" (2015-11-18), https://samnewman.io/patterns/architectural/bff/ | Origin and canonical definition of the BFF pattern (citing SoundCloud's Phil Calçado); why a single general-purpose API backend becomes a bottleneck across desktop web and mobile; **Conway's Law ownership rule** (a BFF must be owned by the team building the frontend it serves); how many BFFs to have (one per user experience / team boundary, e.g., unified mobile BFF vs. separate iOS/Android BFFs depending on team structure); handling multiple downstream microservice calls (parallel aggregation and partial failure resilience); why code duplication across BFFs is preferable to bad coupling; separating general perimeter concerns (auth, TLS, rate limiting) into an upstream routing tier or shared library; clear rule: if you only have one UI, you don't need a BFF. |
+| 2 | Microsoft Azure Architecture Center, "Backends for Frontends pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends | Context and problem of competing frontend demands on a single backend; solution diagram showing separate client-specific BFFs sitting between each client interface and downstream shared microservices; workload design considerations (caching per client flow, avoiding logic duplication in downstream services, fault isolation, and team autonomy). |
+| 3 | Chris Richardson, "Pattern: API Gateway / Backends for Frontends", https://microservices.io/patterns/apigateway.html | Granularity mismatch between fine-grained microservice APIs and what a product-details screen needs across desktop web, native mobile, and third-party REST clients; API composition, protocol translation, circuit breaking, and the BFF variation to prevent a single API Gateway team from becoming a development bottleneck. |
+
+## Notes on disagreements and nuances across sources
+
+- **One Mobile BFF vs. Separate iOS and Android BFFs:** Both Newman (Source 1) and Richardson (Source 3) emphasize that the decision is driven by **team structure and UX divergence**: if one cross-functional mobile team builds an identical experience on iOS and Android, use one Mobile BFF; if separate iOS and Android teams operate autonomously with distinct UX constraints, give each team its own BFF.
