@@ -35,7 +35,7 @@ From Martin Fowler (`BoundedContext`): a term like **Customer**, **Product**, **
 
 ## 3. SOLID Pragmatically (What Each Principle Actually Means)
 
-From Robert C. Martin (*SOLID Relevance*, *SRP*, *OCP*, *Interface Considered Harmful*): SOLID principles guide mid-level module and component structure — not mechanical ceremony on trivial scripts.
+From Robert C. Martin (*SOLID Relevance*, *SRP*, *OCP*): SOLID principles guide mid-level module and component structure — not mechanical ceremony on trivial scripts.
 
 | Principle | Core rule (what it *means*) | Common misreading to reject |
 |---|---|---|
@@ -45,7 +45,7 @@ From Robert C. Martin (*SOLID Relevance*, *SRP*, *OCP*, *Interface Considered Ha
 | **I — Interface Segregation (ISP)** | Clients should not depend on methods/fields they do not use (avoids unnecessary coupling, fat test mocks, and forced rebuild/redeploy) | Wrapping every concrete `UserService` in a 1-to-1 `IUserService` "for SOLID" |
 | **D — Dependency Inversion (DIP)** | High-level domain policy depends on abstractions owned by the policy, not on low-level DB/HTTP/framework drivers (`clean-architecture`, `hexagonal-architecture`) | Inverting stable standard-library or pure value helpers |
 
-**Anti-ceremony rule (*Interface Considered Harmful* & Seam discipline):** Do **not** create boilerplate `IFoo` interfaces for a concrete `Foo` that has only one implementation and sits behind no I/O boundary or test seam. As `codebase-design` puts it: *"One adapter means a hypothetical seam; two adapters means a real one."* Dynamically typed or structurally typed languages (TypeScript, Python, Go implicit interfaces) often don't need upfront `interface` files at all until a second concrete implementation or external boundary test double exists.
+**Anti-ceremony rule (Seam discipline; this is the skill's own guidance, not a claim of Martin's *Interface Considered Harmful*, which is a language-design dialogue about the Java/C# `interface` keyword):** Do **not** create boilerplate `IFoo` interfaces for a concrete `Foo` that has only one implementation and sits behind no I/O boundary or test seam. As `codebase-design` puts it: *"One adapter means a hypothetical seam; two adapters means a real one."* Dynamically typed or structurally typed languages (TypeScript, Python, Go implicit interfaces) often don't need upfront `interface` files at all until a second concrete implementation or external boundary test double exists.
 
 ---
 
@@ -67,12 +67,12 @@ How to avoid premature abstraction while still factoring out real duplication:
 
 ## 5. KISS, Pure Core & Thin I/O Wrappers
 
-Synthesizing *KISS* and *Harvard Kempner SWE Principles*:
+Drawing on the *Harvard Kempner SWE Principles* handbook (KISS, pure core with thin I/O wrapper, default to functions and plain data over deep inheritance, specific error messages) plus this skill's own guidance; items marked *(skill wording)* are not named by that page:
 
 - **Choose the simplest construct that works:** Prefer plain functions, flat data structures, and direct control flow over design patterns, metaprogramming, or deep inheritance hierarchies.
-- **Composition over inheritance:** Compose small behaviors via functions/objects rather than multi-level subclassing (prevents *Refused Bequest* and fragile base classes).
+- **Composition over inheritance *(skill wording; the handbook only says to default to functions plus data containers and avoid deep inheritance)*:** Compose small behaviors via functions/objects rather than multi-level subclassing (prevents *Refused Bequest* and fragile base classes).
 - **Functional Core / Imperative Shell:** Keep core calculations and transformations **pure** (deterministic, no I/O, no hidden globals, returning values instead of mutating shared state) and push I/O, retries, logging, and network calls to a **thin outer wrapper**. Pure functions are trivially testable without mocks (`tdd`, `codebase-design`).
-- **Fail fast with clarity:** Validate external inputs at boundaries (`defensive-domain-modeling`) and raise explicit contextual errors rather than swallowing exceptions or returning ambiguous defaults.
+- **Fail fast with clarity *(skill wording; the handbook asks for specific, informative error messages)*:** Validate external inputs at boundaries (`defensive-domain-modeling`) and raise explicit contextual errors rather than swallowing exceptions or returning ambiguous defaults.
 
 ---
 
