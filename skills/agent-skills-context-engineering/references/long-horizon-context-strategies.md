@@ -36,7 +36,7 @@ Selection rule from the article: compaction for long back-and-forth conversation
 
 ```
 # compaction prompt skeleton (own example)
-Summarise for continuation. KEEP: decisions + rationale, open bugs, file paths touched,
+Summarize for continuation. KEEP: decisions + rationale, open bugs, file paths touched,
 next step. DROP: raw tool output, repeated attempts. Then list 3 things to re-verify.
 ```
 

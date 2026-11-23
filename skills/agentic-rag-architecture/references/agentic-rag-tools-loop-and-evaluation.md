@@ -47,7 +47,7 @@ loop(max=6):
     step = model(plan, history)
     if step.is_answer: break
     obs = run_tool(step.tool, validate(step.args))   # least privilege
-    history += summarise(obs, max_tokens=800)
+    history += summarize(obs, max_tokens=800)
 else: escalate_or_fallback()
 ```
 

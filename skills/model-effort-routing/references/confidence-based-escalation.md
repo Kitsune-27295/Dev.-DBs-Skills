@@ -36,7 +36,7 @@ arXiv 2610.04751 (layer-level routing) offers a caution: even with a confidence 
 ## 5. Procedure
 
 ```
-1. Collect 100-300 labelled tasks per task type (pass/fail by your real check).
+1. Collect 100-300 labeled tasks per task type (pass/fail by your real check).
 2. Run cheap tier; record signal s and pass/fail.
 3. Pick threshold t so that pass-rate of non-escalated >= target (e.g. what the big model achieves).
 4. Escalation rate = P(s < t). Expected cost = c_small + rate*c_big.
