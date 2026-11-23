@@ -150,32 +150,11 @@ Write "claimed by X" for the last row; a fair savings figure names baseline, mix
 
 ## Deep references
 
-- [Sources](references/sources.md) — where each fact came from and what was unreadable.
-- [Workflow vs agent patterns](references/workflow-vs-agent-patterns.md) — choosing an orchestration rung.
-- [Complexity triage tiers](references/complexity-triage-tiers.md) — tier assignment heuristics (claims flagged).
-- [Orchestration control plane](references/orchestration-control-plane.md) — gateways, limits, approvals, sandboxing.
-- [Multi-agent topology and failure modes](references/multi-agent-topology-and-failure-modes.md) — picking a topology, diagnosing failures.
-- [Effort levels by provider](references/effort-levels-by-provider.md) — level names, defaults and limits per vendor.
-- [Overthinking and token ceilings](references/overthinking-and-token-ceilings.md) — sizing max_tokens, over/under-thinking.
-- [Cache and mid-conversation changes](references/cache-and-mid-conversation-changes.md) — before changing effort mid-session.
-- [Portable skill frontmatter](references/portable-skill-frontmatter.md) — which header fields are Claude Code only.
-- [Routing strategies in production](references/routing-strategies-in-production.md) — routers, fallback chains, ceilings.
-- [Tiered work split and pricing](references/tiered-work-split-and-pricing.md) — mapping task types to tiers, costing a split.
-- [Best-of-N and verifier routing](references/best-of-n-and-verifier-routing.md) — multi-sample selection with a verifier.
-- [Confidence-based escalation](references/confidence-based-escalation.md) — cheap-first cascades and triggers.
-- [Claims vs evidence on savings](references/claims-vs-evidence-on-savings.md) — before quoting any savings percentage.
-- [Tier tables compared](references/tier-tables-compared.md) — where community policies agree or conflict.
-- [Escalation, fallback and safety floors](references/escalation-fallback-and-safety-floors.md) — failure counts, fallbacks, minimum tiers.
-- [Quota and cost guards](references/quota-and-cost-guards.md) — budgets, retry caps, premium-model consent.
-- [Delegation brief templates](references/delegation-brief-templates.md) — prompts for workers, reviewers, advisors.
-- [Measured effort evidence](references/measured-effort-evidence.md) — measured vs claimed, low-effort finding.
-- [Antigravity skills format and paths](references/antigravity-skills-format-and-paths.md) — authoring or installing for Antigravity.
-- [Quota-aware subagent orchestration](references/quota-aware-subagent-orchestration.md) — parallel subagents under quota limits.
-- [Complexity assessment and delegation triggers](references/complexity-assessment-and-delegation-triggers.md) — whether to delegate, keyword triggers.
-- [Phase-based skill routing](references/phase-based-skill-routing.md) — phase routers, multi-model harness runs.
-- [Cross-harness portability checklist](references/cross-harness-portability-checklist.md) — Claude Code, Antigravity, Codex, Gemini CLI.
-- [Work-weight tier table](references/work-weight-tier-table.md) — model and effort per skill, tier policy file.
-- [Agent-call rules and enforcement hook](references/agent-call-rules-and-enforcement-hook.md) — launching built-in subagents, guard hook.
-- [Skill header limits and switch cost](references/skill-header-limits-and-switch-cost.md) — header model/effort limits, switch cost.
-- [Instruction size budget and safe shortening](references/instruction-size-budget-and-safe-shortening.md) — always-loaded file budget.
-- [Measuring and auditing model usage](references/measuring-and-auditing-model-usage.md) — verifying routing is followed.
+Sources and unreadable pages: [sources](references/sources.md).
+
+- **Patterns and orchestration** (choose a rung, topology, control plane): [workflow vs agent](references/workflow-vs-agent-patterns.md) · [triage tiers](references/complexity-triage-tiers.md) · [control plane](references/orchestration-control-plane.md) · [topology and failures](references/multi-agent-topology-and-failure-modes.md)
+- **Effort and caching** (levels, ceilings, mid-session changes): [levels by provider](references/effort-levels-by-provider.md) · [overthinking and ceilings](references/overthinking-and-token-ceilings.md) · [cache and mid-conversation changes](references/cache-and-mid-conversation-changes.md) · [portable frontmatter](references/portable-skill-frontmatter.md)
+- **Routing and savings** (routers, cascades, what is claimed vs measured): [routing in production](references/routing-strategies-in-production.md) · [work split and pricing](references/tiered-work-split-and-pricing.md) · [best-of-N and verifier](references/best-of-n-and-verifier-routing.md) · [confidence-based escalation](references/confidence-based-escalation.md) · [claims vs evidence](references/claims-vs-evidence-on-savings.md) · [measured effort evidence](references/measured-effort-evidence.md)
+- **Policies and delegation** (tier tables, floors, briefs, budgets): [tier tables compared](references/tier-tables-compared.md) · [escalation, fallback, floors](references/escalation-fallback-and-safety-floors.md) · [quota and cost guards](references/quota-and-cost-guards.md) · [delegation briefs](references/delegation-brief-templates.md) · [work-weight tier table](references/work-weight-tier-table.md) · [agent-call rules and hook](references/agent-call-rules-and-enforcement-hook.md)
+- **Harnesses** (Antigravity, Claude Code, Codex, Gemini CLI): [Antigravity format and paths](references/antigravity-skills-format-and-paths.md) · [quota-aware subagents](references/quota-aware-subagent-orchestration.md) · [delegation triggers](references/complexity-assessment-and-delegation-triggers.md) · [phase-based routing](references/phase-based-skill-routing.md) · [portability checklist](references/cross-harness-portability-checklist.md) · [header limits and switch cost](references/skill-header-limits-and-switch-cost.md)
+- **Governance and audit**: [instruction size budget](references/instruction-size-budget-and-safe-shortening.md) · [measuring model usage](references/measuring-and-auditing-model-usage.md)
