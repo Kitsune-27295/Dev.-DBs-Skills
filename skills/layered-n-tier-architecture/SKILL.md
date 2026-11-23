@@ -59,3 +59,8 @@ Enforce rule 1 automatically with an import-graph check (`dependency-cruiser`, `
 - **Fat Controller / Anemic Middle Layer:** Putting validation, pricing, or permission checks inside HTTP controllers or SQL stored procedures while the Business layer stays empty.
 - **Upward or circular imports:** Data Access importing a DTO, request context, or error formatter defined in the Presentation layer.
 - **Chatty cross-tier calls:** Making fine-grained synchronous calls in a loop across physical tiers instead of batching or using coarse-grained contracts / asynchronous queues.
+
+## Deep references
+- [Layers, tiers, and communication models](references/layers-tiers-and-communication-models.md) — strict vs relaxed tiers, Azure best practices, VM reference deployment, challenges checklist.
+- [Choosing a style, topologies, and erosion](references/style-fit-topologies-and-erosion.md) — when N-tier fits vs other styles, MVC vs three-tier, monolith scaling, big ball of mud.
+- [Traditional N-Layer vs Clean Architecture](references/layered-vs-clean-dependency-direction.md) — why BLL->DAL dependency hurts tests and how dependency inversion restructures projects.

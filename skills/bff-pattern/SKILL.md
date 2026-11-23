@@ -53,3 +53,8 @@ One idea: instead of forcing every client (desktop web, mobile iOS/Android, smar
 - **Serializing downstream calls (`await A; await B; await C`):** Calling 4 independent downstream microservices sequentially instead of concurrently (`Promise.all` / `Task.WhenAll`), summing their latencies on every request.
 - **All-or-nothing cascading failure:** Letting a timeout in a secondary downstream service (`Reviews` or `AvatarService`) crash the entire BFF response instead of degrading gracefully.
 - **Sharing a heavy "BFF Common Business Library" that forces lockstep deployments:** Coupling all BFFs back together through a shared library that requires every BFF to redeploy simultaneously.
+
+## Deep references
+
+- [Newman: ownership, count, aggregation](references/newman-bff-ownership-and-aggregation.md) — read when deciding how many BFFs, who owns them, and how to aggregate
+- [Azure and microservices.io trade-offs](references/azure-and-microservices-io-considerations.md) — read when weighing BFF vs gateway vs GraphQL and cross-cutting concerns

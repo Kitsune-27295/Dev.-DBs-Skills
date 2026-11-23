@@ -109,3 +109,7 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 In either form, avoid specific file paths or code snippets: they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
 
 > Sources & MIT attribution: [references/sources.md](references/sources.md).
+
+## Deep references
+
+- [Wide refactors, blocking edges and the frontier: worked example](references/wide-refactor-and-frontier-worked-example.md) — when deciding slice vs expand-contract or checking blocking edges

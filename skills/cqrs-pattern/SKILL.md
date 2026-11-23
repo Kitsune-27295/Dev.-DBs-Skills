@@ -55,3 +55,8 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 - **Cruddy Commands (`UpdateCustomerCommand` with 30 nullable fields):** Using CQRS syntax while still passing anemic table rows instead of task-based business intentions (`ChangeCustomerBillingAddress`).
 - **Ignoring projection lag in the UI:** Redirecting the user immediately after a Command to a screen that queries an eventually consistent Read Model without showing the pending state or version check, making the user think their save failed.
 - **Duplicating authorization rules inconsistently:** Enforcing tenant/role security on Commands while forgetting row-level tenant filters on the raw SQL Query projections (`security-audit`).
+
+## Deep references
+
+- [From CQS to CQRS: Fowler cautions](references/cqs-to-cqrs-fowler-cautions.md) — before recommending CQRS at all
+- [Azure CQRS stores and Event Sourcing](references/azure-cqrs-stores-and-event-sourcing.md) — when splitting stores, adding outbox or event sourcing

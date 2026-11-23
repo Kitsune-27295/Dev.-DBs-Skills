@@ -56,3 +56,8 @@ One idea: treat architecture diagrams like **Google Maps for your code** — def
 - **Drawing a Message Broker or Database as a pass-through line without a Container box:** If Service A writes to a database or publishes to Kafka and Service B reads from it, the Database or Kafka Broker is an **L2 Container** and must be drawn as its own node showing who writes/publishes and who reads/subscribes.
 - **Bidirectional unlabelled arrows (`A <---> B`):** Hides who initiates the connection, what protocol is used, and whether the coupling is synchronous RPC or asynchronous pub/sub.
 - **Unexplained color coding and acronyms:** Using 7 pastel colors with no Legend/Key and unexplained internal project code names.
+
+## Deep references
+
+- [C4 abstractions and levels](references/c4-abstractions-and-levels.md) — when deciding what is a container and which levels to draw
+- [C4 docs-as-code pipeline](references/c4-docs-as-code-pipeline.md) — when generating C4 diagrams from a Structurizr/arc42 toolchain

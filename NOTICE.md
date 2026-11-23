@@ -1,14 +1,15 @@
 # Notice: where these skills come from
 
-This repository combines five families of self-contained engineering skills (65 skills total):
+This repository combines five families of self-contained engineering skills (84 skills total):
 
-## 1. Software Architecture, Design Principles & Documentation Skills (39 skills)
+## 1. Software Architecture, Design Principles & Documentation Skills (58 skills)
 
 Distilled from canonical software architecture literature, official cloud architecture guides, reference repositories, and primary engineering blogs/handbooks. Each skill folder carries its own `references/sources.md` table mapping specific claims, URLs (including retrieval HTTP status), and trade-offs to their primary authors:
 
 - **`pragmatic-solid-and-ssot`**: Thomas & Hunt (*The Pragmatic Programmer* 20th Anniv. — DRY chapter), Martin Fowler (*BoundedContext*, *Yagni*), Robert C. Martin (*SOLID Relevance*, *SRP*, *OCP*, *Interface Considered Harmful*), Sandi Metz (*The Wrong Abstraction*), Kent C. Dodds (*AHA Programming*), and Harvard Kempner Institute (*Software Design Principles*).
 - **`defensive-domain-modeling`**: Alexis King (*Parse, Don't Validate*), Scott Wlaschin (*Designing with Types: Making Illegal States Unrepresentable*, *Railway Oriented Programming*, *Recipe Part 2*, example repo), Martin Fowler (*ValueObject*, *TellDontAsk*, *CommandQuerySeparation*, *Guard Clauses*), Lieberherr & Holland / C2 Wiki (*Law of Demeter*).
 - **`mermaid`**: Official Mermaid syntax docs (Flowchart, Sequence, ER, State, Class, C4, Architecture, Syntax Reference), GitHub Docs (*Creating diagrams*, *Copilot Cookbook*), `mermaid-js/mermaid-cli` (`mmdc`), and workflow/semantic-preservation rules adapted from the official Mermaid Chart VS Code extension (MIT; account-bound features omitted).
+- **Software Components & Foundational Principles (19 skills: `router-front-controller-routing` … `error-handling-problem-details`)**: sources listed per skill in `references/sources.md` (Martin Fowler's EAA catalog, Enterprise Integration Patterns, Microsoft Azure Architecture Center, OWASP Cheat Sheets, IETF/HTTPWG RFCs 9110, 9111, 9457, 9700, 6749, Robert C. Martin, Mark Seemann, Sandi Metz, Scott Wlaschin, Alexis King, OpenFeature, Stately). Pages were read through WebFetch digests; unread pages are flagged in each file.
 - **Remaining Architecture, Cloud-Native, Evolution, Testing & Docs skills (36 skills)**: Alistair Cockburn, Martin Fowler, Robert C. Martin, Sam Newman, Simon Brown, Daniele Procida, Mark Richards & Neal Ford, Vlad Khononov, Jimmy Bogard, Chris Richardson, Gregor Hohpe, Eric Evans, Microsoft Azure Architecture Center, AWS Well-Architected, Google / OpenTelemetry / Anthropic guidelines (see each skill's `references/sources.md`).
 
 ## 2. Engineering Fundamentals, Security & Database Diagnostics Skills (18 skills)

@@ -75,3 +75,8 @@ We will **[explicit action]**, because **[core rationale tied to the forces abov
 - **Retroactive justification ("Resume-Driven ADR"):** Picking a complex technology first (e.g., Kubernetes + Kafka for a 10-user internal tool) and writing fake straw-man alternatives to justify it.
 - **Modifying an Accepted ADR in place when reversing a decision:** Deleting the old rationale erases why the team tried the first approach — causing a future team to repeat the exact same mistake 18 months later.
 - **Orphan Decisions with zero verification:** Writing an ADR saying *"Domain layer must never import Infrastructure"* without adding an architecture import test (`clean-architecture`, `hexagonal-architecture`) to enforce it in CI.
+
+## Deep references
+
+- [Nygard's original ADR form](references/nygard-original-adr-form.md) — read when writing or reviewing an ADR's content and style
+- [ADR governance and enforcement](references/adr-team-governance-and-enforcement.md) — read when setting team process, choosing a template or automating checks

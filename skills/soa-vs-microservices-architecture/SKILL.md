@@ -56,3 +56,8 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 - **Putting domain business rules inside the ESB / API Gateway:** Writing pricing, eligibility, or workflow branching logic inside MuleSoft/BizTalk/Camel/Kong routing rules where developers cannot unit-test them locally.
 - **The Canonical Data Model Bottleneck:** Forcing Billing, Shipping, Marketing, and Support to agree on one giant 300-field `EnterpriseOrder` schema instead of letting each Bounded Context model only the fields relevant to its role.
 - **Synchronous request chaining across Enterprise Services:** Chaining 5 synchronous SOA services over an ESB so a slowdown in one legacy system exhausts thread pools across the entire enterprise.
+
+## Deep references
+
+- [SOA vs microservices comparison dimensions](references/soa-vs-microservices-comparison-dimensions.md) — when comparing scope, data, communication and governance
+- [Lewis and Fowler microservice characteristics and SOA lineage](references/lewis-fowler-microservices-characteristics-and-soa-lineage.md) — when auditing whether a system is really microservices

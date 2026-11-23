@@ -59,3 +59,9 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 - **Infinite streams ("God Stream"):** Appending millions of events across years to a single stream without lifecycle boundaries (e.g., closing the book per billing period), causing `O(N)` replay latency spikes.
 - **Storing raw unencrypted GDPR PII inside immutable events:** Putting raw names/emails in an immutable event store with no crypto-shredding or external reference strategy when "right to erasure" applies.
 - **Recording external query results only by calling the external system live:** As Fowler notes, if domain logic depends on an external tax or exchange-rate lookup, record the returned rate *inside the event payload* when the command executes so future replays remain 100% deterministic without calling the external service again.
+
+## Deep references
+
+- [Replay semantics: external effects, reversal and code changes](references/replay-external-effects-and-code-changes.md) — read when designing replays, gateways, retroactive fixes or temporal rules.
+- [Operational considerations: versioning, concurrency, GDPR and fit](references/azure-considerations-versioning-gdpr-and-fit.md) — read when deciding whether to adopt ES or planning schema evolution, idempotency and privacy.
+- [Streams, state aggregation and practitioner guide](references/streams-aggregation-and-practitioner-guide.md) — read when modelling streams, evolve/decide functions, snapshots and event naming.

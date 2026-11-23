@@ -56,3 +56,8 @@ One idea: just as the blueprints of a library scream **"Library"** (reading room
 - **Letting the Framework Generator dictate the entire application architecture:** Running `rails new`, `nest new`, or `create-next-app` and stuffing all business rules directly inside the framework's generated `controllers/` or `app/api/` route files for the next 5 years.
 - **Generic CRUD naming (`OrderManager`, `DataHelper`, `ProcessService`):** Using vague technical nouns instead of the exact business use-case verbs spoken by domain experts.
 - **Confusing "Screaming Architecture" with ignoring Clean/Hexagonal boundaries:** Screaming Architecture does not mean dumping SQL and HTML into a folder just because the folder is named `billing/`. It means the top-level organization screams `billing/`, while keeping delivery (HTTP/UI) and persistence (DB) decoupled from the `billing` use cases and entities.
+
+## Deep references
+
+- [Screaming architecture argument](references/screaming-architecture-argument.md) — read when judging what a repo layout communicates
+- [Clean Architecture dependency rule](references/clean-architecture-dependency-rule.md) — read when enforcing inward dependencies and boundary data

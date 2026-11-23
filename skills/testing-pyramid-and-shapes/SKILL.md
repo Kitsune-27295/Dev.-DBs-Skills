@@ -56,3 +56,10 @@ flowchart TD
 1. **Rich Domain Monoliths / Framework Engines:** **Classic Test Pyramid**. Thousands of millisecond-fast unit tests protecting domain invariants, backed by route-level integration tests and minimal smoke E2E.
 2. **Modern Web SPAs & Full-Stack Apps:** **Testing Trophy**. Heavy emphasis on integration tests testing components as users interact with them (e.g., React Testing Library), supported by strict TypeScript static typing.
 3. **Microservice Fleets & Distributed APIs:** **Testing Honeycomb**. Focus primarily on integration and contract testing between service boundaries, minimizing fragile cross-service end-to-end tests.
+
+
+## Deep references
+
+- [The Practical Test Pyramid, Layer by Layer](references/practical-pyramid-layer-by-layer.md) — read when deciding what belongs in unit, integration, contract, UI or E2E tests.
+- [Test Shapes Debate and the Integration-First View](references/shapes-debate-and-integration-first.md) — read when choosing pyramid vs trophy vs honeycomb or arguing about mocking and coverage.
+- [Avoiding Duplication, Pipeline Placement and Test Code Hygiene](references/duplication-pipeline-and-test-code-hygiene.md) — read when pruning a suite, staging CI, or reviewing test code quality.

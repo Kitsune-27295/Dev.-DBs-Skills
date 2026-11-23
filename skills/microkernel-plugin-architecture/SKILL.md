@@ -57,3 +57,8 @@ One idea: separate a **minimal, stable Core System** (the microkernel that owns 
 - **Running untrusted third-party plug-ins in-process with host privileges:** Allowing an external plug-in full access to `process.env`, filesystem, and network inside the host process — turning one compromised plug-in into a full supply-chain breach (`security-audit`).
 - **No timeout or circuit breaker around plug-in calls:** Letting one synchronous plug-in enter an infinite loop or hang on network I/O and freeze the entire Core System.
 - **Leaking handles across reload/unload cycles:** Failing to enforce a `dispose()` contract so hot-reloading plug-ins leaks event listeners, memory, or child processes until the host OOMs.
+
+## Deep references
+
+- [Microkernel principles, partitioning and extensions](references/microkernel-principles-and-partitioning.md) — read when designing the core/plug-in contract, registry, per-domain interfaces or distributed plug-ins.
+- [Plugin isolation, failure modes and verification](references/plugin-isolation-failure-modes-and-verification.md) — read when choosing isolation level or writing plugin tests and guards.

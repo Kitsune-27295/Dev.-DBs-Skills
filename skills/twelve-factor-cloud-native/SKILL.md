@@ -39,3 +39,8 @@ One idea: build applications designed from day one to run as **portable, scalabl
 - All containerized applications deployed on Kubernetes, ECS, Cloud Run, or serverless platforms.
 - Multi-environment microservice systems requiring seamless horizontal autoscaling.
 - Any application practicing Continuous Integration and Continuous Deployment (CI/CD).
+
+## Deep references
+
+- [Factor mechanics and anti-patterns](references/factor-mechanics-and-anti-patterns.md) — read when auditing config, processes, releases, shutdown, logs or parity
+- [Beyond twelve-factor](references/beyond-twelve-factor-api-telemetry-auth.md) — read when adding API-first, telemetry or zero-trust auth requirements

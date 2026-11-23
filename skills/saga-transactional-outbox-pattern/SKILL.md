@@ -63,3 +63,9 @@ One idea: when a business transaction spans multiple databases or a database plu
 - **Choreography spaghetti across 6+ services:** Chaining 6 services via point-to-point events where no single place tracks whether the overall business transaction is stuck, timed out, or partially compensated. Switch to an Orchestrator.
 - **Forgetting Semantic Locks (Dirty Reads):** Letting a user cancel or withdraw funds that were temporarily credited by Step 1 of an in-flight Saga that later rolls back at Step 3.
 - **Unbounded Outbox table growth:** Never archiving or deleting published Outbox rows (`published_at IS NOT NULL`), causing the Outbox polling query to slow down as the table hits tens of millions of rows.
+
+## Deep references
+
+- [Saga anomalies and countermeasures](references/saga-anomalies-and-countermeasures.md) — read when classifying saga steps (compensable/pivot/retryable) or choosing isolation countermeasures.
+- [Choreography vs orchestration decision guide](references/choreography-vs-orchestration-decision.md) — read when choosing or reviewing a saga coordination style.
+- [Outbox relay mechanics and Cosmos DB implementation](references/outbox-relay-and-cosmos-implementation.md) — read when designing the outbox relay, ordering, dedup and cleanup.

@@ -169,3 +169,11 @@ Run the strongest check available, and state explicitly what ran:
 
 - **Semantic preservation when editing/repairing:** Never change diagram type (`erDiagram` -> `flowchart`), never drop nodes/participants/edges/cardinality markers, and never reorder sequence messages. When improving layout or styling, verify node and edge counts match the original. Fix parser errors minimally at the first failing line, then re-validate.
 - **When NOT to use a diagram:** Use a Markdown table or bullet list instead whenever there are fewer than 3 relationships, when data is a shallow flat hierarchy, or when exact numerical/configuration values matter more than topology.
+
+## Deep references
+- [Parsing rules, frontmatter, looks, and layouts](references/parsing-config-looks-and-layouts.md) — when config is silently ignored, ELK vs Dagre options, theme/look pinning.
+- [Flowchart edges, subgraphs, and styling](references/flowchart-edges-subgraphs-and-styling.md) — chaining, markdown strings, linkStyle/curves, edge ids and animation, escaping.
+- [Sequence diagram details](references/sequence-diagram-details.md) — participant stereotypes, arrows, blocks, activations, escaping, numbering.
+- [ER, state, and class diagram details](references/er-state-class-diagram-details.md) — cardinality table, attributes, composite states, class relations and namespaces.
+- [C4 and architecture-beta diagrams](references/c4-and-architecture-diagrams.md) — C4 macro catalogue, unsupported features, architecture ports, alignment, seed config.
+- [GitHub rendering and mmdc validation](references/github-rendering-and-mmdc-validation.md) — version check, Copilot workflow, mmdc flags and validation limits.

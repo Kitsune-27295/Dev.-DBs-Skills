@@ -82,3 +82,12 @@ Synthesizing *KISS* and *Harvard Kempner SWE Principles*:
 2. **Are there fewer than three callers, or are callers already passing mode flags?** If yes -> duplicate cleanly or re-inline the wrong abstraction; defer unifying.
 3. **Does this `interface` / port separate policy from a varying external I/O or test seam (2+ implementations/adapters)?** If it's 1-to-1 ceremony around pure domain code -> delete the indirection.
 4. **Can business logic be extracted as a pure function with thin I/O callers?** If yes -> separate policy from side effects rather than passing flags down the stack.
+
+## Deep references
+
+- [DRY knowledge-duplication taxonomy](references/dry-knowledge-duplication-taxonomy.md) — read when deciding whether two things are real DRY violations (code, docs, data, representational, inter-developer) and what the book prescribes.
+- [Bounded Context limits on sharing](references/bounded-context-limits-on-sharing.md) — read before sharing a domain model or "common" module across services or teams.
+- [Martin SOLID primary-source notes](references/martin-solid-primary-source-notes.md) — read to cite SRP, OCP, LSP, ISP or DIP accurately and see where the skill wording goes beyond the posts.
+- [Interface Considered Harmful: careful reading](references/interface-considered-harmful-reading.md) — read before citing the article against `IFoo` boilerplate; it is a language-design argument.
+- [Abstraction timing: Metz, Dodds, Fowler YAGNI](references/abstraction-timing-metz-dodds-fowler.md) — read when deciding extract vs duplicate, or recovering from a flag-ridden helper.
+- [Harvard Kempner design principles notes](references/harvard-kempner-design-principles-notes.md) — read for pure-core, thin-adapter and layering guidance with what the page does and does not say.

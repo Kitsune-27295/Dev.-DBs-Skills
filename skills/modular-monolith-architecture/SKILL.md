@@ -55,3 +55,9 @@ One idea: deploy the application as a **single runtime unit**, but partition its
 - **Sharing a "Common Domain" dump:** Putting shared business entities (`User`, `Account`, `Product`) into a global `shared/domain` folder imported by all modules. Each Bounded Context must own its own local representation; share only technical building blocks (UUIDs, Outbox primitives, Clock).
 - **Sharing a single global DI container without module scopes:** Allowing any developer to `@Autowired` / inject `PaymentsRepository` directly inside `MeetingsHandler`.
 - **In-memory fire-and-forget events without an Outbox:** Publishing cross-module events in memory after a DB commit without persisting them in the same transaction — losing events if the process crashes mid-flight.
+
+## Deep references
+
+- [DDD reference implementation](references/modular-monolith-ddd-reference-implementation.md) — full-autonomy module rules, outbox/inbox, testing
+- [Spring Modulith structure and verification](references/spring-modulith-structure-and-verification.md) — module detection, named interfaces, verify()
+- [Spring Modulith events and testing](references/spring-modulith-events-and-testing.md) — publication registry, externalization, module tests

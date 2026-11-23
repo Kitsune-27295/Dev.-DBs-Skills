@@ -59,3 +59,9 @@ One idea: decouple **event producers** from **event consumers** through asynchro
 - **Non-idempotent consumers:** Processing a redelivered `PaymentSucceeded` event twice and double-crediting an account (`idempotency-fix`).
 - **Breaking event schemas in place:** Renaming or deleting fields in a published event payload without versioning or upcasting, crashing downstream consumers.
 - **Unbounded callback storms on thin Event Notifications:** Emitting a thin notification to 20 subscribers who all immediately fire synchronous HTTP `GET` requests back to the producer at the exact same millisecond (fix with Event-Carried State Transfer).
+
+## Deep references
+
+- [Fowler four event patterns](references/fowler-four-event-patterns.md) — before naming or choosing an event-driven pattern
+- [Azure EDA topologies and challenges](references/azure-eda-topologies-and-challenges.md) — when designing brokers, payloads, error handling, DLQs
+- [Queues vs publish/subscribe](references/queues-vs-publish-subscribe.md) — when choosing between a queue and a topic

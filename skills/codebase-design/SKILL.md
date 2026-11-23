@@ -114,3 +114,7 @@ Good interfaces make testing natural:
 - **Exploring alternative interfaces**, see [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md): spin up parallel sub-agents in fresh context windows to design the interface several radically different ways, then compare on depth, locality, and seam placement.
 
 > Sources & MIT attribution: [references/sources.md](references/sources.md).
+
+## Deep references
+
+- [Applying deep modules: worked example](references/applying-deep-modules-worked-example.md) — read when merging shallow modules and migrating tests

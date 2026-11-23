@@ -70,3 +70,10 @@ Worth it: long-lived system, several kinds of client (CLI, web, agent tools), te
 ## In this repository
 
 Map the six areas to the rules above and follow `AGENTS.md`: `src/domain` (pure), `src/ports` (inbound and outbound interfaces plus the runtime locator), `src/application` (use cases), `src/adapters` (driven, one family per folder, no cross-family imports), `src/drivers` (CLI, MCP, HTTP; never import `src/adapters`), `src/bootstrap` (the only wiring root). The strict check lives in the architecture test; run it before finishing any structural change.
+
+## Deep references
+
+- [Ports and Adapters: conceptual model](references/ports-and-adapters-conceptual-model.md) — read when classifying actors, naming ports, or settling port granularity and composition-root duties.
+- [Implementation order and testing strategy](references/implementation-order-and-testing-strategy.md) — read when planning the build sequence, test levels, contract tests or architecture tests.
+- [Use cases, command objects and dependency inversion](references/use-cases-ports-and-dependency-inversion.md) — read when writing a use case, its input and output ports, or deciding where logic lives.
+- [When hexagonal pays off: costs and trade-offs](references/when-hexagonal-pays-off-costs-and-tradeoffs.md) — read when deciding whether a module needs ports at all.

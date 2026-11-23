@@ -55,3 +55,8 @@ One idea: build, package, and deploy the application's behavior as a **single au
 - **In-memory local state blocking horizontal scale:** Storing active user sessions or uploaded files on the local container filesystem so load-balanced replicas see inconsistent state.
 - **Manual or fragile deployments:** Letting the build/test suite grow so slow that teams fear deploying the monolith. Keep tests fast and deployments automated.
 - **Trying to decompose a tangled monolith overnight:** If a monolith has no internal module boundaries, extracting microservices directly will create a distributed big ball of mud. Refactor to a `modular-monolith-architecture` first.
+
+## Deep references
+
+- [Monolith First evolution paths](references/monolith-first-evolution-paths.md) — arguments, evolution options and counter-argument for greenfield decisions
+- [Monolith structure, deployment and comparison](references/monolith-structure-deployment-and-comparison.md) — internal layering, containers, monolith vs microservices dimensions

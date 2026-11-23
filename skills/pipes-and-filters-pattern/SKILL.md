@@ -55,3 +55,8 @@ One idea: decompose a complex, multi-step data-processing task into a sequence o
 - **Distributed queues between trivial 1ms filters:** Putting 6 Kafka topics or SQS queues between 6 tiny JSON-mapping steps that take 0.2ms each — turning a 1ms in-process pipeline into a 150ms distributed operational nightmare.
 - **Unbounded in-memory pipes (No Backpressure):** Reading 10 GB of source records into an unbounded in-memory array/channel before a slow downstream filter can drain it, crashing the process with an Out-Of-Memory error.
 - **Blocking the entire pipe on one malformed record:** Throwing an unhandled exception on a bad record without a Dead-Letter Pipe, causing the queue consumer to retry the same poison message infinitely and halt all subsequent data.
+
+## Deep references
+
+- [Distributed pipeline design issues](references/distributed-pipeline-design-issues.md) — when splitting filters across hosts/queues: idempotency, ordering, backpressure, claim check
+- [Pipeline style and reliability companions](references/pipeline-style-and-reliability-companions.md) — which reliability patterns to pair with a pipeline

@@ -72,3 +72,11 @@ Build trust in non-deterministic coding agents through a cybernetic steering loo
 - **Feedforward-Only Prompting:** Writing strict `AGENTS.md` / `SKILL.md` rules without adding fast computational Sensors (validators, tests, linters) to catch violations automatically.
 - **Unsafe Skill Runtime Execution:** Treating third-party `SKILL.md` instructions or bundled scripts as trusted input without sandboxing, approval gates, or MCP integrity boundaries.
 - **Unbounded History in Multi-Hour Tasks:** Allowing 50k tokens of raw tool logs to accumulate without tool-result clearing, structured notes, compaction, or sub-agent delegation.
+
+
+## Deep references
+
+- [Skill Format and Authoring Rules](references/skill-format-and-authoring-rules.md) — read when writing or validating SKILL.md frontmatter, descriptions, evals and bundled scripts.
+- [Skill Runtime, Providers and Security](references/skill-runtime-providers-and-security.md) — read when hosting skills in an agent runtime (caching, approval, tenant isolation) or auditing third-party skills.
+- [Long-Horizon Context Strategies](references/long-horizon-context-strategies.md) — read when a task outgrows one window: compaction, notes, sub-agents, JIT retrieval.
+- [Harness Guides, Sensors and the Steering Loop](references/harness-guides-sensors-and-steering.md) — read when designing feedforward/feedback controls for coding agents.

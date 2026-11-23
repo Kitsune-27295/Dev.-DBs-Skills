@@ -60,3 +60,9 @@ One idea: extend the vertical decomposition of microservices all the way to the 
 - **Shared global state store across micro-frontends:** Coupling Team A and Team B to the same in-memory Redux state shape so neither can refactor or deploy independently.
 - **Putting business logic inside the shared Design System:** Turning the UI component library into a backdoor monolith where domain rules require coordinated upgrades across all teams.
 - **Unbounded bundle duplication (Framework Anarchy):** Shipping three different versions of React, Lodash, and Moment.js on the same page without monitoring payload weight and Core Web Vitals.
+
+## Deep references
+
+- [Integration approaches and trade-offs](references/integration-approaches-trade-offs.md) — choosing how to compose micro frontends
+- [Contracts, styling, sharing and testing](references/contracts-styling-sharing-and-testing.md) — cross-team rules once composed
+- [Custom Elements, SSI and composite UI](references/custom-elements-ssi-and-composite-ui.md) — standards-based and server-side composition

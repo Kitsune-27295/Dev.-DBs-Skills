@@ -1,14 +1,16 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **65 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
+Catálogo unificado de **84 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
 
 ---
 
 ## O que este projeto faz
 
-Reúne num único pacote verificável **65 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
+Reúne num único pacote verificável **84 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
 
 - **Arquitetura & Design de Software (27 skills):** estilos arquiteturais (Hexagonal, Clean, Layered, Modular Monolith, Microservices, EDA, CQRS, Event Sourcing, Vertical Slice, BFF, Micro-Frontends, Microkernel, Actor Model/Space-Based), DDD estratégico, SSOT/SOLID pragmático, modelagem defensiva e módulos profundos.
+- **Componentes de Software (12 skills):** Router/Front Controller, API Gateway/Reverse Proxy, Middleware, Cache, Background Worker, Rate Limiter, AuthN/AuthZ, Repository/Unit of Work, DTO/Mapper/ACL, Validator, Feature Flags, State Machine.
+- **Princípios & Conceitos Fundamentais (7 skills):** aprofundamentos de SSOT/DRY, OCP, SRP, DIP/Composition Root, KISS/YAGNI/AHA, Value Objects e Problem Details/Result.
 - **Cloud-Native, Resiliência, Evolução & IA (7 skills):** 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering.
 - **Documentação, Diagramas & Contratos (5 skills):** ADRs, arc42 + OpenAPI/AsyncAPI, C4 Model, Diátaxis e Mermaid.
 - **Workflow de Engenharia — Matt Pocock Pack (8 skills):** fluxo ponta a ponta (`setup-matt-pocock-skills` → `grill-me` / `grilling` → `to-spec` → `to-tickets` → `implement` + `tdd` → `code-review`), com invocação autónoma pelo modelo liberada para execuções completas de ponta a ponta.
@@ -19,7 +21,7 @@ Reúne num único pacote verificável **65 skills autocontidas** cobrindo todo o
 ## Por que usar este repositório
 
 - **Zero dependências externas em runtime:** tanto o servidor MCP em Node.js ESM ([bin/mcp-server.mjs](bin/mcp-server.mjs)) como os scripts CLI ([install_skills.py](install_skills.py) e [check_skills.py](check_skills.py)) usam exclusivamente bibliotecas padrão.
-- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 65 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
+- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 84 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
 - **Integridade verificada por SHA-256 e validação estática:** cada ficheiro em `skills/` possui hash registado em [MANIFEST.sha256](MANIFEST.sha256) e passa por validação de frontmatter, links relativos e referências cruzadas.
 - **Portabilidade multi-agente:** funciona com `.claude/skills`, `.agents/skills` (Antigravity), `.codex/skills`, `.cursor/skills` e diretórios globais (`~/.claude/skills`, `~/.gemini/config/skills`).
 
@@ -92,7 +94,7 @@ Depois de ligado, basta pedir ao agente no chat:
 **Script Python incluído ([install_skills.py](install_skills.py)):**
 
 ```bash
-# Instalar todas as 65 skills no projeto atual (./.claude/skills)
+# Instalar todas as 84 skills no projeto atual (./.claude/skills)
 python install_skills.py --project .
 
 # Instalar globalmente no utilizador (~/.claude/skills)
@@ -124,14 +126,14 @@ Implementado em [src/mcp-core.mjs](src/mcp-core.mjs) e exposto em [bin/mcp-serve
 
 | Superfície MCP | Identificadores | O que faz |
 |---|---|---|
-| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 65 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
+| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 84 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
 | **Tools — Instalação & Auditoria** | `install_skills`, `check_installed_skills` | Copia 1, várias ou todas (`["*"]`) as skills para `claude`, `antigravity`, `agents`, `codex`, `cursor` ou `target_dir`, verifica hashes SHA-256 em [MANIFEST.sha256](MANIFEST.sha256) e valida links/frontmatter. |
 | **Resources** | `skill://index.json`, `skill://{name}/{+path}` | Expõe o catálogo JSON completo e qualquer ficheiro interno via URI `skill://`. |
-| **Prompts** | Todas as 65 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
+| **Prompts** | Todas as 84 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
 
 ---
 
-## Catálogo Completo (65 Skills)
+## Catálogo Completo (84 Skills)
 
 Use o menu **Outline** do GitHub para saltar diretamente entre secções, ou pesquise pelo nome exato abaixo.
 
@@ -202,15 +204,36 @@ Use o menu **Outline** do GitHub para saltar diretamente entre secções, ou pes
 | 63 | Diagnósticos de Motores SQL | [`postgres-diagnostics`](skills/postgres-diagnostics/SKILL.md) | 31 scripts só de leitura para PostgreSQL 16, 17 e 18 (bloat, wraparound, locks, `pg_stat_statements`, WAL, replicação, índices). |
 | 64 | Diagnósticos de Motores SQL | [`sql-server-diagnostics`](skills/sql-server-diagnostics/SKILL.md) | 30 scripts só de leitura para SQL Server 2019, 2022 e 2025 (DMVs, wait stats, índices, deadlocks, backups, HA, segurança). |
 | 65 | Diagnósticos de Motores SQL | [`sqlite-diagnostics`](skills/sqlite-diagnostics/SKILL.md) | 19 scripts só de leitura para SQLite 3.49 e 3.53 (`integrity_check`, `foreign_key_check`, tamanho, FKs sem índice, `AUTOINCREMENT`). |
+| 66 | Componentes de Software | [`router-front-controller-routing`](skills/router-front-controller-routing/SKILL.md) | Roteamento HTTP, de mensagens e de UI: *Front Controller*, *Content-Based Router*, *Gateway Routing* e History API, separando decisão de destino de preocupações transversais. |
+| 67 | Componentes de Software | [`api-gateway-reverse-proxy`](skills/api-gateway-reverse-proxy/SKILL.md) | Ponto de entrada de borda com semântica de intermediários HTTP (RFC 9110), *offloading* e *aggregation*, e fronteira com o BFF. |
+| 68 | Componentes de Software | [`middleware-interceptor-chain`](skills/middleware-interceptor-chain/SKILL.md) | *Chain of Responsibility*, filtros de mensagem e ordem do *pipeline* de middleware para preocupações transversais. |
+| 69 | Componentes de Software | [`caching-strategies`](skills/caching-strategies/SKILL.md) | *Cache-Aside*, *write-through/behind*, invalidação, TTL, *cache stampede* e semântica de cache HTTP (RFC 9111/5861). |
+| 70 | Componentes de Software | [`background-worker-job-scheduler`](skills/background-worker-job-scheduler/SKILL.md) | Jobs em segundo plano, *Competing Consumers*, *Leader Election*, agendamento e execução idempotente. |
+| 71 | Componentes de Software | [`rate-limiter-throttler`](skills/rate-limiter-throttler/SKILL.md) | *Throttling* e *rate limiting* (token bucket, janelas, *load shedding*) segundo Azure e Stripe. |
+| 72 | Componentes de Software | [`authn-authz-guard`](skills/authn-authz-guard/SKILL.md) | Autenticação, sessões, OAuth 2.0 (RFC 6749) e Security BCP (RFC 9700), RBAC/ABAC e decisões de autorização (OWASP). |
+| 73 | Componentes de Software | [`repository-unit-of-work`](skills/repository-unit-of-work/SKILL.md) | *Repository* e *Unit of Work*: abstração de persistência, agregados e escopo transacional. |
+| 74 | Componentes de Software | [`dto-mapper-anti-corruption-layer`](skills/dto-mapper-anti-corruption-layer/SKILL.md) | *DTO*, *Mapper* e *Anti-Corruption Layer* para formas de dados em fronteiras e tradução entre modelos/contextos. |
+| 75 | Componentes de Software | [`validator-input-parser`](skills/validator-input-parser/SKILL.md) | Validação/*parsing* de entrada em fronteiras de confiança (OWASP), *allowlist* e *Notification Pattern* para coletar erros. |
+| 76 | Componentes de Software | [`feature-flag-toggle-engine`](skills/feature-flag-toggle-engine/SKILL.md) | Taxonomia de *feature toggles*, ciclo de vida e dívida, pontos de decisão e API OpenFeature. |
+| 77 | Componentes de Software | [`state-machine-workflow-engine`](skills/state-machine-workflow-engine/SKILL.md) | Padrão *State*, máquinas de estados finitos e *statecharts* (hierarquia, guardas, ações) com modelagem Stately/XState. |
+| 78 | Princípios & Conceitos Fundamentais | [`ssot-and-dry`](skills/ssot-and-dry/SKILL.md) | Aprofundamento: DRY como conhecimento único (SSOT), duplicação inadvertida/imposta e limites por *Bounded Context*. |
+| 79 | Princípios & Conceitos Fundamentais | [`open-closed-principle`](skills/open-closed-principle/SKILL.md) | Aprofundamento: OCP e *Strategy* como mecanismo de extensão sem modificar política estável. |
+| 80 | Princípios & Conceitos Fundamentais | [`single-responsibility-cohesion`](skills/single-responsibility-cohesion/SKILL.md) | Aprofundamento: SRP como coesão por ator/eixo de mudança e *Common Closure Principle*. |
+| 81 | Princípios & Conceitos Fundamentais | [`dependency-inversion-composition-root`](skills/dependency-inversion-composition-root/SKILL.md) | Aprofundamento: DIP, formas de injeção de dependência, *Composition Root* e *Service Locator* como anti-padrão. |
+| 82 | Princípios & Conceitos Fundamentais | [`kiss-yagni-aha`](skills/kiss-yagni-aha/SKILL.md) | Aprofundamento: KISS, YAGNI, *Rule of Three*, *Wrong Abstraction* e AHA como procedimento de decisão no código. |
+| 83 | Princípios & Conceitos Fundamentais | [`value-objects-type-invariants`](skills/value-objects-type-invariants/SKILL.md) | Aprofundamento: *Value Objects*, *Money*/alocação e arredondamento, e estados modelados como tipos. |
+| 84 | Princípios & Conceitos Fundamentais | [`error-handling-problem-details`](skills/error-handling-problem-details/SKILL.md) | Taxonomia de erros, contrato HTTP RFC 9457 (*Problem Details*), *Result*/ROP e tratamento seguro de erros (OWASP). |
 
 ---
+
+> **Referências aprofundadas:** cada skill traz, além de `references/sources.md`, ficheiros `references/*.md` com análise detalhada das fontes (lidas em 2026-11-23); páginas não lidas estão assinaladas nos próprios ficheiros.
 
 ## Validação e Testes
 
 Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 
 ```bash
-# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 65 skills
+# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 84 skills
 python check_skills.py skills
 
 # 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
@@ -238,16 +261,20 @@ Dev.-DBs-Skills/
 │   └── mcp-server.test.mjs # Testes automatizados do servidor MCP (node --test)
 ├── install_skills.py       # Instalador idempotente Python com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
-└── skills/                 # As 65 skills autocontidas
+└── skills/                 # As 84 skills autocontidas
     ├── actor-model-space-based-architecture/
     ├── adr-architecture/
     ├── agent-skills-context-engineering/
     ├── agentic-rag-architecture/
+    ├── api-gateway-reverse-proxy/
     ├── arc42-api-contracts-architecture/
     ├── architecture-decision-trees-tradeoffs/
+    ├── authn-authz-guard/
+    ├── background-worker-job-scheduler/
     ├── backup-restore-drill/
     ├── bff-pattern/
     ├── c4-model-architecture/
+    ├── caching-strategies/
     ├── circuit-breaker-retry-telemetry/
     ├── clean-architecture/
     ├── code-review/
@@ -258,9 +285,13 @@ Dev.-DBs-Skills/
     ├── database-exposure/
     ├── ddd-domain-heuristics-debiasing/
     ├── defensive-domain-modeling/
+    ├── dependency-inversion-composition-root/
     ├── diataxis-documentation-architecture/
+    ├── dto-mapper-anti-corruption-layer/
+    ├── error-handling-problem-details/
     ├── event-driven-architecture/
     ├── event-sourcing-pattern/
+    ├── feature-flag-toggle-engine/
     ├── fundamentals-audit/
     ├── grill-me/
     ├── grilling/
@@ -268,17 +299,20 @@ Dev.-DBs-Skills/
     ├── idempotency-fix/
     ├── implement/
     ├── integration-tests/
+    ├── kiss-yagni-aha/
     ├── layered-n-tier-architecture/
     ├── layered-refactor/
     ├── mermaid/
     ├── micro-frontends-architecture/
     ├── microkernel-plugin-architecture/
     ├── microservices-architecture/
+    ├── middleware-interceptor-chain/
     ├── migrations-and-environments/
     ├── modular-monolith-architecture/
     ├── monolithic-architecture/
     ├── mvc-architecture/
     ├── never-trust-the-client/
+    ├── open-closed-principle/
     ├── package-by-feature-component/
     ├── parallel-change-expand-contract/
     ├── pipes-and-filters-pattern/
@@ -286,22 +320,30 @@ Dev.-DBs-Skills/
     ├── pragmatic-solid-and-ssot/
     ├── query-performance/
     ├── race-condition-fix/
+    ├── rate-limiter-throttler/
     ├── repository-root-monorepo-architecture/
+    ├── repository-unit-of-work/
+    ├── router-front-controller-routing/
     ├── saga-transactional-outbox-pattern/
     ├── schema-and-constraints/
     ├── screaming-architecture/
     ├── security-audit/
     ├── serverless-architecture/
     ├── setup-matt-pocock-skills/
+    ├── single-responsibility-cohesion/
     ├── soa-vs-microservices-architecture/
     ├── sql-server-diagnostics/
     ├── sqlite-diagnostics/
+    ├── ssot-and-dry/
+    ├── state-machine-workflow-engine/
     ├── tdd/
     ├── testing-pyramid-and-shapes/
     ├── to-spec/
     ├── to-tickets/
     ├── transaction-fix/
     ├── twelve-factor-cloud-native/
+    ├── validator-input-parser/
+    ├── value-objects-type-invariants/
     ├── vertical-slice-architecture/
     └── yagni-evolutionary-architecture/
 ```

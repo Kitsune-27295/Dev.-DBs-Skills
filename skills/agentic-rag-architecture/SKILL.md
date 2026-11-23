@@ -67,3 +67,11 @@ Always climb one rung at a time and stop at the first rung that meets your evalu
 - **Dumping 50 fine-grained REST endpoints as 50 raw Agent Tools:** Overwhelming the model's tool selector. Consolidate related low-level calls into 3-7 high-signal, task-oriented tools with clear ACI documentation.
 - **Vector-Only Search for exact identifiers:** Using pure embedding similarity when users search for exact SKU codes, error codes, legal clauses, or names — always use **Hybrid Search (BM25 + Vector + Reranker)**.
 - **Unbounded Agent Loops and Context Bloat:** Letting an agent retry a failing search 20 times or inject 100 KB of raw HTML/JSON into its conversation history until latency, cost, and accuracy collapse.
+
+
+## Deep references
+
+- [Workflow Patterns and Tool (ACI) Design](references/workflow-patterns-and-tool-interface-design.md) — read when choosing among chaining/routing/parallel/orchestrator/evaluator patterns or designing retrieval tool signatures.
+- [Multi-Agent Orchestration: Selection and Safeguards](references/multi-agent-orchestration-selection.md) — read when considering more than one agent: use/avoid rules, context, state, reliability.
+- [RAG Pipeline Design, Evaluation Phases and Governance](references/rag-pipeline-design-and-governance.md) — read when designing or tuning the ingest and retrieval pipeline, access control and cost.
+- [Agentic RAG: Retrieval Tools, Loop Control, Evaluation](references/agentic-rag-tools-loop-and-evaluation.md) — read when exposing retrieval as agent tools, capping loops, or evaluating tool selection and cost.

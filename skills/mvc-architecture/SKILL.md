@@ -54,3 +54,9 @@ One idea: enforce **Separated Presentation** — divide user-interface interacti
 - **Smart View (SQL or business logic in templates):** Calling lazy-loaded ORM relations or calculating discounts/permissions inside JSX, Razor, Jinja, or Blade templates.
 - **Coupling Domain Entities directly to Form Inputs (Mass Assignment):** Binding raw HTTP request bodies directly onto persistence models instead of validating through an input DTO or command object in the Controller.
 - **Polluting the Domain Model with UI concerns:** Adding CSS class names, localized display strings, or pagination widget state to core domain entities instead of using a ViewModel / Presentation Model.
+
+## Deep references
+
+- [MVC lineage and Separated Presentation](references/mvc-lineage-and-separated-presentation.md) — read when checking the model/view/controller dependency direction or comparing GUI architecture styles.
+- [Web MVC, SPAs and the two strands](references/web-mvc-spas-and-two-strands.md) — read when applying MVC to server-rendered pages or single-page apps.
+- [MVP, Humble View and testability](references/mvp-humble-view-and-testability.md) — read when making a UI testable or choosing between presenter and presentation-model variants.

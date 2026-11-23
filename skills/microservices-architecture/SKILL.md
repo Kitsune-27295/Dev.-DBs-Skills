@@ -57,3 +57,8 @@ One idea: structure an application as a suite of **independently deployable, loo
 - **Dual-writing to DB and Broker without an Outbox:** Calling `db.save()` followed by `broker.publish()` in application code without a Transactional Outbox — guaranteeing inconsistent state when the process crashes or the broker blips.
 - **Missing Idempotency on Consumers:** Assuming a message broker delivers events "exactly once." Brokers deliver *at-least-once*; every event consumer and Saga step must be idempotent (`idempotency-fix`).
 - **Breaking API changes without versioning:** Modifying or removing a field in a REST/gRPC response or event payload without backward compatibility or contract tests.
+
+## Deep references
+
+- [Fowler and Lewis: the nine characteristics in depth](references/fowler-lewis-nine-characteristics.md) — read when judging whether a design is really microservices or a distributed monolith.
+- [Microservice premium, monolith first and adoption readiness](references/microservice-premium-and-adoption-readiness.md) — read when deciding whether, when and how to split a system.

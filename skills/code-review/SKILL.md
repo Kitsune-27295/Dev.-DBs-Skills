@@ -91,3 +91,7 @@ A change can pass one axis and fail the other:
 Reporting them separately stops one axis from masking the other.
 
 > Sources & MIT attribution: [references/sources.md](references/sources.md).
+
+## Deep references
+
+- [Smell baseline: detection patterns and review mechanics](references/smell-baseline-detection-examples.md) — when spotting baseline smells in a diff or briefing the Standards sub-agent

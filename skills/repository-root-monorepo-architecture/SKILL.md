@@ -77,3 +77,8 @@ repo-root/
 - **A "Monorepo" that is just 10 folders with no workspace graph or boundary rules:** Putting 10 apps in one Git repo without affected-build caching or import rules — resulting in 45-minute CI builds on every typo commit and hidden circular imports across apps.
 - **Sharing a mutable "God Package" (`packages/shared-everything`) across all monorepo apps:** Forces every app to rebuild and redeploy on every commit. Keep shared `packages/*` narrow, cohesive, and versioned/layered cleanly.
 - **Over-nesting a 300-line tool into 12 directories (`cmd/`, `pkg/`, `internal/controllers/`, `internal/services/`, `internal/models/`):** Start flat and split only when flatness causes real friction.
+
+## Deep references
+
+- [Go layout: start flat](references/go-layout-start-flat.md) — when scaffolding directories or Go modules
+- [Monorepo tooling and strategy](references/monorepo-tooling-and-strategy.md) — when choosing monorepo tooling or judging the GitHub guidance

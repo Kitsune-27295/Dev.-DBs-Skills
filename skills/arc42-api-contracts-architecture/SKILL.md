@@ -66,3 +66,10 @@ Keep sections concise ("just enough" documentation); link to C4 diagrams (`c4-mo
 - **Using OpenAPI hacks to document Kafka topics or bidirectional WebSockets:** OpenAPI models HTTP request-response paths (`GET/POST/PUT/DELETE`); use **AsyncAPI 3.x** (`channels` + `send`/`receive` `operations` + protocol bindings) for event streams and WebSockets.
 - **Validating OpenAPI 3.1+ with the outer `schema/` instead of `schema-base/`:** As the OpenAPI Initiative notes, the plain `schema/YYYY-MM-DD` validates only the outer OAS structure and ignores errors inside `Schema Objects`; use `schema-base/YYYY-MM-DD` to validate the JSON Schema definitions too.
 - **Filling all 12 arc42 chapters with boilerplate text on day one:** Leaving template help text or writing 50 pages of filler. Write "just enough" in the sections that matter and expand as decisions are made.
+
+## Deep references
+
+- [arc42 sections and just-enough docs](references/arc42-sections-and-just-enough-docs.md) — read when deciding which of the 12 sections to write and how C4 and ADRs fit.
+- [OpenAPI schema registry and validation](references/openapi-schema-registry-and-validation.md) — read when wiring OAS validation into CI (schema vs schema-base).
+- [AsyncAPI document model and pipeline](references/asyncapi-document-model-and-pipeline.md) — read when modelling events or WebSockets in AsyncAPI 3.x and choosing generator stages.
+- [Generated-docs gaps and docs-as-code integration](references/generated-docs-gaps-and-docs-as-code-integration.md) — read when authoring the operational guide beside generated docs or embedding OpenAPI in arc42 builds.

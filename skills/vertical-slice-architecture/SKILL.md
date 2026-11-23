@@ -55,3 +55,8 @@ One idea: stop coupling code horizontally across technical layers (`Controllers/
 - **Recreating horizontal repositories inside VSA:** Adding `IUserRepository` and `IUserService` layers underneath vertical slice handlers — combining the folder structure of VSA with all the ceremony and coupling of N-Layer.
 - **Sharing DTOs or Validators across distinct slices:** Reusing `OrderDto` across `CreateOrder`, `UpdateOrder`, and `GetOrderDetails`, so a field added for one screen breaks or exposes data on another (`never-trust-the-client`).
 - **Procedural God Handlers (skipping the refactoring step):** Bogard explicitly warns that VSA requires recognizing code smells — when business rules get tangled inside a handler, push them into rich Domain Entities instead of leaving procedural spaghetti.
+
+## Deep references
+
+- [Bogard's slice principles and trade-offs](references/bogard-slice-principles-and-tradeoffs.md) — when justifying slices over layers or checking team fit
+- [Slice practice: cross-cutting, testing, literature](references/slice-practice-cross-cutting-testing-and-literature.md) — when placing shared logic, plumbing and tests, or finding further reading

@@ -62,3 +62,8 @@ Research shows **knowing about biases does not eliminate them** (`*claim*`: More
 - **Forcing Tactical Aggregates Everywhere ("All-DDD Domain Model"):** Implementing heavy DDD Aggregate + Repository ceremony for Generic or Supporting CRUD modules, delaying delivery on the actual Core Domain.
 - **Building Generic Commodities In-House:** Spending top engineering bandwidth building custom auth, scheduling, or payment ledgers while the true Core differentiator stagnates.
 - **Solo Gut-Check Architecture Reviews:** Confusing team consensus (echoed enthusiasm in a design meeting) with independent verification, or skipping subtractive alternatives when refactoring complex monoliths.
+
+## Deep references
+
+- [Subdomain roles and implementation patterns](references/subdomains-and-implementation-patterns.md) — read when classifying subdomains or choosing Transaction Script vs Domain Model
+- [Debiasing checklist in depth](references/debiasing-checklist-in-depth.md) — read when running the five-step check or pasting it into an ADR

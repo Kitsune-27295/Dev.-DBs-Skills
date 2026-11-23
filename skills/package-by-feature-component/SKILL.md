@@ -52,3 +52,8 @@ One idea: stop grouping files by technical stereotype (`controllers/`, `services
 - **"Fake Package by Feature" (Horizontal layers at the root, feature folders only inside `controllers/`):** Putting `controllers/orders/` at the top while still keeping a monolithic shared `services/` and `models/` folder where everything is `public`. Move the whole vertical stack into `orders/`.
 - **Leaving everything `public` / exported inside a feature folder:** Moving files into `features/orders/` but exporting the internal repository and DB row helpers from `index.ts` so `features/shipping/` still calls `OrderRepository` directly.
 - **Cross-feature spaghetti imports:** `features/checkout/` importing private DTOs or handlers from `features/cart/`. Communicate across features only via a narrow public component facade or in-process domain events.
+
+## Deep references
+
+- [Layer vs feature vs component trade-offs](references/layer-feature-component-trade-offs.md) — choosing the top-level packaging scheme
+- [Enforcing component encapsulation](references/enforcing-component-encapsulation.md) — internal, assemblies and architecture tests ladder

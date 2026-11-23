@@ -55,3 +55,9 @@ Automate the Dependency Rule with an architecture test (e.g., `NetArchTest`, `Ar
 - **Leaking Entity internals directly to the external API:** Returning rich domain Entities directly as JSON responses from Controllers without a Presenter or Response DTO, coupling database/domain shape to public API clients.
 - **Anemic Use Cases + Smart Controllers:** Putting orchestration and business validation inside the Web Controller while the Use Case only delegates to a Repository.
 - **Over-abstracting trivial internal helpers:** Creating a Port/Adapter boundary for deterministic in-memory helpers (like date math or string formatting) that are not external agencies.
+
+## Deep references
+
+- [The Dependency Rule and Boundary Crossing](references/dependency-rule-and-boundary-crossing.md) — read when enforcing the rule or designing ports and presenters.
+- [Layers, Stability and Inversion of Control](references/layers-and-inversion-of-control.md) — read for the layer-by-layer rationale and how to place port interfaces.
+- [.NET Project Layout and the Composition Root](references/dotnet-layout-and-composition-root.md) — read when mapping the circles to .NET projects and wiring DI.

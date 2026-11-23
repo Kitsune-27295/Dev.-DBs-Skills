@@ -55,3 +55,8 @@ One idea: build systems out of **managed third-party backend services (BaaS)** a
 - **Unbounded concurrency + recursive trigger loops:** A function triggered by an S3 bucket writing back to the same S3 bucket (infinite loop and massive bill). Never let a function write back to its own trigger source, and always set concurrency and budget caps.
 - **Opening a new DB connection or SDK client inside the handler on every invocation:** Exhausts sockets and adds latency. Instantiate clients at module scope so warm invocations reuse them.
 - **Locking business logic inside the vendor handler:** Mixing AWS/Azure event structures and vendor SDK calls directly into domain rules so the logic cannot be tested locally or moved to a container.
+
+## Deep references
+
+- [BaaS, FaaS and trade-offs](references/baas-faas-tradeoffs.md) — when judging whether serverless fits and what limits apply
+- [AWS lens failure management](references/aws-lens-failure-management.md) — when designing DLQs, retries and stream error handling

@@ -48,3 +48,9 @@ Even when building speculative code feels "cheap right now", every presumptive f
 - **Speculative Generalization ("Rule of One"):** Creating abstract base factories, plugin buses, multi-tenant routers, or message queues for a single concrete requirement. Wait for real variations (Rule of Three or concrete pain) before generalizing.
 - **Building Unrequested Distributed Infrastructure ("100x on Day 1"):** Adopting Kubernetes, Kafka, Event Sourcing, and 12 microservices for an unproven domain instead of a modular `monolithic-architecture` ready to evolve.
 - **Stagnant Codebases Where Nothing Is Ever Deleted:** Growing code monotonically with abandoned flags, unused interfaces, and backward-compatibility shims because nobody dares remove obsolete paths.
+
+## Deep references
+
+- [YAGNI costs and boundaries](references/yagni-costs-and-boundaries.md) — when rejecting or defending speculative features and abstractions
+- [Evolutionary design enabling practices](references/evolutionary-design-enabling-practices.md) — when checking tests/CI/refactoring readiness, reversibility and the will to design
+- [Design stamina and sacrificial architecture](references/design-stamina-and-sacrificial-architecture.md) — when trading design quality against deadlines or planning replacement

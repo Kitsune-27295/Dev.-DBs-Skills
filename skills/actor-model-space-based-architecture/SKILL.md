@@ -59,3 +59,9 @@ One idea: eliminate shared mutable state, lock contention, and central database 
 - **Coarse-grained "Manager Actors" that become bottlenecks:** Routing all traffic through a single stateful `OrderManagerActor` instead of sharding across `OrderActor(orderId)` or using stateless router pools.
 - **Unbounded Actor Mailboxes:** Allowing a fast producer to enqueue millions of messages into a slow actor's unbounded mailbox until the node crashes with an Out-Of-Memory error. Always use bounded mailboxes or backpressure streams.
 - **Using Space-Based Architecture with a huge dataset that cannot fit in RAM:** SBA requires active working-set partitions to reside in the distributed in-memory data grid; if the hot working set exceeds cluster memory budgets and thrashes to disk, SBA loses its core advantage.
+
+## Deep references
+
+- [Akka actor model: messaging and supervision](references/akka-supervision-and-failure-model.md) — when designing actor protocols and deciding domain errors vs supervised faults
+- [Orleans virtual actors and runtime services](references/orleans-virtual-actors-runtime.md) — when choosing grains, placement, reminders, streams or transactions
+- [Space-based architecture components](references/space-based-architecture-components.md) — when judging whether SBA's grids and processing units fit a load problem

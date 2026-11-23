@@ -77,3 +77,10 @@ stateDiagram-v2
 - **Putting Retry *inside* Circuit Breaker instead of *outside* (or ignoring Open exceptions):** If Retry keeps retrying a `BrokenCircuitException`, it hammers the breaker loop instead of failing fast to the Fallback.
 - **Unbounded metric cardinality in OpenTelemetry:** Attaching `trace_id`, `order_id`, or full URLs with query strings as metric labels explodes time-series storage costs; keep high-cardinality IDs in Traces and Logs only.
 - **Paging on every single retried transient error:** Logging attempt #1 of a successful 2-attempt retry as `ERROR` creates alert fatigue; reserve `ERROR` for exhausted retries or Open circuits.
+
+## Deep references
+
+- [Circuit breaker state machine and tuning](references/circuit-breaker-state-machine-and-tuning.md) — when setting thresholds, Open duration, probes, per-partition breakers
+- [Retries, timeouts, jitter and budgets](references/retry-timeouts-jitter-and-budgets.md) — when deriving timeouts, preventing retry amplification, or choosing breaker vs token bucket
+- [Bulkhead isolation design](references/bulkhead-isolation-design.md) — when partitioning pools, queues or service instances
+- [OpenTelemetry signals, spans and Collector resilience](references/opentelemetry-signals-spans-and-collector-resilience.md) — when instrumenting resilience boundaries or sizing Collector buffering

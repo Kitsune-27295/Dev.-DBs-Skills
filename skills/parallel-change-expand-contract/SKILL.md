@@ -59,3 +59,8 @@ flowchart TD
 2. **Dropping the old column before all app instances are running Phase 3:** In rolling deployments, instances running old code will crash when querying the dropped column.
 3. **Synchronous bulk backfill in production:** Locking millions of rows in a single transaction causes database deadlocks and timeouts. Always backfill in small, throttled batches (e.g., 500 rows per batch).
 4. **Skipping rollback planning:** Dual-writing allows you to safely rollback to Phase 1 code if Phase 2 introduces critical bugs.
+
+## Deep references
+
+- [Parallel change phases and variants](references/parallel-change-phases-and-variants.md) — code/API refactoring, feature flags, branch by abstraction, caveats
+- [Database expand/contract playbook](references/database-expand-contract-playbook.md) — seven-step schema migration, dual writes, backfill, rollback limits

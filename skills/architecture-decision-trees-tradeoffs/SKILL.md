@@ -74,3 +74,11 @@ Practice or peer-review decisions with concrete constraints (*Ted Neward / Neal 
 - **Confusing Data Sharing Across Services as "Multiple Quanta":** Splitting compute into 5 deployables that all query one shared schema creates distributed deployment pain without decoupling the architectural quantum.
 - **Treating Kubernetes as Default Greenfield Compute:** Paying AKS cluster management and multi-node operational overhead when PaaS web hosting or serverless containers satisfy every actual SLA.
 - **Evaluating Only Happy-Path Functional Requirements:** Choosing compute and style without mapping explicit failure modes, regional SLA limits, or team operational skills.
+
+## Deep references
+
+- [Architecture styles as constraints](references/architecture-styles-as-constraints.md) — when comparing N-tier, queue-worker, microservices, event-driven, big data/compute
+- [Azure compute decision tree and technology-choice guides](references/azure-compute-and-technology-choice-guides.md) — when choosing a hosting model or covering all decision categories
+- [Characteristics, quanta and fitness functions](references/characteristics-quanta-and-fitness-functions.md) — when ranking -ilities, counting quanta, or defining measurable checks
+- [Style trade-offs, selection, ADRs and risk storming](references/style-tradeoffs-and-decision-making.md) — when picking among Richards/Ford styles and recording the decision
+- [Worksheets and katas](references/worksheets-and-katas-practice.md) — when running a time-boxed style-selection exercise

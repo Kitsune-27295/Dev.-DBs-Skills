@@ -67,3 +67,7 @@ Ask two questions about the sentence or page you are writing:
 | Reference polluted with tutorial steps | An API/CLI reference page where the only way to find a flag's default value is reading a 10-paragraph story | Extract a clean, scannable Reference table with types, defaults, and constraints |
 | Explanation hiding inside a Tutorial | A newcomer trying to run their first command is hit with 6 paragraphs explaining why the engine uses SQLite FTS5 instead of BM25 | Move the "Why" to `explanation/` |
 | Vague headings | Headings like `Webhooks` or `Database` that don't signal which quadrant the page belongs to | Name by quadrant: `Tutorial: Build your first webhook`, `How to rotate webhook secrets`, `Webhook payload reference`, `Why webhooks use at-least-once delivery` |
+
+## Deep references
+
+- [Four forms, map and compass](references/four-forms-map-and-compass.md) — read when classifying or splitting documentation pages
