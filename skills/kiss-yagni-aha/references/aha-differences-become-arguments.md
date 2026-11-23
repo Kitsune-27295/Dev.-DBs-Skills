@@ -1,0 +1,66 @@
+# AHA, DRY/WET and the Rule of Three
+
+Sources: https://kentcdodds.com/blog/aha-programming · https://martinfowler.com/bliki/RuleOfThree.html (404 — see note) · Last verified 2026-11-23
+
+## Vocabulary as used by the article
+
+- **DRY**: Dodds cites the single-unambiguous-authoritative-representation phrasing and follows it less dogmatically than the wording suggests.
+- **WET** ("Write Everything Twice", Conlin Durbin): repeat once or twice, never a third time. Dodds calls it equally dogmatic.
+- **AHA** ("Avoid Hasty Abstractions", Cher Scarlett): built on Sandi Metz's advice to prefer duplication over the wrong abstraction. Optimise for **change** first.
+
+## Rule of Three — status
+
+The Fowler page `RuleOfThree.html` returned 404 (also on the `www.` host), so nothing was read from it. As **background knowledge, not read from source**: the heuristic says tolerate one repetition and consider abstracting at the third occurrence, because three data points reveal what varies. Treat it as a default waiting period, not a law (own inference, consistent with Dodds' "abstract when it feels right").
+
+## The four experiences in the article
+
+1. **Too much duplication**: the same bug fixed in eight places — a shared function would have helped.
+2. **Bad abstraction**: AngularJS controllers handed `this` to a function that attached members (pseudo-inheritance). Reused far more than three times, yet scary to change; duplication would have been better.
+3. **Premature abstraction**: looks perfect for use case #1, gets bent to fit each new case, accumulates `if` statements and loops.
+4. **Late, good abstraction**: using a copy-paste detector (jsinspect) on a client codebase, the right abstractions were obvious from outside.
+
+Lesson (article): count of call sites is not the criterion; **quality of understanding** is.
+
+## Differences become arguments (procedure)
+
+1. Place the copies side by side (diff them).
+2. Mark every difference and classify it:
+   - **Value** (literal, name, threshold) -> candidate parameter.
+   - **Data shape** (field mapping) -> candidate parameter object or mapping table.
+   - **Behaviour** (different steps/branches) -> do not hide behind a flag; pass a function or leave at the call site.
+3. If more than about two behavioural differences remain, the copies are not the same concept; keep them separate.
+4. Extract the common core with the value differences as arguments; name it for the **concept**, not the first caller.
+5. Keep call sites explicit (no default parameters that silently pick one caller's behaviour).
+
+```ts
+// Three copies differ only in endpoint, field list and page size -> values.
+const fetchAll = (endpoint: string, fields: string[], pageSize = 100) => paginate(endpoint, { fields, pageSize });
+// A copy that also transforms the result differently stays in its caller:
+const users = (await fetchAll("/users", ["id", "email"])).map(toUserView);
+```
+
+## Cost model of getting it wrong (article)
+
+- A wrong abstraction is harder to follow and debug than duplicates and makes people afraid to touch it; every new use case adds a conditional.
+- Over-early design work (performance tuning, API design) can be wasted when features change.
+- The opposite error (never abstracting) has a real cost too: parallel edits and drift.
+
+## Decision table
+
+| Evidence | Action |
+|---|---|
+| 1 copy | Write it once, plainly |
+| 2 copies, differences unclear | Copy, wait |
+| 2 copies, spec-defined identical (protocol, formula) | Extract |
+| 3+ copies, value-only differences | Extract with arguments |
+| 3+ copies, behavioural differences | Extract the common core only, or stay duplicated |
+| Fix applied in several places repeatedly | Extract now (pain beats count) |
+| Existing abstraction + new divergent need | Recover; see `wrong-abstraction-recovery.md` |
+
+## How an agent should apply this
+
+- Diff the candidate copies and classify each difference before writing the helper.
+- Extract at two only with a spec-level reason; otherwise wait for a third real use.
+- Refuse flag/mode parameters that select behaviour; prefer passing a function or keeping call-site code.
+- When asked to cite the Rule of Three, say the Fowler page could not be read (404) and describe it as background knowledge.
+- Name the extracted function after the concept it captures, not after its first caller.
