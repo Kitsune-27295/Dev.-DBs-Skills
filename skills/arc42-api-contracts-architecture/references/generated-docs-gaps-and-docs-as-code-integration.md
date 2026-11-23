@@ -15,7 +15,7 @@ Generating from a spec yields a message catalog, not integration documentation. 
 | Ordering and delivery | At-least-once vs at-most-once, per-channel vs global ordering, duplicates, so consumers know if they need idempotency |
 | Backpressure | Whether a slow consumer is buffered, dropped or disconnected |
 
-Note: the skill's SKILL.md and sources.md name four of these; the article text lists six, adding ordering/delivery and backpressure.
+Note: SKILL.md and sources.md previously named four of these; they now list all six, matching the article.
 
 Recommended pipeline from the same article (generic, not product-specific): write the spec first; model both directions explicitly; fill bindings; add realistic examples, ideally frame sequences; validate and lint in CI so broken refs and missing `operationId`s fail the build; regenerate on merge, never by hand; author the integration guide beside the generated reference; publish the raw spec. If docs and a generated client come from different spec copies they diverge, so both must build from one document in one pipeline (the single-source-of-truth argument).
 

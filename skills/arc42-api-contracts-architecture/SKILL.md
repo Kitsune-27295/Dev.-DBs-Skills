@@ -36,12 +36,15 @@ Keep sections concise ("just enough" documentation); link to C4 diagrams (`c4-mo
 2. **Treat API specs as CI build inputs, never hand-edited static wiki pages:**
    - Lint and validate `openapi.yaml` and `asyncapi.yaml` in CI on every commit.
    - Either generate typed server stubs/client SDKs and reference docs from the spec (**Contract-First**), or export the spec from typed route/message schemas in CI and fail the build on any uncommitted diff or breaking change (`oasdiff` / Spectral / AsyncAPI Parser).
-3. **Author prose for the 4 things generated AsyncAPI/OpenAPI references always omit:**
-   Generated reference pages list endpoints, channels, and JSON schemas, but consistently leave out the operational protocol rules developers get stuck on. Always document alongside the generated spec (in arc42 Section 6/8 or the API guide):
-   - **Connection & Handshake Lifecycle** (how auth tokens are passed on WebSocket upgrade or broker connection, keep-alive/heartbeat frames),
-   - **Reconnection & Resume Semantics** (backoff rules, sequence numbers/offsets to replay missed messages after a drop),
-   - **Error Frames & Dead-Letter Behavior** (exact error envelope format — e.g., RFC 9457 Problem Details for HTTP, or error event payloads for AsyncAPI),
-   - **Idempotency & Ordering Guarantees** (`Idempotency-Key` headers, partition keys, at-least-once delivery rules).
+3. **Author prose for the 6 operational gaps that generated AsyncAPI references leave out (Fern):**
+   Generated reference pages list endpoints, channels, and JSON schemas, but not the operational protocol rules developers get stuck on. Always document alongside the generated spec (in arc42 Section 6/8 or the API guide):
+   - **Connection lifecycle** (is a subscribe frame required after connect, does the server send a ready/session message first, handshake timeout, keep-alive/heartbeat frames),
+   - **Authentication handshake** (where the credential goes: upgrade-URL query parameter, `Authorization` header, or first frame),
+   - **Reconnection & resumption** (resume from cursor, replay from sequence, or restart with a gap; backoff rules),
+   - **Error frames & close codes** (exact error envelope and custom close codes, e.g. RFC 9457 Problem Details for HTTP, or error event payloads for AsyncAPI),
+   - **Ordering & delivery guarantees** (at-least-once vs at-most-once, per-channel vs global ordering, duplicates; the skill adds `Idempotency-Key` headers and partition keys as practical advice),
+   - **Backpressure** (whether a slow consumer is buffered, dropped, or disconnected).
+
 4. **Embed OpenAPI / AsyncAPI cleanly into arc42 Docs-as-Code:** Store `openapi.yaml` and `asyncapi.yaml` in the repo, reference them from arc42 Section 3 (External Interfaces) and Section 5 (Building Block Interfaces), and render them in the same doc pipeline (e.g., `docToolchain`, Redocly, Scalar, Fern, or EventCatalog).
 
 ## Building order
