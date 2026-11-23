@@ -40,7 +40,7 @@ PACK = (
     "c4-model-architecture", "adr-architecture", "arc42-api-contracts-architecture",
     "diataxis-documentation-architecture", "mermaid",
     # Software Components & Foundational Principles (19)
-    "router-front-controller-routing", "api-gateway-reverse-proxy", "middleware-interceptor-chain", "caching-strategies", "background-worker-job-scheduler", "rate-limiter-throttler", "authn-authz-guard", "repository-unit-of-work", "dto-mapper-anti-corruption-layer", "validator-input-parser", "feature-flag-toggle-engine", "state-machine-workflow-engine", "ssot-and-dry", "open-closed-principle", "single-responsibility-cohesion", "dependency-inversion-composition-root", "kiss-yagni-aha", "value-objects-type-invariants", "error-handling-problem-details", "git-atomic-commits",
+    "router-front-controller-routing", "api-gateway-reverse-proxy", "middleware-interceptor-chain", "caching-strategies", "background-worker-job-scheduler", "rate-limiter-throttler", "authn-authz-guard", "repository-unit-of-work", "dto-mapper-anti-corruption-layer", "validator-input-parser", "feature-flag-toggle-engine", "state-machine-workflow-engine", "ssot-and-dry", "open-closed-principle", "single-responsibility-cohesion", "dependency-inversion-composition-root", "kiss-yagni-aha", "value-objects-type-invariants", "error-handling-problem-details", "git-atomic-commits", "model-effort-routing",
     # Code Design, SSOT & Type-Safe Domain Modeling (3)
     "pragmatic-solid-and-ssot", "defensive-domain-modeling", "codebase-design",
     # AI Engineering Workflow — Matt Pocock Pack (8)
