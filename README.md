@@ -224,7 +224,7 @@ Use o menu **Outline** do GitHub para saltar diretamente entre secções, ou pes
 | 83 | Princípios & Conceitos Fundamentais | [`value-objects-type-invariants`](skills/value-objects-type-invariants/SKILL.md) | Aprofundamento: *Value Objects*, *Money*/alocação e arredondamento, e estados modelados como tipos. |
 | 84 | Princípios & Conceitos Fundamentais | [`error-handling-problem-details`](skills/error-handling-problem-details/SKILL.md) | Taxonomia de erros, contrato HTTP RFC 9457 (*Problem Details*), *Result*/ROP e tratamento seguro de erros (OWASP). |
 | 85 | Fundamentos de Engenharia & Segurança | [`git-atomic-commits`](skills/git-atomic-commits/SKILL.md) | Commits atómicos, Conventional Commits/SemVer, mensagens, `git add -p`, reescrita segura de histórico, `--force-with-lease` e higiene de segredos. |
-| 86 | Cloud-Native, Resiliência, Evolução & IA | [`model-effort-routing`](skills/model-effort-routing/SKILL.md) | Escolha do tier de modelo e do esforço de raciocínio por tarefa, delegação a subagentes, escalonamento/fallback e poupança de tokens (Claude Code, Antigravity e outros). |
+| 86 | Cloud-Native, Resiliência, Evolução & IA | [`model-effort-routing`](skills/model-effort-routing/SKILL.md) | **Skill-chave de custo/eficácia:** escolhe o tier de modelo e o esforço de raciocínio certos por tarefa (sem modelo caro para tarefa simples nem esforço curto para tarefa crítica), delega a subagentes, escala/faz *fallback* com verificação e busca a solução mais económica em tokens que resolve o problema (Claude Code, Antigravity e outros). |
 
 ---
 
