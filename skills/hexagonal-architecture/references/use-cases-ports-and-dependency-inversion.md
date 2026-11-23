@@ -4,8 +4,8 @@ Sources: https://reflectoring.io/spring-hexagonal/ · https://github.com/cod3rcu
 
 ## Shape of the core (Hombergs, BuckPal example)
 
-- **Domain objects** hold state and behaviour together, plain code with no outward dependency. The `Account` example enforces withdrawal rules itself. They change only when business rules change.
-- **Use cases** are first-class classes, one per user action (`SendMoneyService`). They load domain objects, call behaviour, save results, and depend on nothing outside the hexagon.
+- **Domain objects** hold state and behavior together, plain code with no outward dependency. The `Account` example enforces withdrawal rules itself. They change only when business rules change.
+- **Use cases** are first-class classes, one per user action (`SendMoneyService`). They load domain objects, call behavior, save results, and depend on nothing outside the hexagon.
 - **Input port** = interface the outside calls (`SendMoneyUseCase`), implemented by the use case. Callers are driving adapters.
 - **Command object** bundles the parameters and validates itself in its constructor, so the use case stays free of validation noise and cannot receive an invalid command.
 - **Output ports** (`LoadAccountPort`, `UpdateAccountStatePort`) are shaped by what the use case needs. This is Dependency Inversion: the use case owns an abstraction; the persistence adapter implements it. Ports can be shared across use cases.
@@ -23,7 +23,7 @@ Sources: https://reflectoring.io/spring-hexagonal/ · https://github.com/cod3rcu
 
 ## Mapping strategies (inference from the cost discussion)
 
-Full mapping (separate web, domain and persistence models) maximises isolation but multiplies classes. A shared model across adapters is cheaper but leaks. Use full mapping only where that boundary is likely to change independently. Hombergs defers mapping strategies to his book; the article does not detail them.
+Full mapping (separate web, domain and persistence models) maximizes isolation but multiplies classes. A shared model across adapters is cheaper but leaks. Use full mapping only where that boundary is likely to change independently. Hombergs defers mapping strategies to his book; the article does not detail them.
 
 ## Example: use case owning its output port (my sketch)
 

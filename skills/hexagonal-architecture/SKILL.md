@@ -47,7 +47,7 @@ Asymmetry to remember: the driver adapter knows the application (it calls it); t
 |---|---|---|
 | Domain objects | unit | nothing |
 | Use cases (driver port) | acceptance, most of the suite | in-memory fakes of the driven ports |
-| Driven adapter | integration, few | the real technology plus a contract check that it honours the port |
+| Driven adapter | integration, few | the real technology plus a contract check that it honors the port |
 | Driver adapter | integration, few | a real or recorded request against a fake hexagon |
 | Whole system | system, one success and one failure per flow | everything real |
 

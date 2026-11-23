@@ -33,7 +33,7 @@ def solve(task, small, big, verify, n=4, budget):
 
 ## 3. What the Awesome-Inference-Time-Scaling list actually contains
 
-Read via WebFetch in three chunks of a 300 KB page (first 200,000 characters; the last ~100,000 not read). It is an index of papers with one-line descriptions, not a methods document, and has no entry named best-of-N or routing in the part read. Entries found (descriptions are the list's, relayed by a summariser):
+Read via WebFetch in three chunks of a 300 KB page (first 200,000 characters; the last ~100,000 not read). It is an index of papers with one-line descriptions, not a methods document, and has no entry named best-of-N or routing in the part read. Entries found (descriptions are the list's, relayed by a summarizer):
 - CATTS-style: "Agentic Test-Time Scaling for WebAgents" (Lee et al., 2026-02): spends extra sampling only at contested steps, using uncertainty from the agent's own vote distribution; reports gains over ReAct with fewer tokens than uniform scaling. The listing does not give numbers.
 - Adaptive stopping: TUMIX (stop iterative refinement when an agent ensemble is confident, about half the inference cost, per the list); OptScale (minimum samples for a target confidence); PUMA (early exit when reasoning converges, with answer verification); Think-with-Me.
 - Budget awareness: Budget-Aware Tool-Use (agents see a tool-call budget); Timely Machine (wall-clock budgets).

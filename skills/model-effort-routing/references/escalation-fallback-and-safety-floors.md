@@ -35,7 +35,7 @@ These are repo-author policies (opinion), not measurements. Vishal's skill says 
 | pedrohcgs | Do not demote the four false-PASS gates (editor, two referees, claim verifier) to Sonnet; one wrong PASS costs more than running Opus on everything. Challenger and auditor must be on different tiers (same-tier models share blind spots and launder correlated errors). |
 | ARS | `economy` never touches judgment agents and never goes below an Opus-class floor; `quality-boost` never downgrades anything and only lifts at integrity gates and final review. The author notes the reference savings came from ML-tuning tasks, not scholarly writing, hence the conservative floor. |
 | masskrdjn | Never lower acceptance criteria, skip a needed check or simplify the request to make a cheaper model usable. A small risky change may still need independent review. Never run under `--dangerously-skip-permissions`/`bypassPermissions`; settings deny `git push`, `git reset --hard`, `rm -rf`. `architect` never executes tests. |
-| Vishal, softspark | A stronger model, higher effort, reviewer role or fallback never widens authority. Permission or auth failures go back to the supervisor; they are not licences for bypass. softspark: an access denial or safety refusal ends that route. |
+| Vishal, softspark | A stronger model, higher effort, reviewer role or fallback never widens authority. Permission or auth failures go back to the supervisor; they are not licenses for bypass. softspark: an access denial or safety refusal ends that route. |
 
 ## 4. Independent review pattern
 

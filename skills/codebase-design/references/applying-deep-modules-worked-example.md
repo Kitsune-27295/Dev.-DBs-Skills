@@ -29,7 +29,7 @@ Deletion test on the old trio: removing `validateCoupon` makes complexity reappe
 
 ## Test migration
 
-1. Write behaviour tests at `priceWithCoupon`.
+1. Write behavior tests at `priceWithCoupon`.
 2. Delete the old per-function tests once covered.
 3. Run a refactor of internals; tests must stay green unchanged. If one breaks, it tests past the interface.
 

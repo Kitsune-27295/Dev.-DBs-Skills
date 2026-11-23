@@ -6,13 +6,13 @@ The article stresses there is no formal definition; these are traits most, not a
 
 ## The characteristics, with their sharp edges
 1. Componentization via services: out-of-process, so independently deployable and with explicit remote interfaces that resist encapsulation breaches. Costs: remote calls are slower so APIs must be coarser; moving responsibility across processes is hard.
-2. Organized around business capabilities: criticises UI/server/DB team splits (cross-team approvals, logic drifting to whichever codebase is reachable). Teams are cross-functional and own a vertical slice.
-3. Products, not projects: the team owns the service for its life ("you build it, you run it"), which ties developers to production behaviour.
+2. Organized around business capabilities: criticizes UI/server/DB team splits (cross-team approvals, logic drifting to whichever codebase is reachable). Teams are cross-functional and own a vertical slice.
+3. Products, not projects: the team owns the service for its life ("you build it, you run it"), which ties developers to production behavior.
 4. Smart endpoints, dumb pipes: logic in services, not in an ESB (the authors' footnote jokes "Erroneous Spaghetti Box"). Use plain HTTP/REST and lightweight messaging (RabbitMQ, ZeroMQ named). Pitfall: turning in-process calls straight into RPC gives chatty, slow interactions; coarsen them.
 5. Decentralized governance: per-service tool choice (examples: Node.js for a reports page, C++ for a near-real-time part), shared tools preferred over written standards, consumer-driven contracts and Tolerant Reader to limit central contract control.
 6. Decentralized data management: each service owns its store, possibly different technologies; no distributed transactions; eventual consistency with compensations, acceptable where fixing mistakes costs less than the business lost to stricter consistency.
 7. Infrastructure automation: CI/CD with heavy automated testing; monitoring of both technical and business metrics (orders per minute) and "semantic monitoring" as early warning.
-8. Design for failure: every remote call can fail so clients must degrade gracefully; Circuit Breaker, Bulkhead, Timeout; Netflix's Simian Army injects failures in production hours; emergent behaviour from choreography needs real-time monitoring.
+8. Design for failure: every remote call can fail so clients must degrade gracefully; Circuit Breaker, Bulkhead, Timeout; Netflix's Simian Army injects failures in production hours; emergent behavior from choreography needs real-time monitoring.
 9. Evolutionary design: services are replaceable or disposable; things that change together belong together (if two services keep changing together, merge them); The Guardian kept a monolith core and added short-lived features as services; versioning is a last resort, prefer tolerant consumers.
 
 ## Sidebars worth remembering

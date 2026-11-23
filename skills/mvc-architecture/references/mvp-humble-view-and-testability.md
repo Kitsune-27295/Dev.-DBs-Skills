@@ -4,13 +4,13 @@ Sources: https://martinfowler.com/eaaDev/uiArchs.html · https://engsoftmoderna.
 
 ## Why variants exist
 
-Classic observer-based MVC makes flow hard to trace and leaves view logic (colour of a negative number, enable/disable) without a home. Fowler's survey shows the variants as different answers to "who updates the widgets, and where does view state live?" The Fowler page notes his descriptions rely on common summaries rather than exhaustive historical study, so read the names as patterns, not as history.
+Classic observer-based MVC makes flow hard to trace and leaves view logic (color of a negative number, enable/disable) without a home. Fowler's survey shows the variants as different answers to "who updates the widgets, and where does view state live?" The Fowler page notes his descriptions rely on common summaries rather than exhaustive historical study, so read the names as patterns, not as history.
 
 ## Variants
 
 | Pattern | Who drives widgets | Testing consequence |
 |---|---|---|
-| Presentation Model (MVVM family) | Widgets bind to an intermediate model that holds view state and behaviour | Logic testable without UI; a small binding/mapping risk remains in the widgets |
+| Presentation Model (MVVM family) | Widgets bind to an intermediate model that holds view state and behavior | Logic testable without UI; a small binding/mapping risk remains in the widgets |
 | MVP, Supervising Controller | View handles simple declarative mapping; presenter handles complex cases | Between the two extremes |
 | MVP, Passive View | Presenter sets every widget; view has no logic | Removes mapping risk, but needs a test double for the view |
 | Application Model (VisualWorks) | Intermediate model with value holders and change events | Letting it update widgets directly is the workaround that motivated MVP |
@@ -19,7 +19,7 @@ Classic observer-based MVC makes flow hard to trace and leaves view logic (colou
 
 ## Choosing
 
-- Heavy view behaviour, binding available: Presentation Model.
+- Heavy view behavior, binding available: Presentation Model.
 - Complex screen logic, weak binding, strong need for tests: Passive View.
 - Moderate: Supervising Controller.
 - Server-rendered pages: the template is already the humble view; keep logic in controller and model (MDN and Valente describe the web flow this way).

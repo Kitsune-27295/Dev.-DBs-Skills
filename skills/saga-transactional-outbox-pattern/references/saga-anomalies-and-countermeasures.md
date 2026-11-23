@@ -34,7 +34,7 @@ Richardson points to chapter 4.3 of *Microservices Patterns* for the full treatm
 ## Failure modes
 - Compensations that can themselves fail: they must be retryable and idempotent; park in a dead-letter or manual queue after bounded retries.
 - Semantic lock never released because the saga died: needs saga timeouts and a recovery job (inference).
-- Treating a pivot as compensable and "cancelling" after the point of no return.
+- Treating a pivot as compensable and "canceling" after the point of no return.
 
 ## Reporting the outcome to the client
 Three options from Richardson: (1) block until the saga ends; (2) return an id immediately and let the client poll (`GET /orders/{id}`); (3) return an id and push the result (WebSocket/webhook). Option 2 or 3 is the sensible default for sagas that cross more than two services (inference).

@@ -10,13 +10,13 @@ Sources: https://martinfowler.com/articles/injection.html · Last verified 2026-
 
 1. **Constructor injection** (PicoContainer in the article): `MovieLister(MovieFinder f)`; the finder itself takes its filename as a constructor `String`. Container configured with interface-to-implementation mappings and constants.
 2. **Setter injection** (Spring): `setFinder(MovieFinder)` and `setFilename(String)`; wiring in XML beans, `ref` for objects, `value` for literals.
-3. **Interface injection**: the dependency declares injection interfaces (`InjectFinder.injectFinder(...)`); an `Injector` interface wires targets; the container uses the declared interfaces. Avalon's `service(ServiceManager)` is a related locator-flavoured case.
+3. **Interface injection**: the dependency declares injection interfaces (`InjectFinder.injectFinder(...)`); an `Injector` interface wires targets; the container uses the declared interfaces. Avalon's `service(ServiceManager)` is a related locator-flavored case.
 
 ## Constructor vs setter (from the article)
 
 | Aspect | Constructor | Setter |
 |---|---|---|
-| Valid object at creation | Yes, favoured | No, can be half-configured |
+| Valid object at creation | Yes, favored | No, can be half-configured |
 | Immutability | Clear (no setter, no change) | Weaker |
 | Many parameters | Hard | Easy |
 | Primitive args (strings) | Positional meaning unclear | Named, clearer |
@@ -33,7 +33,7 @@ Both break the concrete dependency; difference is *provided* vs *asked for*. Inj
 
 - Files help when deployments differ; XML was typical.
 - Code is clearer for simple apps and for conditional assembly (builder class).
-- Fowler criticises per-component config formats that multiply files to keep in sync.
+- Fowler criticizes per-component config formats that multiply files to keep in sync.
 - Provide a programmatic API first; layer file config on top.
 - **Separate configuration from use** is the central principle, parallel to separating interface from implementation.
 

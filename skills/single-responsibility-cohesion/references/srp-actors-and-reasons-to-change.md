@@ -19,11 +19,11 @@ A company has a CEO and C-level officers: CFO (finance), COO (operations), CTO (
 
 | Method | Concern | Requests come from |
 |---|---|---|
-| `calculatePay()` | Financial | CFO's organisation |
-| `reportHours()` | Operations, auditing | COO's organisation |
-| `save()` | Technology, persistence | CTO's organisation |
+| `calculatePay()` | Financial | CFO's organization |
+| `reportHours()` | Operations, auditing | COO's organization |
+| `save()` | Technology, persistence | CTO's organization |
 
-The article's argument: a catastrophic error in each method reflects on a different executive, so each serves a different stakeholder; a footnote concedes the firing scenarios are hyperbole but organisations still care about different concerns.
+The article's argument: a catastrophic error in each method reflects on a different executive, so each serves a different stakeholder; a footnote concedes the firing scenarios are hyperbole but organizations still care about different concerns.
 
 ## Why violating it hurts
 
@@ -47,7 +47,7 @@ Pitfall inside the example: if `calculatePay` and `reportHours` both call a priv
 
 - More classes and wiring versus isolation of change and lower regression risk.
 - Facade restores convenience but must stay logic-free, else it becomes the new god class.
-- Correct boundaries depend on the organisation: the same code may have one actor in a startup and three in an enterprise (inference). Re-check when team structure changes.
+- Correct boundaries depend on the organization: the same code may have one actor in a startup and three in an enterprise (inference). Re-check when team structure changes.
 
 ## Use when / avoid when
 

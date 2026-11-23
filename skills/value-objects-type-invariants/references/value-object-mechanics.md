@@ -39,7 +39,7 @@ Immutability also helps reference objects (an order), but that does not turn the
 
 ## Range as the learning exercise
 
-The article recommends building a Range class: the richer behaviour (overlap, contains, merge, length) removes duplicated start/end logic scattered across callers. Value objects often become the focus of refactorings that simplify a codebase (article's claim). Own sketch of the payoff: callers stop comparing `start`/`end` by hand; the invariant `start <= end` is enforced once.
+The article recommends building a Range class: the richer behavior (overlap, contains, merge, length) removes duplicated start/end logic scattered across callers. Value objects often become the focus of refactorings that simplify a codebase (article's claim). Own sketch of the payoff: callers stop comparing `start`/`end` by hand; the invariant `start <= end` is enforced once.
 
 ## Replace primitives: when and how
 
@@ -49,7 +49,7 @@ Benefits listed: explicitness, type checking, validation, preventing meaningless
 
 | Use a value object when | Avoid when |
 |---|---|
-| Concept has rules or behaviour (overlap, currency) | Plain pass-through string with no rules anywhere |
+| Concept has rules or behavior (overlap, currency) | Plain pass-through string with no rules anywhere |
 | Same primitive pair is repeated (start/end, amount/currency) | One-off local variable |
 | Confusable parameters of one primitive type | Persistence/ORM friction outweighs benefit and no invariant exists (record the exception) |
 | Equality must be structural in collections | Concept has identity and lifecycle (use an entity) |

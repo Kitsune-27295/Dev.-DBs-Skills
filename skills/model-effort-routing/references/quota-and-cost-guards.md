@@ -6,7 +6,7 @@ Prices below are quoted as each repo dated them (October to November 2026); they
 
 ## 1. What masskrdjn's guard actually does (most developed example)
 
-The repo is marked deprecated in favour of a successor repo (QuotaOrchestrator), but its skill is the most explicit cost-guard text found.
+The repo is marked deprecated in favor of a successor repo (QuotaOrchestrator), but its skill is the most explicit cost-guard text found.
 
 - **Objective order**: quality and relevance first, then total cost, then latency, under a constraint on access to the expensive tier. Never lower acceptance criteria to make a cheaper model viable.
 - **Whole-job cost**: compare launch, context, execution, waiting, integration and rework across all agents including the root, weighted by input / cache / output prices. More tokens on a cheaper tier is a good trade while quality and latency hold. Without measurement, state an expected gain, not a demonstrated one.

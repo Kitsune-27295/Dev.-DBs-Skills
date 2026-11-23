@@ -4,7 +4,7 @@ Sources: https://martinfowler.com/bliki/CommandQuerySeparation.html, https://mar
 
 ## Command Query Separation (method level)
 
-Bertrand Meyer's rule, summarised by Fowler (2005): split methods into **queries** (return a result, no observable state change) and **commands/modifiers** (change state, return nothing). Payoff: queries can be called anywhere, in any order, any number of times; only modifiers need care. Fowler prefers "modifiers" because "command" is overloaded.
+Bertrand Meyer's rule, summarized by Fowler (2005): split methods into **queries** (return a result, no observable state change) and **commands/modifiers** (change state, return nothing). Payoff: queries can be called anywhere, in any order, any number of times; only modifiers need care. Fowler prefers "modifiers" because "command" is overloaded.
 
 Return type is the usual signal. Violations: Java's iterator `next()` (returns and advances; he would split `advance` and `current`) and stack `pop`, which he tolerates as a useful idiom. Language support is rare because "observable state" is hard to detect automatically; C++ `const` is the main marker.
 

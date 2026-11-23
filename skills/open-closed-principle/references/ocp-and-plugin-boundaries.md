@@ -4,9 +4,9 @@ Sources: https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple
 
 ## What the article argues
 
-Martin traces OCP to Bertrand Meyer's 1988 *Object Oriented Software Construction*. Meyer wanted modules both **open** (extendable: new fields, new functions) and **closed** (usable by others through a stable, well-defined interface). Martin says Meyer's phrasing reflects older practices (modules compiled into libraries, specifications approved by management) that he finds dated, but keeps the core claim: you should be able to extend a system's behaviour without modifying it.
+Martin traces OCP to Bertrand Meyer's 1988 *Object Oriented Software Construction*. Meyer wanted modules both **open** (extendable: new fields, new functions) and **closed** (usable by others through a stable, well-defined interface). Martin says Meyer's phrasing reflects older practices (modules compiled into libraries, specifications approved by management) that he finds dated, but keeps the core claim: you should be able to extend a system's behavior without modifying it.
 
-Implication drawn: if behaviour is extendable without edits, new features are new code only; old code is not recompiled or redeployed. So deployable units (jars, DLLs, gems) should be **isolatable features**.
+Implication drawn: if behavior is extendable without edits, new features are new code only; old code is not recompiled or redeployed. So deployable units (jars, DLLs, gems) should be **isolatable features**.
 
 He anticipates the objection that this is absurd, since most teams add features by changing code throughout the codebase (the "shotgun surgery" smell named by Fowler). His counter-evidence: IDEs and editors extend through plugins without being modified or redeployed.
 
@@ -14,7 +14,7 @@ He anticipates the objection that this is absurd, since most teams add features 
 
 - High-level policy is separated from low-level detail.
 - Dependencies are managed: plugin code depends on the core; **nothing in the core depends on a plugin**. The core does not know its plugins exist; plugins know the core.
-- A whole system can be built this way: databases, GUIs, web services and frameworks are plugins; behaviour is driven by plugin configuration. Business rules at the centre tie the system to no particular feature set, interface, database or framework.
+- A whole system can be built this way: databases, GUIs, web services and frameworks are plugins; behavior is driven by plugin configuration. Business rules at the center tie the system to no particular feature set, interface, database or framework.
 - Martin concludes critics are mistaken and predicts plugin architectures will be the most important aspect of future software.
 
 ## Reading it correctly (partly inference)

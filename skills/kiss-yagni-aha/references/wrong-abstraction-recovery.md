@@ -20,7 +20,7 @@ Existing code reads as proof it is necessary; it embodies effort already spent; 
 ## Recovery recipe
 
 1. **Re-introduce duplication.** Inline the abstraction body into every caller (mechanical; keep tests green after each caller).
-2. **Specialise per caller.** Each caller knows which arguments it passed; use them to see which branches execute and which do not.
+2. **Specialize per caller.** Each caller knows which arguments it passed; use them to see which branches execute and which do not.
 3. **Delete** the dead branches and unused parameters in each inlined copy.
 4. **Remove** the old abstraction once no caller references it.
 5. **Observe.** Metz reports callers often turn out quite different and further features become easier. Re-extract only a real shared subset, later.
@@ -51,7 +51,7 @@ def finance_report(order):   return to_html(order.lines + order.cost_lines)
 
 ## Safety checklist before inlining
 
-- Characterisation tests exist for each caller (or add them first).
+- Characterization tests exist for each caller (or add them first).
 - Inline one caller per commit; run the tests each time.
 - Use IDE "inline function" refactoring where available; avoid hand-editing logic while inlining.
 - Keep public/exported signatures stable until the last caller migrates (`parallel-change-expand-contract` when the function crosses a module or API boundary).

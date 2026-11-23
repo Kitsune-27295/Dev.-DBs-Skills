@@ -2,7 +2,7 @@
 
 Sources: https://developers.openai.com/api/docs/guides/reasoning · https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/reasoning_effort · https://platform.claude.com/docs/en/build-with-claude/effort · https://code.claude.com/docs/en/model-config · Last verified 2026-11-23
 
-Reading note: pages were fetched through a summarising reader (Firecrawl had no credits), so exact wording below is paraphrased from those summaries, not raw page text.
+Reading note: pages were fetched through a summarizing reader (Firecrawl had no credits), so exact wording below is paraphrased from those summaries, not raw page text.
 
 ## 1. Level vocabularies differ per vendor
 
@@ -26,7 +26,7 @@ Agent rule: never hard-code one vendor's level list into another's request; map 
 - Set on Messages API as `output_config.effort`; omitted means the model default. Setting the default explicitly behaves identically to omitting it.
 - Default is `high` everywhere except Claude Opus 5.5 and Claude Haiku 5.5, which default to `medium` (so a request omitting `effort` runs one level lower on Opus 5.5 than on Opus 5).
 - `max` is available on Fable/Mythos 5-5.2, Mythos Preview, Opus 5.5/5/4.8/4.7/4.6, Sonnet 5.5/5/4.6, Haiku 5.5. `xhigh` is available on Fable/Mythos 5-5.2, Opus 5.5/5/4.8/4.7, Sonnet 5.5/5, Haiku 5.5. Not every `max` model has `xhigh`.
-- Effort is a behavioural signal, not a token budget; at low levels the model still thinks on hard problems, just less.
+- Effort is a behavioral signal, not a token budget; at low levels the model still thinks on hard problems, just less.
 - It affects all output tokens: text, tool-call arguments and thinking. Lower effort means fewer, terser tool calls; higher means more calls, plans, summaries.
 - Opus 5.5: adaptive thinking always on; `thinking: disabled` returns 400 at every level. Sonnet 5.5: `thinking: between_tools` works at low/medium/high, 400 at xhigh/max. Haiku 5.5: `disabled` works at high or below, 400 at xhigh/max.
 - Per-model starting points: Fable/Opus 5: start `high`, `xhigh` for hardest agentic coding. Opus 4.7/4.8: start `xhigh` for coding. Sonnet 5.5: `medium` for well-specified agentic work, `high` for harder. Haiku 5.5: start `medium`, `low` for high-volume simple work (more likely to skip a search or check at `low`). Sonnet 4.6: `medium` recommended.

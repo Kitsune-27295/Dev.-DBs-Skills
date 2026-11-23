@@ -11,12 +11,12 @@ The Fern article (dated July 2026) is a vendor blog that sells its own product; 
 | `info` | title, version, description | landing page and version label |
 | `servers` | host, protocol, security | where and how to connect |
 | `channels` | addresses plus parameters | navigational spine |
-| `operations` | `send` / `receive` actions on channels | distinguishes client from server behaviour |
+| `operations` | `send` / `receive` actions on channels | distinguishes client from server behavior |
 | `messages` | payload schema, headers, content type, examples | what developers copy |
 | `components` | reusable schemas, messages, security, traits, bindings | prevents duplicated inline shapes |
 | `bindings` | protocol-specific settings (WebSocket headers/query, Kafka group/client ID, MQTT QoS/retain) | transport detail renderers often drop |
 
-The 3.0 change: operations became top-level with an explicit `send` or `receive` action referencing a channel via `$ref`, replacing 2.x `publish`/`subscribe`, whose perspective confused people. Bi-directional flows (a WebSocket) are modelled as one `send` and one `receive` operation on the same channel. Channel `$ref` uses JSON Pointer with URL encoding (`#/channels/user~1notifications`).
+The 3.0 change: operations became top-level with an explicit `send` or `receive` action referencing a channel via `$ref`, replacing 2.x `publish`/`subscribe`, whose perspective confused people. Bi-directional flows (a WebSocket) are modeled as one `send` and one `receive` operation on the same channel. Channel `$ref` uses JSON Pointer with URL encoding (`#/channels/user~1notifications`).
 
 ## Generator pipeline
 

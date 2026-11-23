@@ -13,7 +13,7 @@ Throttled services meter by operations (20 req/s), data volume (2 GiB/min) or op
 1. Put work in a **durable** messaging system that can absorb the full ingest rate (not an in-memory buffer; if the app dies, buffered data is lost).
 2. Run job processors that dequeue only what the current budget allows (also saves memory).
 3. Pace releases **finer than the service window**: if the limit is 100/s, release 20 every 200 ms rather than 100 once per second, avoiding bursts and keeping CPU, memory, network smooth.
-4. Handle residual throttle errors anyway: honour 429 and `Retry-After`, use bounded retries with small random delays, avoid retry storms (backoff mechanics belong to `circuit-breaker-retry-telemetry`).
+4. Handle residual throttle errors anyway: honor 429 and `Retry-After`, use bounded retries with small random delays, avoid retry storms (backoff mechanics belong to `circuit-breaker-retry-telemetry`).
 
 ```python
 async def drain(queue, send, per_second=100, slice_ms=200):

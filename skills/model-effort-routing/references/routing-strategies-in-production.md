@@ -2,7 +2,7 @@
 
 Sources: https://vercel.com/i/llm-routing-strategies · https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://routllm.pro/docs · Last verified 2026-11-23
 
-Reading note: pages were read through a WebFetch summariser (Firecrawl had no credits), so wording is second-hand. Vercel sells a gateway, Blocksize and DevelopersDigest sell advice/tools: all are vendor-flavoured.
+Reading note: pages were read through a WebFetch summarizer (Firecrawl had no credits), so wording is second-hand. Vercel sells a gateway, Blocksize and DevelopersDigest sell advice/tools: all are vendor-flavored.
 
 ## 1. The strategy menu
 
@@ -12,9 +12,9 @@ Vercel frames routing as "a layered control system", not one trick. Six strategi
 |---|---|---|---|---|
 | Cost-based | static per-token price | low | none | blind to load, queueing, quality drift |
 | Latency-based | recent p50/p90 per deployment | low-medium | none | history lags; a "fast" target slows once traffic shifts onto it |
-| Semantic | embedding similarity to labelled prompts, or a trained classifier | medium-high | high | edge cases misclassify; needs a fallback |
+| Semantic | embedding similarity to labeled prompts, or a trained classifier | medium-high | high | edge cases misclassify; needs a fallback |
 | Fallback chain | error, context mismatch, outage | low | none | stacked retries can amplify an outage |
-| Weighted load balancing | RPM/TPM limits, in-flight count | very low | none | optimises throughput, not model fit |
+| Weighted load balancing | RPM/TPM limits, in-flight count | very low | none | optimizes throughput, not model fit |
 | Budget ceiling | per-request or per-workflow spend cap | low | medium | downgrades later steps when budget is tight |
 
 Blocksize names three decision patterns: cascade (cheap first, escalate if a check fails), predictive routing (small classifier picks before generation), and capability/semantic routing (code to the best coder, long documents to the best long-context model, bulk classification to a small self-hosted model). DevelopersDigest names four: task-complexity tags, cost-budget filter (cheapest model under a price cap; suited to CI and bulk), provider-level chain, and LLM-as-router (a cheap model labels the task simple/medium/complex/frontier).

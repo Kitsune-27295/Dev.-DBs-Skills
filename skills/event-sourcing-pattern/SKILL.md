@@ -64,4 +64,4 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 
 - [Replay semantics: external effects, reversal and code changes](references/replay-external-effects-and-code-changes.md) — read when designing replays, gateways, retroactive fixes or temporal rules.
 - [Operational considerations: versioning, concurrency, GDPR and fit](references/azure-considerations-versioning-gdpr-and-fit.md) — read when deciding whether to adopt ES or planning schema evolution, idempotency and privacy.
-- [Streams, state aggregation and practitioner guide](references/streams-aggregation-and-practitioner-guide.md) — read when modelling streams, evolve/decide functions, snapshots and event naming.
+- [Streams, state aggregation and practitioner guide](references/streams-aggregation-and-practitioner-guide.md) — read when modeling streams, evolve/decide functions, snapshots and event naming.

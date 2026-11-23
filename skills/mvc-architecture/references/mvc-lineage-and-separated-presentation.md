@@ -24,7 +24,7 @@ The dependency arrow points one way: interface depends on Model, Model never on 
 
 ## Why it earned its place (Valente, Fowler and Beck's view)
 
-- Specialisation: UI developers and domain developers work apart.
+- Specialization: UI developers and domain developers work apart.
 - Multiple views of one model (hours and minutes stored once, drawn as analog and digital clock).
 - Testability: non-visual objects test without a screen.
 
@@ -33,10 +33,10 @@ The dependency arrow points one way: interface depends on Model, Model never on 
 | Style | Where logic lives | Weakness |
 |---|---|---|
 | Forms and Controls (VB, Delphi style) | Event handlers in the form; three copies of data: record, session, screen state | Logic tangled with widgets |
-| Smalltalk MVC | Domain in model, widget pairs of view and controller | Observer flow is hard to trace from code; view logic such as colour has no obvious home |
+| Smalltalk MVC | Domain in model, widget pairs of view and controller | Observer flow is hard to trace from code; view logic such as color has no obvious home |
 | VisualWorks Application Model | Intermediate application model with value holders and change notification | Letting it poke widgets directly fed the move to MVP |
 | MVP | Presenter coordinates model and widgets | Variants differ in how much the view does |
-| Presentation Model (also MVVM) | Intermediate model holds view state and behaviour | Small mapping to widgets stays untested |
+| Presentation Model (also MVVM) | Intermediate model holds view state and behavior | Small mapping to widgets stays untested |
 
 Where to put view-only logic: a custom control, or an intermediate Presentation Model (Fowler's suggestion).
 

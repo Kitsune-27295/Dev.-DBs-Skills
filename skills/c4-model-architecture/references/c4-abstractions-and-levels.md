@@ -16,7 +16,7 @@ Hierarchical abstractions (software system, container, component, code), hierarc
 
 ## What is and is not a container (from the container page)
 
-Containers: server-side web app, client-side web app in a browser, desktop app, mobile app, console/batch/scheduled job, serverless function, database schema, blob store or CDN, file system, a single shell script. Not containers: JARs, assemblies, DLLs, modules (they organise code inside an app; usually components).
+Containers: server-side web app, client-side web app in a browser, desktop app, mobile app, console/batch/scheduled job, serverless function, database schema, blob store or CDN, file system, a single shell script. Not containers: JARs, assemblies, DLLs, modules (they organize code inside an app; usually components).
 
 Rulings: a server app that mostly renders HTML is one container; a substantial SPA makes client and server two containers talking JSON/HTTPS. Managed services such as S3, RDS or a CDN are normally containers because you own the buckets or schemas. Several containers may share one runtime (three web apps in one Tomcat), and deployment is a separate concern.
 
@@ -33,7 +33,7 @@ Scope is cumulative and each diagram zooms into one element of the level above.
 
 ## Ad hoc diagram problems the introduction lists
 
-Unexplained colours/shapes/line styles, ambiguous element meaning, missing or unlabelled relationships, generic labels ("business logic"), unexplained acronyms, missing technology, mixed abstraction levels, inconsistent notation across a set, no reading order or clear transitions. Stated goal: raise diagram maturity; use cases: onboarding, reviews, risk-storming, threat modelling.
+Unexplained colors/shapes/line styles, ambiguous element meaning, missing or unlabelled relationships, generic labels ("business logic"), unexplained acronyms, missing technology, mixed abstraction levels, inconsistent notation across a set, no reading order or clear transitions. Stated goal: raise diagram maturity; use cases: onboarding, reviews, risk-storming, threat modeling.
 
 ## Example element and relationship labels
 
@@ -46,5 +46,5 @@ Container: "Orders API" [Node.js, REST]  -- "Reads/writes orders" [SQL/TCP] --> 
 - Produce Level 1 and Level 2 by default; add Level 3 only for a named complex container.
 - Label every element with name, type and technology, and every arrow with purpose and protocol.
 - Draw databases, queues and managed stores as containers, not as lines.
-- Add a legend whenever shapes or colours carry meaning.
+- Add a legend whenever shapes or colors carry meaning.
 - Decide the zoom target explicitly: one diagram per element, never mixed levels.

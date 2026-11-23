@@ -7,7 +7,7 @@ description: "Deep dive on DRY as Single Source of Truth (SSOT): one authoritati
 
 One idea: **every piece of knowledge has a single, unambiguous, authoritative representation** — and *knowledge* means a rule, a fact or an intent, not a run of identical characters. Duplicated syntax that encodes two different facts is fine; one fact written in two formats (code + comment, schema + class, API + client) is the real bug. Sources and fetch outcomes: [references/sources.md](references/sources.md). This is a deep dive; for the compact overview tables (and Rule of Three, KISS) see `pragmatic-solid-and-ssot`.
 
-Boundaries with neighbours: extension via strategies/plugins is `open-closed-principle`; grouping code by who asks for changes is `single-responsibility-cohesion`; dependency direction and wiring is `dependency-inversion-composition-root`; "do not build it yet" is `kiss-yagni-aha`; type-level single definition of a rule is `value-objects-type-invariants`; DB-level enforcement is `schema-and-constraints`; contract-first APIs are `arc42-api-contracts-architecture`.
+Boundaries with neighbors: extension via strategies/plugins is `open-closed-principle`; grouping code by who asks for changes is `single-responsibility-cohesion`; dependency direction and wiring is `dependency-inversion-composition-root`; "do not build it yet" is `kiss-yagni-aha`; type-level single definition of a rule is `value-objects-type-invariants`; DB-level enforcement is `schema-and-constraints`; contract-first APIs are `arc42-api-contracts-architecture`.
 
 ---
 

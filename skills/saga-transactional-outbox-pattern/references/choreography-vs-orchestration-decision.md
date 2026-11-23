@@ -17,7 +17,7 @@ Terminology (Microsoft): an event is a state change that already happened; a com
 | Cyclic dependencies | Real risk: participants consume each other's messages | Avoided; orchestrator owns the flow |
 | Visibility | Hard to see which participant reacts to what as steps grow | Easy: state is stored and interpretable |
 | Integration testing | All services must run to simulate a transaction | Orchestrator testable with stubbed participants (inference) |
-| Timeouts and compensation | Each participant must handle them | Centralised |
+| Timeouts and compensation | Each participant must handle them | Centralized |
 
 ## Decision rules
 - Use choreography when: 2-3 participants, linear flow, rarely changing, no desire for a shared coordinator.

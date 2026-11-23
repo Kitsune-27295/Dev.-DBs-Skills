@@ -1,6 +1,6 @@
 ---
 name: model-effort-routing
-description: "Find the most economical effective solution: pick the model tier and reasoning effort a task deserves, route and delegate to subagents, and cut token spend without under-powering consequential work. Covers optimisation objective, triage by worst dimension, effort and overthinking, orchestration ladder, subagent model and effort per call, escalation and fallback, budget guards, cache cost of mid-conversation changes, and portability across Claude Code, Google Antigravity and other harnesses. Use when choosing model or effort, delegating to subagents, cutting token cost, setting effort mid-conversation, designing routers, cascades or fallbacks, or writing skills and agents with model and effort headers."
+description: "Find the most economical effective solution: pick the model tier and reasoning effort a task deserves, route and delegate to subagents, and cut token spend without under-powering consequential work. Covers optimization objective, triage by worst dimension, effort and overthinking, orchestration ladder, subagent model and effort per call, escalation and fallback, budget guards, cache cost of mid-conversation changes, and portability across Claude Code, Google Antigravity and other harnesses. Use when choosing model or effort, delegating to subagents, cutting token cost, setting effort mid-conversation, designing routers, cascades or fallbacks, or writing skills and agents with model and effort headers."
 ---
 
 # Model & Effort Routing
@@ -25,7 +25,7 @@ Prices and model names change within months: keep them in a dated config, never 
 4. Levers in order: context size and caching, effort, tier, orchestration shape.
 5. **Cost never overrides correctness, safety or the safety floor** (section 2).
 
-## 2. Optimisation objective: the most economical effective solution
+## 2. Optimization objective: the most economical effective solution
 
 Pick the candidate that meets the acceptance criteria at the least cost. Three tests:
 - **Effectiveness**: it really solves the stated problem.
@@ -58,7 +58,7 @@ Score four dimensions; the **highest** decides. Size does not: a 2000-record sch
 ## 4. Effort control
 
 - **Levels (Claude):** `low`, `medium`, `high`, `xhigh`, `max`; other vendors differ and are model-dependent. Map your tiers to the target model's accepted names. Default is `high` except Opus 5.5 and Haiku 5.5 (`medium`); set effort explicitly.
-- Effort is a **behavioural signal, not a token budget**: it scales thinking, tool-call count and thoroughness.
+- Effort is a **behavioral signal, not a token budget**: it scales thinking, tool-call count and thoroughness.
 - **Under-thinking:** one small measurement (five questions, one skill, Claude Code) saw skills skipped at `--effort low`; the lightest tier at `low` skips checks. If an agent ignores a skill or tool, raise effort first and test activation after lowering it.
 - **Overthinking:** `max` gains little over `xhigh`, costs more, can overthink structured output. Use it only to measure a ceiling.
 - **Change effort before tier.** Prompt phrases ("think hard") do nothing; effort is the control; control length in the prompt.
@@ -67,7 +67,7 @@ Score four dimensions; the **highest** decides. Size does not: a 2000-record sch
 
 ## 5. Orchestration ladder and delegation
 
-Climb only on evidence: **single call** (optimise first) -> **chaining** (fixed subtasks) -> **routing** (known categories, reliable classifier) -> **parallelisation** (independent only; never parallel writers on shared files) -> **orchestrator-workers** (subtasks decided at runtime) -> **evaluator-optimizer** (checkable criteria, cap about 3 rounds) -> **autonomous agent** (open-ended, sandboxed). Multi-agent costs far more tokens: the vendor guide quotes roughly 10-15x, **a claim, not verified**; keep it for high-value independent breadth work, depth at two levels. Best-of-N needs a cheap trustworthy verifier.
+Climb only on evidence: **single call** (optimize first) -> **chaining** (fixed subtasks) -> **routing** (known categories, reliable classifier) -> **parallelization** (independent only; never parallel writers on shared files) -> **orchestrator-workers** (subtasks decided at runtime) -> **evaluator-optimizer** (checkable criteria, cap about 3 rounds) -> **autonomous agent** (open-ended, sandboxed). Multi-agent costs far more tokens: the vendor guide quotes roughly 10-15x, **a claim, not verified**; keep it for high-value independent breadth work, depth at two levels. Best-of-N needs a cheap trustworthy verifier.
 
 Delegating:
 1. **Break-even first**: delegate only for a named benefit (freed lead context, large output kept out, disjoint parallel work, verdict only); otherwise do it inline.
@@ -94,7 +94,7 @@ Delegating:
 ## 7. Budget and cost guards
 
 - **Ceilings** on spend, turns, wall-clock and `max_tokens`, enforced outside the model; decide whether a cap rejects or degrades.
-- A premium tier that is "available" is not "authorised": ask once, naming the surcharge; never use it in headless runs without prior consent. Expensive advisors get a consultation budget (one initial call, two per standard task) and a compact envelope.
+- A premium tier that is "available" is not "authorized": ask once, naming the surcharge; never use it in headless runs without prior consent. Expensive advisors get a consultation budget (one initial call, two per standard task) and a compact envelope.
 - **Research caps:** lightest tier, at most 3 researcher subagents (default 2), 3 sources per question, a second search only if the first is thin.
 - **Instruction-size budget:** always-loaded files under about 4 KB; move rationale to linked pages, never delete a rule.
 - **Caching and context size often beat tiering**: agents resend context each step, output and thinking cost several times input (see `caching-strategies`, `agent-skills-context-engineering`).

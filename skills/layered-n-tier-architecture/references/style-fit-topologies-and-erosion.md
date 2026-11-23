@@ -3,7 +3,7 @@
 Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/ · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-23
 
 ## Styles are constraints
-The Azure guide defines an architecture style as a family of architectures sharing characteristics; it constrains the allowed elements and relationships, and desirable properties emerge only if you respect the constraints. Its warning: adopting a style superficially, without its constraints, yields none of the benefits; but sometimes it is better to relax a constraint than chase purity. Choose with stakeholders, starting from the problem and prioritised nonfunctional requirements (time to market favours maintainability/testability; a tight budget favours simplicity). Changing direction later is costly, so invest upfront and keep measuring.
+The Azure guide defines an architecture style as a family of architectures sharing characteristics; it constrains the allowed elements and relationships, and desirable properties emerge only if you respect the constraints. Its warning: adopting a style superficially, without its constraints, yields none of the benefits; but sometimes it is better to relax a constraint than chase purity. Choose with stakeholders, starting from the problem and prioritized nonfunctional requirements (time to market favors maintainability/testability; a tight budget favors simplicity). Changing direction later is costly, so invest upfront and keep measuring.
 
 ## How N-tier compares (guide's table, paraphrased)
 | Style | Dependency management | Best-fit domain |

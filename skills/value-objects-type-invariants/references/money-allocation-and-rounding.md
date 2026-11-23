@@ -4,7 +4,7 @@ Sources: https://martinfowler.com/eaaCatalog/money.html · https://martinfowler.
 
 ## What the sources say (read)
 
-- The catalogue page is a short overview: money is not a first-class data type in mainstream languages, which causes errors in monetary calculations.
+- The catalog page is a short overview: money is not a first-class data type in mainstream languages, which causes errors in monetary calculations.
 - **Currency**: single-currency code is manageable; mixing currencies requires accounting for exchange (adding dollars to yen directly is the example).
 - **Rounding**: amounts are often rounded to the smallest currency unit, which can lose small amounts (pennies).
 - **Solution**: an object-oriented Money class handling currency and rounding. The page defers details to Chapter 18 of *Patterns of Enterprise Application Architecture*.

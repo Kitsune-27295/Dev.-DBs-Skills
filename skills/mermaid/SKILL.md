@@ -55,7 +55,7 @@ The first line after any frontmatter and `%%` comments is the exact type keyword
 | Task board | Kanban | `kanban` |
 | User experience scoring | Journey | `journey` |
 | Proportions | Pie | `pie` |
-| Prioritisation 2x2 | Quadrant | `quadrantChart` |
+| Prioritization 2x2 | Quadrant | `quadrantChart` |
 | Numeric series | XY chart | `xychart-beta` |
 | Flow volumes | Sankey | `sankey-beta` |
 | Requirements traceability | Requirement | `requirementDiagram` |
@@ -175,5 +175,5 @@ Run the strongest check available, and state explicitly what ran:
 - [Flowchart edges, subgraphs, and styling](references/flowchart-edges-subgraphs-and-styling.md) — chaining, markdown strings, linkStyle/curves, edge ids and animation, escaping.
 - [Sequence diagram details](references/sequence-diagram-details.md) — participant stereotypes, arrows, blocks, activations, escaping, numbering.
 - [ER, state, and class diagram details](references/er-state-class-diagram-details.md) — cardinality table, attributes, composite states, class relations and namespaces.
-- [C4 and architecture-beta diagrams](references/c4-and-architecture-diagrams.md) — C4 macro catalogue, unsupported features, architecture ports, alignment, seed config.
+- [C4 and architecture-beta diagrams](references/c4-and-architecture-diagrams.md) — C4 macro catalog, unsupported features, architecture ports, alignment, seed config.
 - [GitHub rendering and mmdc validation](references/github-rendering-and-mmdc-validation.md) — version check, Copilot workflow, mmdc flags and validation limits.

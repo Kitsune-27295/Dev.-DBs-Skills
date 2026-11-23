@@ -11,12 +11,12 @@ Sources: https://www.anthropic.com/research/building-effective-agents · https:/
 ## The ladder (Anthropic, Dec 2024), cheapest first
 | Pattern | Shape | Use when | Avoid when |
 |---|---|---|---|
-| Single call (+ retrieval, examples) | one prompt | usually enough; optimise this first | task needs fixed multi-step accuracy |
+| Single call (+ retrieval, examples) | one prompt | usually enough; optimize this first | task needs fixed multi-step accuracy |
 | Prompt chaining | A -> gate -> B -> C | task splits cleanly into fixed subtasks; trade latency for accuracy | only 2-3 trivial stages a single call handles; backtracking needed |
-| Routing | classify -> specialised prompt/tool/model | distinct categories, reliable classifier (LLM or classic) | categories blur; classification error is costly |
+| Routing | classify -> specialized prompt/tool/model | distinct categories, reliable classifier (LLM or classic) | categories blur; classification error is costly |
 | Parallelization: sectioning | independent subtasks at once | speed; one concern per call (guardrail beside answer) | subtasks depend on each other |
 | Parallelization: voting | same task N times | need confidence (vuln review, moderation thresholds) | no way to aggregate |
-| Orchestrator-workers | LLM plans subtasks at runtime, delegates, synthesises | subtasks unpredictable (multi-file code change, multi-source research) | subtasks known upfront (use chaining/sectioning) |
+| Orchestrator-workers | LLM plans subtasks at runtime, delegates, synthesizes | subtasks unpredictable (multi-file code change, multi-source research) | subtasks known upfront (use chaining/sectioning) |
 | Evaluator-optimizer | generate -> critique -> revise loop | explicit criteria AND revision demonstrably helps | criteria subjective; first draft already good; real-time |
 | Autonomous agent | plan-act-observe loop with ground truth from tools | open-ended, unknown step count, trusted/sandboxed environment | strict audit, tight cost/latency, one-shot perfection required |
 
@@ -35,7 +35,7 @@ Frameworks: start with raw API calls; hidden abstraction obscures prompts and in
 ## Enterprise guide additions (Anthropic PDF)
 - Single agents suit open-ended problems with unknown step count; they are weaker when you need first-try perfection every time, but try adding Skills to one agent before going multi-agent.
 - Multi-agent: Anthropic's internal research is quoted as 90.2% better than single-agent on tasks with several independent directions; the same guide says multi-agent uses roughly 10-15x the tokens (vendor figures, not independently verified). Reserve it for high-value work.
-- Centralised (supervisor/orchestrator/router) vs decentralised (swarm, group chat, blackboard, event-driven). Subagents are treated as tools by a supervisor. Decentralised gives emergent, less predictable behaviour.
+- Centralized (supervisor/orchestrator/router) vs decentralized (swarm, group chat, blackboard, event-driven). Subagents are treated as tools by a supervisor. Decentralized gives emergent, less predictable behavior.
 - Sequential workflows: audit trail, deterministic; avoid when iteration or backtracking is required. Parallel: avoid when agents write shared state.
 - Hybrids: supervisor + parallel specialists; sequential with dynamic routing; single agent that escalates to multi-agent on edge cases (cost-optimal).
 - Dynamic runtime agent creation: described as experimental, no production use known at the time.
@@ -51,9 +51,9 @@ Frameworks: start with raw API calls; hidden abstraction obscures prompts and in
 - Framework magic hiding the real prompts.
 
 ## How an agent should apply this
-- Start at the bottom: optimise one call (retrieval, examples) before adding structure.
+- Start at the bottom: optimize one call (retrieval, examples) before adding structure.
 - If steps are known, write a workflow; if only categories are known, route; if only the goal is known, use an agent with caps.
-- Parallelise only independent work; never parallel writers on shared state.
+- Parallelize only independent work; never parallel writers on shared state.
 - Add an evaluator only with checkable criteria and a hard round limit.
 - Escalate a rung only on measured evidence (eval failures), not intuition.
 - Make tool definitions as carefully as prompts; test them with varied inputs.

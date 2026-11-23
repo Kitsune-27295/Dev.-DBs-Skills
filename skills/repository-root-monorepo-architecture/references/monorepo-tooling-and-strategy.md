@@ -4,7 +4,7 @@ Sources: https://github.com/korfuri/awesome-monorepo (read), https://learn.githu
 
 ## Part A: awesome-monorepo (read from source)
 
-A curated list (about 5.9k stars) organised into: build systems and dependency management, repository management, good reads, version control add-ons, development process tools, notable public monorepos, migration tools, development workflows.
+A curated list (about 5.9k stars) organized into: build systems and dependency management, repository management, good reads, version control add-ons, development process tools, notable public monorepos, migration tools, development workflows.
 
 | Need | Tools named |
 |---|---|
@@ -21,7 +21,7 @@ Reading list highlights: Google's paper on a single repository for billions of l
 
 ## Part B: GitHub Well-Architected page (not read from source)
 
-Not read from source. Well-established general knowledge, labelled as such: monorepos give atomic cross-project changes and easier refactors but need path-aware CI, caching and ownership rules; polyrepos give clear ownership and isolation but risk version drift. The existing skill's SKILL.md and sources.md describe the page's claims; this reference does not independently verify them.
+Not read from source. Well-established general knowledge, labeled as such: monorepos give atomic cross-project changes and easier refactors but need path-aware CI, caching and ownership rules; polyrepos give clear ownership and isolation but risk version drift. The existing skill's SKILL.md and sources.md describe the page's claims; this reference does not independently verify them.
 
 ## Decision rules (own synthesis)
 

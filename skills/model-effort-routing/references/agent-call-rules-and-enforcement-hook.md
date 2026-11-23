@@ -1,6 +1,6 @@
 # Agent-Call Rules and the Enforcement Hook
 
-Sources: Local operating practice (private notes, summarised; not a public URL) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
 
 Agents that have a definition file choose their own model there. Built-in agent types (general-purpose, a catch-all, an explore type) have **no file**: unless the launching call sets `model`, they silently run on the session model, which is usually the most expensive one. A routing policy therefore needs both per-call rules and enforcement.
 
@@ -8,7 +8,7 @@ Agents that have a definition file choose their own model there. Built-in agent 
 
 | Kind of agent / call | Model | Effort | Why |
 |---|---|---|---|
-| Read-only search, lookup, trace, fetch, count (tools limited to read/grep/glob/shell) | lightest | low | Mechanical gathering; no judgement to protect. |
+| Read-only search, lookup, trace, fetch, count (tools limited to read/grep/glob/shell) | lightest | low | Mechanical gathering; no judgment to protect. |
 | Bulk mechanical work that edits files: ingest waves, translation, extraction, i18n, doc moves, surveys that write a report | mid | medium | Needs reliable tool use, not deep reasoning. |
 | Review, audit, root cause, design, security, shared-state queries, anything that judges | strongest, or omit/`inherit` | high | Errors here are expensive; do not downgrade. |
 | Planning agent | inherit the session model | n/a | Design work keeps the session model on purpose. |

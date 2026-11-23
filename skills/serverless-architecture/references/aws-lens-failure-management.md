@@ -13,7 +13,7 @@ Read status: the welcome page yielded only its introduction (lens dated 2022-07-
 
 Otherwise data is lost. Concrete mechanisms described:
 
-| Source | Behaviour | Control |
+| Source | Behavior | Control |
 |---|---|---|
 | Lambda async invocation | Failed events can go to a per-function SQS dead-letter queue | DLQ per function |
 | Kinesis / DynamoDB Streams | Whole batch retried; repeated errors block the shard until fixed or items expire | Maximum retry attempts, maximum record age, destination on failure, bisect batch on function error (removes poison pills) |

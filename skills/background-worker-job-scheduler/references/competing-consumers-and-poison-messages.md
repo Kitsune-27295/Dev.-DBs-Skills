@@ -56,7 +56,7 @@ More consumers only help while downstream capacity exists. Cap max concurrency p
 - Putting sensitive data in the payload instead of a reference id.
 - Auto-scaling consumers without checking the database or API they call.
 
-## Relationship to neighbours
+## Relationship to neighbors
 
 Reliable publication of the message after a DB commit is the outbox problem: `saga-transactional-outbox-pattern`. Broker topology, events vs commands: `event-driven-architecture`. Race conditions between consumers touching the same row: `race-condition-fix`.
 

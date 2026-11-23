@@ -7,7 +7,7 @@ description: "Validate and parse untrusted input at trust boundaries: parse-don'
 
 One idea: every byte that crosses a **trust boundary** is hostile until it has been size-limited, decoded once, **parsed into a stronger type**, checked syntactically and semantically against an **allowlist**, and its failures **collected** (not thrown one at a time) into a single error report; everything behind the boundary then works with already-proven data. Sources and claims: [references/sources.md](references/sources.md).
 
-Boundary with neighbours: type-level modeling (Value Objects, sum types, `Result` pipelines, making illegal states unrepresentable) belongs to `defensive-domain-modeling`; this skill owns the **mechanics at the edge** (what to check, in which order, with which limits, and how to report). DTO-to-domain translation is `dto-mapper-anti-corruption-layer`; the final error envelope is `error-handling-problem-details`; domain value-object invariants are `value-objects-type-invariants`; authorization is `authn-authz-guard`; the trust principle itself is `never-trust-the-client`; broad security review is `security-audit`.
+Boundary with neighbors: type-level modeling (Value Objects, sum types, `Result` pipelines, making illegal states unrepresentable) belongs to `defensive-domain-modeling`; this skill owns the **mechanics at the edge** (what to check, in which order, with which limits, and how to report). DTO-to-domain translation is `dto-mapper-anti-corruption-layer`; the final error envelope is `error-handling-problem-details`; domain value-object invariants are `value-objects-type-invariants`; authorization is `authn-authz-guard`; the trust principle itself is `never-trust-the-client`; broad security review is `security-audit`.
 
 ---
 

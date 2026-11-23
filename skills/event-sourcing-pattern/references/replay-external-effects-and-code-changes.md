@@ -11,7 +11,7 @@ Fowler's 2005 write-up is the deepest treatment of what happens when you replay 
 - Snapshots shorten recovery: load a snapshot, replay newer events. Either the log or the state DB can be the system of record because each can rebuild the other.
 
 ## Reversal
-Difference events ("add 10") reverse trivially; absolute events ("set to 110") need prior values stored in the event. Reversal is an optimisation, since rebuilding from a snapshot always works.
+Difference events ("add 10") reverse trivially; absolute events ("set to 110") need prior values stored in the event. Reversal is an optimization, since rebuilding from a snapshot always works.
 
 ## External updates during replay
 Downstream systems cannot tell a replay from real processing. Wrap them in a gateway that is silent in replay mode; domain code calls the gateway unconditionally and never knows. Alternative: buffer notifications and release them on a schedule.

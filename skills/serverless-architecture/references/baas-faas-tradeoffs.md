@@ -1,6 +1,6 @@
 # BaaS, FaaS and the Serverless Trade-off Ledger
 
-Sources: https://martinfowler.com/articles/serverless.html (Roberts, 2018; closing 3 KB was only boilerplate and acknowledgements), https://martinfowler.com/bliki/Serverless.html (Janakiraman, 2016) · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/serverless.html (Roberts, 2018; closing 3 KB was only boilerplate and acknowledgments), https://martinfowler.com/bliki/Serverless.html (Janakiraman, 2016) · Last verified 2026-11-23
 
 ## Definition
 
@@ -8,7 +8,7 @@ Serverless = third-party **BaaS** (managed auth, databases, messaging that clien
 
 ## FaaS constraints that shape design
 
-- **State**: nothing in local memory or disk may be relied on between invocations; externalise state.
+- **State**: nothing in local memory or disk may be relied on between invocations; externalize state.
 - **Duration cap**: at the time of writing Lambda allowed five minutes (check current limits; they change).
 - **Cold start**: latency depends on language, code size and invocation frequency.
 - **Architecture**: coordination moves toward choreography via events.
@@ -16,7 +16,7 @@ Serverless = third-party **BaaS** (managed auth, databases, messaging that clien
 
 ## Benefits stated
 
-Lower operational cost, pay-per-use that suits bursty traffic (and rewards optimised code), automatic fine-grained scaling, simpler deployment, faster time to market, less idle capacity.
+Lower operational cost, pay-per-use that suits bursty traffic (and rewards optimized code), automatic fine-grained scaling, simpler deployment, faster time to market, less idle capacity.
 
 ## Drawbacks stated
 
@@ -25,7 +25,7 @@ Lower operational cost, pay-per-use that suits bursty traffic (and rewards optim
 | Vendor dependence | Less control over downtime, limits, pricing; switching drags other components |
 | Multitenancy | Security, robustness and performance concerns on shared platforms |
 | Security surface | Each vendor adds attack surface; IAM policies easy to misconfigure |
-| Client-side logic | Full BaaS can duplicate logic across clients and lose server-side optimisation |
+| Client-side logic | Full BaaS can duplicate logic across clients and lose server-side optimization |
 | Testing/debugging | Integration testing hard, emulators imperfect, limited remote debugging |
 | Concurrency limits | Account-wide limits let one workload throttle another, production included; use reserved concurrency |
 | Gateway configuration | Logic pushed into gateway definitions is hard to test and version |
@@ -51,6 +51,6 @@ function: checkout-handler
 
 - Classify each component as BaaS or FaaS before drawing the architecture.
 - Verify current platform limits instead of repeating 2018 numbers.
-- Plan integration tests in a real cloud environment, since unit tests miss IAM, trigger and gateway behaviour.
+- Plan integration tests in a real cloud environment, since unit tests miss IAM, trigger and gateway behavior.
 - Set reserved concurrency and budget alarms for each function that shares an account with production.
 - Keep gateway definitions declarative and thin; keep logic in versioned, testable code.

@@ -25,7 +25,7 @@ Use a function map when each variant is a pure expression; promote to classes wh
 
 ## Recipe B: scattered switches to polymorphism
 
-Symptom: `if kind == X` in pricing, rendering, export. Move all behaviours of one kind into one object with methods `price()`, `render()`, `export()`; each switch disappears. Warning: this makes *adding a new kind* easy but *adding a new operation* hard (touches every kind). Choose by which axis changes more (inference; known as the expression problem). If operations grow, keep data classes plus functions per operation.
+Symptom: `if kind == X` in pricing, rendering, export. Move all behaviors of one kind into one object with methods `price()`, `render()`, `export()`; each switch disappears. Warning: this makes *adding a new kind* easy but *adding a new operation* hard (touches every kind). Choose by which axis changes more (inference; known as the expression problem). If operations grow, keep data classes plus functions per operation.
 
 ## Recipe C: parallel change for live systems
 
@@ -58,7 +58,7 @@ Fail startup on duplicate names or missing required plugins.
 
 ## Testing the seam
 
-- Contract test run against every implementation (same assertions, parametrised).
+- Contract test run against every implementation (same assertions, parametrized).
 - Context tested with a trivial fake strategy.
 - A "new variant" test: add a dummy strategy in the test file and assert the context needs no change.
 

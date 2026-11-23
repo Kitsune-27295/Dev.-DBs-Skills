@@ -33,7 +33,7 @@ under two seconds.
 Refs: #311
 ```
 
-Paragraphs: (1) old behaviour and why it was wrong, (2) new behaviour and why this approach, (3) alternatives or limits. Footers last.
+Paragraphs: (1) old behavior and why it was wrong, (2) new behavior and why this approach, (3) alternatives or limits. Footers last.
 
 ## Bad to better
 
@@ -64,7 +64,7 @@ Agree on style (case, grammar), content (what body must contain) and metadata (i
 ## How an agent should apply this
 
 - Draft the subject last: summarize the staged diff, imperative, <=50 chars, no period; check it completes "If applied, this commit will ...".
-- Write a body whenever the reason is not obvious from the diff: old behaviour, why wrong, why this fix, alternatives rejected.
+- Write a body whenever the reason is not obvious from the diff: old behavior, why wrong, why this fix, alternatives rejected.
 - Put issue links and co-author/sign-off trailers in the footer, one per line, after a blank line.
 - Never leave `WIP`, `fix`, `update` as the final message on a commit that will be shared; reword locally first (only if unpushed).
 - Match the repo's existing capitalization and prefix style from `git log --oneline`.

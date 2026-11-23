@@ -1,6 +1,6 @@
 # Work-Weight Tier Table
 
-Sources: Local operating practice (private notes, summarised; not a public URL) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
 
 A tiering policy maps the *weight of the work* to a model and an effort level, so that cost and capability move together. The policy runs as a single data file (a "policy" JSON) that says which model and effort each kind of work gets, and which skill or agent belongs to which kind. Editing one tier changes every member at once.
 
@@ -10,7 +10,7 @@ A tiering policy maps the *weight of the work* to a model and an effort level, s
 |---|---|---|---|---|
 | `gather` | fetch, search, read-only lookup, counting | lightest (haiku class) | high | Cheap per token. Vendor prompting guidance for the lightest model suggests `high` suits strict instruction following; at `low` it is likelier to skip a search or stop early. |
 | `build` | generate, implement, edit, set up, write, diagnose with tools | mid (sonnet class) | high | `high` is the API default for the mid model and fits long agentic tasks; at `medium` it more often stops to check with the user before finishing. |
-| `reason` | analysis, comprehension, review, design, security, root cause | strongest (opus class) | high | One step above the session default on purpose: these are the heavy-judgement tasks where a wrong answer costs more than the tokens. Higher levels (`xhigh`, `max`) only for a measured gain. |
+| `reason` | analysis, comprehension, review, design, security, root cause | strongest (opus class) | high | One step above the session default on purpose: these are the heavy-judgment tasks where a wrong answer costs more than the tokens. Higher levels (`xhigh`, `max`) only for a measured gain. |
 | `orchestrate` | plan and coordinate other agents, long runs with little supervision | top-tier planner (fable class) | high | Vendor guidance says start at `high`; the model is reported to work well as planner of other models. About twice the price of the strong tier, so keep the list short. |
 | `style` | not a task: an output style that must not switch the session | inherit | no line | Switching model or effort for a presentation style would be wrong. |
 

@@ -1,13 +1,13 @@
 ---
 name: error-handling-problem-details
-description: "Deep dive on error handling as a contract: error taxonomy (client vs server, expected vs unexpected), the HTTP error contract with RFC 9457 Problem Details (type/status/title/detail/instance, extension members, application/problem+json, validation errors, security), Result-vs-exceptions trade-offs, Railway-Oriented Programming composition (bind, map, tee, tryCatch, plus), and OWASP leak-safe handling (global handler, generic client message, detailed server log). Complements `defensive-domain-modeling` (domain modelling) and `circuit-breaker-retry-telemetry`. Use when designing an API error format, writing a global exception handler, choosing Result vs throw, composing fallible steps, or reviewing error responses for information leakage."
+description: "Deep dive on error handling as a contract: error taxonomy (client vs server, expected vs unexpected), the HTTP error contract with RFC 9457 Problem Details (type/status/title/detail/instance, extension members, application/problem+json, validation errors, security), Result-vs-exceptions trade-offs, Railway-Oriented Programming composition (bind, map, tee, tryCatch, plus), and OWASP leak-safe handling (global handler, generic client message, detailed server log). Complements `defensive-domain-modeling` (domain modeling) and `circuit-breaker-retry-telemetry`. Use when designing an API error format, writing a global exception handler, choosing Result vs throw, composing fallible steps, or reviewing error responses for information leakage."
 ---
 
 # Error Handling: Problem Details, Result Pipelines & Leak-Safe Responses
 
 One idea: separate **what the machine and caller need** (stable, typed, documented error contract) from **what the operator needs** (full detail in server logs) and from **what the attacker must not get** (stack traces, paths, versions); and inside the code, make expected failures **values** that flow through composition, and unexpected failures **exceptions** caught once at a global boundary. Sources and fetch status: [references/sources.md](references/sources.md).
 
-Boundaries (do not redo here): modelling domain types and parsing input live in `defensive-domain-modeling` and `value-objects-type-invariants`; the request validation step in `validator-input-parser`; retries, breakers and telemetry in `circuit-breaker-retry-telemetry`; authentication/authorization failures in `authn-authz-guard`; chain placement of the global handler in `middleware-interceptor-chain`; threat review in `security-audit` and `never-trust-the-client`.
+Boundaries (do not redo here): modeling domain types and parsing input live in `defensive-domain-modeling` and `value-objects-type-invariants`; the request validation step in `validator-input-parser`; retries, breakers and telemetry in `circuit-breaker-retry-telemetry`; authentication/authorization failures in `authn-authz-guard`; chain placement of the global handler in `middleware-interceptor-chain`; threat review in `security-audit` and `never-trust-the-client`.
 
 ---
 
@@ -59,7 +59,7 @@ Attackers start with reconnaissance; error output that names the server, framewo
 1. One **global error handler** configured in the runtime/framework, not per-endpoint try/catch.
 2. On an unexpected error: **generic** response to the client, **full detail in the server log** (correlate by an id placed in `instance` or a header).
 3. No stack traces, SQL, file paths, versions or internal hostnames in any response body or header; development-only diagnostic pages must be disabled outside development.
-4. Use 5xx only for requests the application cannot fulfil; use 4xx for client-caused errors (oversized body, unauthorised, malformed).
+4. Use 5xx only for requests the application cannot fulfill; use 4xx for client-caused errors (oversized body, unauthorized, malformed).
 5. Use the problem-details format for the generic body (the cheat sheet cites RFC 7807/9457).
 6. Check `detail` and extension members against the leak list; RFC 9457 security notes say to vet all details and avoid stack dumps/internals.
 7. Be careful with **enumeration**: uniform responses for "user exists" vs "does not exist" on login/reset (own inference, standard practice; verify against `authn-authz-guard`).

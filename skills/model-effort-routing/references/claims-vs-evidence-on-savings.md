@@ -2,7 +2,7 @@
 
 Sources: https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://vercel.com/i/llm-routing-strategies · https://acceleraid.ai/en/blog/ai-models-2026-cost-vs-skills-comparison · https://www.microsoft.com/en-us/research/publication/best-route-adaptive-llm-routing-with-test-time-optimal-compute/ · Last verified 2026-11-23
 
-Pages read through a WebFetch summariser (Firecrawl out of credits), so every figure is second-hand. Confidence = my confidence that the number is a sound, generalisable fact: High / Medium / Low.
+Pages read through a WebFetch summarizer (Firecrawl out of credits), so every figure is second-hand. Confidence = my confidence that the number is a sound, generalizable fact: High / Medium / Low.
 
 ## 1. Table of numeric saving claims
 
@@ -10,7 +10,7 @@ Pages read through a WebFetch summariser (Firecrawl out of credits), so every fi
 |---|---|---|---|
 | 40-70% AI spend reduction at matched quality | Blocksize | headline; no method | Low |
 | About 70% of requests handled as well by small/mid models | Blocksize | none | Low |
-| 55/30/15 traffic split at 1x/5x/25x cost | Blocksize | labelled illustrative | Low |
+| 55/30/15 traffic split at 1x/5x/25x cost | Blocksize | labeled illustrative | Low |
 | 10-30x per-token price gap frontier vs small | Blocksize | list prices | Medium (varies, check) |
 | Solo dev 40-60% vs top model | DevelopersDigest | no method | Low |
 | Small team 60-80% | DevelopersDigest | no method | Low |

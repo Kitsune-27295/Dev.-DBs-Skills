@@ -10,12 +10,12 @@ Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-age
 - How an agent should apply this
 
 ## Complexity ladder
-Use the lowest level that reliably works: (1) direct model call (classification, summarisation, translation: if prompting solves it, no agent); (2) single agent with tools, often the right enterprise default, easier to debug, set iteration limits against infinite tool loops; (3) multiagent orchestration, justified only when one agent fails due to prompt complexity, tool overload, or separate security boundaries. Multi-agent buys specialisation, scalability, maintainability and per-agent model choice, but adds coordination overhead, latency and failure modes.
+Use the lowest level that reliably works: (1) direct model call (classification, summarization, translation: if prompting solves it, no agent); (2) single agent with tools, often the right enterprise default, easier to debug, set iteration limits against infinite tool loops; (3) multiagent orchestration, justified only when one agent fails due to prompt complexity, tool overload, or separate security boundaries. Multi-agent buys specialization, scalability, maintainability and per-agent model choice, but adds coordination overhead, latency and failure modes.
 
 ## The five patterns
 **Sequential** (pipeline, prompt chaining): fixed linear order, next agent chosen by the workflow, not the agent.
 - Use: clear stage dependencies, draft-review-polish, transformation pipelines.
-- Avoid: parallelisable stages, few stages one agent can do, need for backtracking or dynamic routing, or early failures that cannot be stopped from poisoning later steps.
+- Avoid: parallelizable stages, few stages one agent can do, need for backtracking or dynamic routing, or early failures that cannot be stopped from poisoning later steps.
 
 **Concurrent** (fan-out/fan-in, scatter-gather): agents analyse the same input independently. Aggregation strategies: vote or majority for classification, weighted merge for scores, LLM synthesis to reconcile narratives.
 - Use: independent perspectives, ensembles, quorum, latency-sensitive work.
@@ -29,7 +29,7 @@ Use the lowest level that reliably works: (1) direct model call (classification,
 - Use: the right specialist emerges mid-task; signals for "capability limit reached" can be predetermined.
 - Avoid: the right agent is obvious from the input (use a plain dispatcher), rule-based routing, bad routing is costly to the user, bounce loops are hard to prevent.
 
-**Magentic** (task-ledger, adaptive planning): a manager builds and revises a ledger of goals and subgoals while specialised agents use tools to change external systems; yields a reviewable plan and audit trail.
+**Magentic** (task-ledger, adaptive planning): a manager builds and revises a ledger of goals and subgoals while specialized agents use tools to change external systems; yields a reviewable plan and audit trail.
 - Use: open-ended problems with no known path, plan wanted for human approval (example: low-risk SRE incident remediation).
 - Avoid: deterministic paths, no ledger needed, time-sensitive work, likely stalls.
 

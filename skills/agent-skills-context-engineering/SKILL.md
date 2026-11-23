@@ -63,7 +63,7 @@ Build trust in non-deterministic coding agents through a cybernetic steering loo
 3. **Match Control to the 3 Regulation Categories:**
    - **Maintainability Harness:** Strongest today via linters, complexity checks, coverage, dependency-boundary tests, and scheduled "garbage collection" for drift.
    - **Architecture Fitness Harness:** Architectural Fitness Functions (latency benchmarks, logging rules, import-direction checks).
-   - **Behaviour Harness (Hardest):** Never blindly trust AI-generated green tests alone; anchor functional behavior with specs, approved fixtures, contract tests, and targeted human review.
+   - **Behavior Harness (Hardest):** Never blindly trust AI-generated green tests alone; anchor functional behavior with specs, approved fixtures, contract tests, and targeted human review.
 4. **Engineer Codebase "Harnessability":** Strongly typed languages, explicit module boundaries, and clean conventions amplify harness reliability. Keep humans focused on **steering the harness** (turning repeated agent failures into tighter Guides or Sensors) and making high-stakes judgment calls.
 
 ## Mistakes to Catch

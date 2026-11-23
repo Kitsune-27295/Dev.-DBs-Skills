@@ -7,7 +7,7 @@ description: "Deep dive on the Single Responsibility Principle as cohesion by re
 
 One idea: **gather together the things that change for the same reason, separate the things that change for different reasons** — and a "reason" is a *person or group who asks for the change*, not a count of methods. SRP is cohesion/coupling restated at module scale. Sources and fetch outcomes (including the two slugs and the unreachable CCP page): [references/sources.md](references/sources.md). Deep dive; for the overview row see `pragmatic-solid-and-ssot`.
 
-Boundaries with neighbours: one fact, one home is `ssot-and-dry`; adding variants without edits is `open-closed-principle`; direction of dependencies and wiring is `dependency-inversion-composition-root`; where bounded contexts split is `ddd-domain-heuristics-debiasing`; feature-oriented layout is `package-by-feature-component` and `vertical-slice-architecture`; do not split before the pain is real: `kiss-yagni-aha`.
+Boundaries with neighbors: one fact, one home is `ssot-and-dry`; adding variants without edits is `open-closed-principle`; direction of dependencies and wiring is `dependency-inversion-composition-root`; where bounded contexts split is `ddd-domain-heuristics-debiasing`; feature-oriented layout is `package-by-feature-component` and `vertical-slice-architecture`; do not split before the pain is real: `kiss-yagni-aha`.
 
 ---
 
@@ -21,7 +21,7 @@ Note on terminology: the word **"actor"** is the later book formulation; the 201
 
 ## 2. The canonical example, and what it teaches
 
-`Employee` with `calculatePay()` (CFO's organisation), `reportHours()` (COO's, auditing) and `save()` (CTO's, persistence). Three stakeholders edit one file; a change for one can silently break another's behaviour, and trust is lost ("mechanic fixes the window, breaks the engine"). Other symptoms the article lists: SQL inside JSPs, HTML built in calculation modules, business rules that know the DB schema. Full walkthrough and split: [references/srp-actors-and-reasons-to-change.md](references/srp-actors-and-reasons-to-change.md).
+`Employee` with `calculatePay()` (CFO's organization), `reportHours()` (COO's, auditing) and `save()` (CTO's, persistence). Three stakeholders edit one file; a change for one can silently break another's behavior, and trust is lost ("mechanic fixes the window, breaks the engine"). Other symptoms the article lists: SQL inside JSPs, HTML built in calculation modules, business rules that know the DB schema. Full walkthrough and split: [references/srp-actors-and-reasons-to-change.md](references/srp-actors-and-reasons-to-change.md).
 
 ## 3. Common misreadings to reject
 
@@ -39,7 +39,7 @@ Note on terminology: the word **"actor"** is the later book formulation; the 201
 2. **Tag each public method/field** with its actor. Tags that cluster = responsibilities.
 3. **Check git history**: files/functions that change in different commits for different tickets confirm axes; things that always change together belong together.
 4. **Choose a cut**: shared data structure plus one class per actor, or a facade over per-actor classes.
-5. **Move behaviour**, keep tests green, then delete the old entry points.
+5. **Move behavior**, keep tests green, then delete the old entry points.
 6. **Check the arrows**: the actors' modules must not import each other; shared data flows by value.
 
 ```python
@@ -89,5 +89,5 @@ CCP (Martin, package design; **not read from source** since the Fowler bliki pag
 ## Deep references
 
 - [SRP: actors and reasons to change](references/srp-actors-and-reasons-to-change.md) — read for the Employee walkthrough, Parnas/Dijkstra lineage and the split.
-- [Cohesion and the Common Closure Principle](references/cohesion-and-common-closure.md) — read when deciding package/module boundaries (CCP section is labelled background knowledge).
+- [Cohesion and the Common Closure Principle](references/cohesion-and-common-closure.md) — read when deciding package/module boundaries (CCP section is labeled background knowledge).
 - [SRP refactoring recipes and signals](references/srp-refactoring-recipes.md) — read when splitting a god class step by step.

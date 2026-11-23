@@ -1,4 +1,4 @@
-# Azure EDA Style: Topologies, Payloads and Challenge Catalogue
+# Azure EDA Style: Topologies, Payloads and Challenge Catalog
 
 Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven (the PT-PT page is the same article, not re-read) · Last verified 2026-11-23
 
@@ -29,13 +29,13 @@ Per-consumer mixing is allowed when you control the consumers.
 - **Broker**: components broadcast, others react or ignore. Highly decoupled, scalable; nobody owns the state of a multistep transaction, so there is no built-in restart or replay and inconsistency risk is real.
 - **Mediator**: a mediator holds state, handles errors and restarts, and dispatches commands (usually onto queues) instead of broadcasting. More control and consistency; more coupling and a possible bottleneck/reliability point.
 
-## Challenge catalogue (and the stated mitigation)
+## Challenge catalog (and the stated mitigation)
 
 | Challenge | Mitigation from the page |
 |---|---|
 | Guaranteed delivery | Persist in-transit events; acknowledge only after handoff (client acknowledge mode) |
 | Eventual consistency | Design consumers and reads to tolerate stale data |
-| Ordering / exactly-once with multiple instances | Idempotent consumers; minimise coordination |
+| Ordering / exactly-once with multiple instances | Idempotent consumers; minimize coordination |
 | Cross-service coordination | Choreography or saga orchestration; compensating transactions |
 | Error handling | Error-handler processor, resubmit to the channel (out of order), then dead-letter queue |
 | Observability | Correlation ID in every event, planned from the start |

@@ -9,7 +9,7 @@ Note: https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-
 - **Testability**: each driver port gets a test driver, each driven port a mock, so the app is testable alone; fits BDD acceptance scenarios (Garrido).
 - **Maintainability and flexibility**: switch technology by choosing another adapter, possibly from a properties file with no recompile; add adapters without touching existing code (Garrido).
 - **Delayed technology decisions**: build business logic first (Garrido).
-- **Independent evolution**: UI and database can be modernised without touching business logic; several clients share one domain (AWS).
+- **Independent evolution**: UI and database can be modernized without touching business logic; several clients share one domain (AWS).
 - **DDD fit**: each application component can map to a subdomain (AWS).
 
 ## Costs (all argued, none measured)

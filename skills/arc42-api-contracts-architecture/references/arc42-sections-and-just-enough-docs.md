@@ -22,7 +22,7 @@ arc42 (Hruschka and Starke, in use since 2005) answers what to document and how.
 - **Audience table:** context diagram for everyone; container for dev/ops; component for developers; decision record for architects; deployment for ops/security; quality requirements for product owners; runbook for on-call.
 - **Freshness rules:** update docs in the same change (definition of done), assign owners, generate diagrams where possible, review quarterly, show last-verified dates.
 - **Common mistakes:** too much detail, no clear audience, missing rationale, diagrams without titles/legends, writing once and never again, hiding the docs.
-- **Diagram habits:** title and legend, labelled arrows (purpose or protocol), one level of detail per diagram, alt text.
+- **Diagram habits:** title and legend, labeled arrows (purpose or protocol), one level of detail per diagram, alt text.
 
 Caveat: the vickybytes guide is a general overview, not normative; the arc42 section list comes from arc42.org.
 

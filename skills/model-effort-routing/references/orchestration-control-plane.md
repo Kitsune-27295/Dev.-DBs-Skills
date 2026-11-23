@@ -13,29 +13,29 @@ Stages (Kosmoy): trigger, planning, execution, governance, observability; govern
 - **Central LLM gateway**: single entry/exit for model traffic; routing, policy, cost attribution, audit logs.
 - **Agent registry**: inventory of agents with system access, models, owners, risk class.
 - **Sandboxing**: containment enforced by infrastructure. Guardrails ask the agent to restrain itself; a sandbox enforces it regardless.
-- **Observability**: live cost, usage, quality, behaviour.
+- **Observability**: live cost, usage, quality, behavior.
 - **Agent controls**: kill switches, action logging, scope enforcement, human escalation.
 - Routing criteria: cost, capability, latency, compliance (data residency). Multi-provider routing so apps do not hard-code a vendor.
 
 ## Tool and agent protocols
 - MCP: open agent-to-tool standard (machinedge guide says it moved to a Linux Foundation foundation in Dec 2025; not verified against a primary source). Portability is real but auth and feature support vary per server.
 - A2A, ACP, ANP: agent-to-agent protocols; the machinedge guide covers them in a chapter beyond the readable part, so no detail is recorded here.
-- Kosmoy's point: agent activity increasingly flows through MCP tool calls and agent-to-agent messages, so a layer that sees only model completions is blind to it. Route, authorise and log tool/agent traffic like model calls.
+- Kosmoy's point: agent activity increasingly flows through MCP tool calls and agent-to-agent messages, so a layer that sees only model completions is blind to it. Route, authorize and log tool/agent traffic like model calls.
 - Anthropic's tool advice applies at the protocol edge: unambiguous names, examples, edge cases, argument shapes that make mistakes hard.
 
 ## Governance rules from the sources
-- Centralise governance and audit in shared infrastructure; per-app controls are fragile (Kosmoy).
-- Human approval gates at finalisation and high-stakes actions; too many bottleneck, too few lose oversight (machinedge).
+- Centralize governance and audit in shared infrastructure; per-app controls are fragile (Kosmoy).
+- Human approval gates at finalization and high-stakes actions; too many bottleneck, too few lose oversight (machinedge).
 - Hard stops: iteration cap (guide suggests 10-20 steps), ~2-3 retries per tool, stuck detection after ~3 failures, timeout returning best-so-far, explicit done criteria, a verification pass (all machinedge heuristics, not standards).
 - Keep the validating "guardian" separate from the agent it monitors (machinedge).
-- Audit trails favour pipelines and supervisors; fan-out is harder to govern (thinking.inc).
+- Audit trails favor pipelines and supervisors; fan-out is harder to govern (thinking.inc).
 - Context: sub-agents return summaries, not transcripts; compact near capacity; context editing and external memory (Anthropic PDF).
 - Observability must capture prompts, retrieval context, tokens and inter-agent delegation, not only stack traces (Anthropic PDF).
 - Monitor three levels: agent, orchestration (routing accuracy, handoff failures, coordination overhead), workflow (completion, cost, human interventions). Alert thresholds in thinking.inc (95% routing, 5% handoff failure, 25% overhead) are that vendor's suggestions.
 
 ## Where sources disagree or overreach
 - machinedge argues most production systems should be workflows; Anthropic's article is milder.
-- Anthropic's PDF favours multi-agent for open-ended parallel work; the machinedge guide calls orchestrators often over-built.
+- Anthropic's PDF favors multi-agent for open-ended parallel work; the machinedge guide calls orchestrators often over-built.
 - Compliance dates in Kosmoy (EU AI Act phase-in) are the author's account; verify against the regulation.
 
 ## Example: minimal control-plane wrapper

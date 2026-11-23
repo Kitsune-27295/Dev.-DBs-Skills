@@ -62,8 +62,8 @@ If a split produced classes that always change together and are always instantia
 ## How an agent should apply this
 
 - Produce the actor map before proposing a split and cite its evidence.
-- Split by data cluster first, behaviour second, callers third.
-- Keep behaviour identical per step; run tests after each move.
+- Split by data cluster first, behavior second, callers third.
+- Keep behavior identical per step; run tests after each move.
 - Treat shared helpers as a decision, not an accident.
 - Undo splits that created always-co-changing classes.
-- Mention which neighbouring skill handles the next concern (wiring: `dependency-inversion-composition-root`).
+- Mention which neighboring skill handles the next concern (wiring: `dependency-inversion-composition-root`).

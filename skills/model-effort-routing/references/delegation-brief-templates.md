@@ -50,7 +50,7 @@ Output: findings with location and evidence; pass/fail with the checks that were
 actually executed; unknowns listed, not smoothed over.
 ```
 
-Vishal: independent, fresh, requirements plus raw evidence, risk-appropriate tier even if implementation was cheap. orchestra: reviewers on one tier by default, specialised perspectives (security, quality, tests) in parallel, lead synthesises; a clean review of an empty change list is meaningless, so check that the diff scope is non-empty before spawning reviewers.
+Vishal: independent, fresh, requirements plus raw evidence, risk-appropriate tier even if implementation was cheap. orchestra: reviewers on one tier by default, specialized perspectives (security, quality, tests) in parallel, lead synthesizes; a clean review of an empty change list is meaningless, so check that the diff scope is non-empty before spawning reviewers.
 
 ## 4. Template: advisor (expensive, read-only)
 

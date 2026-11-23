@@ -3,7 +3,7 @@
 Sources: https://martinfowler.com/eaaCatalog/unitOfWork.html · https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design · Last verified 2026-11-23
 
 ## Definition
-Fowler: a Unit of Work tracks everything done during a business transaction that can affect the database, and at the end works out what to write and coordinates the writes and concurrency handling. The catalog page is a summary only; caller-versus-object registration is in PoEAA ch. 11 and was NOT read from source here (the following mechanics are well-established general knowledge, labelled as such).
+Fowler: a Unit of Work tracks everything done during a business transaction that can affect the database, and at the end works out what to write and coordinates the writes and concurrency handling. The catalog page is a summary only; caller-versus-object registration is in PoEAA ch. 11 and was NOT read from source here (the following mechanics are well-established general knowledge, labeled as such).
 
 ## Problem it solves (from the page)
 - Loaded objects that change must be tracked or they are not written back; new objects must be inserted, removed ones deleted.

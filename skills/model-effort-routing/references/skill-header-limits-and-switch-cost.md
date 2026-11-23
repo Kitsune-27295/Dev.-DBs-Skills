@@ -1,6 +1,6 @@
 # Skill Header Limits and Model-Switch Cost
 
-Sources: Local operating practice (private notes, summarised; not a public URL); official Claude Code skills documentation as cited in those notes (not re-read here) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL); official Claude Code skills documentation as cited in those notes (not re-read here) · Last verified 2026-11-23
 
 A skill can carry `model:` and `effort:` lines in its header, which is the cheapest way to tier a skill by weight (see work-weight-tier-table). The lines are useful but weaker than they look. Five limits, with their origin:
 
@@ -29,7 +29,7 @@ Between mid, strong and planner tiers the one-off cost can exceed the saving on 
 
 - **Switch down to the light tier freely** (cheap re-read), but remember it lowers the rest of the turn too.
 - **Do not switch between mid/strong/planner mid-conversation for a short task**; do the work on the current model or push it into a subagent.
-- **Prefer a subagent with an explicit `model` on the call** (or a forked skill) when the work is bounded and its result can be summarised back: the lead's context is not re-read by a different model.
+- **Prefer a subagent with an explicit `model` on the call** (or a forked skill) when the work is bounded and its result can be summarized back: the lead's context is not re-read by a different model.
 - **Do not rely on the header in auto mode** or when the effort variable is set; verify with the launch report instead.
 - Re-apply headers after a skill is reinstalled (the lines are lost).
 - Stronger planner tier: reserve for skills that coordinate agents; its price is double the strong tier.
@@ -45,4 +45,4 @@ Between mid, strong and planner tiers the one-off cost can exceed the saving on 
 - Use header tiers for self-contained skills invoked at the start of a turn; use per-call model on subagents for mid-turn work.
 - Before invoking a heavier-tier skill mid-turn on a large context, estimate the uncached re-read cost.
 - Check the effort environment variable and auto-mode status when a tier seems to have no effect.
-- Label unmeasured claims as such in any report; do not present documented behaviour as locally verified.
+- Label unmeasured claims as such in any report; do not present documented behavior as locally verified.

@@ -8,7 +8,7 @@ A branch update from A to B is a fast-forward only if B descends from A. If you 
 
 ## The three tools
 
-| Flag | Behaviour | Risk |
+| Flag | Behavior | Risk |
 |---|---|---|
 | `--force` / `-f` | disables the non-fast-forward check and the lease checks; the remote may lose commits | applies to **all** refs pushed (with `push.default=matching` or several destinations it can overwrite other branches) |
 | `--force-with-lease` | forced update only if the remote ref still has the value you expect | protection depends on what "expected" means (below) |

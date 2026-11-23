@@ -25,7 +25,7 @@ Note: SKILL.md's recovery list has the same steps; the new detail here is the su
 
 ## Fowler: YAGNI (2015)
 
-- YAGNI targets **presumptive features**, capability for a need that has not arrived. Four costs: build, delay, carry (extra complexity slows every later change), repair (built before understanding matured). He cites Kohavi et al.: roughly a third of carefully analysed features moved their target metric, so a presumptive feature has at least about a two-in-three chance of being unused.
+- YAGNI targets **presumptive features**, capability for a need that has not arrived. Four costs: build, delay, carry (extra complexity slows every later change), repair (built before understanding matured). He cites Kohavi et al.: roughly a third of carefully analyzed features moved their target metric, so a presumptive feature has at least about a two-in-three chance of being unused.
 - Abstractions for hypothetical variants are suspect; an abstraction that makes current code harder to read is presumed guilty. Unused extension points often end up in the way (Jeremy Miller, quoted).
 - What YAGNI does **not** cover: refactoring and making code easy to change, enabling practices (self-testing code, continuous delivery), code health, and zero-complexity forward-looking choices (his example: message lookup tables that ease later translation). YAGNI depends on malleable code.
 - Caveat: skipping something occasionally makes a later change costly; those cases are memorable (availability bias) but rarer than the savings.

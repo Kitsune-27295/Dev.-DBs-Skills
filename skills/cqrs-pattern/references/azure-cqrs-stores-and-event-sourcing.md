@@ -23,7 +23,7 @@ With separate stores the write side usually publishes events that refresh the re
 
 ## Benefits listed
 
-Independent scaling, schemas optimised per side, tighter write permissions, cleaner separation of concerns (complex logic write-side, simple read-side), simpler queries via materialized views.
+Independent scaling, schemas optimized per side, tighter write permissions, cleaner separation of concerns (complex logic write-side, simple read-side), simpler queries via materialized views.
 
 ## Problems listed
 
@@ -35,7 +35,7 @@ Use: collaborative multi-user data (fine-grained commands cut conflicts), task-b
 
 ## Combined with Event Sourcing
 
-The event store is the write model and single source of truth; the read model builds denormalised materialized views from events and can be rebuilt by replay, acting like a durable read-only cache. Costs: lag, a different design approach, and view-generation expense. Mitigation: periodic snapshots instead of replaying full history.
+The event store is the write model and single source of truth; the read model builds denormalized materialized views from events and can be rebuilt by replay, acting like a durable read-only cache. Costs: lag, a different design approach, and view-generation expense. Mitigation: periodic snapshots instead of replaying full history.
 
 ## Example: command handler skeleton (inference-free, mirrors the page's shape)
 

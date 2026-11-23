@@ -12,7 +12,7 @@ Sources: https://martinfowler.com/articles/practical-test-pyramid.html · https:
 ## Two rules against duplication
 Fowler/Vocke give a compact policy for a growing suite:
 1. If a high-level test fails and no lower-level test fails, write the lower-level test.
-2. Push each test as far down the pyramid as it can go while still proving the behaviour.
+2. Push each test as far down the pyramid as it can go while still proving the behavior.
 
 Pruning follows: delete high-level tests whose coverage is already provided below, and resist the sunk-cost fallacy about the effort spent on them. A related choice for clients of other services: use a consumer contract test or an integration test for the same client, not both.
 
@@ -28,14 +28,14 @@ nightly: exploratory findings turned into regression tests
 
 ## Writing clean test code
 - Treat tests as production code: one condition per test, a readable name, Arrange-Act-Assert or Given-When-Then.
-- Favour readability (DAMP) over strict DRY; apply the Rule of Three before extracting shared helpers.
-- Assert behaviour, not internals (shared with Dodds: tests coupled to implementation details make refactoring costly).
+- Favor readability (DAMP) over strict DRY; apply the Rule of Three before extracting shared helpers.
+- Assert behavior, not internals (shared with Dodds: tests coupled to implementation details make refactoring costly).
 - Keep third-party mocks minimal; each mock removes confidence in the real connection.
 
 ## Failure signals and responses
 | Signal | Likely cause | Response |
 |---|---|---|
-| Refactor breaks many tests, behaviour unchanged | tests pinned to internals | rewrite against public behaviour |
+| Refactor breaks many tests, behavior unchanged | tests pinned to internals | rewrite against public behavior |
 | E2E suite slow or flaky | too many top-level tests; timing, animation, popups | move assertions down, keep a few journeys |
 | Stub-based tests pass, prod integration fails | stub drift | add contract or real-dependency integration test |
 | Bug escapes to production | gap in pipeline | add lowest-layer regression test, record as pipeline feedback |

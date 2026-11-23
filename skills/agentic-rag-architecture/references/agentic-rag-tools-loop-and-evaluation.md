@@ -25,22 +25,22 @@ Five triggers: multistep reasoning (SKUs from catalog, then recall lookup per SK
 | Approach | Use when | Note |
 |---|---|---|
 | Single retrieval tool | one index, uniform queries | least routing burden |
-| Multiple specialised tools | different indexes, sources or strategies | keep total tools **below 20** to preserve accuracy (the page's figure); this skill's own 3-7 heuristic is stricter |
+| Multiple specialized tools | different indexes, sources or strategies | keep total tools **below 20** to preserve accuracy (the page's figure); this skill's own 3-7 heuristic is stricter |
 
 ## Controlling the loop
 - Cap tool calls per request, typically 5-10; non-convergence means human help or a different approach.
 - Track cumulative tokens per request and set budget thresholds.
 - Put stop rules in the instructions, e.g. synthesise after two relevant sources; do not search more than three times for the same sub-question.
-- Provide fallback behaviour and timeouts when the agent cannot resolve.
+- Provide fallback behavior and timeouts when the agent cannot resolve.
 
 ## Evaluation dimensions (beyond standard RAG metrics)
-1. **Tool-selection accuracy:** labelled queries with expected tools; low score means rewrite descriptions.
+1. **Tool-selection accuracy:** labeled queries with expected tools; low score means rewrite descriptions.
 2. **Retrieval efficiency:** calls per request; many calls on easy questions point to poor descriptions, too few results per call, or an over-cautious prompt.
 3. **End-to-end latency:** break down model reasoning, tool execution, result processing.
 4. **Cost per request:** all model calls plus search calls, compared with a standard-RAG baseline.
 
 ## Design considerations and numbers
-Illustrative figures from the page: a one-search standard request might take 2-3 s; an agentic one with 3-5 tool calls 8-15 s. Reliability risks: bad tool choices, loops, no answer, so add iteration limits, timeouts, fallbacks. Observability: log every tool call, parameters, results and the agent's reading of them. Security: each tool is an attack surface; validate and sanitise parameters, least-privilege data access, never put credentials in tool output.
+Illustrative figures from the page: a one-search standard request might take 2-3 s; an agentic one with 3-5 tool calls 8-15 s. Reliability risks: bad tool choices, loops, no answer, so add iteration limits, timeouts, fallbacks. Observability: log every tool call, parameters, results and the agent's reading of them. Security: each tool is an attack surface; validate and sanitize parameters, least-privilege data access, never put credentials in tool output.
 
 ```
 loop(max=6):

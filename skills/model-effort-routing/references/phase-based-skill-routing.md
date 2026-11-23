@@ -17,7 +17,7 @@ A run = model + skills + prompt; skills discovered at runtime from frontmatter. 
 
 ## 3. AI-research-SKILLs (Orchestra Research, MIT)
 
-98 skills (page also says 87; inconsistent) in 23 numbered categories. The `0-autoresearch-skill` is a router with an inner optimisation loop and an outer synthesis loop across five phases: literature survey, ideation, experiments, synthesis, paper writing; state persisted in files (`research-state.yaml`, `findings.md`, `research-log.md`), runnable under Claude Code `/loop`. Installer puts skills in `~/.orchestra/skills/` and symlinks into detected agents (copies on Windows). Frontmatter: name, description, version; kebab-case names, third-person descriptions. Antigravity not mentioned.
+98 skills (page also says 87; inconsistent) in 23 numbered categories. The `0-autoresearch-skill` is a router with an inner optimization loop and an outer synthesis loop across five phases: literature survey, ideation, experiments, synthesis, paper writing; state persisted in files (`research-state.yaml`, `findings.md`, `research-log.md`), runnable under Claude Code `/loop`. Installer puts skills in `~/.orchestra/skills/` and symlinks into detected agents (copies on Windows). Frontmatter: name, description, version; kebab-case names, third-person descriptions. Antigravity not mentioned.
 
 ## 4. Low-relevance sources
 

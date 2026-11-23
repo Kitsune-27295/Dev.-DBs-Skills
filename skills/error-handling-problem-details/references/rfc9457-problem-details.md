@@ -21,7 +21,7 @@ Published July 2023 (Standards Track); obsoletes RFC 7807. Defines a machine-rea
 ## Extension members
 
 - A problem type may define extra members (the RFC's examples: `balance` and `accounts` for an out-of-credit problem; an `errors` array for validation where each entry carries a JSON Pointer to the field).
-- Clients must ignore extensions they do not recognise; this gives forward compatibility.
+- Clients must ignore extensions they do not recognize; this gives forward compatibility.
 - Naming advice: start with a letter, only letters/digits/underscore, at least three characters. XML extension names must be valid XML Names.
 
 ## Defining a problem type (checklist)
@@ -73,6 +73,6 @@ Published July 2023 (Standards Track); obsoletes RFC 7807. Defines a machine-rea
 - Emit `application/problem+json` with stable absolute `type` URIs, constant `title`, matching `status`.
 - Put occurrence data in `detail` and typed extensions, never debugging data.
 - For validation, use one type with an `errors` extension containing JSON Pointers.
-- Maintain a catalogue of problem types and reference it from the API contract.
+- Maintain a catalog of problem types and reference it from the API contract.
 - Make clients ignore unknown extension members and never parse `detail`.
 - Review every `detail`/extension for leakage (see the OWASP reference).

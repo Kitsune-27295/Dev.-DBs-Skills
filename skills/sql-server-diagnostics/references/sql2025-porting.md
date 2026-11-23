@@ -57,7 +57,7 @@ These do not need a script edit but change how to read the results or what to ch
 Not verified: the `@@VERSION` text (the `ProductMajorVersion` value 17 is confirmed by the run above); whether `backupset.compression_algorithm` holds ZSTD; the `xml_deadlock_report` name on 2025; the three new
 `sys.stats` columns; the other log shipping tables; the full compatibility-170 table; 2025-only memory clerks; four pages
 that Microsoft Learn served from an Azure fallback (`dm_os_volume_stats`, `dm_hadr_database_replica_states`,
-`dm_server_services`, `dm_server_memory_dumps`). The research read pages through a summarising extractor, so a "no change found" on
+`dm_server_services`, `dm_server_memory_dumps`). The research read pages through a summarizing extractor, so a "no change found" on
 a very long page (wait stats, index physical stats) is weaker than on a short one.
 
 Sources, all `https://learn.microsoft.com/en-us/sql/...?view=sql-server-ver17`:

@@ -5,9 +5,9 @@ description: "Deep dive on the Open-Closed Principle (OCP) and the Strategy patt
 
 # Open-Closed Principle & Strategy
 
-One idea: **add behaviour by adding code, not by editing code that already works.** The mechanism is a *seam*: stable policy talks to a small abstraction, and variants live behind it; the dependency arrows point from variants toward the core, never the reverse. Strategy is the workhorse; plugins are the same idea at deployable-unit scale. Sources and fetch outcomes: [references/sources.md](references/sources.md). Deep dive; the overview row for OCP lives in `pragmatic-solid-and-ssot`.
+One idea: **add behavior by adding code, not by editing code that already works.** The mechanism is a *seam*: stable policy talks to a small abstraction, and variants live behind it; the dependency arrows point from variants toward the core, never the reverse. Strategy is the workhorse; plugins are the same idea at deployable-unit scale. Sources and fetch outcomes: [references/sources.md](references/sources.md). Deep dive; the overview row for OCP lives in `pragmatic-solid-and-ssot`.
 
-Boundaries with neighbours: *where the arrows point and who wires them* is `dependency-inversion-composition-root`; *which code belongs together by actor* is `single-responsibility-cohesion`; *one source for a fact* is `ssot-and-dry`; whole-system plugin shape is `microkernel-plugin-architecture` and ports/adapters is `hexagonal-architecture`; do not open seams speculatively: `kiss-yagni-aha`.
+Boundaries with neighbors: *where the arrows point and who wires them* is `dependency-inversion-composition-root`; *which code belongs together by actor* is `single-responsibility-cohesion`; *one source for a fact* is `ssot-and-dry`; whole-system plugin shape is `microkernel-plugin-architecture` and ports/adapters is `hexagonal-architecture`; do not open seams speculatively: `kiss-yagni-aha`.
 
 ---
 
@@ -16,7 +16,7 @@ Boundaries with neighbours: *where the arrows point and who wires them* is `depe
 | Reading | Statement | Practical meaning |
 |---|---|---|
 | **Meyer (1988)** | A module is *open* if it can be extended, *closed* if others can depend on its stable interface | Historic: compiled libraries, approved specs |
-| **Martin (2014)** | You should be able to extend a system's behaviour without modifying it | New feature = new code; no recompile/redeploy of old modules; jars/DLLs/gems as isolatable features |
+| **Martin (2014)** | You should be able to extend a system's behavior without modifying it | New feature = new code; no recompile/redeploy of old modules; jars/DLLs/gems as isolatable features |
 
 Martin's evidence that this is not absurd: IDEs and editors accept plugins without being modified. Their design separates high-level policy from low-level detail and manages dependencies: plugin depends on core; the core does not know plugins exist. Treat "closed" as **closed against a *specific, expected* axis of change**, not against all change (inference: no module can be closed against every change). Details and diagnostics: [references/ocp-and-plugin-boundaries.md](references/ocp-and-plugin-boundaries.md).
 
@@ -41,7 +41,7 @@ Rule: **the choice of strategy is made outside the context**, at a composition p
 
 ## 4. Refactoring recipe: conditional to Strategy
 
-1. **Pin behaviour** with tests on the current `switch` (`tdd`, characterisation tests).
+1. **Pin behavior** with tests on the current `switch` (`tdd`, characterization tests).
 2. **Pick the axis**: what varies (`shipping cost by carrier`). Name the interface by the *role*, not the first implementation (`ShippingRate`, not `FedexShipping`).
 3. **Declare the interface** with the smallest signature the context needs; pass data as parameters so strategies stay stateless.
 4. **Move each branch** into its own class/function behind the interface; tests stay green.
@@ -71,7 +71,7 @@ def checkout(order, shipping: Shipping): return order.total + shipping.cost(orde
 - Shotgun surgery: a feature request touches many existing modules.
 - Parallel `switch`/`if-elif` on an enum or string in 3+ places.
 - Git history: the same function edited for every new customer/provider/format.
-- Boolean/mode parameters that select behaviour.
+- Boolean/mode parameters that select behavior.
 - Core package importing concrete provider SDKs: arrow points the wrong way.
 
 ## 7. Quick Decision Checklist

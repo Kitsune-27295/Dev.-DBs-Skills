@@ -27,7 +27,7 @@ Linear -> pipeline. Diverse inputs -> router first. Planning needed -> superviso
 
 ## Anthropic PDF cautions
 - Context overflow in the orchestrator is the main supervisor risk: use context editing, external memory, summary-returning subagents.
-- Collaborative/peer systems: communication cost and emergent, hard-to-predict behaviour; need frameworks for coordination and tracing of delegation patterns.
+- Collaborative/peer systems: communication cost and emergent, hard-to-predict behavior; need frameworks for coordination and tracing of delegation patterns.
 - Parallel agents must not mutate shared state concurrently.
 - Scale effort to query: simple queries should not trigger the full multi-agent machinery.
 - Peer-to-peer "swarm slightly outperforms supervisor" is an early benchmark quoted in the guide; treat as preliminary.
@@ -36,7 +36,7 @@ Linear -> pipeline. Diverse inputs -> router first. Planning needed -> superviso
 Assistant, Analyst, Tasker, Orchestrator (most over-built), Guardian (separate from what it checks). Heuristic: a system prompt over ~500 words spanning several roles should be split.
 
 ## Disagreements
-Anthropic's PDF: multi-agent far ahead on parallel-direction tasks; machinedge: orchestrators are often over-engineered. Resolve by task shape: breadth with independent directions favours multi-agent; coupled sequential work (e.g. one codebase) favours one agent (inference).
+Anthropic's PDF: multi-agent far ahead on parallel-direction tasks; machinedge: orchestrators are often over-engineered. Resolve by task shape: breadth with independent directions favors multi-agent; coupled sequential work (e.g. one codebase) favors one agent (inference).
 
 ## How an agent should apply this
 - Pick topology from the task shape, not from sophistication; default to pipeline or router.

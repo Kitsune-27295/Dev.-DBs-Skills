@@ -27,7 +27,7 @@ messages = [user1, assistant1,
 
 ## 3. OpenAI: `configuration_update` (verified)
 
-Exists in both the OpenAI reasoning guide and the LangChain reference page (via summarising reader).
+Exists in both the OpenAI reasoning guide and the LangChain reference page (via summarizing reader).
 - Purpose: raise reasoning effort for difficult work or lower it for routine follow-ups without breaking the prompt cache.
 - Mechanism: add a `configuration_update` item to `input` before the next user message, e.g. `{"type": "configuration_update", "reasoning": {"effort": "high"}}` (shape from the LangChain page). Applies to that response and later ones until another update overrides it.
 - Preserves the original prompt prefix for caching; supported on GPT-6 and later, standard single-agent mode. Can be combined with `text.format` in the same item.
@@ -35,7 +35,7 @@ Exists in both the OpenAI reasoning guide and the LangChain reference page (via 
 - LangChain: changing `reasoning_effort` mid-conversation invalidates the prefix; use the update item on models that support it.
 - Related stateful notes: `previous_response_id` carries reasoning forward; `reasoning.context` accepts `auto`/`current_turn`/`all_turns`; with `store: false` or ZDR, reasoning items carry `encrypted_content` and you must append all output items in order; reasoning items can be dropped on a `prefix_mismatch` (GPT-6.2+) if earlier content changes.
 
-## 4. Claude Code behaviour
+## 4. Claude Code behavior
 
 - Skill `effort:` applies until the end of that turn (or the whole forked run with `context: fork`); it is not persisted. A subagent's `effort` applies while it runs. `CLAUDE_CODE_EFFORT_LEVEL` always wins.
 - `ultrathink` affects one turn without altering the session setting.

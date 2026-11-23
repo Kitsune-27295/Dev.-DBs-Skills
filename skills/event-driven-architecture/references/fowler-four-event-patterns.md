@@ -29,7 +29,7 @@ A customer system publishes `CustomerAddressChanged` carrying the new address; e
 
 1. Event processing does not have to be asynchronous (a local git commit is synchronous event sourcing).
 2. Not every component needs to read the log; most code can use a derived working copy and never see events.
-3. Events and snapshots are two views of the same data; snapshots are a replay-cost optimisation.
+3. Events and snapshots are two views of the same data; snapshots are a replay-cost optimization.
 
 Problems: replay is hard if results depend on outside systems (re-sending emails, re-charging cards), and event schemas evolve. Fowler suspects much of the perceived complexity comes from failing to separate "derive the working copy" code from "domain processing" code.
 

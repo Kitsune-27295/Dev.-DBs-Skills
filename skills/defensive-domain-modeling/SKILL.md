@@ -99,6 +99,6 @@ Model multi-step fallible use cases as a **two-track railway** (`Ok(value)` on t
 ## Deep references
 
 - [Parse, Don't Validate: Mechanics and Limits](references/parse-dont-validate-mechanics.md) — read for head/NonEmpty reasoning, two-phase design, and the author's own caveats.
-- [Illegal States, Union Types and Value Objects](references/illegal-states-and-value-objects.md) — read when modelling a rule as a union or choosing value vs reference object.
+- [Illegal States, Union Types and Value Objects](references/illegal-states-and-value-objects.md) — read when modeling a rule as a union or choosing value vs reference object.
 - [Tell-Don't-Ask, Law of Demeter, CQS and Guard Clauses: Source Detail](references/tell-dont-ask-demeter-cqs-guards.md) — read for what each source actually says, including Fowler's caveats.
 - [Railway-Oriented Pipelines: Composition, Validation and Limits](references/railway-pipeline-composition.md) — read when building or reviewing a Result pipeline with parallel validation.

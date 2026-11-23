@@ -29,7 +29,7 @@ Parse everything first (invalid input may fail here), then run an execution phas
 - Make illegal states unrepresentable; pick the most precise structure (e.g. a `Map` rather than a list of pairs so duplicate keys cannot exist).
 - Push the burden of proof upward, but no further: parse as early as the boundary allows; if a branch needs more precision later, parse at the branch and use sum types for control flow.
 - Let datatypes drive code. Treat `m ()`/`void` functions whose main job is to raise an error with suspicion.
-- Avoid denormalised, especially mutable, data; if unavoidable, hide it behind a small module that keeps copies in sync.
+- Avoid denormalized, especially mutable, data; if unavoidable, hide it behind a small module that keeps copies in sync.
 - When the type system cannot express the invariant, use an abstract/opaque type with a smart constructor so the validator "looks like" a parser.
 - Authorization may legitimately precede parsing (to resist denial of service) if it is narrow and does not change state.
 

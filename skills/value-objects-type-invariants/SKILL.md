@@ -1,6 +1,6 @@
 ---
 name: value-objects-type-invariants
-description: "Deep dive on designing Value Objects (equality by value, immutability, side-effect-free operations, aliasing bugs), the Money pattern (currency, minor units, rounding, allocation without losing cents) and modelling states with types so illegal states are unrepresentable (sum types, state-per-type, union instead of optional-field soup). Complements the overview in `defensive-domain-modeling`, which owns Parse-Don't-Validate. Use when replacing primitive obsession, designing Money/Range/Address types, adding equals/hashCode or immutability, splitting a record with flags and optional fields into per-state types, or reviewing business-rule encoding in a type system."
+description: "Deep dive on designing Value Objects (equality by value, immutability, side-effect-free operations, aliasing bugs), the Money pattern (currency, minor units, rounding, allocation without losing cents) and modeling states with types so illegal states are unrepresentable (sum types, state-per-type, union instead of optional-field soup). Complements the overview in `defensive-domain-modeling`, which owns Parse-Don't-Validate. Use when replacing primitive obsession, designing Money/Range/Address types, adding equals/hashCode or immutability, splitting a record with flags and optional fields into per-state types, or reviewing business-rule encoding in a type system."
 ---
 
 # Value Objects & Type-Level Invariants
@@ -43,7 +43,7 @@ Checklist for a Money type:
 5. Currency decimals differ (JPY 0, EUR 2, KWD 3): derive the scale from the currency.
 6. Comparison across currencies is undefined; conversion needs a rate (and date) from outside the type.
 
-Note: the catalogue page itself is a brief overview; the allocation algorithm and minor-unit details in the reference file are marked as background knowledge or own synthesis, not read from that page. See [references/money-allocation-and-rounding.md](references/money-allocation-and-rounding.md).
+Note: the catalog page itself is a brief overview; the allocation algorithm and minor-unit details in the reference file are marked as background knowledge or own synthesis, not read from that page. See [references/money-allocation-and-rounding.md](references/money-allocation-and-rounding.md).
 
 ## 4. Make illegal states unrepresentable
 

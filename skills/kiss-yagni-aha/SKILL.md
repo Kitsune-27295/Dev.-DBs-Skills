@@ -31,7 +31,7 @@ Pick the first construct that works, in this order. Move down only with a stated
 2. Plain function with explicit parameters, returning a value.
 3. Plain data (record / dataclass / object literal) + functions over it.
 4. Composition of two or three small functions.
-5. A class with state, only if state genuinely must live with behaviour.
+5. A class with state, only if state genuinely must live with behavior.
 6. A pattern (strategy, factory, visitor, plugin registry) — only after two real variants exist.
 7. Inheritance / metaprogramming / framework hooks — last resort; justify in the PR.
 
@@ -43,7 +43,7 @@ Rejection list: a factory with one product, a strategy with one strategy, an `Ab
 |---|---|---|
 | Two copies, same actor, same reason to change | Tolerate | Copy, add a `// see also` pointer if in different files; do not abstract yet |
 | Three copies, same reason to change, the differences are **values** | Extract | Differences become arguments (see `references/aha-differences-become-arguments.md`) |
-| Three copies, differences are **behaviours/branches** | Wait or extract the stable core only | Extract only the identical middle; leave the varying parts at the call site or pass a function |
+| Three copies, differences are **behaviors/branches** | Wait or extract the stable core only | Extract only the identical middle; leave the varying parts at the call site or pass a function |
 | Copies look alike but belong to different actors / contexts | Coincidence | Keep separate (see `ssot-and-dry` for the knowledge-vs-syntax test) |
 | The same copy-paste bug was fixed in 3+ places | Real pain | Extract now, even before the "third" copy: the rule is a heuristic, pain is evidence |
 | Existing abstraction needs a new boolean/enum parameter that only some callers use | Wrong abstraction signal | Stop; go to section 5 |
@@ -77,13 +77,13 @@ Full step-by-step with before/after and a safety checklist: [references/wrong-ab
 
 ## 6. AHA in one table
 
-| Mode | Behaviour | Failure if overdone |
+| Mode | Behavior | Failure if overdone |
 |---|---|---|
 | Dogmatic DRY | Extract at the first repetition | Wrong abstraction, flag soup |
 | Dogmatic WET | Never extract after the third | Same bug fixed in eight places |
-| **AHA** | **Optimise for ease of change; extract once the differences are understood** | None systematic; needs judgement |
+| **AHA** | **Optimize for ease of change; extract once the differences are understood** | None systematic; needs judgment |
 
-Practical AHA loop: copy -> note how the copies differ -> wait for another real use -> if the differences are values, extract with arguments; if they are behaviours, extract less. Abstract when it feels right, not on a fixed count.
+Practical AHA loop: copy -> note how the copies differ -> wait for another real use -> if the differences are values, extract with arguments; if they are behaviors, extract less. Abstract when it feels right, not on a fixed count.
 
 ## 7. Review comments to leave (copy-ready)
 

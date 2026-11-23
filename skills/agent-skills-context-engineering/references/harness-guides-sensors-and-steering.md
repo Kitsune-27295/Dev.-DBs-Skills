@@ -33,9 +33,9 @@ Cheap checks before commit or integration; expensive ones (mutation testing, bro
 |---|---|---|
 | Maintainability | strongest | computational sensors reliably catch duplication, complexity, style; but misdiagnosis, overengineering and misread requirements slip through |
 | Architecture fitness | good | fitness functions for performance, observability, import direction |
-| Behaviour | weakest | relies on AI-generated tests plus manual testing, judged not good enough; approved fixtures help in some areas |
+| Behavior | weakest | relies on AI-generated tests plus manual testing, judged not good enough; approved fixtures help in some areas |
 
-Implication: a green AI-written test suite is weak evidence of behaviour. Anchor with specs, approved fixtures, contract tests and human review.
+Implication: a green AI-written test suite is weak evidence of behavior. Anchor with specs, approved fixtures, contract tests and human review.
 
 ## Steering loop
 When a failure recurs, the human's job is to change the harness (tighter guide or new sensor) rather than fix the output again. AI can help author these controls. Example flow (own illustration): agent keeps importing across a layer boundary -> add a dependency-direction test (sensor) and a one-line rule in AGENTS.md (guide).
@@ -49,6 +49,6 @@ Keeping guides and sensors coherent as they grow, resolving conflicting signals,
 ## How an agent should apply this
 - For each recurring failure, propose a pair: one guide and one sensor; prefer a computational sensor.
 - Put fast sensors on the edit/commit path, slow inferential ones in CI or scheduled jobs.
-- Do not claim behaviour is verified because generated tests pass; name the anchor (spec, fixture, contract, human review).
+- Do not claim behavior is verified because generated tests pass; name the anchor (spec, fixture, contract, human review).
 - Suggest harness-friendly changes (types, module boundaries) when sensors are hard to write.
 - Treat a quiet sensor as unproven until it has caught a seeded defect.

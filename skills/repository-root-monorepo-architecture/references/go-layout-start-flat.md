@@ -28,7 +28,7 @@ Go has no mandated layout. Official guidance ("Organizing a Go module") shows la
 - One module per repository until separate versioning is needed.
 - Avoid empty `pkg/`, `src/`, `utils/` directories; name packages for what they provide (`store`, `auth`), not `common`.
 
-## Generalising beyond Go (own inference)
+## Generalizing beyond Go (own inference)
 
 The same principle applies to any monorepo package layout: a directory should mark a real boundary (ownership, dependency rule, release unit), not a hoped-for one. Directory count is a cost paid in imports and navigation.
 
@@ -44,7 +44,7 @@ Move from v0 to v1 only when a file group needs a privacy boundary or two reason
 ## Anti-patterns
 
 - 10+ scaffold directories before the first feature.
-- `pkg/` as a dumping ground, signalling "public" without any consumer.
+- `pkg/` as a dumping ground, signaling "public" without any consumer.
 - Layer-based packages that force every feature change to touch four directories.
 
 ## How an agent should apply this
@@ -52,5 +52,5 @@ Move from v0 to v1 only when a file group needs a privacy boundary or two reason
 - Begin with the smallest layout that compiles; justify each new directory by a concrete boundary.
 - Use `cmd/` only when more than one entrypoint exists.
 - Put private code in `internal/` by default.
-- Organise by domain, and rename `utils`/`common` packages by function.
+- Organize by domain, and rename `utils`/`common` packages by function.
 - Do not cite `golang-standards/project-layout` as authoritative.

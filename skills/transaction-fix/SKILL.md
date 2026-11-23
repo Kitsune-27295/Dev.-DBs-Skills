@@ -14,7 +14,7 @@ A transaction makes several writes behave as one: either every write lands or no
 3. **Write the failing test first:** force an error after the first write (a stub that throws, a violated constraint) and assert that **nothing was written**. It must fail on the current code.
 4. **Wrap the writes in one transaction** in the server or a database function, using the stack's own mechanism, with rollback on any error. If the steps are separate calls from the client today, propose moving them into one endpoint or function. Keep reads that decide the outcome inside it.
 5. **Move every external call outside the transaction:** an email, a payment provider call, a webhook. Hold the transaction open on a slow network call and locks pile up. Pattern: commit first, then call; or record the intent inside the transaction and send afterwards.
-6. **Run the test again** and the neighbouring tests; show the output.
+6. **Run the test again** and the neighboring tests; show the output.
 
 ## Rules
 

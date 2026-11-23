@@ -52,7 +52,7 @@ Exhaustiveness in TS: `switch (s.kind) { ... default: const _x: never = s; }` fo
 - Forgetting the database: a union persisted as nullable columns needs CHECK constraints (`schema-and-constraints`).
 - Leaking union cases directly into public API without versioning; adding a case is a breaking change for exhaustive consumers (note it in the contract).
 
-## State per type (own extension, labelled)
+## State per type (own extension, labeled)
 
 When states permit different **operations**, give each state its own type (`UnverifiedEmail`, `VerifiedEmail`) and expose only valid operations on each (`sendVerification` on unverified, `sendNewsletter` on verified). The compiler then rejects "send newsletter to unverified". This goes slightly beyond the page, which focuses on data-shape unions; the next post in the author's series (not read) covers state machines.
 

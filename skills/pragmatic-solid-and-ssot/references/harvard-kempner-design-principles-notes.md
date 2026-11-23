@@ -2,7 +2,7 @@
 
 Sources: https://handbook.eng.kempnerinstitute.harvard.edu/s2_swe_for_research/software_design_principles.html · Last verified 2026-11-23
 
-A Python-flavoured chapter (section 6) that presents principles as defaults to be applied with judgment. It anchors SKILL.md section 5.
+A Python-flavored chapter (section 6) that presents principles as defaults to be applied with judgment. It anchors SKILL.md section 5.
 
 ## What the page covers
 

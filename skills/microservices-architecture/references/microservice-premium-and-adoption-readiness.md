@@ -11,19 +11,19 @@ Every style has trade-offs and most situations are better served by a monolith. 
 - The resolution for an agent (inference): start with a modular monolith with enforced boundaries, and extract when a force below justifies it.
 
 ## Richardson's forces
-- Dark energy (favour splitting): simpler components, team autonomy, fast pipelines, multiple stacks, segregating by scalability, availability or security needs.
-- Dark matter (favour fewer boundaries): simple and efficient interactions, ACID over BASE, minimal runtime coupling (availability), minimal design-time coupling (lockstep changes).
+- Dark energy (favor splitting): simpler components, team autonomy, fast pipelines, multiple stacks, segregating by scalability, availability or security needs.
+- Dark matter (favor fewer boundaries): simple and efficient interactions, ACID over BASE, minimal runtime coupling (availability), minimal design-time coupling (lockstep changes).
 - Assemblage is his process for grouping subdomains by weighing these forces. Context: DORA metrics and Team Topologies (small cross-functional teams owning subdomains).
 - Drawbacks: hard-to-troubleshoot distributed operations, eventual consistency, runtime coupling reducing availability, design-time coupling forcing lockstep releases.
 
-## Distributed operations catalogue
+## Distributed operations catalog
 Saga (commands as local transactions), command-side replica, API composition (queries as local queries joined in memory), CQRS (separate query models). Asynchronous variants generally need the Transactional Outbox. Richardson's wider pattern language also lists decomposition (by business capability or subdomain, self-contained service), Strangler Application and anti-corruption layer for migration, API gateway and backend-for-front-end, service discovery, circuit breaker, consumer-driven contract tests and service component tests, and observability (log aggregation, metrics, distributed tracing, health check API).
 
 ## Prerequisites (Fowler's list)
 Rapid provisioning, basic monitoring, rapid application deployment; operations carries the biggest burden. Teams without these should not adopt the style.
 
 ## Migration guidance Fowler links
-Start with a simple service, then extract vertical business-relevant capabilities; each step an atomic improvement. For a data-rich service separate behaviour first, then data, keeping one write copy at all times. Rethink tests because of network partitions.
+Start with a simple service, then extract vertical business-relevant capabilities; each step an atomic improvement. For a data-rich service separate behavior first, then data, keeping one write copy at all times. Rethink tests because of network partitions.
 
 ## Decision table
 | Situation | Recommendation |
@@ -38,5 +38,5 @@ Start with a simple service, then extract vertical business-relevant capabilitie
 - Ask for the forcing function (team autonomy, scaling, security isolation) before recommending services.
 - Verify the three prerequisites exist; if not, recommend a modular monolith.
 - Draw boundaries on business capabilities and keep ACID-coupled data together.
-- For migration, extract one vertical slice at a time, behaviour before data, with a single writer.
+- For migration, extract one vertical slice at a time, behavior before data, with a single writer.
 - Document the premium you accept: consistency model, new failure modes, ops load.

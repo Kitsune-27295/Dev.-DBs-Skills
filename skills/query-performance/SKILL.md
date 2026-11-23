@@ -10,7 +10,7 @@ Measure first, change one thing, measure again. An index that is never used stil
 ## Steps
 
 1. **Find the five most used queries** (from the code, the logs or `pg_stat_statements`) plus any the owner calls slow. Done when each has `file:line` and its SQL.
-2. **Measure on a realistic copy:** run `EXPLAIN ANALYZE` on each against the **development database** filled with production-sized, anonymised data. Record time and plan. A `Seq Scan` on a large table with a selective filter is the usual suspect.
+2. **Measure on a realistic copy:** run `EXPLAIN ANALYZE` on each against the **development database** filled with production-sized, anonymized data. Record time and plan. A `Seq Scan` on a large table with a selective filter is the usual suspect.
 3. **Write the findings:** for each query, what the plan shows and the smallest fix. Typical fixes:
    - an index on the filter, sort or join column, and on every **foreign key** column used in joins or deletes (PostgreSQL does not create these automatically);
    - a query inside a **loop** (N+1) replaced by a `JOIN` or an `IN` list;

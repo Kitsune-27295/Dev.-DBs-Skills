@@ -74,5 +74,5 @@ Keep sections concise ("just enough" documentation); link to C4 diagrams (`c4-mo
 
 - [arc42 sections and just-enough docs](references/arc42-sections-and-just-enough-docs.md) — read when deciding which of the 12 sections to write and how C4 and ADRs fit.
 - [OpenAPI schema registry and validation](references/openapi-schema-registry-and-validation.md) — read when wiring OAS validation into CI (schema vs schema-base).
-- [AsyncAPI document model and pipeline](references/asyncapi-document-model-and-pipeline.md) — read when modelling events or WebSockets in AsyncAPI 3.x and choosing generator stages.
+- [AsyncAPI document model and pipeline](references/asyncapi-document-model-and-pipeline.md) — read when modeling events or WebSockets in AsyncAPI 3.x and choosing generator stages.
 - [Generated-docs gaps and docs-as-code integration](references/generated-docs-gaps-and-docs-as-code-integration.md) — read when authoring the operational guide beside generated docs or embedding OpenAPI in arc42 builds.

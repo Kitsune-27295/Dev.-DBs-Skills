@@ -101,5 +101,5 @@ Details: [authorization models](references/authorization-models-and-enforcement.
 - [Authentication and credential handling](references/authentication-and-credential-handling.md) — passwords, MFA, reset, enumeration, federation account linking.
 - [Session management lifecycle](references/session-management-lifecycle.md) — ID entropy, cookie attributes, renewal, timeouts, logout, detection.
 - [Authorization models and enforcement](references/authorization-models-and-enforcement.md) — least privilege, deny-by-default, RBAC vs ABAC vs ReBAC, IDOR.
-- [OAuth 2.0 Security BCP (RFC 9700)](references/oauth-security-bcp-rfc9700.md) — normative requirements and attack catalogue.
+- [OAuth 2.0 Security BCP (RFC 9700)](references/oauth-security-bcp-rfc9700.md) — normative requirements and attack catalog.
 - [OAuth 2.0 core mechanics (RFC 6749)](references/oauth2-core-rfc6749-mechanics.md) — roles, grants, endpoints, token responses, security considerations.

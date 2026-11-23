@@ -10,7 +10,7 @@ Use for work spanning 3+ files/components, parallel agents, prior mid-task quota
 
 ## Six phases
 
-1. Decompose: announce, then write a Mission Brief: goal, agent count, quota strategy (FLASH / SONNET / MIXED), expected cost (LOW/MEDIUM/HIGH), and per agent ID, role, exact scope, model, input, output, dependencies. Proceed without asking only if the user already authorised parallel work in that scope; new scope, cost or external writes need approval.
+1. Decompose: announce, then write a Mission Brief: goal, agent count, quota strategy (FLASH / SONNET / MIXED), expected cost (LOW/MEDIUM/HIGH), and per agent ID, role, exact scope, model, input, output, dependencies. Proceed without asking only if the user already authorized parallel work in that scope; new scope, cost or external writes need approval.
 2. Quota routing: over 20 files or 500+ new lines: cheap tier for all agents, strong tier only for final review. Otherwise creative UI / complex logic / API design: mid tier builder, cheap for the rest. Else cheap everywhere.
 3. Context isolation: each agent gets a packet (files to read, files to write, excluded files, only the relevant instruction-file section). Never the whole codebase; exclude lockfiles/build output unless needed.
 4. Parallel execution in rounds: independent agents first, dependents next, integration last. Between rounds collect outputs and spot-check scope adherence, import/export conflicts, leftover TODO placeholders; re-run only the failing agent.
@@ -34,7 +34,7 @@ Quota-impact estimates per event: spawn/indexing LOW; file IO and terminal MEDIU
 - Integration checks bind to the real combined diff; spot checks do not prove correctness.
 - Read-only reviewers must not repair files unless reassigned.
 - Percentages in examples are illustrative, never report them as measured.
-- Use only host-exposed delegation tools and user-authorised models; model availability, cost and quota separation are not established by the doc.
+- Use only host-exposed delegation tools and user-authorized models; model availability, cost and quota separation are not established by the doc.
 - Do not auto-alter global agent setup.
 
 ## Trade-offs and failure modes
@@ -52,7 +52,7 @@ round1: A,B  round2: C  integration: run tests
 
 ## How an agent should apply this
 
-- Write the brief first and show it; get approval before spawning beyond authorised scope.
+- Write the brief first and show it; get approval before spawning beyond authorized scope.
 - Default subagents to the cheapest tier; escalate one agent only for design-heavy work.
 - Give each agent a file-scoped packet and unique write ownership.
 - Gate each round with checks; repair narrowly, never restart.

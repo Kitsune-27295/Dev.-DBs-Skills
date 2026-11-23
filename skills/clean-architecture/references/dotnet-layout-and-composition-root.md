@@ -32,4 +32,4 @@ The fetched GitHub page lists the top-level contents but not the contents of `sr
 - Restrict the UI-to-Infrastructure reference to the composition root; enforce with an architecture test.
 - Put repository interfaces and domain exceptions in the Core; EF types and external clients in Infrastructure.
 - Use the template as a starting point, then trim unneeded features (frontend, Aspire) rather than keeping dead scaffolding.
-- Choose a folder-organised single project for small apps; adopt the split when business rules and change pressure justify it.
+- Choose a folder-organized single project for small apps; adopt the split when business rules and change pressure justify it.

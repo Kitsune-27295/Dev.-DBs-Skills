@@ -1,6 +1,6 @@
 # Instruction Size Budget and Safe Shortening
 
-Sources: Local operating practice (private notes, summarised; not a public URL) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
 
 Always-loaded instruction files are paid for on every turn of every session, so their size is a standing token cost, not a one-off.
 

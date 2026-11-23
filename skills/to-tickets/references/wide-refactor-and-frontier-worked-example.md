@@ -13,9 +13,9 @@ The upstream page defines tickets as tracer-bullet vertical slices with explicit
 ## Is it a slice or a wide refactor? (decision rule, inference)
 | Question | Slice | Wide refactor |
 |---|---|---|
-| Can one ticket change behaviour end to end and pass CI? | yes | no, a single edit breaks many sites |
+| Can one ticket change behavior end to end and pass CI? | yes | no, a single edit breaks many sites |
 | Does the change touch a shared symbol/column/contract used everywhere? | no | yes |
-| Is the work mechanical rather than behavioural? | rarely | usually |
+| Is the work mechanical rather than behavioral? | rarely | usually |
 
 ## Example A: normal feature (frontier in action)
 ```
@@ -24,7 +24,7 @@ The upstream page defines tickets as tracer-bullet vertical slices with explicit
 03 List saved searches (API + UI + tests)          blocked by: 01
 04 Delete a saved search                           blocked by: 02
 ```
-Frontier at start: {01}. After 01: {02, 03} (parallelisable). After 02: 04 joins. Each ticket delivers observable behaviour; 01 is a prefactor/foundation and is placed first because prefactoring goes first in the page's rules. Note that 01 alone is thin; if it is not independently verifiable, fold it into 02 (inference).
+Frontier at start: {01}. After 01: {02, 03} (parallelizable). After 02: 04 joins. Each ticket delivers observable behavior; 01 is a prefactor/foundation and is placed first because prefactoring goes first in the page's rules. Note that 01 alone is thin; if it is not independently verifiable, fold it into 02 (inference).
 
 ## Example B: wide refactor (retype `userId` from number to string)
 ```
@@ -40,7 +40,7 @@ If batches cannot stay green individually, keep the same sequence but put them o
 
 ## Failure modes
 - **Horizontal slicing:** all-DB-changes or all-UI-changes tickets. Nothing is demoable until the last one lands.
-- **Phantom edges:** declaring blockers that do not genuinely gate the ticket, which serialises work and shrinks the frontier. The quiz step asks the user to check exactly this.
+- **Phantom edges:** declaring blockers that do not genuinely gate the ticket, which serializes work and shrinks the frontier. The quiz step asks the user to check exactly this.
 - **Forcing a wide refactor into a tracer bullet:** produces an unlandable red-CI ticket.
 - **Stale detail:** file paths and code snippets in tickets rot; only inline a snippet when a prototype produced it and it encodes a decision (state machine, schema, type shape).
 - **Combined local file:** local mode needs one file per ticket (`.scratch/<feature-slug>/issues/<NN>-<slug>.md`), numbered in dependency order.
@@ -50,4 +50,4 @@ If batches cannot stay green individually, keep the same sequence but put them o
 - Write blocking edges as real identifiers/numbers, blockers first in publication order, so edges can reference them.
 - After drafting, compute the frontier explicitly and report it; if it is always size one, ask whether edges are phantom.
 - For expand-contract, always create the contract ticket last and blocked by all migrate batches.
-- Keep ticket bodies behavioural (what works end to end), with acceptance criteria as checkboxes.
+- Keep ticket bodies behavioral (what works end to end), with acceptance criteria as checkboxes.

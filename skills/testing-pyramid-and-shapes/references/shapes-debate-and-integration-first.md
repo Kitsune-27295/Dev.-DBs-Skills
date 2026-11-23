@@ -14,7 +14,7 @@ Sources: https://martinfowler.com/articles/2021-test-shapes.html · https://kent
 Fowler (2021) notes "unit test" and "integration test" never had crisp definitions. Originally a unit test checked a team's own code in isolation and an integration test checked it against separately built code. Kent Beck used "unit test" for any test programmers wrote (as opposed to a QA team's), often with real collaborators. Jay Fields named the two styles: **solitary** (collaborators replaced by doubles) and **sociable** (real collaborators), matching the mockist and classicist schools.
 
 ## What the shapes disagree about
-Pyramid: many unit tests. Honeycomb and trophy: fewer unit tests, more integration tests. Fowler's reading: honeycomb advocates criticise heavy mocking, so their "unit test" means solitary and their "integration test" effectively means sociable. The disagreement is therefore largely semantic. Rule from the article: when someone argues for a shape, ask what they mean by each term. Searls's point: percentage debates distract; the real failure is tests without clear boundaries that are slow, flaky, or fail for uninteresting reasons.
+Pyramid: many unit tests. Honeycomb and trophy: fewer unit tests, more integration tests. Fowler's reading: honeycomb advocates criticize heavy mocking, so their "unit test" means solitary and their "integration test" effectively means sociable. The disagreement is therefore largely semantic. Rule from the article: when someone argues for a shape, ask what they mean by each term. Searls's point: percentage debates distract; the real failure is tests without clear boundaries that are slow, flaky, or fail for uninteresting reasons.
 
 ## Dodds's trophy reasoning
 His headline, attributed to Guillermo Rauch: "Write tests. Not too many. Mostly integration."
@@ -45,6 +45,6 @@ for bug in last_90_days_incidents:
 ## How an agent should apply this
 - Define "unit" and "integration" explicitly in the repo's test docs before debating ratios.
 - Prefer sociable tests over heavy mocking; mock only external effects (email, payments, third-party APIs).
-- Assert on behaviour users or callers observe; reject tests that pin internals.
+- Assert on behavior users or callers observe; reject tests that pin internals.
 - Do not set a blanket coverage target; use incident history to decide where the next test goes.
 - Pick the shape from architecture (domain engine, SPA, service fleet), and state the reason.

@@ -6,7 +6,7 @@ Sources: https://kentcdodds.com/blog/aha-programming · https://martinfowler.com
 
 - **DRY**: Dodds cites the single-unambiguous-authoritative-representation phrasing and follows it less dogmatically than the wording suggests.
 - **WET** ("Write Everything Twice", Conlin Durbin): repeat once or twice, never a third time. Dodds calls it equally dogmatic.
-- **AHA** ("Avoid Hasty Abstractions", Cher Scarlett): built on Sandi Metz's advice to prefer duplication over the wrong abstraction. Optimise for **change** first.
+- **AHA** ("Avoid Hasty Abstractions", Cher Scarlett): built on Sandi Metz's advice to prefer duplication over the wrong abstraction. Optimize for **change** first.
 
 ## Rule of Three — status
 
@@ -27,10 +27,10 @@ Lesson (article): count of call sites is not the criterion; **quality of underst
 2. Mark every difference and classify it:
    - **Value** (literal, name, threshold) -> candidate parameter.
    - **Data shape** (field mapping) -> candidate parameter object or mapping table.
-   - **Behaviour** (different steps/branches) -> do not hide behind a flag; pass a function or leave at the call site.
-3. If more than about two behavioural differences remain, the copies are not the same concept; keep them separate.
+   - **Behavior** (different steps/branches) -> do not hide behind a flag; pass a function or leave at the call site.
+3. If more than about two behavioral differences remain, the copies are not the same concept; keep them separate.
 4. Extract the common core with the value differences as arguments; name it for the **concept**, not the first caller.
-5. Keep call sites explicit (no default parameters that silently pick one caller's behaviour).
+5. Keep call sites explicit (no default parameters that silently pick one caller's behavior).
 
 ```ts
 // Three copies differ only in endpoint, field list and page size -> values.
@@ -53,7 +53,7 @@ const users = (await fetchAll("/users", ["id", "email"])).map(toUserView);
 | 2 copies, differences unclear | Copy, wait |
 | 2 copies, spec-defined identical (protocol, formula) | Extract |
 | 3+ copies, value-only differences | Extract with arguments |
-| 3+ copies, behavioural differences | Extract the common core only, or stay duplicated |
+| 3+ copies, behavioral differences | Extract the common core only, or stay duplicated |
 | Fix applied in several places repeatedly | Extract now (pain beats count) |
 | Existing abstraction + new divergent need | Recover; see `wrong-abstraction-recovery.md` |
 
@@ -61,6 +61,6 @@ const users = (await fetchAll("/users", ["id", "email"])).map(toUserView);
 
 - Diff the candidate copies and classify each difference before writing the helper.
 - Extract at two only with a spec-level reason; otherwise wait for a third real use.
-- Refuse flag/mode parameters that select behaviour; prefer passing a function or keeping call-site code.
+- Refuse flag/mode parameters that select behavior; prefer passing a function or keeping call-site code.
 - When asked to cite the Rule of Three, say the Fowler page could not be read (404) and describe it as background knowledge.
 - Name the extracted function after the concept it captures, not after its first caller.

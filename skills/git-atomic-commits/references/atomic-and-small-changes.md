@@ -22,7 +22,7 @@ Per Google's guidance: reviewed faster and more thoroughly, fewer bugs, less was
 
 | Strategy | How | When |
 |---|---|---|
-| Prepare-then-change | refactor commit (no behaviour change), then feature commit | code is hard to extend as it stands |
+| Prepare-then-change | refactor commit (no behavior change), then feature commit | code is hard to extend as it stands |
 | Stacking | submit small change 1, build change 2 on top | review latency is blocking you |
 | By file/owner | e.g. schema/proto change separate from consumers | different reviewers |
 | Horizontal | stub shared API/interface first, layers proceed independently | multiple people on layers |
@@ -38,7 +38,7 @@ git status                # inventory
 git add -p src/parse.py   # stage only the refactor hunks
 git diff --cached         # verify
 git commit -m "refactor(parse): extract tokenizer"
-git add -p                # now the behaviour hunks + their tests
+git add -p                # now the behavior hunks + their tests
 git commit -m "fix(parse): reject empty tokens"
 ```
 Already one big commit, unpushed: `git rebase -i <base>`, mark `edit`, then `git reset HEAD^` and recommit in pieces, then `git rebase --continue`.
@@ -61,7 +61,7 @@ If the staged diff exceeds roughly 300 changed lines or touches unrelated direct
 ## How an agent should apply this
 
 - Before committing, list the distinct concerns in the diff; if more than one, stage and commit them separately.
-- Put refactors and formatting first, behaviour next, each with its tests.
+- Put refactors and formatting first, behavior next, each with its tests.
 - Verify each commit builds (run the quick test/build between commits when feasible).
 - Keep generated artifacts out unless the repo tracks them; if so, isolate them.
 - For multi-step migrations or breaking changes, one commit per step, see `parallel-change-expand-contract`; for review of the result, `code-review`.

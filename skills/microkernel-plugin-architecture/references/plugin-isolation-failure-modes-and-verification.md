@@ -3,7 +3,7 @@
 Sources: https://quality.arc42.org/approaches/plugin-architecture · Last verified 2026-11-23
 
 ## Intent and mechanism (arc42 Quality Guide)
-Let independent teams or third parties extend behaviour without changing or redeploying the core. The core declares extension points (interfaces, abstract classes, event topics) and owns their semantics. Plugins register via directory scanning, a service registry (Java ServiceLoader, Python entry points) or runtime hot-plug; the host calls them without knowing concrete types, and one or all registered plugins respond. Supported qualities: extensibility, modifiability, configurability (different plugin sets per customer), reusability.
+Let independent teams or third parties extend behavior without changing or redeploying the core. The core declares extension points (interfaces, abstract classes, event topics) and owns their semantics. Plugins register via directory scanning, a service registry (Java ServiceLoader, Python entry points) or runtime hot-plug; the host calls them without knowing concrete types, and one or all registered plugins respond. Supported qualities: extensibility, modifiability, configurability (different plugin sets per customer), reusability.
 
 ## Isolation as a dial
 | Level | Gives | Costs |
@@ -17,7 +17,7 @@ Choose the lowest level the trust model allows: first-party plugins in-process; 
 ## Failure modes (named by the source)
 1. Breaking API change strands the ecosystem; core upgrades stall until plugins catch up.
 2. Leaks of memory, handles or threads across unload cycles slowly destabilise the host.
-3. Extension point invoked before registration completes, so behaviour silently depends on startup timing.
+3. Extension point invoked before registration completes, so behavior silently depends on startup timing.
 4. Unsandboxed plugin = host privileges = supply-chain incident if compromised.
 Also: a slow synchronous plugin can stall the whole pipeline.
 
@@ -31,7 +31,7 @@ Also: a slow synchronous plugin can stall the whole pipeline.
 - Use when the set of capabilities varies or is unknown: third-party extensions, per-customer feature combinations, hardware drivers (the source's example: five battery providers behind one contract).
 - Skip when the extension set is small and fixed: the permanent public API costs more than a few known variants. Once third parties build against it, the core team maintains a public product (versioning, deprecation windows, compatibility suites).
 
-## Neighbouring approaches
+## Neighboring approaches
 - Extension hooks (named attachment points): simpler, weaker than full contracts.
 - Marketplace: curated registry with automated quality and security gates.
 - Externalized business rules: declarative where plugins are imperative code.

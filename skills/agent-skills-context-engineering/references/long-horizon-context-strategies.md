@@ -28,9 +28,9 @@ Context engineering is curating the smallest set of high-signal tokens that make
 The article cites Claude Code as hybrid: CLAUDE.md files loaded up front, glob and grep for the rest; it suggests hybrid fits less dynamic domains (legal, finance).
 
 ## Three long-horizon techniques
-1. **Compaction:** summarise a nearly full window and restart from the summary. Keep architectural decisions and unresolved bugs; drop redundant tool output. Tune for recall first, then precision. The lightest form is clearing old tool results. Risk: over-aggressive compaction loses something needed later.
+1. **Compaction:** summarize a nearly full window and restart from the summary. Keep architectural decisions and unresolved bugs; drop redundant tool output. Tune for recall first, then precision. The lightest form is clearing old tool results. Risk: over-aggressive compaction loses something needed later.
 2. **Structured note-taking:** the agent writes durable notes (NOTES.md, to-do list, memory tool files) outside the window and reloads them. Low overhead, good for iterative work with milestones.
-3. **Sub-agent isolation:** specialists work in a clean window and return a condensed summary (often 1,000-2,000 tokens); lead agent synthesises. Strong for parallel research; adds coordination overhead.
+3. **Sub-agent isolation:** specialists work in a clean window and return a condensed summary (often 1,000-2,000 tokens); lead agent synthesizes. Strong for parallel research; adds coordination overhead.
 
 Selection rule from the article: compaction for long back-and-forth conversation, notes for milestone-based iteration, multi-agent for parallel exploration. Guiding principle: "do the simplest thing that works."
 
@@ -41,7 +41,7 @@ next step. DROP: raw tool output, repeated attempts. Then list 3 things to re-ve
 ```
 
 ## Failure modes
-- Tool results piling up until 50k tokens of logs sit in history (clear or summarise).
+- Tool results piling up until 50k tokens of logs sit in history (clear or summarize).
 - Compaction that drops the one constraint a later step needs (mitigate: re-read notes, keep a pinned decisions list).
 - JIT exploration with no hints, burning turns on dead ends (add naming conventions and entry-point docs).
 - Sub-agents returning raw dumps instead of condensed findings.
@@ -51,4 +51,4 @@ next step. DROP: raw tool output, repeated attempts. Then list 3 things to re-ve
 - Keep a persistent notes file for any task that will outlive one window; write decisions as they happen.
 - Pre-load only the stable core; reference everything else by path and read on demand.
 - Delegate wide searches to a sub-agent with an explicit "return under ~1-2k tokens" instruction.
-- Clear stale tool results before resorting to full summarisation.
+- Clear stale tool results before resorting to full summarization.

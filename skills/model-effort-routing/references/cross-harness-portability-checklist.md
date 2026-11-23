@@ -16,7 +16,7 @@ Every source uses a folder with `SKILL.md` (YAML frontmatter + Markdown) and opt
 | Gemini CLI | AAS `--agent gemini-cli`; Antigravity CLI also reads `~/.gemini/skills/` | exact Gemini CLI path not documented in the pages read |
 | Installers | AAS supports Cursor, Copilot, Kiro, OpenCode, AdaL, `--dir`; `npx skills` writes `~/.agents/skills` | App reads it, `agy` does not |
 
-AAS (agentic-awesome-skills, formerly antigravity-awesome-skills, 3,100+ skills, tool MIT / content CC BY 4.0, imported skills keep their licences incl. some AGPL) pins installs to release tags and previews with `gh skill preview`.
+AAS (agentic-awesome-skills, formerly antigravity-awesome-skills, 3,100+ skills, tool MIT / content CC BY 4.0, imported skills keep their licenses incl. some AGPL) pins installs to release tags and previews with `gh skill preview`.
 
 ## Portability rules
 
@@ -27,8 +27,8 @@ AAS (agentic-awesome-skills, formerly antigravity-awesome-skills, 3,100+ skills,
 5. Scripts: prefer cross-platform (Python/Node); the orchestra template uses PowerShell, which is Windows-biased.
 6. Headless modes may skip skill loading (`agy -p` ignores workspace `.agents/`); test the actual mode you ship for.
 7. Delegation tools differ per host; use only what the host exposes and say so (subagent-orchestrator guardrail).
-8. Do not install the whole catalogue: metadata overhead and false activations grow with count.
-9. Licences: check each imported skill; MIT/Apache/CC-BY/AGPL mix in AAS.
+8. Do not install the whole catalog: metadata overhead and false activations grow with count.
+9. Licenses: check each imported skill; MIT/Apache/CC-BY/AGPL mix in AAS.
 
 ## Verification routine
 

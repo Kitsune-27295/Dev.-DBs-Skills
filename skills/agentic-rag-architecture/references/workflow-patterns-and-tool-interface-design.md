@@ -17,9 +17,9 @@ Workflows run LLMs and tools along predefined code paths; agents let the LLM ste
 | Pattern | Shape | Use when | Typical cost |
 |---|---|---|---|
 | Prompt chaining | step N consumes step N-1, optional programmatic gates | task splits into fixed subtasks | latency for accuracy |
-| Routing | classify input, dispatch to specialised path | categories are distinct and classification is reliable (LLM or classic classifier) | one extra call; can send easy queries to a small model |
+| Routing | classify input, dispatch to specialized path | categories are distinct and classification is reliable (LLM or classic classifier) | one extra call; can send easy queries to a small model |
 | Parallelization | sectioning (independent subtasks) or voting (same task repeated) | speed, or several perspectives for confidence | more tokens |
-| Orchestrator-workers | central LLM decomposes at runtime, workers execute, orchestrator synthesises | subtasks unpredictable (edits across unknown files, multi-source search) | highest of the workflows |
+| Orchestrator-workers | central LLM decomposes at runtime, workers execute, orchestrator synthesizes | subtasks unpredictable (edits across unknown files, multi-source search) | highest of the workflows |
 | Evaluator-optimizer | generator plus critic loop | clear criteria and measurable gain from iteration | N rounds |
 
 Distinction worth remembering: parallelization has subtasks fixed in code; orchestrator-workers decides them at runtime.
@@ -33,7 +33,7 @@ An agent plans, acts, reads environment feedback (tool result, code execution) e
 SDKs speed setup but hide prompts and responses, complicate debugging and invite needless complexity. Begin with direct API calls; if using a framework, understand what it sends. Three principles: simplicity, visible planning steps, a carefully engineered agent-computer interface.
 
 ## Tool interface design
-- **Format choice:** pick formats that are cheap for the model: diffs force counting lines ahead of time; code embedded in JSON forces escaping. Leave room to reason before committing; favour formats common in online text.
+- **Format choice:** pick formats that are cheap for the model: diffs force counting lines ahead of time; code embedded in JSON forces escaping. Leave room to reason before committing; favor formats common in online text.
 - **Think like writing a function for a junior colleague:** obvious from name and parameters, include examples, edge cases, input boundaries, and distinguish similar tools. Test with many inputs and iterate.
 - **Poka-yoke:** reshape arguments so errors are hard to make. Cited example: requiring absolute file paths removed failures that appeared once the agent changed directory.
 

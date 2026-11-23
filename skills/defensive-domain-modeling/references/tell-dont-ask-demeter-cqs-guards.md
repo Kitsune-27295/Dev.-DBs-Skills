@@ -5,7 +5,7 @@ Sources: https://martinfowler.com/bliki/TellDontAsk.html · https://www2.ccs.neu
 ## Tell, Don't Ask (Fowler, 2013)
 - Idea: bundle data with the functions that use it; tell the object what to do instead of pulling its data out and deciding outside. Fowler's contrast: an "ask" monitor exposes value, limit and alarm for callers to compare; a "tell" monitor's `setValue` compares and warns internally.
 - Rationale: tightly coupled things belong in the same component.
-- Fowler's own stance is cooler than the slogan: he does not use TDA as a rule, aims at co-locating data and behaviour, and calls TDA a stepping stone. He warns about "GetterEradicators", about tangled code from forcing "tell" where a responsible query would be simpler, and says co-location can yield to other concerns such as layering ("good design is all about trade-offs").
+- Fowler's own stance is cooler than the slogan: he does not use TDA as a rule, aims at co-locating data and behavior, and calls TDA a stepping stone. He warns about "GetterEradicators", about tangled code from forcing "tell" where a responsible query would be simpler, and says co-location can yield to other concerns such as layering ("good design is all about trade-offs").
 - Origin credited to Andy Hunt and Dave Thomas.
 
 ## Law of Demeter (Lieberherr/Holland page)
@@ -36,7 +36,7 @@ function payAmount(e: Employee): Money {
 
 ## Trade-offs and failure modes
 - Over-applying TDA yields god-objects with forwarding methods; keep read-only query methods for views, reports and serialization.
-- Demeter-by-wrappers inflates class interfaces; apply it to collaborators with behaviour, not to immutable data.
+- Demeter-by-wrappers inflates class interfaces; apply it to collaborators with behavior, not to immutable data.
 - Guard clauses read best when the branches are genuine exceptional cases of equal weight; for two equally normal outcomes, a plain if/else is clearer (inference).
 
 ## How an agent should apply this

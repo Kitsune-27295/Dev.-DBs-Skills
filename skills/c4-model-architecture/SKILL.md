@@ -33,9 +33,9 @@ One idea: treat architecture diagrams like **Google Maps for your code** — def
 
 1. **Never mix abstraction levels on the same diagram:** Do not draw an L2 Container (e.g., `PostgreSQL Database`) or an L3 Component (e.g., `AuthController`) inside an L1 System Context diagram. And do not draw internal L3 Components of *every* microservice on a single giant L2 Container diagram — zoom into one Container per L3 diagram.
 2. **Every box must carry 3 pieces of metadata (Name + Type/Technology + Short Description):**
-   - Never draw a box labelled just `Backend` or `Order Service`.
+   - Never draw a box labeled just `Backend` or `Order Service`.
    - Write: **`Order Service`** / `[Container: Go 1.24 / gRPC]` / *"Validates orders, orchestrates checkout sagas, and owns order state."*
-3. **Every arrow must be unidirectional and labelled with intent + technology/protocol:**
+3. **Every arrow must be unidirectional and labeled with intent + technology/protocol:**
    - Never draw unlabelled lines or vague double-headed `<-->` arrows.
    - Label the **action** in active voice and the **protocol**: e.g., `Sends order confirmation email using [HTTPS / JSON REST]` or `Publishes OrderPaid events to [Kafka / Avro]`. Indicate the direction of the **call or dependency** (who initiates the request), not just "data flows both ways."
 4. **Every diagram must have a Title, Scope, and Legend/Key:** Anyone opening the diagram cold must immediately see what diagram type/level it is (`[Container] Internet Banking System`) and what every shape, border style (dashed = system boundary), and color means.

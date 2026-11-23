@@ -28,7 +28,7 @@ Limit what saturates first: requests per second, **concurrent in-flight requests
 
 ## 3. Algorithms
 
-| Algorithm | Behaviour | Choose when | Reject when |
+| Algorithm | Behavior | Choose when | Reject when |
 |---|---|---|---|
 | **Token bucket** | Steady refill, burst up to capacity | Default for APIs; absorb legitimate short spikes | Backend cannot tolerate bursts |
 | **Leaky bucket** | Constant outflow | Backend needs steady ingress; client-side pacing | Callers need burst latitude |
@@ -65,7 +65,7 @@ Safety for all four: **fail open** (limiter or Redis bug must not break the API)
 
 - Classify traffic by business criticality (payment path above listing, interactive above batch, paying tier above free, live above test).
 - Reserve capacity for the critical class instead of only capping the others.
-- Isolate tenants: per-tenant limits so one tenant cannot monopolize (noisy neighbour); high-value tenants may have separate queues or endpoints.
+- Isolate tenants: per-tenant limits so one tenant cannot monopolize (noisy neighbor); high-value tenants may have separate queues or endpoints.
 - Defer rather than reject when work is deferrable: queue with priority (`background-worker-job-scheduler`).
 - Graceful degradation: switch off non-essential features before rejecting essential requests.
 
@@ -85,7 +85,7 @@ A limiter that rejects only at 100% utilization causes a latency spike first. St
 
 ## 9. Client-Side Pacing (When You Are the Caller)
 
-Blind retry-on-reject multiplies traffic (the source's example sends 30,000 records to deliver 10,000). Instead: durable queue, workers dequeue at the budget, release in small slices (e.g. 20 ops per 200 ms for a 100/s limit), honour `Retry-After`, bounded retries with jitter, and lease capacity when several processes share one quota. Not suitable when the call must be synchronous and low latency, or when the bottleneck is concurrency. Details: [references/client-side-rate-limiting-and-capacity-leasing.md](references/client-side-rate-limiting-and-capacity-leasing.md).
+Blind retry-on-reject multiplies traffic (the source's example sends 30,000 records to deliver 10,000). Instead: durable queue, workers dequeue at the budget, release in small slices (e.g. 20 ops per 200 ms for a 100/s limit), honor `Retry-After`, bounded retries with jitter, and lease capacity when several processes share one quota. Not suitable when the call must be synchronous and low latency, or when the bottleneck is concurrency. Details: [references/client-side-rate-limiting-and-capacity-leasing.md](references/client-side-rate-limiting-and-capacity-leasing.md).
 
 ## 10. Operating Rules
 

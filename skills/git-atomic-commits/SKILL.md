@@ -38,7 +38,7 @@ Test of atomicity: each commit builds, passes its tests, and can be reverted alo
 ```
 <type>[(scope)][!]: <imperative subject, <=50 chars, no period>
 
-<body: wrapped ~72, explains WHY and the old vs new behaviour>
+<body: wrapped ~72, explains WHY and the old vs new behavior>
 
 <footers: Refs: #123 / BREAKING CHANGE: ... / Co-authored-by: ...>
 ```

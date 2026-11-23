@@ -2,7 +2,7 @@
 
 Sources: https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html (cohesion/coupling framing, read) · https://martinfowler.com/bliki/CommonClosurePrinciple.html (404, not read) · Last verified 2026-11-23
 
-**Source status:** the Fowler CCP URL returns 404; no such bliki page exists. Everything under "Common Closure Principle" below is **background knowledge, not read from source**, and is labelled as such.
+**Source status:** the Fowler CCP URL returns 404; no such bliki page exists. Everything under "Common Closure Principle" below is **background knowledge, not read from source**, and is labeled as such.
 
 ## Cohesion and coupling (read from the SRP article)
 
@@ -57,4 +57,4 @@ Use when choosing package/module boundaries or when single changes sprawl across
 - Use git co-change data to decide boundaries rather than naming alone.
 - Prefer feature/actor grouping for application code; keep generic libraries separate.
 - When two packages always change together, merge or colocate them.
-- Re-measure after a reorganisation; the point is fewer packages per change.
+- Re-measure after a reorganization; the point is fewer packages per change.

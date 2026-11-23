@@ -4,8 +4,8 @@ Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit
 
 ## What the pages say
 
-- The landing page frames ROP as a recipe for the "happy path vs real-world failures" problem (validation, logging, network/service errors). It is *not* a monad tutorial, uses `Either` specialised with a list of custom error types, and warns "don't take it to extremes" (linking an "Against ROP" post). Aim: a consistent template, "basically only one way to write the code", not the only valid approach.
-- The recipe components: **bind**, **Kleisli composition** (`>=>`), **map**, **tee** (for unit-returning functions such as logging), **exception mapping**, **`&&&`** (parallel validation), custom error types for domain modelling, extensions (logging, domain events, compensating transactions).
+- The landing page frames ROP as a recipe for the "happy path vs real-world failures" problem (validation, logging, network/service errors). It is *not* a monad tutorial, uses `Either` specialized with a list of custom error types, and warns "don't take it to extremes" (linking an "Against ROP" post). Aim: a consistent template, "basically only one way to write the code", not the only valid approach.
+- The recipe components: **bind**, **Kleisli composition** (`>=>`), **map**, **tee** (for unit-returning functions such as logging), **exception mapping**, **`&&&`** (parallel validation), custom error types for domain modeling, extensions (logging, domain events, compensating transactions).
 - The series page defines the mechanics below.
 
 ## Mechanics

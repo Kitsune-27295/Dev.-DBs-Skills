@@ -18,7 +18,7 @@ Group tests by granularity: many fast tests at the bottom, fewer broad ones abov
 - Stubs return canned answers; mocks verify interactions. Different tools.
 - Must be fast: no DB, filesystem or HTTP; thousands should finish in minutes.
 - Test the public interface, roughly one test class per production class. Needing to test a private method signals too many responsibilities: extract a class.
-- Assert observable behaviour (input -> output), not call sequences; skip trivial getters/setters and branch-free code.
+- Assert observable behavior (input -> output), not call sequences; skip trivial getters/setters and branch-free code.
 - Structure: Arrange-Act-Assert or Given-When-Then.
 - Framework wrinkle: a controller unit-tested by plain method call misses routing, annotations and binding; use the framework's mock-MVC style test.
 
@@ -29,7 +29,7 @@ def test_unknown_person_returns_fallback():
 ```
 
 ## Integration tests
-Check one external integration point at a time (DB, filesystem, other service) with the rest doubled. Required wherever data is serialised or deserialised: REST calls, DB access, queues, file I/O. Run real dependencies locally or a dedicated test instance, never production. Use the production database type where feasible: the source warns that an in-memory substitute of a different engine carries risk. For outbound HTTP, stub the remote with a local stub server and point the client's base URL config at it. Limitation: the stub can drift from the real service, which is why contract tests exist.
+Check one external integration point at a time (DB, filesystem, other service) with the rest doubled. Required wherever data is serialized or deserialized: REST calls, DB access, queues, file I/O. Run real dependencies locally or a dedicated test instance, never production. Use the production database type where feasible: the source warns that an in-memory substitute of a different engine carries risk. For outbound HTTP, stub the remote with a local stub server and point the client's base URL config at it. Limitation: the stub can drift from the real service, which is why contract tests exist.
 
 ## Consumer-driven contract tests
 Problem: handing a spec over the fence plus a big manual system test is slow and fragile. CDC flips it: the consumer writes tests stating what it needs; these are published as a contract file; the provider replays them in its own pipeline; a failure starts a conversation between teams, and the provider builds only what is consumed. Mechanics with Pact: consumer test emits a pact file; provider test loads it and implements each named "state"; provider names and state strings must match exactly. Share pacts via version control first, an artifact store or broker later. For a given client use a consumer test **or** an integration test, not both.
@@ -43,6 +43,6 @@ Problem: handing a spec over the fence plus a big manual system test is slow and
 ## How an agent should apply this
 - Classify each proposed test by integration point crossed, then place it at the lowest layer that can catch the bug.
 - Unit tests: no I/O, assert outputs, refuse tests of private methods (suggest extraction).
-- Add an integration test for every serialisation or persistence boundary, against the real engine type.
+- Add an integration test for every serialization or persistence boundary, against the real engine type.
 - Between teams, propose consumer-driven contracts instead of a shared E2E environment.
 - Cap E2E at a handful of critical journeys and track their flake rate.

@@ -14,7 +14,7 @@ Limits you must keep when citing it:
 - The authors explicitly say they have **only measured Claude Code**. Codex has an analogous `model_reasoning_effort` setting (`low` to `ultra`, depending on model); the FAQ presents that as a "plausible first thing to check", not a known cause.
 - Recommended response in the FAQ: if an agent ignores skills, raise effort and retry before blaming the skill; asking for the skill by name bypasses routing and distinguishes "skill missing" from "skill not selected". The FAQ also says agents skip skills for tasks they can do unaided, by design, so vague or trivial prompts may not trigger even at high effort.
 
-Implication for routing (my inference): an effort floor is a correctness setting for any workflow that depends on skill or tool invocation, not only a cost dial. Pin effort at a level where the skill reliably fires, and test activation after lowering it. masskrdjn reaches a compatible point from vendor docs: lower effort consolidates tool calls (cheaper, but different behaviour), and Haiku `low` may skip checks or stop early on long prompts.
+Implication for routing (my inference): an effort floor is a correctness setting for any workflow that depends on skill or tool invocation, not only a cost dial. Pin effort at a level where the skill reliably fires, and test activation after lowering it. masskrdjn reaches a compatible point from vendor docs: lower effort consolidates tool calls (cheaper, but different behavior), and Haiku `low` may skip checks or stop early on long prompts.
 
 ## 2. Claims by repo, graded
 

@@ -13,17 +13,17 @@ DevelopersDigest adds that Luna-first style fleets are defensible because a fail
 Ordered by how much I would trust them (my ranking, an inference):
 1. External, deterministic checks: tests pass, JSON schema validates, citation exists, SQL runs, linter clean.
 2. Agreement signals: vote or self-consistency across several cheap samples (the CATTS-style idea in the inference-time-scaling list: spend extra samples only at steps where the agent's votes disagree).
-3. Verifier or judge model scores (correlated with the generator; calibrate on labelled data).
+3. Verifier or judge model scores (correlated with the generator; calibrate on labeled data).
 4. Model-reported or token-probability confidence: cheap, but often poorly calibrated; the sources give no thresholds.
 5. User signals (retry, thumbs-down, edit distance): lagging but real; Blocksize recommends watching satisfaction alongside spend.
 
-None of the read sources publishes a numeric confidence threshold or target escalation rate. Any threshold must be fitted on your own labelled traffic. Do not copy a number from a blog.
+None of the read sources publishes a numeric confidence threshold or target escalation rate. Any threshold must be fitted on your own labeled traffic. Do not copy a number from a blog.
 
 ## 3. Adaptive compute beyond model choice
 
 From the Awesome-Inference-Time-Scaling index (descriptions only): stop iterating once an ensemble is confident (TUMIX, "about half the inference cost" per the list), pick the minimum number of samples for a target confidence (OptScale), exit reasoning early when it has converged with answer-level verification (PUMA), give agents a visible budget to decide dig-deeper vs pivot (Budget-Aware Tool-Use). Common pattern: compute (samples, thinking length, steps) is a variable allocated per query/step by an uncertainty or budget signal, not a constant. Mapping to an agent harness (inference): "effort" is that knob. Low effort first, raise effort or switch model only on failed checks.
 
-arXiv 2610.04751 (layer-level routing) offers a caution: even with a confidence arbiter, an oracle over compute options was far above the achieved accuracy (0.816 vs 0.712 on MMLU, per its abstract), so confidence selection leaves most headroom unused. Also its note that confidence saturates after post-training, favouring the default computation, is a warning that model self-confidence can be uninformative (the paper concerns layer-routing programs; extension to model-level escalation is my inference).
+arXiv 2610.04751 (layer-level routing) offers a caution: even with a confidence arbiter, an oracle over compute options was far above the achieved accuracy (0.816 vs 0.712 on MMLU, per its abstract), so confidence selection leaves most headroom unused. Also its note that confidence saturates after post-training, favoring the default computation, is a warning that model self-confidence can be uninformative (the paper concerns layer-routing programs; extension to model-level escalation is my inference).
 
 ## 4. Failure modes
 

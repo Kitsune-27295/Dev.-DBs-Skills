@@ -5,7 +5,7 @@ Sources: https://mermaid.js.org/syntax/c4.html · https://mermaid.js.org/syntax/
 ## C4 in Mermaid
 Five types: `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`. Syntax follows C4-PlantUML, but layout comes from statement order (no automatic algorithm) and styling is fixed (no skins or CSS).
 
-### Macro catalogue (parameter lists as documented; `?` = optional, may be named with a `$` prefix)
+### Macro catalog (parameter lists as documented; `?` = optional, may be named with a `$` prefix)
 | Group | Macros |
 |---|---|
 | People/systems | `Person(alias, label, ?descr, ?sprite, ?tags, $link)`, `System(...)`, plus `Person_Ext`, `System_Ext`, `SystemDb`, `SystemDb_Ext`, `SystemQueue`, `SystemQueue_Ext` |

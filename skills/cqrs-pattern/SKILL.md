@@ -21,7 +21,7 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 
 ## Core architectural rules and invariants
 
-1. **Commands mutate state and return no domain payload; Queries never mutate state:** A Command may only return an acknowledgement (`void`, `202 Accepted`, newly created ID/version, or validation errors). A Query must never alter observable state, write audit mutations, or trigger domain side effects.
+1. **Commands mutate state and return no domain payload; Queries never mutate state:** A Command may only return an acknowledgment (`void`, `202 Accepted`, newly created ID/version, or validation errors). A Query must never alter observable state, write audit mutations, or trigger domain side effects.
 2. **Apply CQRS per Bounded Context, never across the entire system by default:** Most submodules of an application are simple CRUD and should stay CRUD. Use CQRS only in the specific Bounded Context that has severe read/write skew or complex collaborative domain invariants.
 3. **Never route Queries through Domain Aggregates:** If your Query handler loads a rich DDD Aggregate from a Repository just to map it to a DTO, you have paid the cost of CQRS without getting the benefit. Queries should project directly from the database (views, thin SQL, or materialized read tables) into the response DTO.
 4. **Prefer Single-Store CQRS before Dual-Store CQRS:** Start by separating the write model (domain aggregates + transactions) and read model (direct SQL projections or DB views) over the **same transactional database**. Only split into physically separate read and write databases when scaling or lock-contention measurements prove a single database cannot handle the load.

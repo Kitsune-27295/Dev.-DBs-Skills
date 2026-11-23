@@ -4,7 +4,7 @@ Sources: https://github.com/milanm/architecture-docs · Last verified 2026-11-23
 
 ## What the repository demonstrates
 
-An example documentation set combining the **arc42** template with the **C4 model**, with the model defined in **Structurizr DSL** and prose in **AsciiDoc**. Licence Apache-2.0.
+An example documentation set combining the **arc42** template with the **C4 model**, with the model defined in **Structurizr DSL** and prose in **AsciiDoc**. License Apache-2.0.
 
 ## Layout
 
@@ -47,7 +47,7 @@ workspace {
 ## How an agent should apply this
 
 - Prefer a text model (Structurizr DSL or equivalent) over drawn images when the user wants maintainable diagrams.
-- Keep model, sections and generated output in separate folders; commit sources, not generated artefacts, unless publishing needs them.
+- Keep model, sections and generated output in separate folders; commit sources, not generated artifacts, unless publishing needs them.
 - Add a CI job that regenerates diagrams and fails on DSL errors.
 - Reference diagrams from the matching arc42 section instead of duplicating text.
 - State clearly which mapping choices are conventions rather than repo-documented facts.

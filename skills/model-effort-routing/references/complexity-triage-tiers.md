@@ -4,7 +4,7 @@ Sources: https://github.com/machinedge/building-effective-agents/blob/main/build
 
 Caution: every number below is a **claim** from a third party or an illustrative heuristic, not a benchmark. The Anthropic sources give no multipliers except the PDF's "roughly 10-15x tokens" for multi-agent. Use the numbers to compare shapes, then measure your own.
 
-## Tier ladder (machinedge guide, labelled illustrative by that guide)
+## Tier ladder (machinedge guide, labeled illustrative by that guide)
 | Tier | Shape | Claimed cost | Claimed latency | Predictability |
 |---|---|---|---|---|
 | 1 | Single LLM call | 1x | ~2s | high |

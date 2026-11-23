@@ -28,18 +28,18 @@ Note a divergence: Anthropic's guide additionally forbids XML tags in `name`/`de
 
 ## Authoring principles (best-practices guide)
 1. **Concise is key.** The context window is shared with system prompt, history and other skills. Only add what Claude lacks; ask of each paragraph "does this justify its token cost?" (the guide contrasts a ~50-token snippet with a ~150-token explanatory one for the same task).
-2. **Degrees of freedom match fragility.** High freedom (prose heuristics) for context-dependent work such as code review; medium (templates or parameterised pseudocode) when a preferred pattern exists; low (exact command, "do not add flags") for fragile sequences such as migrations. Mental model: narrow bridge = guardrails, open field = direction only.
+2. **Degrees of freedom match fragility.** High freedom (prose heuristics) for context-dependent work such as code review; medium (templates or parameterized pseudocode) when a preferred pattern exists; low (exact command, "do not add flags") for fragile sequences such as migrations. Mental model: narrow bridge = guardrails, open field = direction only.
 3. **Test on every target model.** Haiku may need more guidance, Opus may need less; aim for text that works on all you will use.
 4. **Descriptions in third person**, specific, with triggers ("Use when ..."). The description is the only thing used to pick among 100+ skills. Vague ones ("Helps with documents") fail.
 5. **Naming:** gerund (`processing-pdfs`) preferred, noun phrase or imperative acceptable; avoid `helper`, `utils`, `tools`, `documents`.
 6. **Progressive disclosure patterns:** (a) overview in `SKILL.md` linking to `FORMS.md`/`REFERENCE.md`; (b) domain folders (`reference/finance.md`, `sales.md`) so only the relevant domain loads; (c) conditional details ("for tracked changes see REDLINING.md").
 7. **No nested reference chains.** Claude may `head -100` a file reached via another file and miss content. Files over 100 lines get a table of contents.
 8. **Workflows and feedback loops:** checklists Claude copies and ticks; "run validator, fix, repeat" loops; plan-validate-execute for batch or destructive work (write `changes.json`, validate with a script, then apply).
-9. **No time-sensitive text.** Put deprecated behaviour in a collapsed "old patterns" section. Use one term per concept.
+9. **No time-sensitive text.** Put deprecated behavior in a collapsed "old patterns" section. Use one term per concept.
 10. **Templates and examples:** strict templates for formats that must not vary, "sensible default" templates otherwise; input/output pairs convey style better than description.
 
 ## Evaluation-driven iteration
-Build evaluations before prose: (1) run Claude on representative tasks without the skill and log failures; (2) write about three scenarios covering the gaps; (3) record the baseline; (4) write the minimum instructions that close the gaps; (5) rerun and compare. The guide's eval record has `skills`, `query`, `files`, `expected_behavior[]`; no built-in runner exists, so you build your own. The two-instance loop: "Claude A" drafts and refines the skill, "Claude B" uses it on real tasks, and observed failures (skipped filter, ignored file, unexpected read order) feed back to A. Watch for: files never read (unneeded or poorly signalled), the same file read repeatedly (move it into `SKILL.md`), missed links (make them explicit).
+Build evaluations before prose: (1) run Claude on representative tasks without the skill and log failures; (2) write about three scenarios covering the gaps; (3) record the baseline; (4) write the minimum instructions that close the gaps; (5) rerun and compare. The guide's eval record has `skills`, `query`, `files`, `expected_behavior[]`; no built-in runner exists, so you build your own. The two-instance loop: "Claude A" drafts and refines the skill, "Claude B" uses it on real tasks, and observed failures (skipped filter, ignored file, unexpected read order) feed back to A. Watch for: files never read (unneeded or poorly signaled), the same file read repeatedly (move it into `SKILL.md`), missed links (make them explicit).
 
 ## Scripts inside skills
 - Prefer shipping a script over asking the model to regenerate code: more reliable, cheaper, consistent. State clearly **run** versus **read as reference**.

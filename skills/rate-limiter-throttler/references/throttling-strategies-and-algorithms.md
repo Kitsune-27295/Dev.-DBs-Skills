@@ -12,7 +12,7 @@ Terminology used by this skill: **rate limiting** = per-caller quota/rate contro
 
 | Strategy | What it does | Pick when |
 |---|---|---|
-| Per-principal rate limit | Reject callers exceeding rate over a window | Need fairness and noisy-neighbour protection; requires attributing each request to a principal |
+| Per-principal rate limit | Reject callers exceeding rate over a window | Need fairness and noisy-neighbor protection; requires attributing each request to a principal |
 | Graceful feature degradation | Switch off or downgrade non-essential features (e.g. lower video resolution) | Essential paths must stay up; trade completeness for availability |
 | Load leveling | Buffer in a queue; process at a steady rate; priority queue or separate endpoints per tier | Work can be deferred; tenants differ in SLA |
 | Priority-based deferral | Suspend/limit lower-priority tenants or apps; return an error to retry later | Mixed-value traffic during scarcity |
@@ -24,7 +24,7 @@ Combine with autoscaling: throttle during scale-out, relax after capacity arrive
 
 Limit the dimension that saturates first: request rate, concurrent in-flight requests, queue depth, CPU/memory, or a downstream's limit. A requests-per-second cap does not protect a system bottlenecked on concurrency at a fan-out point (use bulkheads/concurrency limits there). Normalize per-operation cost (reads cheap, writes expensive); ignoring cost is an attack vector.
 
-| Algorithm | Behaviour | Best fit | Weakness |
+| Algorithm | Behavior | Best fit | Weakness |
 |---|---|---|---|
 | Token bucket | Tokens refill at a steady rate; burst up to bucket size; empty bucket rejects | Gateways absorbing short spikes (Stripe uses it) | Burst may pass straight to a fragile backend |
 | Leaky bucket | Constant outflow rate | Backends needing steady ingress | Delays or drops bursts; queue sizing |

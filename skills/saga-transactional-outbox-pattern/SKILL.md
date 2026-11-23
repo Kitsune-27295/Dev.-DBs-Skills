@@ -33,7 +33,7 @@ One idea: when a business transaction spans multiple databases or a database plu
    - **Pessimistic View:** Reorder Saga steps so high-risk business checks happen early, minimizing the window where dirty reads occur.
    - **Reread Value:** Verify the record version hasn't changed before overwriting.
 5. **Compensating transactions are semantic undos, never physical deletions of history:** A compensation (`RefundPayment`, `CancelOrder`) is a new forward local transaction that reverses the business effect of an earlier step and must itself be idempotent and retried until it completes.
-6. **Handle Concurrent Compensation & Action Races:** If a Saga times out and sends a `Cancel/Compensate` command while the original `DoAction` command is delayed on the network, the participant might receive `Compensate` *before* `DoAction`. Make the participant record a tombstone/cancelled state on `Compensate` so a late-arriving `DoAction` is rejected as a no-op!
+6. **Handle Concurrent Compensation & Action Races:** If a Saga times out and sends a `Cancel/Compensate` command while the original `DoAction` command is delayed on the network, the participant might receive `Compensate` *before* `DoAction`. Make the participant record a tombstone/canceled state on `Compensate` so a late-arriving `DoAction` is rejected as a no-op!
 
 ## Building order
 

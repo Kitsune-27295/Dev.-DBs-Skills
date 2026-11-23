@@ -22,7 +22,7 @@ A comment listing fee rules above code implementing the same rules states intent
 
 ## Kind 3 — Data duplication
 
-`Line { start, end, length }` stores length although it is determined by the endpoints. Make it computed. If performance requires caching, the authors accept a deliberate violation **provided its impact is localised**: only methods inside the class maintain the cache, setters recompute it. Pair this with accessor functions and Meyer's **Uniform Access Principle** (services available through one notation regardless of storage vs. computation), so you can swap the implementation later.
+`Line { start, end, length }` stores length although it is determined by the endpoints. Make it computed. If performance requires caching, the authors accept a deliberate violation **provided its impact is localized**: only methods inside the class maintain the cache, setters recompute it. Pair this with accessor functions and Meyer's **Uniform Access Principle** (services available through one notation regardless of storage vs. computation), so you can swap the implementation later.
 
 ```
 class Line:
@@ -45,7 +45,7 @@ Hardest to detect. Their anecdote: an audit of a US state's systems found over 1
 ## Forces and trade-offs
 
 - Removing duplication adds indirection; worth it only when the shared fact really is one.
-- Caching/denormalisation is legitimate when encapsulated; unencapsulated it is a DRY bug.
+- Caching/denormalization is legitimate when encapsulated; unencapsulated it is a DRY bug.
 - Generated artifacts shift duplication from humans to tooling; the cost is a generation step that must be enforced.
 
 ## How an agent should apply this

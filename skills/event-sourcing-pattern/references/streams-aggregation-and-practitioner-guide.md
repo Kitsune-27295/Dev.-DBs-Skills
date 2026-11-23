@@ -12,9 +12,9 @@ Read note: the page was truncated at about 100,000 of 111,000 characters, so lat
 ## State rehydration
 Read the stream ordered by position, start from an empty entity, apply each event. A generic `Evolve` dispatches to typed `Apply` methods (Marten finds `Apply(Event)` by convention). Online aggregation always runs current business logic, so a logic change needs no data migration; inline snapshots are stored documents that must be re-aggregated after logic changes.
 
-## Modelling notes
+## Modeling notes
 - Aggregate base: id, version, queue of uncommitted events dequeued on save.
-- Strongly typed ids (`ReservationId`) catch argument mix-ups; cost is serialisation and LINQ friction. Marten wants string or Guid ids, so expose a backing property.
+- Strongly typed ids (`ReservationId`) catch argument mix-ups; cost is serialization and LINQ friction. Marten wants string or Guid ids, so expose a backing property.
 - Aggregates are optional: the Helpdesk sample uses commands as pure functions and no aggregate class.
 
 ## Topics the repo covers (titles read, bodies partly unread)

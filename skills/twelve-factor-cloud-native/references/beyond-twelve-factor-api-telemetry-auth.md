@@ -28,7 +28,7 @@ The article does not enumerate every other reformulation, so do not attribute fu
 
 ## Operational context
 
-The CNCF Cloud Native Maturity Model is cited: from production readiness onward expect multiple replicas, externalised config, meaningful readiness probes, an SBOM per release, sized resources. Common obstacles: session state in memory or disk, secrets mixed into plain config, apps that ignore SIGTERM and drop requests. A provider running an app as SREaaS treats these as prerequisites (JSON logs with correlation ID, Prometheus metrics, health endpoint, SBOM).
+The CNCF Cloud Native Maturity Model is cited: from production readiness onward expect multiple replicas, externalized config, meaningful readiness probes, an SBOM per release, sized resources. Common obstacles: session state in memory or disk, secrets mixed into plain config, apps that ignore SIGTERM and drop requests. A provider running an app as SREaaS treats these as prerequisites (JSON logs with correlation ID, Prometheus metrics, health endpoint, SBOM).
 
 ```yaml
 # illustrative Kubernetes fragment (own example)

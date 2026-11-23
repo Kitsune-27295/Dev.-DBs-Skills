@@ -10,7 +10,7 @@ Error handling is part of application security. Attackers begin with reconnaissa
 
 - Configure a **global error handler** in runtime configuration (or in code where more efficient).
 - Unexpected error -> **generic** response to the client, **details logged server-side**.
-- Cover failure modes thoroughly; use 5xx only for requests the application cannot fulfil; never put implementation details in responses.
+- Cover failure modes thoroughly; use 5xx only for requests the application cannot fulfill; never put implementation details in responses.
 - Use the problem-details format (RFC 7807 cited in the body, RFC 9457 in references). The sheet assumes an API-only backend; logging itself is in a separate Logging Cheat Sheet.
 
 ## Per-stack patterns the sheet shows
@@ -22,13 +22,13 @@ Error handling is part of application security. Attackers begin with reconnaissa
 | ASP.NET Core | `[ApiController]`/`[AllowAnonymous]` error controller reading `IExceptionHandlerFeature`, logging, returning generic JSON 500; developer exception page only in Development, otherwise `UseExceptionHandler` and generic `UseStatusCodePages` |
 | ASP.NET Web API (.NET Framework) | `ExceptionLogger` + `ExceptionHandler` returning generic JSON 500, registered through `config.Services.Replace`; `customErrors` set to `RemoteOnly` with a default redirect |
 
-Status rules (appendix): 4xx for client-caused errors (unauthorised access, oversized body, misbehaving client); 5xx for unforeseen server bugs; monitor 5xx rates because they often signal the application failing on certain inputs; status definitions in RFC 9110 section 15.
+Status rules (appendix): 4xx for client-caused errors (unauthorized access, oversized body, misbehaving client); 5xx for unforeseen server bugs; monitor 5xx rates because they often signal the application failing on certain inputs; status definitions in RFC 9110 section 15.
 
 Not on the page: a dedicated "what not to leak" list or testing section (testing is referenced to the OWASP WSTG improper-error-handling guide). The checklist below is **own synthesis** from the page's context plus RFC 9457's security notes.
 
 ## Leak checklist (own synthesis)
 
-Never return in a body or header: stack traces; exception class names or messages from libraries; SQL or ORM errors; file-system paths; internal hostnames/IPs; framework or server versions (also `Server`/`X-Powered-By` headers); raw upstream error bodies; other users' identifiers; secrets or tokens; validation messages that echo unsanitised input back into HTML (output-encode).
+Never return in a body or header: stack traces; exception class names or messages from libraries; SQL or ORM errors; file-system paths; internal hostnames/IPs; framework or server versions (also `Server`/`X-Powered-By` headers); raw upstream error bodies; other users' identifiers; secrets or tokens; validation messages that echo unsanitized input back into HTML (output-encode).
 
 Always provide: a stable generic title, a correlation id (in `instance` or a response header), and a way for support to find the matching log line.
 
@@ -66,7 +66,7 @@ Rules: handler is last in the chain (`middleware-interceptor-chain`); it must it
 ## How an agent should apply this
 
 - Verify a global handler exists, is last, and returns problem-details with a generic body.
-- Grep handlers and filters for places that serialise exceptions into responses; remove them.
+- Grep handlers and filters for places that serialize exceptions into responses; remove them.
 - Check production profile disables debug/developer error pages.
 - Add a leak-pattern test and a 5xx-rate alert.
 - Hand authentication-enumeration questions to `authn-authz-guard`, deeper audit to `security-audit`.

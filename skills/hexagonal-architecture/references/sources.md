@@ -1,6 +1,6 @@
 # Sources for the hexagonal-architecture skill
 
-Retrieved 2026-11-22. Statements below are the sources' claims, summarised; a claim marked *claim* is the author's own measurement or opinion, not verified here.
+Retrieved 2026-11-22. Statements below are the sources' claims, summarized; a claim marked *claim* is the author's own measurement or opinion, not verified here.
 
 | # | Source | What the skill takes from it |
 |---|---|---|

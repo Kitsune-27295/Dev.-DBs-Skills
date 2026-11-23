@@ -3,7 +3,7 @@
 Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit.com/posts/recipe-part2/ · https://github.com/swlaschin/railway-oriented-programming-example · Last verified 2026-11-23
 
 ## Model
-A step that can fail needs one return type carrying both outcomes: a `Result` with `Success`/`Failure`. Each step is a "switch" (one input, `Result` out). Steps are chained so success flows on and a failure skips the remaining steps; once on the failure track, data does not normally return. The `/rop/` landing page frames it as a specialised `Either` (with a list of custom error types) and offers "a recipe, not a tool".
+A step that can fail needs one return type carrying both outcomes: a `Result` with `Success`/`Failure`. Each step is a "switch" (one input, `Result` out). Steps are chained so success flows on and a failure skips the remaining steps; once on the failure track, data does not normally return. The `/rop/` landing page frames it as a specialized `Either` (with a list of custom error types) and offers "a recipe, not a tool".
 
 ## Adapters and what each is for (recipe part 2)
 | Adapter | Use |

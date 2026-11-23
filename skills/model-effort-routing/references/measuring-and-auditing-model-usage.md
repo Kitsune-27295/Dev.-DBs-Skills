@@ -1,6 +1,6 @@
 # Measuring and Auditing Model Usage
 
-Sources: Local operating practice (private notes, summarised; not a public URL) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
 
 A routing policy that is not measured decays: callers forget the `model` parameter and everything runs on the session model. Measure launches, not intentions.
 
@@ -37,7 +37,7 @@ The report reads only; it prints counts and never prompt text.
 
 - Baseline in the private notes (2026-11-06, all transcripts on one machine, each call counted once): **60 of 999 built-in launches (6%) named a model.** The remaining 94% ran on the session model. That gap is what motivated the guard hook (see agent-call-rules-and-enforcement-hook).
 - After installing the guard, the named share on new launches should approach 100%; rerun with `--since <install date>` to check.
-- Also look at the **mix**: if nearly everything now says the same model, the caller is complying mechanically; compare with the tier table (searches light, bulk edits mid, judgement strong).
+- Also look at the **mix**: if nearly everything now says the same model, the caller is complying mechanically; compare with the tier table (searches light, bulk edits mid, judgment strong).
 
 ## Pitfalls
 

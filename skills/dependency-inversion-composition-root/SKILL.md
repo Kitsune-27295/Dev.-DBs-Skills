@@ -7,7 +7,7 @@ description: "Deep dive on Dependency Inversion in practice: the three Dependenc
 
 One idea: **business code declares what it needs (an abstraction it owns) and receives it; exactly one place near the program entry point decides which concrete things to build and connects them.** Everything else never calls `new` on collaborators and never asks a registry for them. Sources and fetch outcomes: [references/sources.md](references/sources.md). Deep dive; the overview DIP row is in `pragmatic-solid-and-ssot`.
 
-Boundaries with neighbours: the *architecture-level* rule (domain at the centre, adapters outside, port ownership) is `clean-architecture` and `hexagonal-architecture`; *adding variants* behind the abstraction is `open-closed-principle`; *one fact, one home* is `ssot-and-dry`; *who owns what by change axis* is `single-responsibility-cohesion`; test shapes using fakes are `testing-pyramid-and-shapes`; avoid needless interfaces: `kiss-yagni-aha`.
+Boundaries with neighbors: the *architecture-level* rule (domain at the center, adapters outside, port ownership) is `clean-architecture` and `hexagonal-architecture`; *adding variants* behind the abstraction is `open-closed-principle`; *one fact, one home* is `ssot-and-dry`; *who owns what by change axis* is `single-responsibility-cohesion`; test shapes using fakes are `testing-pyramid-and-shapes`; avoid needless interfaces: `kiss-yagni-aha`.
 
 ---
 

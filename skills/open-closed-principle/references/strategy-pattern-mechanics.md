@@ -4,7 +4,7 @@ Sources: https://refactoring.guru/design-patterns/strategy · Last verified 2026
 
 ## Intent and problem
 
-Strategy is a behavioural pattern: define a family of algorithms, put each in its own class, make them interchangeable. The source's motivating case is a navigation app that keeps adding route types (car, walking, public transport, cycling, tourist sights). Each addition enlarges the navigator class, changes to one algorithm risk breaking others, and teammates collide in merge conflicts. Real-world analogy: getting to the airport by bus, cab or bicycle depending on budget and time.
+Strategy is a behavioral pattern: define a family of algorithms, put each in its own class, make them interchangeable. The source's motivating case is a navigation app that keeps adding route types (car, walking, public transport, cycling, tourist sights). Each addition enlarges the navigator class, changes to one algorithm risk breaking others, and teammates collide in merge conflicts. Real-world analogy: getting to the airport by bus, cab or bicycle depending on budget and time.
 
 ## Structure
 
@@ -27,20 +27,20 @@ Pseudocode in the source: `Strategy.execute(a, b)` with Add/Subtract/Multiply; c
 
 ## Applicability
 
-Swap algorithm variants at run time; merge near-identical classes that differ in one behaviour; isolate business logic from algorithm details; replace a large conditional over variants.
+Swap algorithm variants at run time; merge near-identical classes that differ in one behavior; isolate business logic from algorithm details; replace a large conditional over variants.
 
 ## Pros and cons
 
 - Pros: run-time swapping, isolation of details, composition over inheritance, supports OCP (new strategy, context untouched).
 - Cons: with few, stable algorithms the extra types are needless complexity; the client must understand differences between strategies to choose; in languages with function values an anonymous function often suffices.
 
-## Relations (how to pick the neighbour)
+## Relations (how to pick the neighbor)
 
 | Pattern | Difference from Strategy |
 |---|---|
 | State | An extension of Strategy; states may know about and trigger each other, strategies are mutually independent |
 | Template Method | Inheritance, class-level, static; Strategy is composition, object-level, switchable at run time |
-| Decorator | Changes an object's outer behaviour; Strategy changes its "guts" |
+| Decorator | Changes an object's outer behavior; Strategy changes its "guts" |
 | Command | Turns an operation into an object (queue, log, undo); Strategy = different ways of the same task |
 | Bridge, Adapter | Similar composition structure, different problems |
 

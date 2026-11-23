@@ -16,7 +16,7 @@ Richardson frames it as a fix for atomically updating state and publishing event
 | Ordering and concurrency | Per-stream incrementing sequence plus optimistic concurrency: the store rejects an append if the stream changed since read; handler reloads, re-evaluates, retries |
 | Querying | Only "stream by entity id"; everything else needs projections or materialized views |
 | Event store vs broker | Kafka-style brokers lack per-entity stream reads and optimistic concurrency; use them to distribute events, not as the store |
-| Rehydration cost | Snapshot every N events; snapshots are an optimisation, the stream remains the truth |
+| Rehydration cost | Snapshot every N events; snapshots are an optimization, the stream remains the truth |
 | Cross-entity conflicts | OCC covers one stream; reconcile others by business means (back order, notify customer) |
 | Idempotency | At-least-once delivery means duplicates; track last processed sequence per consumer or make mutations repeat-safe |
 | Circular logic | Event handlers that raise events that trigger the same handlers can loop |
