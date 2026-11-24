@@ -1,6 +1,6 @@
 # Work-Weight Tier Table
 
-Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
+Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-24
 
 A tiering policy maps the *weight of the work* to a model and an effort level, so that cost and capability move together. The policy runs as a single data file (a "policy" JSON) that says which model and effort each kind of work gets, and which skill or agent belongs to which kind. Editing one tier changes every member at once.
 
@@ -15,6 +15,12 @@ A tiering policy maps the *weight of the work* to a model and an effort level, s
 | `style` | not a task: an output style that must not switch the session | inherit | no line | Switching model or effort for a presentation style would be wrong. |
 
 Pairs of model and effort come from vendor guides plus the policy author's session defaults; they were **not evaluated on the local task mix**. Two choices sit above session defaults (`medium`) and cost more thinking per turn: `reason` at `high` (a choice, not a guide default) and `build` at `high` (buys fewer early stops on long agentic skills, but short skills pay too). If turns slow down without a gain, drop `build` back to `medium`.
+
+## Two effort surfaces: tier table vs agent call
+
+The efforts above are for a **skill header**, which applies to the rest of the lead's turn and so also covers checks the lead still performs; that is why `gather` sits at `high`. An **agent call** launches an isolated subagent whose only job is the named work, so its effort follows the per-call table in agent-call-rules-and-enforcement-hook: `low` gathering, `medium` bulk edits, `high` judging. The two numbers differ on purpose and neither is copied into the other. A fork runs at the lead's own effort, so it takes none.
+
+`orchestrate` is a tier a skill may be assigned, but using the planner model is still a premium choice: it needs the user's prior consent (ask once, naming the surcharge) and never runs headless without it.
 
 ## Illustrative prices
 

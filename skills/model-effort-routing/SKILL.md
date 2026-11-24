@@ -61,6 +61,7 @@ Score four dimensions; the **highest** decides. Size does not: a 2000-record sch
 - Effort is a **behavioral signal, not a token budget**: it scales thinking, tool-call count and thoroughness.
 - **Under-thinking:** one small measurement (five questions, one skill, Claude Code) saw skills skipped at `--effort low`; the lightest tier at `low` skips checks. If an agent ignores a skill or tool, raise effort first and test activation after lowering it.
 - **Overthinking:** `max` gains little over `xhigh`, costs more, can overthink structured output. Use it only to measure a ceiling.
+- **Two effort surfaces, two defaults.** On an **agent call** (isolated subagent) set effort by weight: `low` read-only gathering and tiny mechanical audits, `medium` implementation and bulk edits, `high` judging, security, review, root cause. In a **skill header** (applies to the rest of the lead's turn) use the tier-table effort (`high` for `gather`, `build`, `reason`), because the header also drives checks the lead still has to do. They differ by design; do not copy one into the other. Omit effort only on a fork.
 - **Change effort before tier.** Prompt phrases ("think hard") do nothing; effort is the control; control length in the prompt.
 - **Ceilings:** thinking counts as billed output and against `max_tokens`. Size for thinking plus answer; a truncated or `incomplete` reply is a ceiling bug, not a retry. Cap agent loops (turns, budget).
 - **Cache cost (vendor-documented):** a top-level effort change can invalidate the cached prefix and re-bill it at full input price. Use per-message effort (Claude beta, appended at the tail) or OpenAI `configuration_update` (GPT-6+) where supported; otherwise one effort per cached session, varied across workloads.
@@ -71,10 +72,11 @@ Climb only on evidence: **single call** (optimize first) -> **chaining** (fixed 
 
 Delegating:
 1. **Break-even first**: delegate only for a named benefit (freed lead context, large output kept out, disjoint parallel work, verdict only); otherwise do it inline.
-2. **Set `model` and `effort` on every built-in or untyped agent call**; omitted means the session model. Read-only search, lookup, trace -> lightest, low/medium; bulk mechanical edits -> mid, medium; review, audit, root cause, design, security -> strongest or inherit, high; planning -> inherit; fork -> inherits lead effort. Judge by what the agent does, not its name (reviewer = `reason`).
+2. **Set `model` and `effort` on every built-in or untyped agent call**; omitted means the session model. Read-only search, lookup, trace -> lightest, low/medium; bulk mechanical edits (ingest waves, translation, extraction, i18n, doc moves) -> mid, medium; review, audit, root cause, design, security, shared-state queries -> strongest or inherit, high; planning -> inherit (design keeps the session model); fork -> inherits lead effort. Judge by what the agent does, not its name (reviewer, auditor, critic = `reason`).
 3. **Write scopes**: unique file ownership, worktrees for concurrent writers, read-only reviewers do not repair.
 4. **Minimal standalone brief**: goal and the user's acceptance criteria, owned and forbidden paths, sourced facts, unknowns kept apart, commands already run, loop bounds, "if unsure, stop and report, never guess", proof of completion = quoted check output. Reviewers get requirements, change and raw evidence, never the implementer's conclusions.
 5. Re-run the key check yourself; self-reports are not acceptance. Quota-limited hosts: cheap tier default, at most one mid-tier and one browser agent per mission.
+6. **Agent definition files** (typed agents have no per-call model): a read-only search, lookup or trace agent (tools limited to read, grep, glob, shell) sets the light model in its file; a reviewer, auditor, root-cause, shared-state or editing agent omits `model` or sets `inherit`. Update every mirror copy and every template kept as documentation, or the next install reverts a light agent to the expensive model.
 
 ## 6. Escalation, fallback, failure classification
 
@@ -95,8 +97,8 @@ Delegating:
 
 - **Ceilings** on spend, turns, wall-clock and `max_tokens`, enforced outside the model; decide whether a cap rejects or degrades.
 - A premium tier that is "available" is not "authorized": ask once, naming the surcharge; never use it in headless runs without prior consent. Expensive advisors get a consultation budget (one initial call, two per standard task) and a compact envelope.
-- **Research caps:** lightest tier, at most 3 researcher subagents (default 2), 3 sources per question, a second search only if the first is thin.
-- **Instruction-size budget:** always-loaded files under about 4 KB; move rationale to linked pages, never delete a rule.
+- **Research caps** (every research skill and every copy of it): lightest tier in the header, at most 3 researcher subagents (default 2), one search first and a second only if the first is thin or contradictory, at most 3 sources captured per question, no extra research round, redundant steps merged.
+- **Instruction-size budget:** always-loaded files (global and project instruction files, rule files without a `paths:` scope) under about 4 KB; move rationale, incident history and enumerations to linked pages, never delete a rule (section 10).
 - **Caching and context size often beat tiering**: agents resend context each step, output and thinking cost several times input (see `caching-strategies`, `agent-skills-context-engineering`).
 - A router or classifier is an extra call: add it only when measured savings exceed its cost. Saving = traffic moved x price gap - retries - escalations - router cost - quality loss, against a named baseline.
 
@@ -117,7 +119,8 @@ Delegating:
 ## 9. Enforcement and measurement
 
 - Prose decays: add a **fail-open** pre-tool hook that denies a built-in or untyped agent launch with no `model`; never guard typed agents.
-- **Measure launches, not intentions**: count agent launches by (type, model) from transcripts, de-duplicate by call id, compare date windows. One local baseline (one machine): 60 of 999 built-in launches (6%) named a model. It shows what was requested, not what ran.
+- **Measure launches, not intentions**: count agent launches by (type, model) from transcripts, de-duplicate by call id, compare date windows (old transcripts get pruned, so never compare all-time totals). One local baseline (one machine): 60 of 999 built-in launches (6%) named a model. It shows what was requested, not what ran.
+- A global "subagent model" environment variable changed rank between versions (once it overrode every subagent model, `inherit` and per-call values included, so it also downgraded reviewers; later it is only the default for subagents that set nothing). Check the CLI version before relying on it.
 - Before down-routing a task class, evaluate the exact model-and-effort pair on representative tasks; redo after model, tool or prompt changes.
 - Close with Implemented / Validated / Partially validated / Blocked and the checks that ran.
 
@@ -132,6 +135,17 @@ Delegating:
 
 Write "claimed by X" for the last row; a fair savings figure names baseline, mix, quality metric, escalation rate and price date.
 
+## 10. Maintaining the policy (files, mirrors, headers)
+
+Applies whenever an agent, skill or rule file is created, edited, installed or synced. Detail: [instruction size budget](references/instruction-size-budget-and-safe-shortening.md), [work-weight tier table](references/work-weight-tier-table.md), [agent-call rules](references/agent-call-rules-and-enforcement-hook.md).
+
+1. **One home for tiers.** Keep tier -> model/effort in one policy file and let a check script compare every skill header with it: it fails on a header that differs, an unclassified skill or an unreadable file; `--apply` fixes headers and backs up what it overwrites. Re-run it after a skill is reinstalled or rewritten (the header lines are lost); skip synced copies, trash and staging folders on purpose. Change a tier, not individual files.
+2. **Shorten without breaking citations.** Before moving or renaming rule text, grep every citation of its file, headings and item numbers (docs, hooks, tests, doctor checks, eval fixtures). Keep every heading and number; compress in place and move the full text to a linked page with the same sections. Measure bytes with a script, not by eye; keep line endings.
+3. **Wording is load-bearing for retrieval.** After shortening a file a search index covers, re-index and run the retrieval tests and drift report; if a question regresses, restore the common words the cut removed. Never edit expected answers, floors or baselines to pass; record a regression caused by corpus growth as a known failure.
+4. **Mirrors, templates, governed projects.** Parallel agent and skill directories are often real copies: check, edit both, confirm with a directory diff. A project with its own change mechanism (for example a kit lock) uses it and records only the files touched.
+5. **Sweep, then report, do not reach.** For a cost fix, sweep every sibling project the user named for the same pattern (scripted walk, skipping dependency folders, VCS internals, worktrees, snapshots, archives). A finding outside that scope is reported with evidence and left unedited unless the user asks.
+6. **Order that held up:** read-only inventory -> draft in a scratch location, show size and diff -> apply -> re-index -> retrieval tests -> the project's doctor and lint -> report what ran and what did not.
+
 ## Quick Decision Checklist
 
 1. Worst dimension (ambiguity, blast radius, verifiability, novelty)? It picks the row.
@@ -143,6 +157,7 @@ Write "claimed by X" for the last row; a fair savings figure names baseline, mix
 7. Failure classified? Environment never escalates; 1 up, 2 fresh top pass, 3 ask the user.
 8. Mid-conversation model or effort change? Count the cache cost. Fallback or non-default choice? Disclose.
 9. Stopped when criteria passed? Savings quoted only if measured.
+10. Touching an agent, skill or rule file? Tier from the policy file, mirrors and templates in step, citations grepped, size under budget (section 10).
 
 ## Boundaries
 
