@@ -1,6 +1,6 @@
 # Notice: where these skills come from
 
-This repository combines five families of self-contained engineering skills (91 skills total):
+This repository combines five families of self-contained engineering skills (92 skills total):
 
 ## 1. Software Architecture, Design Principles & Documentation Skills (65 skills)
 
@@ -28,10 +28,11 @@ Facts about PostgreSQL (money and timestamp types, foreign-key indexes, `CREATE 
 
 Statistics and empirical anecdotes quoted in sources are marked as claims (`*claim*`) in `references/sources.md` or left out.
 
-## 3. AI Engineering Workflow & Deep-Module Design Pack (9 skills, adapted from `mattpocock/skills`)
+## 3. AI Engineering Workflow & Deep-Module Design Pack (10 skills, adapted from `mattpocock/skills`)
 
 Adapted and integrated from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT License, Copyright (c) 2026 Matt Pocock; retrieved 2026-11-22) covering the interactive spec-to-code-review construction workflow highlighted in Felipe Borges ("As 5 Melhores Skills da Nova Era do Claude Code", 2026-08-13):
 
+- **`diagnosing-bugs`** (added 2026-11-24, upstream `skills/engineering/diagnosing-bugs`, MIT): six-phase bug diagnosis starting from a red-capable feedback loop; see its `references/sources.md`.
 - **`grill-me`** & **`grilling`**: design-tree interview in frontier rounds with fresh-context fact lookup.
 - **`setup-matt-pocock-skills`**: per-repo scaffolding for issue tracker (GitHub, GitLab, local `.scratch/`), triage labels, and `GLOSSARY.md` / `docs/adr/` domain docs.
 - **`to-spec`**: conversation synthesis into spec + testing seams without re-interviewing.

@@ -14,7 +14,7 @@ if (process.argv.includes("--help") || process.argv.includes("-h")) {
       "Usage: dev-dbs-skills-mcp\n" +
       "Tools: list_skills, search_skills, get_skill, read_skill_file, install_skills, check_installed_skills\n" +
       "Resources: skill://index.json, skill://<name>/<path>\n" +
-      "Prompts: all 91 pack skills exposed as MCP prompts\n",
+      "Prompts: all 92 pack skills exposed as MCP prompts\n",
   );
   process.exit(0);
 }
