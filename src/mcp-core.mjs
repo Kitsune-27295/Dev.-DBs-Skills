@@ -609,8 +609,8 @@ export function createMcpHandler(packRoot) {
             protocolVersion,
             capabilities: {
               tools: { listChanged: false },
-              resources: { subscribe: false, listChanged: false },
-              prompts: { listChanged: false },
+              resources: { subscribe: false, listChanged: true },
+              prompts: { listChanged: true },
             },
             serverInfo: {
               name: "dev-dbs-skills",
