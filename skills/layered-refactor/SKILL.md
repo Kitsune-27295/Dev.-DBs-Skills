@@ -30,3 +30,8 @@ Why it matters: a disorganized file confuses the agent as it confuses a person. 
 - No renaming of routes, public props or database columns.
 - Order of work in a larger cleanup: tests first, so the separation is protected; separation last. See `fundamentals-audit` for the full order.
 - Integration-level characterization is preferred over unit tests with mocks; see `integration-tests`.
+
+## Deep references
+
+- [Sources](references/sources.md) — provenance and the Lost-in-the-Middle caveat
+- [Drawers and incremental steps](references/drawers-and-incremental-steps.md) — when planning the step sequence of a refactor

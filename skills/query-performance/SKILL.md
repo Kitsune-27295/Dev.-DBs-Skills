@@ -29,3 +29,9 @@ Measure first, change one thing, measure again. An index that is never used stil
 - The statistics in the lesson (a large drop in milliseconds on millions of orders) are the author's, not measured here.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the slow page").
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [The missing foreign key index](references/missing-foreign-key-index.md) — when a join or lookup on a foreign key is slow or you audit foreign keys
+- [Query rewrites and reading the plan](references/query-rewrites-and-explain-reading.md) — when you read EXPLAIN ANALYZE or rewrite a slow query pattern

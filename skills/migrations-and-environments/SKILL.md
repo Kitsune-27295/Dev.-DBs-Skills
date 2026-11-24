@@ -26,3 +26,8 @@ Two rules: every schema change is a numbered file in the repository, and a comma
 - Backups are `backup-restore-drill`; tests of migrations use a throwaway database, see `integration-tests`.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "migrations and separate environments").
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [Migrations, drift and environment separation](references/migrations-drift-and-environment-separation.md) — when you set up baselines, drift checks, dev/prod split or an app role

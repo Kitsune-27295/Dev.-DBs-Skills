@@ -44,3 +44,9 @@ Default to a relational database, **Postgres**, for anything with money, users, 
 - Each fix starts from the report and waits for the owner's OK.
 
 Source: the handout of the second database lesson of mano deyvin (audit prompt, run order and "which database" note).
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [Choosing a database](references/database-choice-reasoning.md) — when you must justify a relational vs document vs key-value vs BaaS recommendation
+- [Audit order and report shape](references/audit-order-and-report-shape.md) — when you write DB-AUDIT.md or must explain why the seven areas run in this order

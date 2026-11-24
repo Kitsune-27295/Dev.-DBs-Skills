@@ -23,3 +23,9 @@ A usage-priced database is a taxi meter: it does not know your code entered a lo
 - A figure from a post-mortem or a pricing page is a claim until read at its source; prices change.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "end-of-month scare").
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [Usage pricing mechanics](references/usage-pricing-mechanics.md) — when you estimate reads per user or cost at 10x users
+- [Runaway bill case and budget limits](references/runaway-bill-case-and-budget-limits.md) — when you must say what a budget alert does and does not stop

@@ -45,3 +45,8 @@ Without them an agent changes one place, breaks another far away, and the custom
 Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. **Never connect tests to a production database**; RLS and policy tests are only valid against a real database.
 
 When an agent changes code, run the test command; green means carry on, red means read the failure and fix the code.
+
+## Deep references
+
+- [Sources](references/sources.md) — provenance and tool-page caveats (Vitest, Playwright)
+- [What to test and real database](references/what-to-test-and-real-database.md) — when deciding test scope, database setup or tooling

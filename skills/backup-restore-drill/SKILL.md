@@ -23,3 +23,9 @@ A backup you have never restored is a hope, not a backup. The lesson's example i
 - A managed database's own backups still need step 3: ask what its restore actually does and try it.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "backup that comes back"); the GitLab postmortem is cited there.
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [GitLab 2017 backup failures](references/gitlab-2017-backup-failures.md) — when you assess which backup mechanisms are real
+- [Restore test design](references/restore-test-design.md) — when you write the restore test, runbook or schedule

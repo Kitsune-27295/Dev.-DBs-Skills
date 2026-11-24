@@ -36,3 +36,10 @@ The database has its own audit and run order (exposure, backups, usage cost, tra
 ## Deliverable
 
 `AUDIT.md` at the project root: one table per step (finding, risk high/medium/low, file and line, suggested fix) and, at the top, the **five highest risks** in order. Anything not verifiable says "not verified" and why, never a guess. End with which of the five fix skills to run first and why.
+
+## Deep references
+
+- [Sources](references/sources.md) — what the video, handout and cited pages contributed, plus caveats
+- [How the five audits compose](references/how-the-five-audits-compose.md) — when you need the reasoning behind the run order
+- [Combined audit prompt and report shape](references/combined-audit-prompt-and-report-shape.md) — when writing or checking the read-only audit report
+- [Common failure scenarios](references/common-failure-scenarios.md) — when you need concrete signals to look for while auditing

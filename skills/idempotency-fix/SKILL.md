@@ -30,3 +30,8 @@ An in-process flag or variable is not shared between requests and dies with the 
 - Never change amounts, prices or billing rules.
 - Never use personal data (email, tax id) as an idempotency key.
 - The unique constraint is the guard; the concurrent test proves it. Two simultaneous inserts of one id must leave one row, which is the same mechanism as in `race-condition-fix`.
+
+## Deep references
+
+- [Sources](references/sources.md) — provenance, the transcript gap and caveats
+- [Webhook retries and dedupe storage](references/webhook-retries-and-dedupe-storage.md) — when designing the processed-events table and the key rules

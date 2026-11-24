@@ -24,3 +24,9 @@ Application code has bugs; a constraint does not forget. The goal is that the da
 - Adding a foreign key does not create an index on the referencing column (PostgreSQL documentation): add it separately.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the schema that refuses bad data"); the money, timestamp and foreign-key points were checked against the PostgreSQL wiki and documentation.
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [PostgreSQL column-type pitfalls](references/postgres-column-type-pitfalls.md) — when you review money, time, text or id column types
+- [Constraint types and indexes](references/constraint-types-and-indexes.md) — when you choose constraints, foreign key actions, or must know which constraints create an index

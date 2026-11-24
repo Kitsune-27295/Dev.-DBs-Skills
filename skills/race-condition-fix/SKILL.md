@@ -31,3 +31,9 @@ Duplicate orders, negative stock, a coupon or invite redeemed more than once, a 
 ## Source
 
 Martin Kleppmann, "How to do distributed locking": the correct fix is a monotonically checked token validated at the place that writes, which here is the database.
+
+## Deep references
+
+- [Sources](references/sources.md) — provenance and caveats, including the Kleppmann wording discrepancy
+- [Race scenarios and database guards](references/race-scenarios-and-database-guards.md) — when choosing between unique index, atomic update and row lock
+- [Locks versus database guards](references/locks-vs-database-guards-kleppmann.md) — when someone proposes Redis or another external lock

@@ -25,3 +25,8 @@ A transaction makes several writes behave as one: either every write lands or no
 - Show the list from step 1 before editing anything.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the half-saved order").
+
+## Deep references
+
+- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
+- [Atomicity scenarios and external calls](references/atomicity-scenarios-and-external-calls.md) — when you hunt multi-write operations or decide where an email or payment call goes

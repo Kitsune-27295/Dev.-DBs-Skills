@@ -26,3 +26,8 @@ description: Use to move business rules from the browser or app to the server an
 - Never switch off an existing protection to "make it work".
 - No prompt fixes everything: the owner knows the intended behavior, the agent does not.
 - Policy and RLS tests only count against a real database (local or a dedicated test project), never production; see `integration-tests`.
+
+## Deep references
+
+- [Sources](references/sources.md) — provenance, unverified statistics and which steps are the skill author's additions
+- [Server-side checks and key classification](references/server-side-checks-and-key-classification.md) — when classifying keys or deciding what moves server-side
