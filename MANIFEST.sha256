@@ -243,6 +243,17 @@ f068599e9c81305b6cc8ed27318e00cf76b0c227f9ffabe6ed0a1d728a00e91b  skills/mvc-arc
 a74c4d99adab89812a486f62ffbd379bd102305cf5ffa2453e55c87c8cdee09b  skills/open-closed-principle/references/sources.md
 63d040c4b29845110931bee2c24ff600548b1d0f0a6cce643e08d079a49b9893  skills/open-closed-principle/references/strategy-pattern-mechanics.md
 f688485e31e9fcdea9095aba9e9abfaf2b9099b7f3cbad96ebd4be10080508aa  skills/open-closed-principle/SKILL.md
+3f25dd13180331b9aad2fd517429d158e96d2f17594e98061fdbcec788aafb1e  skills/oss-deep-audit/references/existing-audit-skills-compared.md
+f42e4c277c870841f9f5c195a68111e9328fb9295631a84ec9cd71577f912097  skills/oss-deep-audit/references/rea-evidence-and-phase-discipline.md
+800a1dc0eec94fa2704e2cacb81e5bdc682788495b86bdd9c6a8479702f6cc4a  skills/oss-deep-audit/references/rea-repo-inventory-and-skills-map.md
+8bdddf1a95b88ad6b3d25bb1fa53df1adc1e77b8bb49bf151a81bc5301f3f385  skills/oss-deep-audit/references/rea-report-and-handoff-patterns.md
+ec83630fd27517992c36a16a6dbd21ef0cf595f089113971cc02bc9e8733157f  skills/oss-deep-audit/references/rea-to-oss-audit-mapping.md
+4d6dca12e50e907edfb186cb8089c6c2cbd46d9872a9061b0e9e7ced251ea77a  skills/oss-deep-audit/references/repo-recon-and-health-checks.md
+b9abea1db659b0b211c9da5d15d4f09d4342346600ead326ffb5993a854ceb4b  skills/oss-deep-audit/references/report-templates-and-verdict-rubric.md
+18c9215e3b4eb44436a41c45eac9ee12520fc94c631b2d60a370ecffd15c1fc1  skills/oss-deep-audit/references/security-and-supply-chain-pass.md
+28f767bf7296bda49d370457152ef6eb0188e5257093246bafa2a78b83412dad  skills/oss-deep-audit/references/skill-authoring-notes-for-this-skill.md
+85b58cfabe9e83a719984efb70045d47f46619e09e49a24df45fd312c3551117  skills/oss-deep-audit/references/sources.md
+0e31650f1286b52d27f0723392e7670f7ed5f46f983fc3a5ef8378b5fe7ec7f1  skills/oss-deep-audit/SKILL.md
 c16de27d6b02a74a5b04f02fdf3e66e008596327f4098e06e2701f31ddf9db9d  skills/package-by-feature-component/references/enforcing-component-encapsulation.md
 6322f869eed19799e1282361da991635a66703e7646ce6cd54bdbd9cfb1dbb8e  skills/package-by-feature-component/references/layer-feature-component-trade-offs.md
 6ad41d736b40b84b1aaddedbb1bd6f6523883997659aa4f661f69f05e8a2f8b9  skills/package-by-feature-component/references/sources.md
