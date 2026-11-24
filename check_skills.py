@@ -46,6 +46,27 @@ PACK = (
     # AI Engineering Workflow — Matt Pocock Pack (8)
     "setup-matt-pocock-skills", "grill-me", "grilling", "to-spec", "to-tickets",
     "implement", "tdd", "code-review",
+    "verification-loop",
+    "a11y-audit",
+    "ci-test-reliability",
+    "cross-layer-value-trace",
+    "threat-modeling",
+    "vulnerability-triage",
+    "sql-server-audit",
+    "agent-session-memory",
+    "memory-hygiene",
+    "triage",
+    "wayfinder",
+    "retro",
+    "handoff",
+    "prototype",
+    "domain-modeling",
+    "git-guardrails-claude-code",
+    "wizard",
+    "setup-ts-deep-modules",
+    "setup-pre-commit",
+    "to-questionnaire",
+    "wait-what",
 )
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")

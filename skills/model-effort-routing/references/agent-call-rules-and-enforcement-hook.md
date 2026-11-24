@@ -21,7 +21,7 @@ Rules for agent *definition files*:
 
 ## Research-skill caps
 
-Research skills fan out and are the easiest place to burn tokens. Typical caps in this policy: light model in the header, at most 3 researcher subagents (default 2), no extra research round, one web search first and a second only if the first is thin or contradictory, at most 3 sources captured per question, redundant steps merged.
+Research skills fan out and are the easiest place to burn tokens. The caps (light model in the header, researcher count, search and source limits) are owned by `SKILL.md` section 7 and apply to every research skill and every copy of it; this file does not restate the numbers.
 
 ## A related environment variable
 
@@ -64,5 +64,5 @@ Install: copy the script into the hooks folder and register it under the PreTool
 - Always set `model` (and `effort`) on a built-in agent call, chosen by the table above, before the hook has to ask.
 - Never put a reviewer or auditor on the light model to save tokens.
 - When creating an agent definition, set its model by function and update every mirror and template.
-- Cap research fan-out: 2 subagents by default, 3 sources per question.
+- Apply the research caps of `SKILL.md` section 7 to any research skill.
 - Install the guard hook if you control the harness config; keep it fail-open.

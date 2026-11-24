@@ -53,6 +53,10 @@ Tool output feeds the audit; it does not replace the five-class review.
 - If a database is exposed through an API: security policies on in every table, service key never in the front end.
 - Findings became issues (hardening) or a private advisory (exploitable).
 
+## Diff review mode (a pull request or local diff)
+
+When the target is a change, not the whole repository, ask: does this diff introduce, widen or remove a security control? Classify the changed files by risk first (authentication, authorization, queries and tenant scoping, new entry points and rendering of user data get deep reading; docs, tests and styling get a skim), then open the code around each change, because the usual flaw is a check that is **missing** from the diff. Run only the five classes and the extra checks the diff touches, report issues introduced by the change separately from pre-existing ones, mark anything unverifiable, and keep exploit details out of public comments. Checks and output shape: [references/diff-review-mode.md](references/diff-review-mode.md). Rating and routing a finding: `vulnerability-triage`; a design-level change: `threat-modeling`; style and correctness: `code-review`.
+
 ## Deep references
 
 - [Sources](references/sources.md) — origin of the five-class list, source status and caveats.
@@ -60,3 +64,4 @@ Tool output feeds the audit; it does not replace the five-class review.
 - [Tenant isolation and RLS checks](references/tenant-isolation-and-rls-checks.md) — read when auditing row-level security or tenant filters.
 - [Secrets in git history and rotation](references/secrets-in-git-history-and-rotation.md) — read when scanning history and triaging leaked keys.
 - [XSS and output encoding checks](references/xss-and-output-encoding-checks.md) — read when tracing sinks, uploads and admin HTML fields.
+- [Diff review mode](references/diff-review-mode.md) — read when reviewing a pull request or diff: risk classification, absent-control hunting, OWASP-derived checks, introduced vs pre-existing findings.

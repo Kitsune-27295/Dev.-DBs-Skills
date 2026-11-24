@@ -19,8 +19,14 @@ Every source below was checked during skill authoring (2026-11-24).
 | https://bandit.readthedocs.io/en/latest/ | Read OK | Python static analyzer scope |
 | https://github.com/opengrep/opengrep | Read OK | Fork of Semgrep, LGPL-2.1, rules-compatible |
 | https://www.veracode.com/resources/analyst-reports/2025-genai-code-security-report/ | Read OK (landing page) | Checks the "about 45%" figure |
+| https://owasp.org/www-project-code-review-guide/ (added 2026-11-24) | 200 OK; landing page only, no chapter content | Project status (lab project, CC BY-SA 4.0) |
+| https://github.com/OWASP/www-project-code-review-guide (added 2026-11-24) | 200 OK; repository layout and raw files read | Version 3.0 is a short work-in-progress draft; repository archived and read-only since April 2025 |
+| https://owasp.org/www-project-code-review-guide/assets/OWASP_Code_Review_Guide_v2.pdf (added 2026-11-24) | 200 OK (PDF, text extracted locally) | Risk-based review depth, preparation, design questions, access-control, authentication, CSRF, redirect, component and concurrency checks used in the diff review mode |
+| Local plugin skill on diff security scanning (added 2026-11-24) | Third-party skill read for ideas (title and description only), no text reused; plugin license visible as "Proprietary" | Only confirmed that a diff mode was missing |
 
 ## Claims and caveats
+
+- **Diff review mode (added 2026-11-24):** the checks come from the OWASP Code Review Guide 2.0 PDF, which predates some current practice (for example its password-complexity advice); the reference defers to `authn-authz-guard` there. The process steps (risk classification of the file list, reading around the diff, introduced versus pre-existing findings, output shape) are this skill's own synthesis.
 
 - **Auto-caption errors in the capture:** the transcript misspells several names. Corrected against real sources: "Cloud Code" = Claude Code; "Supas/Super base" = Supabase; "OASP/OAP" = OWASP; "Gitliaks" = Gitleaks; "Open Grab" = OpenGrep; "Srap" = Semgrep; "Vera Code" = Veracode; "RER/Riter" and the two presenter-referenced channel names are garbled and deliberately not repeated here. One phrase attributed to a scammer ("Git Gnó") is unintelligible; it may refer to Git history or a scanner, so it was not used.
 - **Cases are second-hand:** the card-data, localStorage-admin and exposed-gateway-key cases come from another channel; targets are not shown and no case was independently verified. They illustrate patterns only.

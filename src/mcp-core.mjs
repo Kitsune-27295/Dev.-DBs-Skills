@@ -425,12 +425,12 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: "search_skills",
-    description: "Search across all 92 Dev.-DBs-Skills by topic, architecture pattern, database engine, security issue, or workflow keyword.",
+    description: "Search across all 113 Dev.-DBs-Skills by topic, architecture pattern, database engine, security issue, or workflow keyword.",
     inputSchema: {
       type: "object",
       properties: {
         query: { type: "string", description: "Search keywords (e.g. 'hexagonal', 'cqrs', 'webhook idempotency', 'postgres locks', 'tdd')." },
-        limit: { type: "integer", minimum: 1, maximum: 92, default: 10, description: "Maximum number of matching skills to return." },
+        limit: { type: "integer", minimum: 1, maximum: 113, default: 10, description: "Maximum number of matching skills to return." },
       },
       required: ["query"],
       additionalProperties: false,
@@ -471,7 +471,7 @@ const TOOL_DEFINITIONS = [
         skills: {
           type: "array",
           items: { type: "string" },
-          description: "Skill names to install. Omit or pass ['*'] to install all 92 skills.",
+          description: "Skill names to install. Omit or pass ['*'] to install all 113 skills.",
         },
         scope: {
           type: "string",
@@ -617,7 +617,7 @@ export function createMcpHandler(packRoot) {
               version,
             },
             instructions:
-              "Expose and install the 92 Dev.-DBs-Skills agent skills. Call list_skills or search_skills to discover relevant skills, get_skill / skill:// resources to load instructions on demand, and install_skills to copy skills locally into a project or user skills directory.",
+              "Expose and install the 113 Dev.-DBs-Skills agent skills. Call list_skills or search_skills to discover relevant skills, get_skill / skill:// resources to load instructions on demand, and install_skills to copy skills locally into a project or user skills directory.",
           });
         }
 
@@ -686,7 +686,7 @@ export function createMcpHandler(packRoot) {
             {
               uri: "skill://index.json",
               name: "skills-index",
-              title: "Dev.-DBs-Skills Index (92 skills)",
+              title: "Dev.-DBs-Skills Index (113 skills)",
               description: "Machine-readable JSON index of all skills and their bundled files.",
               mimeType: "application/json",
             },

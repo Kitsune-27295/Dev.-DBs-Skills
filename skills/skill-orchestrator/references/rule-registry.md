@@ -110,3 +110,12 @@ Rules that were stated in more than one reference were cut from the less authori
 - The numbered protocol, load cap and instruction priority (PROTO-01 to PROTO-03, CONF-01): removed from TLA and META; owner SKILL.
 - Principle wording (KP-03) and advisory text: KPA now carries labels only; owner KAU for wording.
 - Context-engineering theory: removed from CTX; owner `agent-skills-context-engineering`.
+
+## Moved on 2026-11-24
+
+`SKILL.md` was cut from about 15.1 KB to under 13 KB (the pack budget for a pillar skill). No rule was dropped: the body now keeps the protocol, load cap, conflict order, decision matrices, the four Karpathy lines with owners and the checklist, and states every other rule as one line with its id. Each id still points to the owner in the table above:
+- Three-layer table and failure modes (LAY-01): owner TLA sections 1-2; the body keeps a one-paragraph summary.
+- Version-sensitive facts (AGM-02, IMP-01, IMP-02, LIM-01, CHK-01): owners AGM, MEM and CMO; the body keeps a pointer line and the instruction to quote the version.
+- Include and exclude list, size, placement, single source, audit steps (INC-01, VER-01, SIZE-01, PLC-01, SSOT-01, SSOT-02, KP-04): owners CMO, CTX, AGM and KAU; the body keeps one line each.
+- Primary-source status of the Karpathy file (KP-01): owner KPA; the body keeps a pointer.
+- Router rules and the spec table (RT-01 to RT-05, META-01, META-02, SPEC-01 to SPEC-05): owners DESC, META and SPEC; the body keeps four numbered lines and a one-line summary of the spec limits.

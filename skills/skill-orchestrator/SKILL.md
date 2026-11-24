@@ -39,24 +39,18 @@ It should cost a few hundred tokens; if it would cost more than the task, the ta
 
 ## 3. Three layers, precedence, version-sensitive facts
 
-| Layer | What | Paid | Fails by |
-|---|---|---|---|
-| 1 Global instructions | CLAUDE.md or AGENTS.md: one pointer to this protocol plus a few hard rules | every turn | bloat |
-| 2 Discovery index | `name` and `description` of every installed skill | every session | colliding descriptions |
-| 3 Precedence meta-skill | this body: classify, select, order, resolve | only when loaded | never loading |
+Three layers: global instructions (a pointer to this protocol plus a few hard rules, paid every turn), the discovery index (`name` and `description` of every skill, paid every session) and this precedence meta-skill (paid only when loaded). Layer 1 never repeats layer 3 text; layer 3 must work from its description alone, since a portable pack cannot assume hooks (LAY-01; table and failure modes in [three-layer-orchestration-architecture.md](references/three-layer-orchestration-architecture.md)).
 
-Layer 1 never repeats layer 3 text; layer 3 must work from its description alone, since a portable pack cannot assume hooks (LAY-01).
-
-- **Instruction files concatenate; they do not override (PREC-01).** User and project files both load; on conflict the model may follow either. The nearest file is read last: recency, not priority. Remove contradictions. Real override semantics exist for settings (permissions, hooks), not for CLAUDE.md text. In AGENTS.md convention the nearest file wins (AGM-01).
-- **Version-sensitive (quote the version, recheck):** Claude Code reads AGENTS.md directly from v2.1.277, only when no CLAUDE.md-family file exists at or above the working directory, and a personal CLAUDE.local.md turns that off (AGM-02); imports go at most four hops and load in full with the importer (IMP-01, IMP-02); on-demand files are truncated per file from v2.1.309 (LIM-01); `/doctor prompt-audit` needs v2.1.283 (CHK-01). Facts as read from the docs on 2026-11-24.
+- **Instruction files concatenate; they do not override (PREC-01).** On conflict the model may follow either; the nearest file is read last, which is recency, not priority. Remove contradictions; real override semantics exist only for settings (permissions, hooks). In AGENTS.md convention the nearest file wins (AGM-01).
+- **Version-sensitive facts** (AGENTS.md fallback AGM-02, import hops IMP-01/02, on-demand truncation LIM-01, `/doctor prompt-audit` CHK-01) are owned by the files named in the registry: quote the version and recheck.
 
 ## 4. Instruction-file governance
 
-- **Size (SIZE-01).** Under about 200 lines per CLAUDE.md as a target, not a cap; imported text counts. The pack's 4 KB budget for always-loaded user files is owned by `model-effort-routing` (section 7).
-- **Include only what the model cannot derive (INC-01):** verification commands, places where the code misleads, decisions invisible in the repo, anything corrected twice. Leave out architecture tours, layouts, dependency lists, procedures (a skill), subtree rules (nested file or `paths` rule), personal preferences (user or local file). Write rules that can be checked: a command, a path, a number.
-- **One source of truth (SSOT-01, SSOT-02).** Tool-neutral rules live in AGENTS.md; tool files hold only deltas. Prefer a CLAUDE.md that imports AGENTS.md; a symlink only on POSIX-only repos with no Claude-specific text. Never hand-edit two copies. Adding CLAUDE.md or CLAUDE.local.md changes what Claude reads; say so.
-- **Placement (PLC-01).** Root file for the tiny always-needed part, nested file by location, `paths` rule by file type, skill by task, pointers not pasted text, durable rules in a file not in chat: [placement table](references/context-engineering-for-instruction-files.md).
-- **Audit and update (KP-04).** Measure, map rules to principles or project facts, find conflicts, dedupe against the pack, split advisory from enforced, test against real failures, record. Run the first three read-only and show the conflict list before editing; never delete project facts or user-owned rules unasked; report size before and after: [procedure](references/karpathy-claude-md-audit-and-update-procedure.md).
+- **Size (SIZE-01).** About 200 lines per CLAUDE.md as a target, not a cap; imported text counts. The 4 KB budget for always-loaded user files is owned by `model-effort-routing` (section 7).
+- **Include only what the model cannot derive (INC-01)** and write rules that can be checked (VER-01): a command, a path, a number.
+- **One source of truth (SSOT-01, SSOT-02).** Tool-neutral rules in AGENTS.md, tool files hold deltas; prefer a CLAUDE.md that imports AGENTS.md; never hand-edit two copies.
+- **Placement (PLC-01).** Root file for the tiny always-needed part, nested file by location, `paths` rule by file type, skill by task, pointers not pasted text: [placement table](references/context-engineering-for-instruction-files.md).
+- **Audit and update (KP-04).** Measure, map, find conflicts (show the list before editing), dedupe against the pack, split advisory from enforced, test against real failures, record; never delete project facts or user-owned rules unasked; report size before and after: [procedure](references/karpathy-claude-md-audit-and-update-procedure.md).
 
 **Advisory versus enforceable (ADV-01, ENF-01 to ENF-03).** Instruction files, rules and skills are context the model reads; only the harness enforces.
 
@@ -68,7 +62,7 @@ Layer 1 never repeats layer 3 text; layer 3 must work from its description alone
 | Convention for one subtree | nested file or `paths` rule | nothing: scoping only |
 | Multi-step procedure | skill | nothing: advisory |
 
-A line the model keeps missing is lost in a long file or is a zero-exception rule: shorten the file or move it to a hook. Capitals are not a fix on current models (EMP-01). Command, http and tool hooks are deterministic; hooks that ask a model are not (ENF-02). Keep the enforced set small. Mechanisms: [claude-md-official-guidance-and-limits.md](references/claude-md-official-guidance-and-limits.md).
+A line the model keeps missing is lost in a long file or is a zero-exception rule: shorten the file or move it to a hook; capitals are not a fix (EMP-01). Only command, http and tool hooks are deterministic (ENF-02). Keep the enforced set small. Mechanisms: [claude-md-official-guidance-and-limits.md](references/claude-md-official-guidance-and-limits.md).
 
 ## 5. Karpathy-style behavioral rules as a CLAUDE.md template
 
@@ -83,27 +77,16 @@ These four rules live in the instruction file, next to project facts, never in a
 
 Add the trade-off clause: care over speed, and trivial edits skip the ritual (KP-05). Cross-map: Simplicity First and Goal-Driven Execution are the instruction-file face of the cheapest-sufficient-path rule in `model-effort-routing` (sections 1 and 2); pointer only, the routing decision stays there.
 
-The primary source (KP-01, read 2026-11-24) is a short CLAUDE.md in a community repository, derived by its author from public remarks of Andrej Karpathy; a distillation, not his document. Its README says MIT but no LICENSE file was found, so this pack copies nothing. It names no formal diff test, only informal signals (smaller diffs, fewer overbuilt rewrites, questions first), and no benchmark. Checkable parts: [analysis](references/karpathy-four-principles-analysis.md); reply and diff shapes: [examples](references/karpathy-examples-before-after.md).
+Primary source, license status and what it does not claim (a distillation, not Karpathy's document; nothing copied; no benchmark) are owned by KP-01 in [the analysis](references/karpathy-four-principles-analysis.md); reply and diff shapes: [examples](references/karpathy-examples-before-after.md).
 
 ## 6. Router and meta-skill design rules
 
 1. **Description as routing condition (RT-01, RT-02).** The router sees only `name` and `description`: what it does, `Use when` with real user phrasing, an exclusion naming the neighbor; third person. Body text cannot route.
-2. **Collisions (RT-03).** Pairs sharing nouns get mutual exclusions and one owner per noun; the protocol orders what still overlaps.
-3. **Over- and under-triggering (RT-04).** Under: add real phrasing. Over: narrow scope, add exclusions. "Be pushy" and "negative triggers" conflict: generous on the positive domain, strict on named exclusions, decided by data.
-4. **No hunch rule (META-01).** Reject "invoke on any chance"; a mandatory pre-step before every reply costs tokens every turn.
-5. **Rationalized skips (META-02).** A 3 to 4 line list of excuses at most; enforce with a hook where one exists.
-6. **Evals (RT-05).** 10 or more labeled queries per skill with near-misses and a held-out split, run on the lightest model and effort targeted (weaker settings skip skills more).
+2. **Collisions and trigger tuning (RT-03, RT-04).** Overlapping pairs get mutual exclusions and one owner per noun; undertriggering needs real phrasing, overtriggering narrower scope; settle pushy versus negative triggers with data.
+3. **No hunch rule (META-01).** Reject "invoke on any chance"; a mandatory pre-step before every reply costs tokens every turn. Rationalization lists stay at 3 to 4 lines, enforced by a hook where one exists (META-02).
+4. **Evals (RT-05).** 10 or more labeled queries per skill with near-misses and a held-out split, on the lightest model and effort targeted.
 
-Spec facts (checked against agentskills.io, 2026-11-24):
-
-| Item | Status |
-|---|---|
-| `name` 1 to 64 characters, equals the folder; `description` 1 to 1024 | specified (SPEC-01) |
-| Metadata about 100 tokens per skill; body under about 5000 tokens; `SKILL.md` under 500 lines | typical and recommended, not validator rules; other figures (30 to 50 tokens, words) are claims (SPEC-02) |
-| "26 or more platforms" | claim, not on the spec site (SPEC-03) |
-| Reserved words, tag bans, `model`/`effort` keys | vendor extensions, not portable (SPEC-04) |
-
-A structure validator checks format, not routing quality (SPEC-05). More: [skill-description-and-trigger-design.md](references/skill-description-and-trigger-design.md), [agent-skills-spec-and-progressive-disclosure.md](references/agent-skills-spec-and-progressive-disclosure.md), [meta-skill-routing-patterns-compared.md](references/meta-skill-routing-patterns-compared.md).
+Spec limits (`name` 1 to 64 characters equal to the folder, `description` 1 to 1024; token and line figures are recommendations, not validator rules; vendor keys are not portable; a validator checks format, not routing: SPEC-01 to SPEC-05): [agent-skills-spec-and-progressive-disclosure.md](references/agent-skills-spec-and-progressive-disclosure.md). More: [descriptions](references/skill-description-and-trigger-design.md), [router patterns](references/meta-skill-routing-patterns-compared.md).
 
 ## 7. Conflicts between skills and with instructions (CONF-01)
 
@@ -135,6 +118,6 @@ Two contradicting lines inside instruction files are a defect to edit away, not 
 
 Registry (start here): [rule-registry.md](references/rule-registry.md) lists every rule id, owner, agreement and what can enforce it.
 
-- **Instruction files** (what to write, where, how long): [claude-md-official-guidance-and-limits.md](references/claude-md-official-guidance-and-limits.md) · [memory-hierarchy-imports-and-rules.md](references/memory-hierarchy-imports-and-rules.md) · [agents-md-standard-and-interoperability.md](references/agents-md-standard-and-interoperability.md) · [context-engineering-for-instruction-files.md](references/context-engineering-for-instruction-files.md)
-- **Karpathy-style rules** (template, analysis, examples): [karpathy-four-principles-analysis.md](references/karpathy-four-principles-analysis.md) · [karpathy-examples-before-after.md](references/karpathy-examples-before-after.md) · [karpathy-claude-md-audit-and-update-procedure.md](references/karpathy-claude-md-audit-and-update-procedure.md)
-- **Skills and routing** (spec, descriptions, routers, architecture): [agent-skills-spec-and-progressive-disclosure.md](references/agent-skills-spec-and-progressive-disclosure.md) · [skill-description-and-trigger-design.md](references/skill-description-and-trigger-design.md) · [meta-skill-routing-patterns-compared.md](references/meta-skill-routing-patterns-compared.md) · [three-layer-orchestration-architecture.md](references/three-layer-orchestration-architecture.md)
+- **Instruction files:** [CLAUDE.md guidance](references/claude-md-official-guidance-and-limits.md) · [memory and imports](references/memory-hierarchy-imports-and-rules.md) · [AGENTS.md](references/agents-md-standard-and-interoperability.md) · [placement](references/context-engineering-for-instruction-files.md)
+- **Karpathy-style rules:** [analysis](references/karpathy-four-principles-analysis.md) · [examples](references/karpathy-examples-before-after.md) · [audit procedure](references/karpathy-claude-md-audit-and-update-procedure.md)
+- **Skills and routing:** [spec](references/agent-skills-spec-and-progressive-disclosure.md) · [descriptions](references/skill-description-and-trigger-design.md) · [router patterns](references/meta-skill-routing-patterns-compared.md) · [three layers](references/three-layer-orchestration-architecture.md)

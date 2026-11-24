@@ -1,13 +1,13 @@
 ---
 name: model-effort-routing
-description: "Find the most economical effective solution: pick the model tier and reasoning effort a task deserves, route and delegate to subagents, and cut token spend without under-powering consequential work. Covers optimization objective, triage by worst dimension, effort and overthinking, orchestration ladder, subagent model and effort per call, escalation and fallback, budget guards, cache cost of mid-conversation changes, and portability across Claude Code, Google Antigravity and other harnesses. Use when choosing model or effort, delegating to subagents, cutting token cost, setting effort mid-conversation, designing routers, cascades or fallbacks, or writing skills and agents with model and effort headers."
+description: "Find the most economical effective solution: pick the model tier and reasoning effort a task deserves, route and delegate to subagents, and cut token spend without under-powering consequential work. Covers triage, effort, orchestration, subagent model and effort per call, escalation, budget guards, cache cost and harness portability. Use when choosing model or effort, delegating to subagents, cutting token cost, designing routers, cascades or fallbacks, or writing skills and agents with model and effort headers."
 ---
 
 # Model & Effort Routing
 
-One idea: **use the cheapest model tier, lowest effort and simplest route that still passes a check you can name; escalate on evidence, never on size or gut feeling.** Sources, statuses and unadopted claims: [references/sources.md](references/sources.md). All rules live in this body because Antigravity reads only `name` and `description`; nothing depends on `model:`/`effort:` keys.
+One idea: **use the cheapest model tier, lowest effort and simplest route that still passes a check you can name; escalate on evidence, never on size or gut feeling.** Sources and unadopted claims: [references/sources.md](references/sources.md). All rules live in this body because Antigravity reads only `name` and `description`; nothing depends on `model:`/`effort:` keys.
 
-| Tier | Work | Illustrative mapping (verify current vendor docs) |
+| Tier | Work | Illustrative mapping |
 |---|---|---|
 | `gather` | fetch, search, read-only lookup, count, trace | lightest model (Claude Haiku 5.x class) |
 | `build` | generate, edit, translate, bulk mechanical work with tools | mid model (Sonnet 5.x class) |
@@ -15,7 +15,7 @@ One idea: **use the cheapest model tier, lowest effort and simplest route that s
 | `orchestrate` | coordinate agents, long unsupervised runs | top planner (Fable 5.x class); short list |
 | `style` | output style only; never switches model or effort | inherit |
 
-Prices and model names change within months: keep them in a dated config, never in a rule.
+Prices and model names change within months: keep them in a dated config.
 
 ## 1. Prime rule
 
@@ -27,23 +27,11 @@ Prices and model names change within months: keep them in a dated config, never 
 
 ## 2. Optimization objective: the most economical effective solution
 
-Pick the candidate that meets the acceptance criteria at the least cost. Three tests:
-- **Effectiveness**: it really solves the stated problem.
-- **Efficacy**: it reaches the goal reliably and verifiably (a check passes).
-- **Efficiency**: fewest tokens, tool calls, latency and new dependencies.
-
-Before acting, compare 2-3 routes and take the **cheapest that clears the check**: (a) answer directly from what you already know or have read; (b) reuse an existing tool, script, file, cache or earlier result; (c) delegate bounded work to a lighter agent; (d) use the strongest model. A route with no way to verify its result does not qualify as cheap. **Stop as soon as the acceptance criteria pass**; do not add polish, extra passes or a second opinion the stakes do not need.
-
-Token-saving tactics:
-- **Inspect before asking**: read the repo, config and logs before questioning the user; ask only for what cannot be found.
-- **Targeted reads**: grep or glob, then read the needed lines, not whole files or the whole repo.
-- **Reuse**: prior results, cached output, existing helpers; do not re-derive or re-fetch.
-- **No repeated identical checks** and no redundant agents; one run of a check per unchanged input.
-- **Minimal briefs** to subagents (section 5) and summaries back, not transcripts.
+Compare 2-3 routes and take the **cheapest that clears the check**: (a) answer from what you know; (b) reuse a tool, file, cache or earlier result; (c) delegate bounded work to a lighter agent; (d) the strongest model. A route that cannot be verified is not cheap. **Stop as soon as the acceptance criteria pass.** Tactics: [token tactics](references/economical-route-and-token-tactics.md).
 
 ## 3. Triage by the WORST single dimension
 
-Score four dimensions; the **highest** decides. Size does not: a 2000-record schema-checked extraction is `gather`/`build`; a three-line auth change is `reason`.
+The **highest** of four dimensions decides, not size: a 2000-record schema-checked extraction is `gather`/`build`; a three-line auth change is `reason`.
 **Ambiguity** (goal, criteria, open decisions fixed?), **blast radius** (what breaks, reversible?), **verifiability** (cheap oracle?), **novelty** (known pattern or unfamiliar invariants?).
 
 | Task profile | Tier | Effort | Orchestration |
@@ -51,117 +39,83 @@ Score four dimensions; the **highest** decides. Size does not: a 2000-record sch
 | **Trivial**: question, rename, formatting, exact lookup | `gather` or session model if already cheap | low (medium if the lightest tier skips checks) | single call, inline |
 | **Standard**: fixed spec, test-verifiable, known pattern | `build` | medium; high if long agentic runs stop early | chain or route; read-only `gather` fan-out for volume |
 | **Complex**: ambiguity or novelty high, cross-module invariants | `reason` | high; `xhigh` only after measured gain | orchestrator-workers, independent checker, cheap gatherers |
-| **Consequential**: destructive, irreversible, security, money, migration, weak oracle, public release | `reason` floor; `orchestrate` only for long-horizon work with consent | high minimum | plan, execute, **independent same-floor review**, human gate |
+| **Consequential**: destructive, irreversible, security, money, migration, weak oracle, public release | `reason` floor; `orchestrate` only long-horizon, with consent | high minimum | plan, execute, **independent same-floor review**, human gate |
 
-**Safety floor:** the highest-risk factor wins; never average a destructive risk down because the diff is small. Cheap generation is fine only with strong verification: up-tier the checker, not the typist. The reviewer stays at the floor even if the implementer was down-routed. More model or effort never widens authority; permission failures go back to the supervisor. A role whose load spans tiers is two roles.
+**Safety floor:** the highest-risk factor wins; never average a destructive risk down for a small diff. Cheap generation needs strong verification: up-tier the checker, not the typist; the reviewer stays at the floor even if the implementer was down-routed. More model or effort never widens authority. A role spanning tiers is two roles.
 
 ## 4. Effort control
 
-- **Levels (Claude):** `low`, `medium`, `high`, `xhigh`, `max`; other vendors differ and are model-dependent. Map your tiers to the target model's accepted names. Default is `high` except Opus 5.5 and Haiku 5.5 (`medium`); set effort explicitly.
-- Effort is a **behavioral signal, not a token budget**: it scales thinking, tool-call count and thoroughness.
-- **Under-thinking:** one small measurement (five questions, one skill, Claude Code) saw skills skipped at `--effort low`; the lightest tier at `low` skips checks. If an agent ignores a skill or tool, raise effort first and test activation after lowering it.
-- **Overthinking:** `max` gains little over `xhigh`, costs more, can overthink structured output. Use it only to measure a ceiling.
-- **Two effort surfaces, two defaults.** On an **agent call** (isolated subagent) set effort by weight: `low` read-only gathering and tiny mechanical audits, `medium` implementation and bulk edits, `high` judging, security, review, root cause. In a **skill header** (applies to the rest of the lead's turn) use the tier-table effort (`high` for `gather`, `build`, `reason`), because the header also drives checks the lead still has to do. They differ by design; do not copy one into the other. Omit effort only on a fork.
-- **Change effort before tier.** Prompt phrases ("think hard") do nothing; effort is the control; control length in the prompt.
-- **Ceilings:** thinking counts as billed output and against `max_tokens`. Size for thinking plus answer; a truncated or `incomplete` reply is a ceiling bug, not a retry. Cap agent loops (turns, budget).
-- **Cache cost (vendor-documented):** a top-level effort change can invalidate the cached prefix and re-bill it at full input price. Use per-message effort (Claude beta, appended at the tail) or OpenAI `configuration_update` (GPT-6+) where supported; otherwise one effort per cached session, varied across workloads.
+- Effort is a **behavioral signal, not a token budget**; set it explicitly (defaults vary). **Change effort before tier**; "think hard" prompts do nothing; if an agent skips a skill or tool, raise effort first; `max` only to measure ceilings.
+- **Two surfaces, two defaults, never copied across.** Agent call (isolated subagent): `low` gathering, `medium` bulk edits, `high` judging; omit effort only on a fork. Skill header (rest of the lead's turn): tier-table effort, `high` for `gather`, `build`, `reason`.
+- Thinking counts against `max_tokens` (a truncated reply is a ceiling bug, not a retry); a top-level effort change can invalidate the cache. See [levels](references/effort-levels-by-provider.md), [ceilings](references/overthinking-and-token-ceilings.md), [cache](references/cache-and-mid-conversation-changes.md).
 
 ## 5. Orchestration ladder and delegation
 
-Climb only on evidence: **single call** (optimize first) -> **chaining** (fixed subtasks) -> **routing** (known categories, reliable classifier) -> **parallelization** (independent only; never parallel writers on shared files) -> **orchestrator-workers** (subtasks decided at runtime) -> **evaluator-optimizer** (checkable criteria, cap about 3 rounds) -> **autonomous agent** (open-ended, sandboxed). Multi-agent costs far more tokens: the vendor guide quotes roughly 10-15x, **a claim, not verified**; keep it for high-value independent breadth work, depth at two levels. Best-of-N needs a cheap trustworthy verifier.
+Climb on evidence only: **single call** -> **chaining** -> **routing** -> **parallelization** (independent only; never parallel writers on shared files) -> **orchestrator-workers** -> **evaluator-optimizer** (checkable criteria, about 3 rounds) -> **autonomous agent** (sandboxed). Multi-agent costs roughly 10-15x tokens (vendor guide, **claim, not verified**): independent breadth work only. Best-of-N needs a cheap verifier.
 
-Delegating:
-1. **Break-even first**: delegate only for a named benefit (freed lead context, large output kept out, disjoint parallel work, verdict only); otherwise do it inline.
-2. **Set `model` and `effort` on every built-in or untyped agent call**; omitted means the session model. Read-only search, lookup, trace -> lightest, low/medium; bulk mechanical edits (ingest waves, translation, extraction, i18n, doc moves) -> mid, medium; review, audit, root cause, design, security, shared-state queries -> strongest or inherit, high; planning -> inherit (design keeps the session model); fork -> inherits lead effort. Judge by what the agent does, not its name (reviewer, auditor, critic = `reason`).
+1. **Break-even first**: delegate only for a named benefit (freed lead context, output kept out, disjoint parallel work, verdict only), else inline.
+2. **Set `model` and `effort` on every built-in or untyped agent call** (omitted = session model): read-only search lightest/low-medium; bulk mechanical edits mid/medium; review, audit, root cause, design, security strongest or inherit/high; planning inherit. Judge by what it does, not its name. Table, definition files: [agent-call rules](references/agent-call-rules-and-enforcement-hook.md).
 3. **Write scopes**: unique file ownership, worktrees for concurrent writers, read-only reviewers do not repair.
-4. **Minimal standalone brief**: goal and the user's acceptance criteria, owned and forbidden paths, sourced facts, unknowns kept apart, commands already run, loop bounds, "if unsure, stop and report, never guess", proof of completion = quoted check output. Reviewers get requirements, change and raw evidence, never the implementer's conclusions.
-5. Re-run the key check yourself; self-reports are not acceptance. Quota-limited hosts: cheap tier default, at most one mid-tier and one browser agent per mission.
-6. **Agent definition files** (typed agents have no per-call model): a read-only search, lookup or trace agent (tools limited to read, grep, glob, shell) sets the light model in its file; a reviewer, auditor, root-cause, shared-state or editing agent omits `model` or sets `inherit`. Update every mirror copy and every template kept as documentation, or the next install reverts a light agent to the expensive model.
+4. **Minimal standalone brief**: goal, acceptance criteria, scopes, sourced facts, unknowns apart, loop bounds, "if unsure, stop and report", quoted check output as proof. Reviewers get requirements, change and raw evidence, never conclusions ([templates](references/delegation-brief-templates.md)). Re-run the key check yourself; self-reports are not acceptance.
 
 ## 6. Escalation, fallback, failure classification
 
 | Class | Examples | Action |
 |---|---|---|
-| Environment | auth, permissions, sandbox, dependency, malformed input, broken fixture | repair, retry on the **same** allocation; never escalate, do not count |
-| Scope change | requirement moved | re-triage from scratch |
+| Environment | auth, permissions, sandbox, dependency, broken fixture | repair, retry on the **same** allocation; never escalate, do not count |
+| Scope change | requirement moved | re-triage |
 | Substantive | wrong result, failed check, conceptual error | counts toward escalation |
 
-- 1st substantive failure: one tier up, failed attempt attached. 2nd: **fresh top-tier pass**, high effort, root cause before more edits. 3rd: stop, question the approach, **ask the user**. Same error twice with no new signal: no identical third attempt.
-- Loop bound about 2-3 per role. One layer owns retries, or gateway x SDK x loop retries multiply (see `circuit-breaker-retry-telemetry`).
+- 1st substantive failure: one tier up, failed attempt attached. 2nd: **fresh top-tier pass**, high effort, root cause before more edits. 3rd: stop and **ask the user**. Same error twice with no new signal: no identical third attempt. Loop bound about 2-3 per role; one layer owns retries (`circuit-breaker-retry-telemetry`).
 - **Checker floor:** challenger and auditor on different tiers; the implementer never approves its own work.
-- **No silent fallback:** state model, effort, reason and changed verification; if the fallback breaches the floor (destructive, security, weak oracle), pause. Missing identity metadata means "not attested".
-- **Confidence signals**, best first: deterministic checks, cross-sample agreement, judge scores, self-reported confidence (poorly calibrated). No cheap-first path without a detector; never gate irreversible actions on cheap-tier confidence.
-- Disclose model, effort and reason for any non-default choice in one line.
+- **No silent fallback:** state model, effort, reason, changed verification; a fallback that breaches the floor pauses. Disclose non-default choices in one line.
+- Never gate irreversible actions on cheap-tier confidence ([signals](references/confidence-based-escalation.md), [floors](references/escalation-fallback-and-safety-floors.md)).
 
 ## 7. Budget and cost guards
 
-- **Ceilings** on spend, turns, wall-clock and `max_tokens`, enforced outside the model; decide whether a cap rejects or degrades.
-- A premium tier that is "available" is not "authorized": ask once, naming the surcharge; never use it in headless runs without prior consent. Expensive advisors get a consultation budget (one initial call, two per standard task) and a compact envelope.
-- **Research caps** (every research skill and every copy of it): lightest tier in the header, at most 3 researcher subagents (default 2), one search first and a second only if the first is thin or contradictory, at most 3 sources captured per question, no extra research round, redundant steps merged.
-- **Instruction-size budget:** always-loaded files (global and project instruction files, rule files without a `paths:` scope) under about 4 KB; move rationale, incident history and enumerations to linked pages, never delete a rule (section 10).
-- **Caching and context size often beat tiering**: agents resend context each step, output and thinking cost several times input (see `caching-strategies`, `agent-skills-context-engineering`).
-- A router or classifier is an extra call: add it only when measured savings exceed its cost. Saving = traffic moved x price gap - retries - escalations - router cost - quality loss, against a named baseline.
+- **Ceilings** on spend, turns, wall-clock, `max_tokens`, enforced outside the model. "Available" premium is not "authorized": ask once, naming the surcharge; never headless without consent ([quota guards](references/quota-and-cost-guards.md)).
+- **Research caps** (every research skill and copy): lightest tier, at most 3 researcher subagents (default 2), one search first and a second only if thin or contradictory, at most 3 sources per question, no extra round.
+- **Instruction-size budget:** always-loaded files (including rule files without `paths:`) under about 4 KB; move rationale to linked pages, never delete a rule (section 10).
+- Caching and context size often beat tiering. A router is an extra call: add it only when the measured saving (traffic moved x price gap - retries - escalations - router cost - quality loss) beats a named baseline.
 
 ## 8. Harness portability
 
-| Concern | Claude Code | Antigravity and others |
-|---|---|---|
-| Frontmatter read | `name`, `description` plus extensions (`model`, `effort`, `context`) | `name`, `description` only |
-| Routing rules live in | optional header overlay | **Markdown body** and the tier table above |
-| Header scope | `model:`/`effort:` last the **rest of the turn**, then revert | n/a |
-| Precedence | effort env var outranks skill `effort:`; auto mode ignores unsupported models | model picker or host setting |
-| Isolation | `context: fork` gives a subagent its own model/effort | the host's delegation tool only |
-
-- A model switch is not free: caches are model-scoped, so a switch on large context re-reads it at **uncached** price. Down to the lightest tier is cheap; mid/strong/planner swaps on a short task can cost more than they save. Prefer a subagent or forked skill with an explicit model.
-- A light-tier skill lowers the model for the rest of that turn. Header lines vanish on reinstall.
-- API and claude.ai uploads reject non-portable keys; keep Claude Code extras in a separate copy. Effort flags differ: `--effort` (Claude), `model_reasoning_effort` (Codex), `--variant` (OpenCode). Test triggers in every target harness, headless modes separately; no permission-bypass flags outside a sandbox.
+Antigravity and others read only `name` and `description`; Claude Code adds `model`, `effort`, `context`. Header `model:`/`effort:` last the **rest of the turn**; an effort env var outranks them; caches are model-scoped, so a switch on large context re-reads it at **uncached** price: prefer a subagent or forked skill with an explicit model. Test triggers per harness (headless too); no permission-bypass flags outside a sandbox. See [checklist](references/cross-harness-portability-checklist.md), [header limits](references/skill-header-limits-and-switch-cost.md).
 
 ## 9. Enforcement and measurement
 
-- Prose decays: add a **fail-open** pre-tool hook that denies a built-in or untyped agent launch with no `model`; never guard typed agents.
-- **Measure launches, not intentions**: count agent launches by (type, model) from transcripts, de-duplicate by call id, compare date windows (old transcripts get pruned, so never compare all-time totals). One local baseline (one machine): 60 of 999 built-in launches (6%) named a model. It shows what was requested, not what ran.
-- A global "subagent model" environment variable changed rank between versions (once it overrode every subagent model, `inherit` and per-call values included, so it also downgraded reviewers; later it is only the default for subagents that set nothing). Check the CLI version before relying on it.
-- Before down-routing a task class, evaluate the exact model-and-effort pair on representative tasks; redo after model, tool or prompt changes.
-- Close with Implemented / Validated / Partially validated / Blocked and the checks that ran.
+Prose decays: a **fail-open** pre-tool hook denies a built-in or untyped agent launch without `model`; never guard typed agents. **Measure launches, not intentions** (by type and model, de-duplicated, date windows; [measuring](references/measuring-and-auditing-model-usage.md)). Before down-routing a task class, evaluate the exact model-and-effort pair on representative tasks. Close with Implemented / Validated / Partially validated / Blocked plus the checks that ran.
 
 ### Evidence quality
 
-| Status | Covers |
-|---|---|
-| Vendor-documented | effort levels and defaults, thinking counted in `max_tokens`, cache scoping, per-message effort, header scope |
-| Measured (tiny n) | low effort suppressing skill use; the 6% baseline |
-| Paper abstract | best-of-N routing "up to 60% cost, under 1% loss" (peak, unreplicated) |
-| Claims / opinion | 70/20/10 splits, 40-95% savings, multiplier tables, per-agent tier maps, Fable price multiple (2x vs 2.5x across repos) |
-
-Write "claimed by X" for the last row; a fair savings figure names baseline, mix, quality metric, escalation rate and price date.
+Rank every figure: vendor-documented, measured (tiny n), paper abstract, claim ("claimed by X"); a savings figure names baseline, quality metric, escalation rate, price date ([table](references/claims-vs-evidence-on-savings.md)).
 
 ## 10. Maintaining the policy (files, mirrors, headers)
 
-Applies whenever an agent, skill or rule file is created, edited, installed or synced. Detail: [instruction size budget](references/instruction-size-budget-and-safe-shortening.md), [work-weight tier table](references/work-weight-tier-table.md), [agent-call rules](references/agent-call-rules-and-enforcement-hook.md).
+When an agent, skill or rule file is created, edited, installed or synced:
 
-1. **One home for tiers.** Keep tier -> model/effort in one policy file and let a check script compare every skill header with it: it fails on a header that differs, an unclassified skill or an unreadable file; `--apply` fixes headers and backs up what it overwrites. Re-run it after a skill is reinstalled or rewritten (the header lines are lost); skip synced copies, trash and staging folders on purpose. Change a tier, not individual files.
-2. **Shorten without breaking citations.** Before moving or renaming rule text, grep every citation of its file, headings and item numbers (docs, hooks, tests, doctor checks, eval fixtures). Keep every heading and number; compress in place and move the full text to a linked page with the same sections. Measure bytes with a script, not by eye; keep line endings.
-3. **Wording is load-bearing for retrieval.** After shortening a file a search index covers, re-index and run the retrieval tests and drift report; if a question regresses, restore the common words the cut removed. Never edit expected answers, floors or baselines to pass; record a regression caused by corpus growth as a known failure.
-4. **Mirrors, templates, governed projects.** Parallel agent and skill directories are often real copies: check, edit both, confirm with a directory diff. A project with its own change mechanism (for example a kit lock) uses it and records only the files touched.
-5. **Sweep, then report, do not reach.** For a cost fix, sweep every sibling project the user named for the same pattern (scripted walk, skipping dependency folders, VCS internals, worktrees, snapshots, archives). A finding outside that scope is reported with evidence and left unedited unless the user asks.
-6. **Order that held up:** read-only inventory -> draft in a scratch location, show size and diff -> apply -> re-index -> retrieval tests -> the project's doctor and lint -> report what ran and what did not.
+1. **One home for tiers:** one policy file, checked against every skill header by script; change a tier, not files; re-run after any reinstall.
+2. **Shorten without breaking citations:** grep citations of headings and numbers first; compress in place, move full text to a linked page; re-run retrieval tests, never editing expected answers.
+3. **Mirrors and templates:** edit every real copy, confirm with a diff; governed projects use their own mechanism.
+4. **Sweep, then report:** only named projects; out-of-scope findings are reported, not edited.
+5. **Order:** inventory -> scratch draft (size, diff) -> apply -> re-index -> tests and lint -> report.
 
 ## Quick Decision Checklist
 
-1. Worst dimension (ambiguity, blast radius, verifiability, novelty)? It picks the row.
-2. Compared direct / reuse / lighter agent / frontier; took the cheapest that clears a check?
-3. Deterministic check available? If not, raise the floor or add an independent reviewer.
-4. Lowest effort that passes, set explicitly; read targeted, reused results, no repeated checks.
-5. Delegating? Named benefit, explicit `model` + `effort`, minimal brief, unique write scope.
-6. Consequential? `reason` floor, high effort, same-floor reviewer, human gate; cost does not override.
-7. Failure classified? Environment never escalates; 1 up, 2 fresh top pass, 3 ask the user.
-8. Mid-conversation model or effort change? Count the cache cost. Fallback or non-default choice? Disclose.
+1. Worst dimension picks the row.
+2. Compared routes; took the cheapest passing a check?
+3. No deterministic check? Raise the floor or add an independent reviewer.
+4. Lowest effort that passes, set explicitly; targeted reads, no repeated checks.
+5. Delegating? Named benefit, explicit `model` + `effort`, minimal brief, unique scope.
+6. Consequential? `reason` floor, high effort, same-floor reviewer, human gate.
+7. Failure classified? Environment never escalates; 1 up, 2 fresh top pass, 3 ask.
+8. Mid-conversation model or effort change? Count the cache cost; disclose non-default choices.
 9. Stopped when criteria passed? Savings quoted only if measured.
-10. Touching an agent, skill or rule file? Tier from the policy file, mirrors and templates in step, citations grepped, size under budget (section 10).
+10. Editing an agent, skill or rule file? Policy tier, mirrors, citations, size (section 10).
 
 ## Core pair with `skill-orchestrator`
 
-This skill and `skill-orchestrator` are the pack's two pillar skills and form one start-of-task protocol. `skill-orchestrator` decides which instructions and skills apply and in what order (it is the single owner of that protocol); this skill then decides model, effort and delegation. Karpathy-style behavioral rules for instruction files live in `skill-orchestrator` (section 5). Its Simplicity First and Goal-Driven Execution rules map to the prime rule of section 1 here (cheapest sufficient path with a check you can name); they are not restated.
+This skill and `skill-orchestrator` are the pack's two pillar skills and form one start-of-task protocol: `skill-orchestrator` (its single owner) decides which instructions and skills apply and in what order; this skill then decides model, effort and delegation. Karpathy-style rules for instruction files live in `skill-orchestrator` (section 5); its Simplicity First and Goal-Driven Execution map to the prime rule of section 1 here and are not restated.
 
 ## Boundaries
 
@@ -169,11 +123,7 @@ This skill and `skill-orchestrator` are the pack's two pillar skills and form on
 
 ## Deep references
 
-Sources and unreadable pages: [sources](references/sources.md).
-
-- **Patterns and orchestration** (choose a rung, topology, control plane): [workflow vs agent](references/workflow-vs-agent-patterns.md) · [triage tiers](references/complexity-triage-tiers.md) · [control plane](references/orchestration-control-plane.md) · [topology and failures](references/multi-agent-topology-and-failure-modes.md)
-- **Effort and caching** (levels, ceilings, mid-session changes): [levels by provider](references/effort-levels-by-provider.md) · [overthinking and ceilings](references/overthinking-and-token-ceilings.md) · [cache and mid-conversation changes](references/cache-and-mid-conversation-changes.md) · [portable frontmatter](references/portable-skill-frontmatter.md)
-- **Routing and savings** (routers, cascades, what is claimed vs measured): [routing in production](references/routing-strategies-in-production.md) · [work split and pricing](references/tiered-work-split-and-pricing.md) · [best-of-N and verifier](references/best-of-n-and-verifier-routing.md) · [confidence-based escalation](references/confidence-based-escalation.md) · [claims vs evidence](references/claims-vs-evidence-on-savings.md) · [measured effort evidence](references/measured-effort-evidence.md)
-- **Policies and delegation** (tier tables, floors, briefs, budgets): [tier tables compared](references/tier-tables-compared.md) · [escalation, fallback, floors](references/escalation-fallback-and-safety-floors.md) · [quota and cost guards](references/quota-and-cost-guards.md) · [delegation briefs](references/delegation-brief-templates.md) · [work-weight tier table](references/work-weight-tier-table.md) · [agent-call rules and hook](references/agent-call-rules-and-enforcement-hook.md)
-- **Harnesses** (Antigravity, Claude Code, Codex, Gemini CLI): [Antigravity format and paths](references/antigravity-skills-format-and-paths.md) · [quota-aware subagents](references/quota-aware-subagent-orchestration.md) · [delegation triggers](references/complexity-assessment-and-delegation-triggers.md) · [phase-based routing](references/phase-based-skill-routing.md) · [portability checklist](references/cross-harness-portability-checklist.md) · [header limits and switch cost](references/skill-header-limits-and-switch-cost.md)
-- **Governance and audit**: [instruction size budget](references/instruction-size-budget-and-safe-shortening.md) · [measuring model usage](references/measuring-and-auditing-model-usage.md)
+- [Reference index](references/reference-index.md) — every reference by topic, one when-to-read line each; start here.
+- [Sources](references/sources.md) — statuses and unadopted claims.
+- [Token tactics](references/economical-route-and-token-tactics.md) — section 2 tactics.
+- [Agent-call rules](references/agent-call-rules-and-enforcement-hook.md), [work-weight tiers](references/work-weight-tier-table.md), [size budget](references/instruction-size-budget-and-safe-shortening.md) — owners of sections 5, 9, 10.

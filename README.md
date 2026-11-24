@@ -1,12 +1,12 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **92 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
+Catálogo unificado de **113 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
 
 ---
 
 ## O que este projeto faz
 
-Reúne num único pacote verificável **92 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
+Reúne num único pacote verificável **113 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
 
 - **Skills pilares (2):** `skill-orchestrator` + `model-effort-routing` formam o protocolo de início de tarefa: a primeira decide quais instruções e skills se aplicam e em que ordem (incluindo regras comportamentais estilo Karpathy para `CLAUDE.md`/`AGENTS.md`), a segunda decide modelo, esforço e delegação, sempre pela solução mais econômica e eficaz.
 - **Arquitetura & Design de Software (27 skills):** estilos arquiteturais (Hexagonal, Clean, Layered, Modular Monolith, Microservices, EDA, CQRS, Event Sourcing, Vertical Slice, BFF, Micro-Frontends, Microkernel, Actor Model/Space-Based), DDD estratégico, SSOT/SOLID pragmático, modelagem defensiva e módulos profundos.
@@ -22,7 +22,7 @@ Reúne num único pacote verificável **92 skills autocontidas** cobrindo todo o
 ## Por que usar este repositório
 
 - **Zero dependências externas em runtime:** tanto o servidor MCP em Node.js ESM ([bin/mcp-server.mjs](bin/mcp-server.mjs)) como os scripts CLI ([install_skills.py](install_skills.py) e [check_skills.py](check_skills.py)) usam exclusivamente bibliotecas padrão.
-- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 92 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
+- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 113 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
 - **Integridade verificada por SHA-256 e validação estática:** cada arquivo em `skills/` possui hash registrado em [MANIFEST.sha256](MANIFEST.sha256) e passa por validação de frontmatter, links relativos e referências cruzadas.
 - **Portabilidade multi-agente:** funciona com `.claude/skills`, `.agents/skills` (Antigravity), `.codex/skills`, `.cursor/skills` e diretórios globais (`~/.claude/skills`, `~/.gemini/config/skills`).
 
@@ -95,7 +95,7 @@ Depois de conectado, basta pedir ao agente no chat:
 **Script Python incluído ([install_skills.py](install_skills.py)):**
 
 ```bash
-# Instalar todas as 92 skills no projeto atual (./.claude/skills)
+# Instalar todas as 113 skills no projeto atual (./.claude/skills)
 python install_skills.py --project .
 
 # Instalar globalmente no usuário (~/.claude/skills)
@@ -127,14 +127,14 @@ Implementado em [src/mcp-core.mjs](src/mcp-core.mjs) e exposto em [bin/mcp-serve
 
 | Superfície MCP | Identificadores | O que faz |
 |---|---|---|
-| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 92 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
+| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 113 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
 | **Tools — Instalação & Auditoria** | `install_skills`, `check_installed_skills` | Copia 1, várias ou todas (`["*"]`) as skills para `claude`, `antigravity`, `agents`, `codex`, `cursor` ou `target_dir`, verifica hashes SHA-256 em [MANIFEST.sha256](MANIFEST.sha256) e valida links/frontmatter. |
 | **Resources** | `skill://index.json`, `skill://{name}/{+path}` | Expõe o catálogo JSON completo e qualquer arquivo interno via URI `skill://`. |
-| **Prompts** | Todas as 92 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
+| **Prompts** | Todas as 113 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
 
 ---
 
-## Catálogo Completo (92 Skills)
+## Catálogo Completo (113 Skills)
 
 Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesquise pelo nome exato abaixo.
 
@@ -232,6 +232,27 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 | 90 | Fundamentos de Engenharia & Segurança | [`clean-code-for-agents`](skills/clean-code-for-agents/SKILL.md) | Regras de escrita e autorrevisão de código para agentes (simplicidade, nomes, funções, comentários estritamente necessários, código morto), com registro canônico de regras e contramedidas aos vieses dos LLMs. |
 | 91 | Cloud-Native, Resiliência, Evolução & IA | [`skill-orchestrator`](skills/skill-orchestrator/SKILL.md) | **Pilar (com `model-effort-routing`):** governa arquivos de instrução (`CLAUDE.md`/`AGENTS.md`, regras estilo Karpathy), decide quais skills se aplicam e em que ordem (descoberta barata, processo antes de implementação) e separa o que é conselho do que exige *hooks*/permissões. |
 | 92 | Fundamentos de Engenharia & Segurança | [`diagnosing-bugs`](skills/diagnosing-bugs/SKILL.md) | Diagnóstico de bugs difíceis e regressões de desempenho: loop de feedback vermelho primeiro, reprodução mínima, hipóteses falsificáveis, instrumentação marcada e teste de regressão no *seam* correto (MIT, Matt Pocock). |
+| 93 | Fundamentos de Engenharia & Segurança | [`verification-loop`](skills/verification-loop/SKILL.md) | Verificação em ciclo fechado: critérios `AC-n` falsificáveis, registro de evidência por comando, verificador independente, vias por risco, tetos de tentativas e estados finais (Implemented, Validated, Partially validated, Blocked). |
+| 94 | Fundamentos de Engenharia & Segurança | [`a11y-audit`](skills/a11y-audit/SKILL.md) | Audita acessibilidade de página ou app web com evidências, mapeada para WCAG 2.2 A/AA: árvore de acessibilidade, teclado e foco, contraste, alvos, zoom, formulários, axe-core e Lighthouse, declarando o que a automação não cobre. |
+| 95 | Fundamentos de Engenharia & Segurança | [`ci-test-reliability`](skills/ci-test-reliability/SKILL.md) | Testes confiáveis no CI: topologia de execução, alocação atômica de portas e diretórios, estado global, tempo e rede, esperas por estado, teardown, diferenças Windows/POSIX, retries como diagnóstico, quarentena e correções que só mascaram flakiness. |
+| 96 | Fundamentos de Engenharia & Segurança | [`cross-layer-value-trace`](skills/cross-layer-value-trace/SKILL.md) | Rastreia um valor errado, ausente ou desatualizado da fonte de verdade até a tela, salto a salto, com quatro perguntas por salto (valor, ausência, frescor, falha), e entrega o conserto à skill certa. |
+| 97 | Fundamentos de Engenharia & Segurança | [`threat-modeling`](skills/threat-modeling/SKILL.md) | Modelo de ameaças leve: DFD, fronteiras de confiança, STRIDE/LINDDUN, mitigação, validação e manutenção contínua. |
+| 98 | Fundamentos de Engenharia & Segurança | [`vulnerability-triage`](skills/vulnerability-triage/SKILL.md) | Triagem de achados de segurança: reproduzir ou rejeitar, alcançabilidade, CVSS × SSVC × matriz de risco, veredito, roteamento e noções de divulgação. |
+| 99 | Bancos de Dados & Governança | [`sql-server-audit`](skills/sql-server-audit/SKILL.md) | Método para auditar instância ou banco SQL Server: evidência antes de opinião, somente leitura, severidade e confiança por achado, mitos desmentidos e relatório priorizado com correções apenas propostas. |
+| 100 | Cloud-Native, Resiliência, Evolução & IA | [`agent-session-memory`](skills/agent-session-memory/SKILL.md) | Memória durável entre sessões para agentes de código: quatro canais curtos e limitados, balanço final em 3 linhas e *handoff* de uso único com registro *append-only*. |
+| 101 | Cloud-Native, Resiliência, Evolução & IA | [`memory-hygiene`](skills/memory-hygiene/SKILL.md) | Varredura de confiança da memória do agente: classifica afirmações, verifica contra o ambiente real, carimba `last_verified` e `confidence` e propõe arquivar ou substituir, nunca apagar. |
+| 102 | Workflow de Engenharia (Matt Pocock) | [`triage`](skills/triage/SKILL.md) | Move issues e PRs por uma máquina de estados de triagem, verifica, questiona e escreve briefs prontos para agentes (MIT, Matt Pocock). |
+| 103 | Workflow de Engenharia (Matt Pocock) | [`wayfinder`](skills/wayfinder/SKILL.md) | Planeja trabalho grande como mapa de tickets de decisão no tracker e os resolve um a um (MIT, Matt Pocock). |
+| 104 | Workflow de Engenharia (Matt Pocock) | [`retro`](skills/retro/SKILL.md) | Retrospectiva de uma sessão de código com propostas de melhoria do ambiente do agente (MIT, Matt Pocock). |
+| 105 | Workflow de Engenharia (Matt Pocock) | [`handoff`](skills/handoff/SKILL.md) | Compacta a conversa num documento de passagem para outro agente, com variante opcional para a CLI do Claude Code (MIT, Matt Pocock). |
+| 106 | Workflow de Engenharia (Matt Pocock) | [`prototype`](skills/prototype/SKILL.md) | Cria um protótipo descartável para responder a uma dúvida de lógica ou de UI (MIT, Matt Pocock). |
+| 107 | Workflow de Engenharia (Matt Pocock) | [`domain-modeling`](skills/domain-modeling/SKILL.md) | Constrói o modelo de domínio: glossário, terminologia e ADRs no momento da discussão (MIT, Matt Pocock). |
+| 108 | Workflow de Engenharia (Matt Pocock) | [`git-guardrails-claude-code`](skills/git-guardrails-claude-code/SKILL.md) | Hook do Claude Code que bloqueia comandos git perigosos (push, reset --hard, clean), endurecido e com falha fechada (MIT, Matt Pocock). |
+| 109 | Workflow de Engenharia (Matt Pocock) | [`wizard`](skills/wizard/SKILL.md) | Gera um script bash interativo que guia o humano por passos manuais (credenciais, segredos de CI), com confirmações e sem expor valores (MIT, Matt Pocock). |
+| 110 | Workflow de Engenharia (Matt Pocock) | [`setup-ts-deep-modules`](skills/setup-ts-deep-modules/SKILL.md) | Impõe pacotes TypeScript como módulos profundos via dependency-cruiser (MIT, Matt Pocock). |
+| 111 | Workflow de Engenharia (Matt Pocock) | [`setup-pre-commit`](skills/setup-pre-commit/SKILL.md) | Configura Husky, lint-staged e Prettier com typecheck e testes no pre-commit (MIT, Matt Pocock). |
+| 112 | Workflow de Engenharia (Matt Pocock) | [`to-questionnaire`](skills/to-questionnaire/SKILL.md) | Transforma uma decisão que você não resolve sozinho num questionário em Markdown para outra pessoa (MIT, Matt Pocock). |
+| 113 | Workflow de Engenharia (Matt Pocock) | [`wait-what`](skills/wait-what/SKILL.md) | Pede a re-explicação da última mensagem em linguagem simples e com o glossário do projeto (MIT, Matt Pocock). |
 
 ---
 
@@ -242,7 +263,7 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 
 ```bash
-# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 92 skills
+# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 113 skills
 python check_skills.py skills
 
 # 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
@@ -270,9 +291,11 @@ Dev.-DBs-Skills/
 │   └── mcp-server.test.mjs # Testes automatizados do servidor MCP (node --test)
 ├── install_skills.py       # Instalador idempotente Python com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
-└── skills/                 # As 92 skills autocontidas
+└── skills/                 # As 113 skills autocontidas
+    ├── a11y-audit/
     ├── actor-model-space-based-architecture/
     ├── adr-architecture/
+    ├── agent-session-memory/
     ├── agent-skills-context-engineering/
     ├── agentic-rag-architecture/
     ├── api-gateway-reverse-proxy/
@@ -284,12 +307,14 @@ Dev.-DBs-Skills/
     ├── bff-pattern/
     ├── c4-model-architecture/
     ├── caching-strategies/
+    ├── ci-test-reliability/
     ├── circuit-breaker-retry-telemetry/
     ├── clean-architecture/
     ├── clean-code-for-agents/
     ├── code-review/
     ├── codebase-design/
     ├── cqrs-pattern/
+    ├── cross-layer-value-trace/
     ├── database-audit/
     ├── database-cost-guard/
     ├── database-exposure/
@@ -299,6 +324,7 @@ Dev.-DBs-Skills/
     ├── dependency-inversion-composition-root/
     ├── diagnosing-bugs/
     ├── diataxis-documentation-architecture/
+    ├── domain-modeling/
     ├── dto-mapper-anti-corruption-layer/
     ├── error-handling-problem-details/
     ├── event-driven-architecture/
@@ -306,8 +332,10 @@ Dev.-DBs-Skills/
     ├── feature-flag-toggle-engine/
     ├── fundamentals-audit/
     ├── git-atomic-commits/
+    ├── git-guardrails-claude-code/
     ├── grill-me/
     ├── grilling/
+    ├── handoff/
     ├── hexagonal-architecture/
     ├── idempotency-fix/
     ├── implement/
@@ -315,6 +343,7 @@ Dev.-DBs-Skills/
     ├── kiss-yagni-aha/
     ├── layered-n-tier-architecture/
     ├── layered-refactor/
+    ├── memory-hygiene/
     ├── mermaid/
     ├── micro-frontends-architecture/
     ├── microkernel-plugin-architecture/
@@ -334,11 +363,13 @@ Dev.-DBs-Skills/
     ├── playwright-qa-orchestrator/
     ├── postgres-diagnostics/
     ├── pragmatic-solid-and-ssot/
+    ├── prototype/
     ├── query-performance/
     ├── race-condition-fix/
     ├── rate-limiter-throttler/
     ├── repository-root-monorepo-architecture/
     ├── repository-unit-of-work/
+    ├── retro/
     ├── router-front-controller-routing/
     ├── saga-transactional-outbox-pattern/
     ├── schema-and-constraints/
@@ -346,22 +377,33 @@ Dev.-DBs-Skills/
     ├── security-audit/
     ├── serverless-architecture/
     ├── setup-matt-pocock-skills/
+    ├── setup-pre-commit/
+    ├── setup-ts-deep-modules/
     ├── single-responsibility-cohesion/
     ├── skill-orchestrator/
     ├── soa-vs-microservices-architecture/
+    ├── sql-server-audit/
     ├── sql-server-diagnostics/
     ├── sqlite-diagnostics/
     ├── ssot-and-dry/
     ├── state-machine-workflow-engine/
     ├── tdd/
     ├── testing-pyramid-and-shapes/
+    ├── threat-modeling/
+    ├── to-questionnaire/
     ├── to-spec/
     ├── to-tickets/
     ├── transaction-fix/
+    ├── triage/
     ├── twelve-factor-cloud-native/
     ├── validator-input-parser/
     ├── value-objects-type-invariants/
+    ├── verification-loop/
     ├── vertical-slice-architecture/
+    ├── vulnerability-triage/
+    ├── wait-what/
+    ├── wayfinder/
+    ├── wizard/
     └── yagni-evolutionary-architecture/
 ```
 

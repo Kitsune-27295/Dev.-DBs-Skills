@@ -45,6 +45,19 @@ Savings = (fraction of traffic moved) x (price gap) - (retries, escalations, rou
 - The one paper-backed figure (up to 60%, under 1% loss) needs a verifier and a difficulty predictor; it is not what a keyword-rule router delivers.
 - Largest dependable levers in the sources, in order of evidence strength: price arithmetic of tiers and caching (checkable), then verifier-gated cascades (paper), then percentages from blogs (unverified).
 
+## 5. Evidence status table
+
+Rank every figure used in a routing decision by how it was obtained. This table is the single owner of the ranking; `SKILL.md` section 9 only names the four ranks.
+
+| Status | Covers |
+|---|---|
+| Vendor-documented | effort levels and defaults, thinking counted in `max_tokens`, cache scoping, per-message effort, header scope |
+| Measured (tiny n) | low effort suppressing skill use (five questions, one skill); the 6% named-model baseline (one machine) |
+| Paper abstract | best-of-N routing "up to 60% cost, under 1% loss" (peak, unreplicated) |
+| Claims / opinion | 70/20/10 splits, 40-95% savings, multiplier tables, per-agent tier maps, the premium-tier price multiple (2x vs 2.5x across repos) |
+
+Write "claimed by X" for the last row.
+
 ## How an agent should apply this
 
 - Never repeat a blog percentage as a result; write "claimed by X" or compute from your own logs.
