@@ -159,6 +159,10 @@ Applies whenever an agent, skill or rule file is created, edited, installed or s
 9. Stopped when criteria passed? Savings quoted only if measured.
 10. Touching an agent, skill or rule file? Tier from the policy file, mirrors and templates in step, citations grepped, size under budget (section 10).
 
+## Core pair with `skill-orchestrator`
+
+This skill and `skill-orchestrator` are the pack's two pillar skills and form one start-of-task protocol. `skill-orchestrator` decides which instructions and skills apply and in what order (it is the single owner of that protocol); this skill then decides model, effort and delegation. Karpathy-style behavioral rules for instruction files live in `skill-orchestrator` (section 5). Its Simplicity First and Goal-Driven Execution rules map to the prime rule of section 1 here (cheapest sufficient path with a check you can name); they are not restated.
+
 ## Boundaries
 
 `agent-skills-context-engineering`: context shaping, not model choice. `agentic-rag-architecture`: retrieval design. `circuit-breaker-retry-telemetry`: breaker and retry mechanics; here only retry ownership. `rate-limiter-throttler`: traffic throttling; here quota-aware agent counts. `caching-strategies`: caching design; here only prompt-cache effects. `yagni-evolutionary-architecture`: no router or orchestrator before evidence. `architecture-decision-trees-tradeoffs`: general trade-offs. `code-review`: how to review; here the reviewer's tier. `implement`: ticket execution; here its workers' tier. `grilling`: clarify intent first when ambiguity is the worst dimension.

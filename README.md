@@ -1,17 +1,18 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **90 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
+Catálogo unificado de **91 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
 
 ---
 
 ## O que este projeto faz
 
-Reúne num único pacote verificável **90 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
+Reúne num único pacote verificável **91 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
 
+- **Skills pilares (2):** `skill-orchestrator` + `model-effort-routing` formam o protocolo de início de tarefa: a primeira decide quais instruções e skills se aplicam e em que ordem (incluindo regras comportamentais estilo Karpathy para `CLAUDE.md`/`AGENTS.md`), a segunda decide modelo, esforço e delegação, sempre pela solução mais econômica e eficaz.
 - **Arquitetura & Design de Software (27 skills):** estilos arquiteturais (Hexagonal, Clean, Layered, Modular Monolith, Microservices, EDA, CQRS, Event Sourcing, Vertical Slice, BFF, Micro-Frontends, Microkernel, Actor Model/Space-Based), DDD estratégico, SSOT/SOLID pragmático, modelagem defensiva e módulos profundos.
 - **Componentes de Software (12 skills):** Router/Front Controller, API Gateway/Reverse Proxy, Middleware, Cache, Background Worker, Rate Limiter, AuthN/AuthZ, Repository/Unit of Work, DTO/Mapper/ACL, Validator, Feature Flags, State Machine.
 - **Princípios & Conceitos Fundamentais (7 skills):** aprofundamentos de SSOT/DRY, OCP, SRP, DIP/Composition Root, KISS/YAGNI/AHA, Value Objects e Problem Details/Result.
-- **Cloud-Native, Resiliência, Evolução & IA (9 skills):** roteamento de modelo e esforço (a opção mais econômica e eficaz), pesquisa profunda na web com citações verificadas, 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering.
+- **Cloud-Native, Resiliência, Evolução & IA (10 skills):** orquestração de instruções e skills (CLAUDE.md/AGENTS.md, roteamento), roteamento de modelo e esforço (a opção mais econômica e eficaz), pesquisa profunda na web com citações verificadas, 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering.
 - **Documentação, Diagramas & Contratos (5 skills):** ADRs, arc42 + OpenAPI/AsyncAPI, C4 Model, Diátaxis e Mermaid.
 - **Workflow de Engenharia — Matt Pocock Pack (8 skills):** fluxo ponta a ponta (`setup-matt-pocock-skills` → `grill-me` / `grilling` → `to-spec` → `to-tickets` → `implement` + `tdd` → `code-review`), com invocação autônoma pelo modelo liberada para execuções completas de ponta a ponta.
 - **Fundamentos de Engenharia & Segurança (11 skills):** auditoria geral, automação de QA com Playwright (ciclo completo com guardrails anti-batota), padrões de escrita de código limpo para agentes, auditoria somente leitura de repositórios open-source externos, commits atômicos e higiene Git, proteção anti-client-trust, *race conditions*, idempotência, refatoração incremental em camadas, testes de integração com DB real e auditoria de segurança.
@@ -21,7 +22,7 @@ Reúne num único pacote verificável **90 skills autocontidas** cobrindo todo o
 ## Por que usar este repositório
 
 - **Zero dependências externas em runtime:** tanto o servidor MCP em Node.js ESM ([bin/mcp-server.mjs](bin/mcp-server.mjs)) como os scripts CLI ([install_skills.py](install_skills.py) e [check_skills.py](check_skills.py)) usam exclusivamente bibliotecas padrão.
-- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 90 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
+- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 91 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
 - **Integridade verificada por SHA-256 e validação estática:** cada arquivo em `skills/` possui hash registrado em [MANIFEST.sha256](MANIFEST.sha256) e passa por validação de frontmatter, links relativos e referências cruzadas.
 - **Portabilidade multi-agente:** funciona com `.claude/skills`, `.agents/skills` (Antigravity), `.codex/skills`, `.cursor/skills` e diretórios globais (`~/.claude/skills`, `~/.gemini/config/skills`).
 
@@ -94,7 +95,7 @@ Depois de conectado, basta pedir ao agente no chat:
 **Script Python incluído ([install_skills.py](install_skills.py)):**
 
 ```bash
-# Instalar todas as 90 skills no projeto atual (./.claude/skills)
+# Instalar todas as 91 skills no projeto atual (./.claude/skills)
 python install_skills.py --project .
 
 # Instalar globalmente no usuário (~/.claude/skills)
@@ -126,14 +127,14 @@ Implementado em [src/mcp-core.mjs](src/mcp-core.mjs) e exposto em [bin/mcp-serve
 
 | Superfície MCP | Identificadores | O que faz |
 |---|---|---|
-| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 90 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
+| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 91 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
 | **Tools — Instalação & Auditoria** | `install_skills`, `check_installed_skills` | Copia 1, várias ou todas (`["*"]`) as skills para `claude`, `antigravity`, `agents`, `codex`, `cursor` ou `target_dir`, verifica hashes SHA-256 em [MANIFEST.sha256](MANIFEST.sha256) e valida links/frontmatter. |
 | **Resources** | `skill://index.json`, `skill://{name}/{+path}` | Expõe o catálogo JSON completo e qualquer arquivo interno via URI `skill://`. |
-| **Prompts** | Todas as 90 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
+| **Prompts** | Todas as 91 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
 
 ---
 
-## Catálogo Completo (90 Skills)
+## Catálogo Completo (91 Skills)
 
 Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesquise pelo nome exato abaixo.
 
@@ -229,6 +230,7 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 | 88 | Cloud-Native, Resiliência, Evolução & IA | [`deep-web-research`](skills/deep-web-research/SKILL.md) | Pesquisa profunda na web em ondas, com orçamento por modo de profundidade, subagentes paralelos, registro de afirmações, validação de citações, níveis de confiança e contrato de ferramentas com *fallback* (Firecrawl → WebSearch/WebFetch → curl). |
 | 89 | Fundamentos de Engenharia & Segurança | [`playwright-qa-orchestrator`](skills/playwright-qa-orchestrator/SKILL.md) | Ciclo contínuo de QA com Playwright (descoberta, plano, implementação, execução direcionada, análise de falhas e recuperação controlada), com modos Plan/Test/Test & Fix, guardrails anti-batota e adaptadores por stack. |
 | 90 | Fundamentos de Engenharia & Segurança | [`clean-code-for-agents`](skills/clean-code-for-agents/SKILL.md) | Regras de escrita e autorrevisão de código para agentes (simplicidade, nomes, funções, comentários estritamente necessários, código morto), com registro canônico de regras e contramedidas aos vieses dos LLMs. |
+| 91 | Cloud-Native, Resiliência, Evolução & IA | [`skill-orchestrator`](skills/skill-orchestrator/SKILL.md) | **Pilar (com `model-effort-routing`):** governa arquivos de instrução (`CLAUDE.md`/`AGENTS.md`, regras estilo Karpathy), decide quais skills se aplicam e em que ordem (descoberta barata, processo antes de implementação) e separa o que é conselho do que exige *hooks*/permissões. |
 
 ---
 
@@ -239,7 +241,7 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 
 ```bash
-# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 90 skills
+# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 91 skills
 python check_skills.py skills
 
 # 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
@@ -267,7 +269,7 @@ Dev.-DBs-Skills/
 │   └── mcp-server.test.mjs # Testes automatizados do servidor MCP (node --test)
 ├── install_skills.py       # Instalador idempotente Python com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
-└── skills/                 # As 90 skills autocontidas
+└── skills/                 # As 91 skills autocontidas
     ├── actor-model-space-based-architecture/
     ├── adr-architecture/
     ├── agent-skills-context-engineering/
@@ -343,6 +345,7 @@ Dev.-DBs-Skills/
     ├── serverless-architecture/
     ├── setup-matt-pocock-skills/
     ├── single-responsibility-cohesion/
+    ├── skill-orchestrator/
     ├── soa-vs-microservices-architecture/
     ├── sql-server-diagnostics/
     ├── sqlite-diagnostics/
