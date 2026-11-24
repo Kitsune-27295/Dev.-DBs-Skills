@@ -35,7 +35,7 @@ Docs example for efficiency: `sum(pgsize-unused)*100.0/sum(pgsize)` per object; 
 - Overflow pages count toward the owning object: a table with large blobs shows many overflow pages, not many leaf pages.
 - High `unusedPct` on an index or table after heavy deletes suggests fragmentation; the docs show a sequential-page fraction query as a guide for when `VACUUM` is worth it.
 - Index names such as `sqlite_autoindex_<table>_N` are internal objects; the script labels names missing from `sqlite_schema` as `internal`.
-- Docs inconsistency: the page writes `'internal'` in the schema and `'interior'` in another table. Filter with `'internal'` as the docs example does, and confirm against output.
+- Docs inconsistency: the page writes `'internal'` in the schema and `'interior'` in another table. Filter with `'internal'` as the docs example does, and confirm against output (`SELECT DISTINCT pagetype FROM dbstat`); any script filtering on `pagetype` inherits this doubt.
 
 ## Cost and safety
 

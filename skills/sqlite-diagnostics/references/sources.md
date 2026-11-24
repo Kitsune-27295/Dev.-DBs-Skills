@@ -1,8 +1,12 @@
 # Sources — SQLite Diagnostics
 
-Every URL below was checked during skill authoring (2026-11-24).
+## Provenance
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below were used later, only to verify claims.
+
+Every URL below was checked as a verification source on 2026-11-24.
+
+| Verification source | Retrieved status | What it confirms |
 |---|---|---|
 | https://www.sqlite.org/pragma.html | 200 OK (page is ~100 KB; the last 492 characters, the `writable_schema` tail, were not read) | Table-valued `pragma_*` functions (3.16.0) and the no-side-effects rule; `integrity_check`/`quick_check` semantics; `foreign_key_check` columns; `foreign_keys` default OFF; `journal_mode`; `page_count`, `freelist_count`, `auto_vacuum`; `table_list` (3.37.0); which pragmas write (`optimize`, `wal_checkpoint`, `analysis_limit`, setters) |
 | https://www.sqlite.org/dbstat.html | 200 OK | Compile option `SQLITE_ENABLE_DBSTAT_VTAB`, eponymous table, columns, aggregate mode (3.31.0), pages it omits |
@@ -22,9 +26,9 @@ Every URL below was checked during skill authoring (2026-11-24).
 
 ## Claims and caveats
 
-- **Not confirmed by any page read:** the README statements that rowids can be renumbered by `VACUUM` for tables without a primary key, that `VACUUM INTO` on a `mode=ro` connection writes only the new file, and that `.backup` from `-readonly` is safe. `lang_vacuum.html` and the shell page were not fetched.
+- **Not confirmed by any page read:** the README statements that rowids can be renumbered by `VACUUM` for tables without a primary key, that `VACUUM INTO` on a `mode=ro` connection writes only the new file, and that `.backup` from `-readonly` is safe. `lang_vacuum.html` and `cli.html` were then fetched (resolved 2026-11-24: not confirmed, now marked as author notes). `lang_vacuum.html` confirms VACUUM may change rowids of tables without an explicit INTEGER PRIMARY KEY, and says VACUUM INTO leaves the original unchanged and, unlike VACUUM, is not a write operation on it; it says nothing about read-only connections or `mode=ro`. `cli.html` documents `-readonly` and `.backup ?DB? FILE` but not their combination.
 - **Author's own test evidence (README, not re-verified here):** all 19 scripts passed on SQLite 3.49.1 (Python build) and 3.53.4 (Alpine CLI); the Python build lacked `dbstat`. The official release notes neither confirm nor contradict that build detail.
 - **Differences 3.49 versus 3.53:** the official notes show no change to `integrity_check`, `quick_check`, `foreign_key_check`, `dbstat`, `table_list` or `optimize`. The README reports no behavior difference either, only the dbstat availability gap, which is a build option, not a version difference.
-- **Docs inconsistency:** `dbstat.html` lists `pagetype` as `'internal'` in the schema but `'interior'` in the aggregate-mode table.
+- **Docs inconsistency:** `dbstat.html` lists `pagetype` as `'internal'` in the schema and example but `'interior'` in the column-meaning table. The page does not say which value is returned (resolved 2026-11-24: noted in the dbstat reference; confirm with `SELECT DISTINCT pagetype FROM dbstat`).
 - **Page details missing:** `dbstat.html` says nothing about cost or WAL behavior, and `autoinc.html` gives no reset procedure; the cost statements in the reference files are the skill author's inference.
 - `foreign_key_list` output columns are only partly listed on `pragma.html`; the script uses `id`, `seq`, `from`, which the author tested but the page does not fully list.

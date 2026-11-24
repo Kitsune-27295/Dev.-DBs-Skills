@@ -5,7 +5,7 @@ description: Use to put database changes under version control and separate deve
 
 # Migrations and environments
 
-Two rules: every schema change is a numbered file in the repository, and a command run on a laptop can never reach production data. The lesson's cautionary case is an AI coding agent that deleted a production database (the SaaStr founder's account, reported by The Register; Replit's response was not verified). Shared database rules: `database-audit`.
+Two rules: every schema change is a numbered file in the repository, and a command run on a laptop can never reach production data. The lesson's cautionary case is an AI coding agent that deleted a production database (the SaaStr founder's account, reported by The Register; Replit had not commented in the article, so its side is unverified). Shared database rules: `database-audit`.
 
 ## Steps (report first)
 

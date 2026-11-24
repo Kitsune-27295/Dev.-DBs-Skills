@@ -26,7 +26,7 @@ Measure first, change one thing, measure again. An index that is never used stil
 - Production is never queried or altered by this skill; it hands over the statements.
 - Do not rewrite business logic to gain speed; ask first.
 - This skill does not create data; use a copy or generated rows, and say which.
-- The statistics in the lesson (a large drop in milliseconds on millions of orders) are the author's, not measured here.
+- The statistics in the lesson (a large drop in milliseconds on millions of orders) are the author's claims in the source video, not measured here.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the slow page").
 

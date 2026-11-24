@@ -18,6 +18,6 @@ Every source below was checked during skill authoring (2026-11-24).
 
 ## Discrepancies with SKILL.md (not edited)
 
-- `SKILL.md` quotes that finding and using the backups "failed completely" per the postmortem. The summary of the page read here confirms the substance (none worked reliably) but did not surface that exact phrase; it was not verified verbatim in this read.
+- `SKILL.md` quotes that finding and using the backups "failed completely" per the postmortem. The summary of the page read here confirms the substance (none worked reliably) but did not surface that exact phrase (resolved 2026-11-24: re-fetched the postmortem; it says "the process of both finding and using backups failed completely", so the `SKILL.md` quote stands; it also lists the empty S3 bucket, the pg_dump version mismatch with silent failure, and broken replication).
 - `SKILL.md` says "only a six-hour-old snapshot not meant for disaster recovery saved the data"; consistent with the pages (a manually taken LVM snapshot used for staging).
 - The 7 daily and 4 weekly retention rule is the handout's own recommendation, not from GitLab.

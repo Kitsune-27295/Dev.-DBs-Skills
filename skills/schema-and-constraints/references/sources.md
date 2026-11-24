@@ -11,12 +11,12 @@ Every source below was checked during skill authoring (2026-11-24).
 
 ## Claims and caveats
 
-- `0.1 + 0.2 = 0.30000000000000004` is floating-point behavior stated by the video and handout. The wiki page, as read, does not discuss `float`; it warns against `money`. The `float` rule is therefore the lesson's claim backed by general knowledge, not by that page.
+- `0.1 + 0.2 = 0.30000000000000004` is floating-point behavior stated by the video and handout. The wiki page, as read, does not discuss `float`; it warns against `money`. The `float` rule is therefore the lesson's claim backed by general knowledge, not by that page (resolved 2026-11-24: re-read the wiki, confirmed it has no float section; `SKILL.md` now labels the `float` rule as the skill's own guidance and no longer credits the wiki for it).
 - The video says to store dates in "timestamp Z", meaning `timestamptz`. The wiki confirms `timestamptz` for points in time and says `timestamp(0)` style rounding and `BETWEEN` on timestamps are traps.
 - Video example (Manaus order at 11 pm landing on the next day in a report) is illustrative, not from a source.
 
 ## Discrepancies with SKILL.md (not edited)
 
-- `SKILL.md` says the wiki allows plain `timestamp` only for abstract values that are never compared or computed. The summary of the wiki page read here lists plain `timestamp` as a don't for points in time and UTC values but did not surface that exception; treat that sentence as unconfirmed against this read.
+- (resolved 2026-11-24: re-read the wiki; its "When should you?" text allows plain `timestamp` for timestamps handled in an abstract way or just saved and retrieved, with no arithmetic. `SKILL.md` no longer says "never compared", which the page does not state; the page allows UTC values in it only when compatibility with non-timezone databases trumps all else.)
 - `SKILL.md` says `foreign key` and `check` can be added `NOT VALID` and validated later. That is standard PostgreSQL behavior but is not in the constraints page as summarized here; marked as not read from source.
 - The video presents the prompt as covering "not null, unique, check"; the handout prompt names foreign keys too. No conflict.

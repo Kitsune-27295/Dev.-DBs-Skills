@@ -34,7 +34,7 @@ Plan regression workflow in words: find a query whose average duration or CPU ro
 Defaults by version, from the Query Store page and What's New pages:
 - 2019: off by default for new databases.
 - 2022: on by default in read-write mode for new databases; upgraded or restored databases keep their previous setting.
-- 2025: also on by default for readable secondary replicas (feature page applies it to 2025; see Claims in sources.md for an inconsistency).
+- Readable secondary replicas: the Query Store page and What's New 2025 apply it to 2025; What's New 2022 also lists it. Uncertain; see Claims in sources.md.
 - Cannot be enabled on `master` or `tempdb`. Plans for DDL are not captured; natively compiled procedures need an explicit switch.
 
 ## 4. Query Store state can lie

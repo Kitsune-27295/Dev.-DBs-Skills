@@ -13,7 +13,7 @@ documents as free of side effects, so a diagnosis never changes the file. Cross-
 
 1. **Work on a copy.** Running against a live file is safe for the schema scripts, but the integrity and size scripts read every
    page and compete with the application for the lock. Make the copy from a read-only connection (`sqlite3 -readonly live.db
-   ".backup copy.db"`, or `VACUUM INTO 'copy.db'` on a connection opened as `file:live.db?mode=ro`, which writes only the new file;
+   ".backup copy.db"`, or `VACUUM INTO 'copy.db'` on a connection opened as `file:live.db?mode=ro`, which writes only the new file (author note, not verified against docs: neither sqlite.org page states read-only behavior; test it);
    never a plain file copy of a WAL database in use), diagnose the copy, and say that you did.
 2. **Check the engine first:** `identity/engine_identity.sql`. Below 3.16 nothing here runs; below 3.37 the five `table_list`
    scripts need rewriting; the minimum versions are in `references/README.md`.

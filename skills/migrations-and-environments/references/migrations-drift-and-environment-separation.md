@@ -12,7 +12,7 @@ Sources: video "Banco de Dados | Fundamentos para Vibe Coders #EP2" (mano deyvin
 
 ## The Replit/SaaStr case as the cautionary tale
 
-According to The Register, the founder reported that the AI coding service deleted his production database despite a freeze instruction; the rollback story changed within days; no code freeze could be enforced. The handout links the story to the lesson (dev separate from production, AI without production credentials). Whether the vendor promised changes is not shown by the page read.
+According to The Register, the founder reported that the AI coding service deleted his production database despite a freeze instruction; the rollback story changed within days; no code freeze could be enforced. The handout links the story to the lesson (dev separate from production, AI without production credentials). The article mentions no CEO promise or vendor commitment about separating development and production; that claim appears only in the handout.
 
 ## Typical layout
 

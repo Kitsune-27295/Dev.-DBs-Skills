@@ -17,5 +17,5 @@ No external web page is cited for this topic.
 
 ## Discrepancies with SKILL.md (not edited)
 
-- The handout prompt says external calls (email, payment gateway) stay outside the transaction; the video does not mention this at all. `SKILL.md` follows the handout. The advice to "commit first, then call" or record intent inside the transaction (an outbox-style pattern) is `SKILL.md`'s own addition, not from either source.
-- `SKILL.md` adds "keep reads that decide the outcome inside it"; neither source says this.
+- The handout prompt says external calls (email, payment gateway) stay outside the transaction; the video does not mention this at all. `SKILL.md` follows the handout. The advice to "commit first, then call" or record intent inside the transaction (an outbox-style pattern) is `SKILL.md`'s own addition, not from either source (resolved 2026-11-24: `SKILL.md` now labels these as the skill's own).
+- `SKILL.md` adds "keep reads that decide the outcome inside it"; neither source says this (also now labeled as the skill's own).

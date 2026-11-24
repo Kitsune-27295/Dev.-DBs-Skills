@@ -21,7 +21,7 @@ All of them exist on 2019. Earliest version where the page states one:
 | `sys.dm_os_sys_info.sql_memory_model_desc` | 2012 SP4 / 2016 SP1 | `memory/memory_model` |
 | `sys.dm_server_services.instant_file_initialization_enabled` | 2016 SP1 | `config/service_accounts` |
 | `sys.dm_db_log_info` | 2016 SP2 | `databases/vlf_counts` |
-| `DATABASEPROPERTYEX(..., 'LastGoodCheckDbTime')` | 2016 SP2 | `databases/database_inventory` |
+| `DATABASEPROPERTYEX(..., 'LastGoodCheckDbTime')` | 2016 SP2, 2017 CU9 | `databases/database_inventory` |
 | `sys.dm_exec_plan_attributes` | 2016 | `queries/top_queries_*` |
 | `sys.dm_server_memory_dumps` | 2008 R2 SP1 | `errorlog/memory_dumps` |
 | `sys.dm_hadr_database_replica_states.is_primary_replica` | 2014 | `databases/vlf_counts`, `ha/ha_status` |
@@ -60,8 +60,7 @@ require VIEW SERVER STATE permission"). A hardened least-privilege login is the 
 ## 4. Lifecycle
 
 Microsoft's lifecycle page lists SQL Server 2019 as: start 2019-11-04, mainstream support ended 2025-03-01, extended support
-ends 2030-01-09. The latest cumulative update shown there was CU32 (15.0.4430.1, 2025-02-27). Check the page before quoting
-dates in a client document.
+ends 2030-01-09. Check the page before quoting dates in a client document. (Author note, not verified against docs: CU32, 15.0.4430.1, 2025-02-27 was the latest CU when the port was written; the lifecycle page does not list it.)
 
 Sources: Microsoft Learn pages of each object, for example
 `https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql`,

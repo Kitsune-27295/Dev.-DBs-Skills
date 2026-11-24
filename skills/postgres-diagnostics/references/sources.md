@@ -1,10 +1,14 @@
 # Sources — PostgreSQL Diagnostics
 
-Every URL below was checked during skill authoring (2026-11-24).
+## Provenance
+
+This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below were used later, only to verify claims.
+
+Every URL below was checked as a verification source on 2026-11-24.
 
 Retrieval used WebFetch (Firecrawl had no credits). "200 OK" means the page returned content; the long monitoring pages were read in part (first 100,000 characters, plus a second window where noted), which is stated in the status.
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Verification source | Retrieved status | What it confirms |
 |---|---|---|
 | https://www.postgresql.org/docs/18/monitoring-stats.html | 200 OK (read to char ~100,000 of 117,838, two windows) | Statistics reset rules (clean shutdown keeps, crash/base backup/PITR resets), `stats_fetch_consistency`, 1-second flush lag, `wait_event_type` list, `pg_stat_activity`, `pg_stat_replication` lag columns, `pg_stat_database`, `pg_stat_checkpointer`, `pg_stat_io`, `pg_stat_wal`, table and index counters, `pg_stat_archiver`, `pg_stat_ssl` |
 | https://www.postgresql.org/docs/17/monitoring-stats.html | 200 OK (read to char 100,000 of 111,754) | `pg_stat_checkpointer` columns, 4-column `pg_stat_bgwriter`, `op_bytes` still in `pg_stat_io`, `wal_write`/`wal_sync` still in `pg_stat_wal` |
@@ -36,8 +40,8 @@ Confirmed against the docs:
 Not confirmed or worth correcting:
 - README says `pg_stat_io` came "in 16 and later": the 16 release notes confirm it.
 - The 18 `pg_stat_io` docs say WAL rows exist in 18 only; the README says to use `pg_stat_io` for WAL counters but does not mention it needs `track_wal_io_timing` for times (18 release notes).
-- 17 also removed `buffers_backend` and `buffers_backend_fsync` from `pg_stat_bgwriter` (release notes). The README difference table does not list this; the 17/18 scripts simply omit the column, and the 16 script reads `buffers_backend`. Not an error, but an omission.
-- 18 adds a fourth `invalidation_reason` value (`idle_timeout`); README says slots are "same as 17". Columns are the same, values differ.
+- 17 also removed `buffers_backend` and `buffers_backend_fsync` from `pg_stat_bgwriter` (release notes). (resolved 2026-11-24: the README difference table now lists it, confirmed on the 17.0 release notes.)
+- 18 adds a fourth `invalidation_reason` value (`idle_timeout`); README said slots are "same as 17". (resolved 2026-11-24: README now names `idle_timeout`, confirmed on the 18 `pg_replication_slots` page.)
 - The 18 `pg_stat_statements` page lists `shared_blk_read_time`; the wider 17 pg_stat_statements page was not read, so the "renamed in 17" claim rests on the 17.0 release notes only.
 - "PostgreSQL does not index the referencing side of a foreign key", "`pg_hba_file_rules` needs a superuser", and "`pg_monitor` alone sees no row for a sequence without USAGE/SELECT" were not read from a page in this session; treat them as unverified here.
 - Xid-age percentage is computed over 2,147,483,647; the docs describe about 2 billion usable XIDs, so the percentage is an approximation of headroom, not an exact distance.

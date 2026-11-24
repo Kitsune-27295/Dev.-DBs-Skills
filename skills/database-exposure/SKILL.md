@@ -25,7 +25,7 @@ A part that does not apply (no database reachable through an API, no VPS) is rep
 
 ## Evidence behind the lesson
 
-UpGuard's blog reported 16,326 Supabase databases exposing readable tables, found by probing about 300,000 candidate domains for a `users` table. Supabase's changelog entry 45329 (28 April 2026) says new tables in the `public` schema need an explicit `grant` before the Data API sees them, rolled out by project age; confirm the state of your own project instead of assuming it.
+UpGuard's blog (23 September 2026) reported 16,326 Supabase databases exposing readable tables, found by probing about 300,000 candidate domains for a `users` table. Supabase's changelog entry 45329 (28 April 2026) says new tables in the `public` schema need an explicit `grant` before the Data API sees them, rolled out by project age; confirm the state of your own project instead of assuming it.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the open door").
 

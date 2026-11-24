@@ -24,7 +24,7 @@ A transaction makes several writes behave as one: either every write lands or no
 - Tests run against a real test database that is not production; see `integration-tests`.
 - Show the list from step 1 before editing anything.
 
-Source: the handout of the second database lesson of mano deyvin (prompt "the half-saved order").
+Source: the handout of the second database lesson of mano deyvin (prompt "the half-saved order"). The external-call rule is from the handout; the commit-then-call and record-intent patterns and "keep reads inside" are this skill's own practice, not from a source.
 
 ## Deep references
 

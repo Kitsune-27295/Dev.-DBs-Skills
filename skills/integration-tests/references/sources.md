@@ -11,9 +11,9 @@ Every source below was checked during skill authoring (2026-11-24).
 
 ## Claims and caveats
 
-- The video says Kent Beck is "the creator of BDD" and says he warned that AI agents bypass or delete tests. Kent Beck is generally associated with TDD and Extreme Programming; BDD is usually credited to Dan North. Treat the attribution as the video's claim; SKILL.md does not repeat it. The warning itself is the speaker's observation from experience.
+- The video says Kent Beck is "the creator of BDD" and says he warned that AI agents bypass or delete tests. Kent Beck is generally associated with TDD and Extreme Programming; BDD is usually credited to Dan North. Treat the attribution as the video's claim; SKILL.md does not repeat it. (resolved 2026-11-24: confirmed absent from the body; no change needed) The warning itself is the speaker's observation from experience.
 - The video says the end-to-end option is exemplified by Cypress; the handout names Playwright. SKILL.md names both; fine.
 - The video's "run `npm run dev`" for running tests appears to be a slip in the transcript (elsewhere it says `npm test`); SKILL.md uses "the single command that runs all tests". Not a conflict.
-- The Vitest page, as fetched, uses `test` and `expect` in its example and does not document `describe`/`it`, concurrency (`test.concurrent`) or integration testing. SKILL.md's example uses `describe`/`it` and `Promise.all`; the handout calls it illustrative. This is a documented-elsewhere API, not confirmed by that page.
+- The Vitest page, as fetched, uses `test` and `expect` in its example and does not document `describe`/`it`, concurrency (`test.concurrent`) or integration testing. SKILL.md's example uses `describe`/`it` and `Promise.all`; the handout calls it illustrative. This is a documented-elsewhere API, not confirmed by that page. (resolved 2026-11-24: SKILL.md now labels the example as illustrative and runner-agnostic rather than as Vitest documentation)
 - The Playwright home page does not mention API-level (request) testing; SKILL.md only recommends Playwright for an optional smoke test, which is consistent.
 - The video's claim that integration tests are "the only test needed" is opinion; `testing-pyramid-and-shapes` in this repository offers the broader view.

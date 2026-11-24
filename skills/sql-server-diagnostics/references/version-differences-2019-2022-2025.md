@@ -12,7 +12,7 @@ This file does not repeat the per-folder script changes: see [sql2019-porting.md
 | `dm_db_log_info` needs `VIEW DATABASE PERFORMANCE STATE` on 2022+ | Confirmed. |
 | VLF formula changed slightly in 2022 | Confirmed; What's New 2022 gives the rule (one VLF for growth of at most 64 MB and above 1/8 of the log, was four). |
 | `backupset.compression_algorithm` is 2022-only | Confirmed ("Introduced in SQL Server 2022"); `last_valid_restore_time` is also 2022. |
-| `LastGoodCheckDbTime` since 2016 SP2 | Partly: the page says 2016 SP2, 2017 CU9, 2019 and later. For 2019 nothing changes. |
+| `LastGoodCheckDbTime` since 2016 SP2, 2017 CU9 | Confirmed (re-verified 2026-11-24). |
 | `dm_db_log_info` since 2016 SP2 | Confirmed. |
 | 2019 Query Store off by default, 2022 on for new databases | Confirmed on the Query Store page. |
 | 2025 XACT lock waits appear in wait stats | Confirmed on the wait stats page (optimized locking). |

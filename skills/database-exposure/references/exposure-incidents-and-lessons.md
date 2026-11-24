@@ -4,7 +4,7 @@ Sources: UpGuard https://www.upguard.com/blog/everything-everywhere-systemic-dat
 
 ## 1. UpGuard: systemic exposure (as reported)
 
-UpGuard gathered about 300,000 domains showing signs of Supabase and queried each for a `users` table. 16,326 databases exposed readable tables. Shares of those databases: any personal information 55.8%, emails 38.8%, phone numbers 25.8%, payment indicators 12.1% (mostly reference IDs and billing metadata, not card data), passwords or PINs 8.2%. Causes: RLS disabled or absent, policies that did not restrict, public keys treated as secrets, and tables created through the API (as AI coding agents do) not having RLS enabled by default, unlike tables created in the dashboard editor. The article lists its own limits and notes the vendor sells breach-risk products. Takeaway: defaults and agent-made tables are a repeated cause.
+UpGuard (post dated 23 September 2026) gathered about 300,000 domains showing signs of Supabase and queried each for a `users` table. 16,326 databases exposed readable tables. Shares of those databases: any personal information 55.8%, emails 38.8%, phone numbers 25.8%, payment indicators 12.1% (mostly reference IDs and billing metadata, not card data), passwords or PINs 8.2%. Causes: RLS disabled or absent, policies that did not restrict, public keys treated as secrets, and tables created through the API (as AI coding agents do) not having RLS enabled by default, unlike tables created in the dashboard editor. The article lists its own limits and notes the vendor sells breach-risk products. Takeaway: defaults and agent-made tables are a repeated cause.
 
 ## 2. Moltbook (Wiz, February 2026)
 
@@ -12,7 +12,7 @@ A social network for AI agents had a Supabase key in its public JavaScript and n
 
 ## 3. FIESP (Tecnoblog, 2018)
 
-Three Elasticsearch servers were reachable from the internet without login, exposing registration data such as names, ID and tax numbers, addresses, emails and phones. The headline says 180 million records, but the body counts about 52 million across three databases; the article does not reconcile this. A researcher found it; takeaway: a database port open to the internet with no authentication, which is the first check in the audit (it is not an RLS problem). The article notes the LGPD was not yet in force then.
+Three Elasticsearch servers were reachable from the internet without login, exposing registration data such as names, ID and tax numbers, addresses, emails and phones. The headline and lede say 180 million personal records, but the three per-database figures in the body (34,817,273 + 6,986,604 + 10,558,155) add up to 52,362,032, and the article does not reconcile the gap; the 52 million is what the page itemizes. A researcher found it; takeaway: a database port open to the internet with no authentication, which is the first check in the audit (it is not an RLS problem). The article notes the LGPD was not yet in force then.
 
 ## Pattern across the three
 

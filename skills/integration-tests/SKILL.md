@@ -21,7 +21,7 @@ Without them an agent changes one place, breaks another far away, and the custom
 2. **Write behavior sentences** in `describe` / `it` form ("when ..., then ...") for each flow, covering: the happy path; expected errors (payment declined, invalid field, no permission); repetition (double click, duplicate webhook, two requests at once); limits (zero stock, expired plan, zero or negative amount); improper access (user A reading or changing user B's data). [five groups per flow]
 3. **Stop and show the sentences.** The human is the source of truth for expected behavior: they read, correct and approve. You write the sentences; they do not have to write code, only agree with the `it` line. [explicit approval]
 4. **Set up the environment** with the project's existing tool; if none exists, suggest the simplest for the stack and wait for approval. The test database is **separate**: local container, local backend-as-a-service, or a dedicated test project, with the same engine as production. [config points at no production data]
-5. **Write the tests against the routes** (API routes, server actions, edge functions). Mock only external services; the database, business rules and policies run for real. Fire concurrent cases at the same instant (`Promise.all` or equivalent). Example shape:
+5. **Write the tests against the routes** (API routes, server actions, edge functions). Mock only external services; the database, business rules and policies run for real. Fire concurrent cases at the same instant (`Promise.all` or equivalent). Illustrative shape (Vitest-style `describe`/`it`; adapt to your runner):
 
    ```ts
    describe('payment webhook', () => {

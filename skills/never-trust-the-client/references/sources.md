@@ -10,8 +10,8 @@ Every source below was checked during skill authoring (2026-11-24).
 ## Claims and caveats
 
 - Statistic: the video says "170 of 1,645" low-code apps had broken row-level security; the handout attributes it to a named researcher analyzing apps built on one low-code platform, looking only at the landing page. Both are the author's citations; the underlying study was not opened. SKILL.md does not repeat the figure.
-- The video claims bots scan for leaked LLM keys and that a black market resells them; plausible but stated without a source. SKILL.md repeats it as fact ("bots hunt because leaked paid keys are resold"); flagged here, not edited.
+- The video claims bots scan for leaked LLM keys and that a black market resells them; plausible but stated without a source. SKILL.md repeats it as fact ("bots hunt because leaked paid keys are resold"); flagged here. (resolved 2026-11-24: SKILL.md now words it as "reportedly" and "can be resold")
 - The video says an unauthenticated call to the filtered query "returns 500"; the handout does not. SKILL.md says "fails with an error"; consistent in substance.
-- Items in SKILL.md not found in the video or handout: step 4's IDOR check on every by-id access and rate limits against id enumeration, and step 5 (input validation, output escaping, upload checks). They are the skill author's additions (the video covers the list-by-owner part only); they are common practice but not sourced here.
+- Items in SKILL.md not found in the video or handout: step 4's IDOR check on every by-id access and rate limits against id enumeration, and step 5 (input validation, output escaping, upload checks). They are the skill author's additions (the video covers the list-by-owner part only); they are common practice but not sourced here. (left as is: SKILL.md never presents them as the video's; they stay marked here as the skill's own guidance)
 - The video's remark that AI models may skip server recomputation unless told is the speaker's observation.
 - No external pages are cited for this topic.

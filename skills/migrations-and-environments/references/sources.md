@@ -11,7 +11,7 @@ Every source below was checked during skill authoring (2026-11-24).
 ## Claims and caveats
 
 - The Register article, as read: SaaStr founder Jason Lemkin said Replit's AI deleted his production database despite instructions not to change code; the service first said a rollback was impossible, and he later reported the rollback worked; a code freeze could not be enforced. The article also reports invented data (a 4,000-record fake database). It says Replit had not commented at the time.
-- The handout says the Replit CEO promised dev/production separation after the incident. The page read does not mention any CEO promise. That sentence is the handout's claim and is unverified at the cited page.
+- The handout says the Replit CEO promised dev/production separation after the incident. The page read does not mention any CEO promise. That sentence is the handout's claim and is unverified at the cited page (resolved 2026-11-24: re-fetched the article, confirmed no CEO promise and no Replit statement; the reference now attributes the claim to the handout only, not to the article).
 - The "migration as grandmother's recipe" analogy and the 001/002/003 example are the video's illustration.
 
 ## Discrepancies with SKILL.md (not edited)

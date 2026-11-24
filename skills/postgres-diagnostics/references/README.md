@@ -60,7 +60,9 @@ Scripts marked `db` describe the database you are connected to; run them in each
 | `queries/top_queries_reads.sql` | `blk_read_time` | renamed `shared_blk_read_time` | same as 17 |
 | `io/io_overview.sql` | bytes = reads x `op_bytes` | same as 16 | `read_bytes` and `write_bytes` columns, `op_bytes` gone |
 | `wal/wal_stats.sql` | write and sync counters and times in `pg_stat_wal` | same as 16 | those columns are gone: use `pg_stat_io` |
-| `replication/replication_slots.sql` | `conflicting` | adds `inactive_since`, `invalidation_reason` | same as 17 |
+| `replication/replication_slots.sql` | `conflicting` | adds `inactive_since`, `invalidation_reason` | same columns; `invalidation_reason` adds `idle_timeout` (`idle_replication_slot_timeout`) |
+
+The 16 `pg_stat_bgwriter` also has `buffers_backend` and `buffers_backend_fsync`; 17 removed both (see `pg_stat_io`), so the 17 and 18 scripts omit them.
 
 Every other file is identical across the three folders apart from the first comment line. After any edit run
 `python scripts/check_versions.py references pg references/README.md` from the skill folder: it fails when a file differs between versions and

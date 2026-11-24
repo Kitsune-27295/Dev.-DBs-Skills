@@ -46,7 +46,7 @@ These do not need a script edit but change how to read the results or what to ch
 | Compatibility level | 170 is the 2025 default; it changes plans for optional parameters and the cardinality estimator | `databases/database_inventory.sql` (`compatibilityLevel`) |
 | Optimized locking | new XACT lock waits (`LCK_M_S_XACT_READ`, `LCK_M_S_XACT_MODIFY`, `LCK_M_S_XACT`) can appear in `sys.dm_os_wait_stats`; they are real waits, so `waits/wait_stats.sql` leaves them in | `waits/wait_stats.sql` |
 | Tempdb governance | Resource Governor can cap tempdb use per workload group | `tempdb/tempdb_files.sql` shows files only; no limit check was added |
-| Query Store | on by default for readable secondary replicas | the pack does not read Query Store |
+| Query Store | readable secondary replicas: Query Store page and What's New 2025 say 2025, What's New 2022 also lists it; uncertain | the pack does not read Query Store |
 | Backup | ZSTD compression is available (`ALGORITHM = ZSTD`); `backup compression algorithm` accepts 3 | `backup/*`; whether `backupset` records ZSTD is not verified |
 | Windows hosts | Windows Server 2025 is supported; Linux adds Ubuntu 24.04 and Red Hat 10 | `identity/server_identity.sql` parses `@@VERSION`: read `hostDistribution` once |
 | Removed products | Data Quality Services, Master Data Services and Synapse Link are discontinued | not read by the pack |

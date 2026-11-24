@@ -16,6 +16,6 @@ Every source below was checked during skill authoring (2026-11-24).
 
 ## Discrepancies with SKILL.md (not edited)
 
-- `SKILL.md` says to create the index with `CREATE INDEX CONCURRENTLY` and notes it cannot run in a transaction block; the handout only says to use it for large production tables and warn first. The extra detail is general PostgreSQL knowledge not read on this page (marked as not read from source here).
+- `SKILL.md` says to create the index with `CREATE INDEX CONCURRENTLY` and notes it cannot run in a transaction block; the handout only says to use it for large production tables and warn first. (resolved 2026-11-24: the CREATE INDEX page confirms `CONCURRENTLY` cannot run in a transaction block and a failed run leaves an invalid index to drop and retry, so the `SKILL.md` attribution to the PostgreSQL documentation holds.)
 - `SKILL.md` adds `NOT IN` to `NOT EXISTS` and expression indexes for wrapped columns; the PostgreSQL wiki (see `schema-and-constraints`) supports `NOT EXISTS`, the rest is general knowledge.
 - The video mentions "function on a column" and "offset" checks; the handout adds `count` vs `EXISTS`. `SKILL.md` includes all.

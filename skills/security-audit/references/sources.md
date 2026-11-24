@@ -27,9 +27,9 @@ Every source below was checked during skill authoring (2026-11-24).
 - **Video figures are the video's claims, not verified here:** "83% of leaks" in Supabase projects, a CVE touching 170+ apps, "24 million secrets leaked in 2024", and the 45% figure. Only the 45% was cross-checked: the vendor page says risky flaws appeared in 45% of tests for AI-generated code and does not mention XSS, so the video's phrasing (a flaw of this specific kind) is looser than the source.
 - **Row-isolation "off by default":** the official docs say it must be enabled per table and that enabled-without-policy denies access. The slogan is a simplification.
 - **OWASP IDOR ranking:** the video says it is number one in the OWASP API list; confirmed as API1:2023 (BOLA). The general web list ranks broken access control first in 2021.
-- **Discrepancies vs SKILL.md (body not edited):**
-  1. Tools table lists OWASP ZAP without a maintainer note; the current ZAP docs credit Checkmarx, while the video says a non-profit foundation. Harmless for the audit, but do not repeat the foundation claim.
-  2. Gitleaks row has no command; real docs use `gitleaks git` for history, and note feature-complete status with a successor project.
-  3. SKILL.md does not mention that views can bypass row security, that the table owner bypasses it unless forced, or that an enabled table with no policy denies; these are covered in the tenant-isolation reference.
-  4. SKILL.md says IDs "sequential make it trivial"; OWASP adds that random ids are only defence in depth and never replace the ownership check.
-  5. SKILL.md's wording "an image hiding a script stole an admin session" is the presenter's second-hand case, not a verified incident.
+- **Discrepancies vs SKILL.md:**
+  1. Tools table lists OWASP ZAP without a maintainer note; the current ZAP docs credit Checkmarx, while the video says a non-profit foundation. Harmless for the audit, but do not repeat the foundation claim. (resolved 2026-11-24: SKILL.md never made the foundation claim or cited the 45%/83%/170/24 million figures; no change needed)
+  2. Gitleaks row has no command; real docs use `gitleaks git` for history, and note feature-complete status with a successor project. (resolved 2026-11-24: SKILL.md table now names `gitleaks git`, with `detect` only for older versions)
+  3. SKILL.md does not mention that views can bypass row security, that the table owner bypasses it unless forced, or that an enabled table with no policy denies; these are covered in the tenant-isolation reference. (resolved 2026-11-24: the isolation class now states all three)
+  4. SKILL.md says IDs "sequential make it trivial"; OWASP adds that random ids are only defence in depth and never replace the ownership check. (resolved 2026-11-24: IDOR class now says random ids are defense in depth)
+  5. SKILL.md's wording "an image hiding a script stole an admin session" is the presenter's second-hand case, not a verified incident. (resolved 2026-11-24: SKILL.md now attributes it to the source video)

@@ -45,4 +45,5 @@ References (read only the one you need):
 - [Top queries and Query Store](references/query-store-and-plan-regression.md) — read when cached top queries are not enough or plans regress.
 - [Backup, log and CHECKDB evidence](references/backup-log-and-recovery-health.md) — read when judging backup history, VLF counts or last CHECKDB.
 - [Version differences 2019, 2022, 2025](references/version-differences-2019-2022-2025.md) — read to cross-check the porting guides and lifecycle dates.
+- Caveat: `backup_status.sql` does not filter `is_copy_only`, so a copy-only full can show as the last full; check `is_copy_only` before reporting restore points.
 - [Sources](references/sources.md) — read for URL status and unconfirmed claims.

@@ -1,12 +1,16 @@
 # Sources — SQL Server Diagnostics
 
-Every URL below was checked during skill authoring (2026-11-24).
+## Provenance
+
+This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below were used later, only to verify claims.
+
+Every URL below was checked as a verification source on 2026-11-24.
 
 Retrieved with WebFetch (Firecrawl had no credits). "200 OK" means the page content was returned. Learn serves some DMV pages from `system-dynamic-management-objects/` while older links use `system-dynamic-management-views/`; both resolved to the same page. The "ver17" rendering was read, and it carries per-version "Applies to" and permission notes for 2019 and 2022.
 
 All paths below start with `https://learn.microsoft.com/en-us/sql/` unless a full URL is given.
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Verification source | Retrieved status | What it confirms |
 |---|---|---|
 | **Waits, I/O, memory counters** | | |
 | `relational-databases/system-dynamic-management-views/sys-dm-os-wait-stats-transact-sql?view=sql-server-ver17` | 200 OK; first 100000 of 156344 characters read (later wait-type entries not read) | Columns, reset by restart or `DBCC SQLPERF CLEAR`, signal wait, CXPACKET split in 2022, optimized-locking and 2025 hash waits; permissions by version |
@@ -37,12 +41,12 @@ Pages named in the porting guides (breaking changes 2025, deprecated features 20
 
 ## Claims and caveats
 
-- **CU32 on the lifecycle page.** `sql2019-porting.md` says the latest cumulative update shown was CU32 (15.0.4430.1). The 2019 lifecycle page read on 2026-11-24 lists no update. Unconfirmed; do not quote it.
-- **`LastGoodCheckDbTime` start version.** The porting file says 2016 SP2; the page says 2016 SP2, 2017 CU9, 2019 and later. No effect on 2019, 2022 or 2025.
-- **Query Store on secondary replicas.** What's New 2022 lists "Query Store on secondary replicas" in its 2022 table, while the Query Store page and What's New 2025 apply it to 2025 ("now on by default" in 2025). The Query Store page is treated as authoritative; the discrepancy is in Microsoft's pages.
+- **CU32 on the lifecycle page.** `sql2019-porting.md` says the latest cumulative update shown was CU32 (15.0.4430.1). The 2019 lifecycle page read on 2026-11-24 lists no update. Unconfirmed; do not quote it. (resolved 2026-11-24: the CU claim is now an author note in `sql2019-porting.md`.)
+- **`LastGoodCheckDbTime` start version.** The porting file says 2016 SP2; the page says 2016 SP2, 2017 CU9, 2019 and later. No effect on 2019, 2022 or 2025. (resolved 2026-11-24: re-verified on the DATABASEPROPERTYEX page; `sql2019-porting.md` now says 2016 SP2 and 2017 CU9.)
+- **Query Store on secondary replicas.** What's New 2022 lists "Query Store on secondary replicas" in its 2022 table, while the Query Store page and What's New 2025 apply it to 2025 ("now on by default" in 2025). Status is uncertain: the Query Store page and What's New 2025 list it for 2025, What's New 2022 for 2022; no script here reads Query Store. (resolved 2026-11-24: porting and reference files now state the page-by-page status instead of a firm claim.)
 - **Missing-index cap.** Both the tuning page and the group-stats page say 600; some older community material says 500. The pages win.
 - **Missing-index rank formula.** The script divides the impact percentage by 100; the Microsoft example does not. Only the scale differs, not the order.
-- **`backup_status.sql` and copy-only fulls.** The script does not filter `is_copy_only`, so a copy-only full can count as "last full". Observed in the script text (author's reading), not a documentation claim.
+- **`backup_status.sql` and copy-only fulls.** The script does not filter `is_copy_only`, so a copy-only full can count as "last full". Observed in the script text (author's reading), not a documentation claim. (resolved 2026-11-24: caveat documented in `SKILL.md`; script unchanged.)
 - **ZSTD in `backupset`.** The fetched `backupset` page (latest revision 2024) lists compatibility levels up to 160 and does not say ZSTD is recorded. Unconfirmed, as the porting file already states.
 - **Compatibility level 170.** Not on any page fetched here; kept as in `sql2025-porting.md`.
 - **`xml_deadlock_report` event name.** The `system_health` page says deadlocks and the deadlock graph are collected but does not name the event. Unconfirmed on the page, on every version.
