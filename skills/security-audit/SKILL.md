@@ -52,3 +52,11 @@ Tool output feeds the audit; it does not replace the five-class review.
 - Every user input is validated and sanitized before becoming HTML.
 - If a database is exposed through an API: security policies on in every table, service key never in the front end.
 - Findings became issues (hardening) or a private advisory (exploitable).
+
+## Deep references
+
+- [Sources](references/sources.md) — origin of the five-class list, source status and caveats.
+- [Five classes: attack and detection patterns](references/five-classes-attack-and-detection-patterns.md) — how each class shows up in generated code, how to verify it, false positives.
+- [Tenant isolation and RLS checks](references/tenant-isolation-and-rls-checks.md) — read when auditing row-level security or tenant filters.
+- [Secrets in git history and rotation](references/secrets-in-git-history-and-rotation.md) — read when scanning history and triaging leaked keys.
+- [XSS and output encoding checks](references/xss-and-output-encoding-checks.md) — read when tracing sinks, uploads and admin HTML fields.

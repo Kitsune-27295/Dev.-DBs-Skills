@@ -37,3 +37,12 @@ References (read only the one you need):
 - `references/sql2022/README.md`: the index of the 30 scripts and how to read results.
 - `references/sql2019-porting.md`: what changes on 2019 (permissions, defaults, lifecycle).
 - `references/sql2025-porting.md`: what changes on 2025 (breaking changes, new objects, defaults).
+
+## Deep references
+
+- [Wait stats, I/O and blocking](references/wait-stats-and-blocking-interpretation.md) — read when interpreting waits, latency, counters or deadlock evidence.
+- [Index DMVs and reset rules](references/index-dmvs-and-reset-semantics.md) — read before reporting missing or unused indexes.
+- [Top queries and Query Store](references/query-store-and-plan-regression.md) — read when cached top queries are not enough or plans regress.
+- [Backup, log and CHECKDB evidence](references/backup-log-and-recovery-health.md) — read when judging backup history, VLF counts or last CHECKDB.
+- [Version differences 2019, 2022, 2025](references/version-differences-2019-2022-2025.md) — read to cross-check the porting guides and lifecycle dates.
+- [Sources](references/sources.md) — read for URL status and unconfirmed claims.

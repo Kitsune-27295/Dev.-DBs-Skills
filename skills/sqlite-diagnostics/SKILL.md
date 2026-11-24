@@ -37,3 +37,10 @@ documents as free of side effects, so a diagnosis never changes the file. Cross-
 - To change a script, test it on a seeded and on an empty database and update the README row in the same change.
 
 References: `references/README.md` (index, minimum versions, how this was proven).
+
+## Deep references
+
+- [Integrity and foreign key pragmas](references/integrity-and-foreign-key-pragmas.md) — read when interpreting quick_check, integrity_check or foreign_key_check output.
+- [dbstat and space analysis](references/dbstat-and-space-analysis.md) — read when dbstat is missing or file size and free pages need explaining.
+- [WAL, journal mode, statistics and counters](references/wal-journal-and-connection-health.md) — read for locked databases, WAL copies, sqlite_stat1 or AUTOINCREMENT.
+- [Version differences, 3.49 to 3.53](references/version-differences-3-49-to-3-53.md) — read before claiming a version-specific behavior.

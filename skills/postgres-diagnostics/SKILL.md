@@ -35,3 +35,12 @@ Postgres tool box under it, and `query-performance` is the generic method behind
 - To change a script, edit every version folder it exists in and run `python scripts/check_versions.py references pg references/README.md` from the skill folder in the same change.
 
 References: `references/README.md` (index of the scripts, differences between versions, how this was proven).
+
+## Deep references
+
+- [Statistics views and reset semantics](references/stats-views-and-reset-semantics.md) — read before trusting any counter-based finding (unused index, scans, statements).
+- [Vacuum, bloat and wraparound concepts](references/vacuum-bloat-and-wraparound-concepts.md) — read when dead rows, autovacuum lag or transaction-ID age appears.
+- [Locks and activity interpretation](references/locks-and-activity-interpretation.md) — read for blocking, idle-in-transaction, replication lag and slot results.
+- [Index health queries explained](references/index-health-queries-explained.md) — read before proposing to drop, rebuild or add an index.
+- [Version differences 16, 17 and 18](references/version-differences-16-17-18.md) — read when a script fails or the server is not on the tested version.
+- [Sources](references/sources.md) — URLs checked and claims not confirmed.
