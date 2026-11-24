@@ -17,7 +17,7 @@ Every source below was checked during skill authoring (2026-11-24).
 - The video says the cause was a scraper in a loop; the article says infinite recursion from pages linking to each other, high Cloud Run defaults (1,000 max instances, concurrency 80) and background services left running. Also an article note: billing data and the Firebase dashboard lagged by about a day.
 - Verified at the Firebase page: "Budget alerts do not pause services"; spend caps exist only for Firebase AI Logic, App Hosting, Cloud Functions for Firebase and Extensions; Firestore and Realtime Database are not on that list; Firestore usage is calculated daily.
 - Verified at the pricing page: offset skipped documents are billed; per-document reads for listener updates; 30-minute disconnect rule; free daily quota. The video's "listener listens to the whole collection" is an oversimplification: you are billed per document added or updated in the result set.
-- The video's "same thing happened at AWS" is unsourced.
+- The video's "same thing happened at AWS" is unsourced (resolved 2026-11-24: it appears in no SKILL.md or reference file of this pack; it stays an unverified anecdote of the video and is not cited as fact).
 
 ## Discrepancies with SKILL.md (not edited)
 

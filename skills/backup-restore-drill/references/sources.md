@@ -12,7 +12,7 @@ Every source below was checked during skill authoring (2026-11-24).
 ## Claims and caveats
 
 - Verified: about 300 GB deleted on the primary by mistake, about 18 hours of downtime, roughly six hours of database changes lost, five backup and replication mechanisms none working reliably; the S3 bucket was empty; `pg_dump` ran as 9.2 against a 9.6 server; failure emails were rejected (DMARC); Azure snapshots covered NFS but not database servers; LVM snapshot existed only because of a manual copy about six hours earlier.
-- The two pages differ slightly on the loss window (postmortem: loss window starting 17:20 UTC, with 23:30 given as the end in one place and 00:00 in another; incident report: 5:20 pm to 11:25 pm) and on the cause of the load. I did not reconcile them.
+- Loss window (resolved 2026-11-24: reconciled by re-reading both pages): both start at 17:20 UTC on 31 January 2017. The incident report (written during the incident) gives 5:20 pm to 11:25 pm UTC and says the removal was terminated at 11:27 pm UTC; the postmortem's data-loss section gives 17:20 to 23:30 UTC and its summary paragraph rounds the end to 00:00 UTC. Treat the window as about six hours, ending around 23:25-23:30 UTC. The two pages also tell the cause of the load differently; this skill does not depend on that.
 - Verified counts of loss from the postmortem: at least 5,000 projects, 5,000 comments and roughly 700 user accounts; repositories and wikis were stored separately and not lost.
 - The video's "lost 300 GB" refers to the data directory removed on the primary; the data actually unrecoverable was about six hours.
 
