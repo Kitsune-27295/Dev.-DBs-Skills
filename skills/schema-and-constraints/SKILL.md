@@ -30,3 +30,4 @@ Source: the handout of the second database lesson of mano deyvin (prompt "the sc
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
 - [PostgreSQL column-type pitfalls](references/postgres-column-type-pitfalls.md) — when you review money, time, text or id column types
 - [Constraint types and indexes](references/constraint-types-and-indexes.md) — when you choose constraints, foreign key actions, or must know which constraints create an index
+- [Keys, identifiers and partitioning](references/keys-identifiers-and-partitioning.md) — when you choose primary keys, review quoted names or consider partitioning

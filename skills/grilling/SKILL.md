@@ -29,4 +29,11 @@ Finding _facts_ is your job, never the user's. When a frontier question needs a 
 
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
 
+Variants: with docs (keep a glossary and ADRs while grilling; see `domain-modeling`, `adr-architecture`): [references/docs-variant.md](references/docs-variant.md). Before asking anything about identity or meaning, run the search chain first and ask with a hypothesis: [references/resolve-before-asking.md](references/resolve-before-asking.md).
+
+## Deep references
+
+- [Docs variant](references/docs-variant.md) — read when the user wants decisions and terms written down as they settle.
+- [Resolve before asking](references/resolve-before-asking.md) — read before asking the user who or what something is.
+
 > Sources & MIT attribution: [references/sources.md](references/sources.md).

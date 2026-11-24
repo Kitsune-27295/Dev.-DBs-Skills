@@ -17,3 +17,8 @@ All 11 references below were retrieved and verified on 2026-11-22.
 | [mermaid-js/mermaid-cli (`mmdc`)](https://github.com/mermaid-js/mermaid-cli) | 200 OK | CLI validation & export flags (`-i`, `-o`, `-t dark -b transparent`, stdin `-`, markdown transformation, `--iconPacks`). |
 
 Method and semantic-preservation checklist originally adapted from the official Mermaid Chart VS Code extension (MIT); account-bound features omitted.
+
+## Added 2026-11-24
+
+- The gate (order, exchange, lifecycle, relations, decision; more than about eight lines of prose; a diagram is never the only carrier of a fact) and the type-per-need table were adapted, method only and rewritten, from an internal documentation workflow of an internal project (added 2026-11-24). No text, names or product examples were reused.
+- Section 4 of `SKILL.md` (syntax cheatsheet) was moved unchanged to `references/syntax-cheatsheet-per-type.md` to keep `SKILL.md` within its size budget (added 2026-11-24).

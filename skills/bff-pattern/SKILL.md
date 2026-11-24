@@ -58,3 +58,4 @@ One idea: instead of forcing every client (desktop web, mobile iOS/Android, smar
 
 - [Newman: ownership, count, aggregation](references/newman-bff-ownership-and-aggregation.md) — read when deciding how many BFFs, who owns them, and how to aggregate
 - [Azure and microservices.io trade-offs](references/azure-and-microservices-io-considerations.md) — read when weighing BFF vs gateway vs GraphQL and cross-cutting concerns
+- [Route handler narrowing example](references/route-handler-narrowing-example.md) — read when writing a BFF route that validates input and narrows a backend response to one screen

@@ -26,6 +26,7 @@ Measure first, change one thing, measure again. An index that is never used stil
 - Production is never queried or altered by this skill; it hands over the statements.
 - Do not rewrite business logic to gain speed; ask first.
 - This skill does not create data; use a copy or generated rows, and say which.
+- Slow screen with no obvious query: classify one slow thing versus many fast things first (triage order below in the references); keyset paging, index design, RLS cost, N+1 and upserts have their own references.
 - The statistics in the lesson (a large drop in milliseconds on millions of orders) are the author's claims in the source video, not measured here.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the slow page").
@@ -35,3 +36,7 @@ Source: the handout of the second database lesson of mano deyvin (prompt "the sl
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
 - [The missing foreign key index](references/missing-foreign-key-index.md) — when a join or lookup on a foreign key is slow or you audit foreign keys
 - [Query rewrites and reading the plan](references/query-rewrites-and-explain-reading.md) — when you read EXPLAIN ANALYZE or rewrite a slow query pattern
+- [PostgreSQL coverage gap table](references/postgres-coverage-gap-table.md) — when you need to know which skill owns a Postgres topic (locks, pooling, upserts, RLS, partitioning) and what was added
+- [Pagination and index design](references/pagination-and-index-design.md) — when replacing offset paging or choosing composite, partial, covering or expression indexes
+- [RLS speed, N+1, bulk loading and upserts](references/rls-bulk-writes-and-upserts.md) — when a policy-protected table is slow, you hunt N+1, import data or write insert-or-update
+- [End-to-end triage order](references/end-to-end-triage-order.md) — when a screen is slow and you do not yet know the layer

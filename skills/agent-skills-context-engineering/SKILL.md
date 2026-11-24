@@ -80,3 +80,6 @@ Build trust in non-deterministic coding agents through a cybernetic steering loo
 - [Skill Runtime, Providers and Security](references/skill-runtime-providers-and-security.md) — read when hosting skills in an agent runtime (caching, approval, tenant isolation) or auditing third-party skills.
 - [Long-Horizon Context Strategies](references/long-horizon-context-strategies.md) — read when a task outgrows one window: compaction, notes, sub-agents, JIT retrieval.
 - [Harness Guides, Sensors and the Steering Loop](references/harness-guides-sensors-and-steering.md) — read when designing feedforward/feedback controls for coding agents.
+- [Tool Definition Context Economy](references/tool-definition-context-economy.md) — read when writing or trimming tool definitions: minimal context, rules on the parameter, bounded outputs, first-turn token measurement. (added 2026-11-24)
+- [Skill Admission, Contract Checklist and Baseline-First Authoring](references/skill-admission-and-baseline-first.md) — read before adding a skill or reviewing one: admission questions, input/loading/delegation/validation checklist, baseline-first evals. (added 2026-11-24)
+- [Context Stack Audit (Report-Only)](references/context-stack-audit-report.md) — read when asked to audit always-loaded context: token ranking, risk classes, delta against the previous report. (added 2026-11-24)

@@ -19,3 +19,17 @@ Every source below was checked during skill authoring (2026-11-24).
 - `SKILL.md` says "Replit's response was not verified"; consistent with what the page shows.
 - `SKILL.md` calls the case "an AI coding agent that deleted a production database (the SaaStr founder's account, reported by The Register)". The article presents it as the founder's claims; the Replit side is only partly reported.
 - Baseline migrations, `CONCURRENTLY`, drift commands and owner-credential separation in `SKILL.md` go beyond the source; they are standard practice, not read on any listed page.
+
+## Added 2026-11-24
+
+| Source | Retrieved status | What it contributed |
+|---|---|---|
+| https://www.prisma.io/docs/orm/prisma-schema/data-model/unsupported-database-features | 200 (summarizing fetch tool) | views unsupported; partial indexes via where; CHECK constraints not mentioned (added 2026-11-24) |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/customizing-migrations | 200 (summarizing fetch tool) | editing a draft migration with --create-only; page does not list CHECK or partial indexes (added 2026-11-24) |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/prototyping-your-schema | 200 (summarizing fetch tool) | db push: no history, data-loss flag, prototyping only (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/catalog-pg-constraint.html | 200 (summarizing fetch tool) | contype codes, pg_get_constraintdef, convalidated (added 2026-11-24) |
+| https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-indexes-transact-sql | 200 (summarizing fetch tool) | has_filter and filter_definition (added 2026-11-24) |
+| https://learn.microsoft.com/en-us/sql/relational-databases/indexes/create-filtered-indexes | 200 (summarizing fetch tool) | what a filtered index is (added 2026-11-24) |
+| Internal project skill, read for method only; no text, names or figures reused (ORM migration and local stack procedures) | read locally | the two lessons only (added 2026-11-24) |
+
+Claims not adopted: that Prisma cannot express CHECK constraints is not confirmed on the pages read; the reference says to test the tool and version. Catalog views for check constraints and DENY permissions on SQL Server were not read.

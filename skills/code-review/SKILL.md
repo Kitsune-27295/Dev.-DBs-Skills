@@ -81,6 +81,10 @@ Present the two reports under `## Standards` and `## Spec` headings, verbatim or
 
 End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes: that's the reranking the separation exists to prevent.
 
+### 6. Optional second opinion
+
+For security-sensitive, wide or churning diffs, a reviewer on a different model can re-check against the same spec at roughly double the cost; findings stay advisory. See [references/second-opinion-review.md](references/second-opinion-review.md).
+
 ## Why two axes
 
 A change can pass one axis and fail the other:
@@ -94,4 +98,5 @@ Reporting them separately stops one axis from masking the other.
 
 ## Deep references
 
+- [Second opinion: a reviewer on a different model](references/second-opinion-review.md) — read when a diff is security-sensitive, wide or churning and one more independent read is worth the cost.
 - [Smell baseline: detection patterns and review mechanics](references/smell-baseline-detection-examples.md) — when spotting baseline smells in a diff or briefing the Standards sub-agent

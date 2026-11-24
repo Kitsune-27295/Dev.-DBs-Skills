@@ -118,3 +118,4 @@ Good interfaces make testing natural:
 ## Deep references
 
 - [Applying deep modules: worked example](references/applying-deep-modules-worked-example.md) — read when merging shallow modules and migrating tests
+- [Architecture-review workflow](references/architecture-review-workflow.md) — read when asked for architecture-improvement or deepening opportunities across an existing codebase (git-log hotspots, report, then grilling)

@@ -17,3 +17,12 @@ Every source below was checked during skill authoring (2026-11-24).
 - The Vitest page, as fetched, uses `test` and `expect` in its example and does not document `describe`/`it`, concurrency (`test.concurrent`) or integration testing. SKILL.md's example uses `describe`/`it` and `Promise.all`; the handout calls it illustrative. This is a documented-elsewhere API, not confirmed by that page. (resolved 2026-11-24: SKILL.md now labels the example as illustrative and runner-agnostic rather than as Vitest documentation)
 - The Playwright home page does not mention API-level (request) testing; SKILL.md only recommends Playwright for an optional smoke test, which is consistent.
 - The video's claim that integration tests are "the only test needed" is opinion; `testing-pyramid-and-shapes` in this repository offers the broader view.
+
+## Added 2026-11-24
+
+| Source | Retrieved status | What it contributed |
+|---|---|---|
+| https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization | 200 after redirect from owasp.org (summarizing fetch tool) | BOLA description, advice to test authorization and not deploy on failure (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/ddl-rowsecurity.html | 200 (summarizing fetch tool) | owners and BYPASSRLS roles skip policies (added 2026-11-24) |
+| https://martinfowler.com/bliki/PresentationDomainDataLayering.html | 200 (summarizing fetch tool) | domain logic separate from data access is testable without the database (added 2026-11-24) |
+| Internal project skill, read for method only; no text, names or figures reused (backend test procedure) | read locally | the negative tenant test and the logic-in-the-wrong-layer heuristic (added 2026-11-24) |

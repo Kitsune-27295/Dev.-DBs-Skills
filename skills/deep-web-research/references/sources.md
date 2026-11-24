@@ -21,6 +21,10 @@ Every URL below was checked during skill authoring (2026-11-24).
 | Firecrawl repository snapshot (AGPL-3.0), path skills/firecrawl-build*/ (endpoint-selection, scrape, search, interact, freshness-and-liveness) | read OK | escalation order, freshness vs liveness, index vs category filters |
 | Firecrawl repository snapshot (AGPL-3.0), paths firecrawl-cli, firecrawl-cli-skills, firecrawl-skills, firecrawl-workflows | read OK but README stubs only (pointers to external repos) | nothing beyond pointers |
 | Firecrawl repository snapshot (AGPL-3.0), path apps/api/openapi.json and apps/api/src/lib/extract/ | NOT read (openapi.json 476 KB skipped; extract only prompt file skimmed) | none |
+| https://ifcncodeofprinciples.poynter.org/the-commitments | 200 OK (curl, tags stripped; first 5,000 characters read) | sources principle: identify all significant evidence, prefer primary sources, check key elements against more than one named source, disclose source interests (added 2026-11-24) |
+| https://www.gradeworkinggroup.org/ | 200 OK (curl, tags stripped) | certainty graded per outcome in categories (high, moderate, low, very low) (added 2026-11-24) |
+| https://training.cochrane.org/handbook/current/chapter-14 | 200 OK (curl); not read in detail | cited only as the Cochrane home of GRADE-based summary of findings (added 2026-11-24) |
+| Third-party MIT skills fact-check, research-compendium, brain-ingest-gate; vault-template research-with-provenance | read in full or in large part | Third-party skill read for ideas, no text reused (MIT): six confidence levels, producer is not verifier, delivery block, archive then summarize 1:1 then synthesize, local-first stop (added 2026-11-24) |
 
 ## Licensing and clean-room note
 
@@ -42,3 +46,6 @@ Firecrawl is AGPL-3.0; this pack is MIT. The Firecrawl material was read as untr
 - The robertnowell tiers and confidence labels are adopted as working rules, not proven thresholds; the "under about 10% new claims" diminishing-returns heuristic is our own inference.
 - The aihero recursive-delegation bug is reported by its author; we guard against it but did not reproduce it.
 - Firecrawl defaults (limits, timeouts, step caps) reflect one snapshot.
+
+- (added 2026-11-24) Only the first 5,000 characters of the IFCN page and the GRADE home page were read; IFCN principles beyond sources and fairness were not used. The Cochrane chapter was not read in detail.
+- (added 2026-11-24) The six-level scale is a working mapping to our five labels, not an IFCN or GRADE scale.

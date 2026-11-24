@@ -20,3 +20,7 @@ Once done, call the Skill tool with `code-review` (ideally in a fresh context wi
 Commit your work to the current branch.
 
 > Sources & MIT attribution: [references/sources.md](references/sources.md).
+
+## Deep references
+
+- [Orchestrating a whole spec by task graph](references/orchestrating-a-spec-by-task-graph.md) — read only when asked to implement an entire spec and all its tickets with subagents (frontier, integration branch, per-subagent weights).

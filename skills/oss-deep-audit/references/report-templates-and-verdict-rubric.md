@@ -78,3 +78,13 @@ Run both repos at the same tier, commit-pinned. Keep two headings: findings abou
 - Score each rubric dimension before choosing the verdict, and cite the driving rows.
 - For comparisons, use the same commit-pinned tier for both and keep external vs local findings separate.
 - Before delivering, open every cited path:line once to confirm it says what the audit claims.
+
+## Evidence ledger example (moved from SKILL.md, 2026-11-24)
+
+Evidence table (keep one running ledger, reuse it in the report):
+
+| Claim | Class | Evidence (`path:line` or command) | Confidence |
+|---|---|---|---|
+| Entry point is `cmd/server/main.go` | Observation | `cmd/server/main.go:12` | High |
+| Writes to Postgres only through `repo/` | Inference | grep of `sql.Open` hits only `repo/db.go:30` | Medium |
+| Sends usage telemetry in production | Gap | needs a runtime capture; code has a flag at `cfg.go:55` | Unknown |

@@ -34,6 +34,8 @@ One idea: build applications designed from day one to run as **portable, scalabl
 
 ---
 
+**Adding a variable?** Classify it first (secret, deploy config, local, or code constant), put it in its home, share names and never values, and treat browser-exposed prefixes (`NEXT_PUBLIC_`, `VITE_`) as public. Details: [classifying a new variable](references/classifying-a-new-variable.md).
+
 ## When It Earns Its Keep
 
 - All containerized applications deployed on Kubernetes, ECS, Cloud Run, or serverless platforms.
@@ -44,3 +46,4 @@ One idea: build applications designed from day one to run as **portable, scalabl
 
 - [Factor mechanics and anti-patterns](references/factor-mechanics-and-anti-patterns.md) — read when auditing config, processes, releases, shutdown, logs or parity
 - [Beyond twelve-factor](references/beyond-twelve-factor-api-telemetry-auth.md) — read when adding API-first, telemetry or zero-trust auth requirements
+- [Classifying a new variable](references/classifying-a-new-variable.md) — read when adding a variable, key or setting and deciding its home and exposure

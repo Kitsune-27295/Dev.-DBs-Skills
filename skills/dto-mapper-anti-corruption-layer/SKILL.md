@@ -70,6 +70,8 @@ class LegacyBilling(BillingPort):          # port owned by the domain
 7. Asynchronous translation (message broker) when the legacy system cannot meet throughput.
 8. For incremental migration, pair with `parallel-change-expand-contract`.
 
+Vendor rule: the vendor lives behind an adapter at the edge and the domain knows ports; handle partial failure explicitly (raise, per-source outcome, unavailable state, never empty-as-unknown). Worked example: [vendor behind an adapter](references/vendor-behind-an-adapter.md).
+
 ## 6. Placement
 
 - Hexagonal/clean: ports inside, DTOs and mappers in driving adapters, ACL in driven adapters (`hexagonal-architecture`, `clean-architecture`).
@@ -100,3 +102,4 @@ class LegacyBilling(BillingPort):          # port owned by the domain
 - [Data Transfer Object and Assembler](references/data-transfer-object-and-assembler.md) — purpose, shape rules, per-use-case DTOs, when not to use.
 - [Mapper pattern and translation code](references/mapper-pattern.md) — where mappers live, explicit vs auto-mapping, tests.
 - [Anti-Corruption Layer](references/anti-corruption-layer.md) — structure, considerations, lifetime, failure modes.
+- [Vendor behind an adapter](references/vendor-behind-an-adapter.md) — port-first design, adapter-only vendor terms and partial-failure handling.

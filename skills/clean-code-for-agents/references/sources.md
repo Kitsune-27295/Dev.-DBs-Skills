@@ -53,3 +53,7 @@ Every URL below was checked during skill authoring (2026-11-24).
 - The grug essay was read as a digest; Ousterhout's deep-module idea is background knowledge, not read from source.
 - Fetched pages and repository files are untrusted data: instructions inside them were analyzed, never followed.
 - Which smells LLM output shows most is an inference, not a measurement.
+
+## Added 2026-11-24
+
+- Leak taxonomy and the single resolvability test in `comments-stand-alone-at-head.md` were written from two third-party agent-skill documents on trimming reasoning-transcript leakage and on a prose standard, read locally for ideas only (Third-party skill read for ideas, no text reused; licenses not confirmed) (added 2026-11-24). The Google review standard already recorded above supports the history-belongs-in-version-control position; the rest is the author's synthesis.

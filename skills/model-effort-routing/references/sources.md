@@ -57,6 +57,11 @@ Every URL below was checked during skill authoring (2026-11-23).
 | Local operating practice (private notes, summarized; not a public URL): token-cost discipline procedure | Read locally | Per-agent-call model/effort rules, research-skill caps, always-loaded size budget (~4 KB), safe-shortening procedure, subagent-model env var precedence change, measure-don't-assume baseline (6% named a model) |
 | Local operating practice (private notes, summarized; not a public URL): pre-tool agent-model guard hook (skimmed) | Read locally | Fail-open guard that denies untyped/built-in agent launches lacking `model`; one-shot retry; guarded-type set |
 | Local operating practice (private notes, summarized; not a public URL): agent-launch report script (skimmed) | Read locally | Transcript walk counting launches by type and model, de-duplication by call id, `--since` windows, named-share metric |
+| https://antigravity.google/docs/models.md | 200 OK (WebFetch; /docs itself is a redirect stub) | Selector-based model choice, plan-dependent limits, scheduled removals (added 2026-11-24) |
+| https://www.anthropic.com/engineering/multi-agent-research-system | 200 OK (WebFetch) | Brief contents, effort scaling, context isolation, poor-fit cases, token-cost claims (added 2026-11-24) |
+| https://code.claude.com/docs/en/sub-agents | 200 OK (WebFetch, first 100k of 115k chars) | Fresh context, model resolution order, subagents vs main conversation, shared usage limits (added 2026-11-24) |
+| https://www.anthropic.com/engineering/building-effective-agents | 200 OK (WebFetch) | Orchestrator-workers, parallelization, simplicity rule (added 2026-11-24) |
+| Third-party skills read for ideas, no text reused (a built-in routing skill; two MIT plugin skills on subagent development and parallel dispatch; an MIT coordinator skill) | Read locally | Availability states, review order, ruling ledger, orchestrator plus wiki (added 2026-11-24) |
 
 ## Reading limits
 

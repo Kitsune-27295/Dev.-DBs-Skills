@@ -16,3 +16,19 @@ Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summar
 
 - **Token Budget & Empirical Numbers (`*claim*`):** Specific token/line thresholds cited in Sources 1, 3, and 6 — including ~100 metadata tokens at startup, <5,000 tokens / <500 lines for `SKILL.md`, and 1,000–2,000 token sub-agent return summaries — are empirical design heuristics (`*claim*`) rather than hard parser limits.
 - **Deduplication Note:** This skill packages cross-platform `agentskills.io` standards, runtime provider architecture, Context Engineering, and Harness Engineering without duplicating separate local review/bootstrapping workflows (`skill-review`, `harness-skill-creator`, `writing-for-agents`) or runtime RAG/agent topologies (`agentic-rag-architecture`).
+
+## Added 2026-11-24
+
+| # | Source | Retrieved status | What the skill takes from it |
+|---|---|---|---|
+| 8 | Anthropic Engineering, "Writing tools for agents", https://www.anthropic.com/engineering/writing-tools-for-agents (added 2026-11-24) | 200 OK (WebFetch) | Tool description and parameter naming, concise vs detailed responses, pagination and truncation defaults, actionable errors, evaluation of tools. |
+| 9 | Model Context Protocol, "Tools" (2025-06-18), https://modelcontextprotocol.io/specification/2025-06-18/server/tools (added 2026-11-24) | 200 OK (WebFetch) | Tool data type fields, untrusted annotations, protocol vs `isError` tool errors, server input validation and output sanitization. |
+| 10 | Anthropic Skills repository, https://github.com/anthropics/skills (skills/skill-creator, Apache-2.0 per its listing) (added 2026-11-24) | 200 OK (WebFetch, raw SKILL.md, contents API) | Baseline-vs-with-skill eval runs, snapshot baseline when improving a skill, separate description-optimization step. README itself does not mention evals. |
+| 11 | Superpowers plugin, `writing-skills`, https://github.com/obra/superpowers (MIT, added 2026-11-24) | 200 OK (raw SKILL.md) | Baseline-first (RED/GREEN/REFACTOR) method for skills, restated in new words. |
+| 12 | gbrain, `context-audit` skill, https://github.com/garrytan/gbrain (MIT, added 2026-11-24) | 200 OK (raw SKILL.md) | Report-only audit shape: enumerate, measure with stated divisor, risk classes, ranked table, delta against previous report. |
+
+Third-party skills read locally for ideas, no text reused (license unverified or not applicable): a tool-definition guidance skill, an internal capability-admission page, and a skill-review skill. Their ideas were re-derived from sources 3, 8 and 9.
+
+New reference files: `tool-definition-context-economy.md`, `skill-admission-and-baseline-first.md`, `context-stack-audit-report.md`.
+
+Claims not adopted as fact: the "delete obvious constraints / say each fact once" framing and the five admission questions are this skill's own synthesis, not quotations; the 25,000-token tool-response cap is one product's default, and the 2.6 to 3.5 bytes-per-token range is the cited audit skill's calibration.

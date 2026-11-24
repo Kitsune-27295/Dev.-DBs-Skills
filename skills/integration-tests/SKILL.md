@@ -42,7 +42,7 @@ Without them an agent changes one place, breaks another far away, and the custom
 
 ## Golden rule
 
-Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. **Never connect tests to a production database**; RLS and policy tests are only valid against a real database.
+Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. Add a negative cross-tenant test (user B asks for user A's object and gets nothing); if a calculation needs the database to be tested, the logic is in the wrong layer (see the tenant-isolation reference). **Never connect tests to a production database**; RLS and policy tests are only valid against a real database.
 
 When an agent changes code, run the test command; green means carry on, red means read the failure and fix the code.
 
@@ -50,3 +50,4 @@ When an agent changes code, run the test command; green means carry on, red mean
 
 - [Sources](references/sources.md) — provenance and tool-page caveats (Vitest, Playwright)
 - [What to test and real database](references/what-to-test-and-real-database.md) — when deciding test scope, database setup or tooling
+- [Tenant-isolation negative test and logic layer](references/tenant-isolation-and-logic-layer.md) — when a route reads tenant data, or a test needs the database only for arithmetic

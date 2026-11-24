@@ -10,3 +10,7 @@ Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summar
 ## Notes on disagreements and nuances across sources
 
 - **Top-down folder scaffolding vs. Inside-out incremental refactoring:** Procida (Source 2) explicitly warns against starting a Diátaxis adoption by creating four empty top-level directories (`tutorials/`, `how-to/`, `reference/`, `explanation/`) before auditing actual content, recommending instead that authors use the Diátaxis Compass on existing pages to separate mixed concerns organically until the four top-level groupings emerge naturally.
+
+## Added 2026-11-24
+
+- Join-versus-split rule (would this have a thesis of its own; default is not to create a page; joining is cheap, splitting is expensive; a split is earned by deep links to a section; folders at the third page of a kind) adapted from the `note-granularity` skill of a personal note vault (MIT, retrieved locally 2026-11-24), generic part only and rewritten for documentation pages (added 2026-11-24).

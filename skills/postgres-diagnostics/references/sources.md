@@ -45,3 +45,13 @@ Not confirmed or worth correcting:
 - The 18 `pg_stat_statements` page lists `shared_blk_read_time`; the wider 17 pg_stat_statements page was not read, so the "renamed in 17" claim rests on the 17.0 release notes only.
 - "PostgreSQL does not index the referencing side of a foreign key", "`pg_hba_file_rules` needs a superuser", and "`pg_monitor` alone sees no row for a sequence without USAGE/SELECT" were not read from a page in this session; treat them as unverified here.
 - Xid-age percentage is computed over 2,147,483,647; the docs describe about 2 billion usable XIDs, so the percentage is an approximation of headroom, not an exact distance.
+
+## Added 2026-11-24
+
+| Source | Retrieved status | What it contributed |
+|---|---|---|
+| https://www.postgresql.org/docs/current/explicit-locking.html | 200 (summarizing fetch tool) | row and table lock modes, advisory locks, deadlock prevention; lock queueing is marked general knowledge on the fetch (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/sql-select.html (locking clause) | 200 (summarizing fetch tool) | NOWAIT, SKIP LOCKED, restrictions (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/runtime-config-connection.html, runtime-config-client.html | 200 (summarizing fetch tool) | connection limits, reserved slots, four timeouts (added 2026-11-24) |
+| https://www.pgbouncer.org/features.html | 200 (summarizing fetch tool) | pool modes and transaction-mode restrictions; version of prepared-statement support not stated (added 2026-11-24) |
+| Third-party skill collection on Postgres and Supabase best practices, read for topic coverage only, no text reused (license: MIT per the collection; not verified here) | read locally | topic coverage only (added 2026-11-24) |

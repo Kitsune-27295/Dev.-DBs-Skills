@@ -84,6 +84,8 @@ Model each step as a **switch**: one input, a two-case output (success or failur
 
 Details, TypeScript implementation sketch, accumulating validation, mapping Result to Problem Details: [references/railway-result-composition.md](references/railway-result-composition.md).
 
+Who owns recovery, what state survives a failure (none, basic, strong, no-throw guarantees), why logging is not recovery, typed failures and honest reporting of unknown outcomes: [references/recovery-ownership-and-guarantees.md](references/recovery-ownership-and-guarantees.md).
+
 ## 6. Mapping errors to the contract (single place)
 
 Keep a **total mapping** `DomainError -> ProblemDetails` in one module (adapter layer), so each typed error has a status, a `type` URI, a title and allowed extensions:
@@ -117,4 +119,5 @@ Unknown/unexpected exceptions go through the global handler to `{ type: "about:b
 - [RFC 9457 Problem Details](references/rfc9457-problem-details.md) — when designing or reviewing an API error body, problem types, extensions or multiple errors.
 - [OWASP leak-safe handling](references/owasp-leak-safe-handling.md) — when writing a global handler or auditing error responses for information leakage.
 - [Railway Result composition](references/railway-result-composition.md) — when composing fallible steps, accumulating validation errors, or choosing Result vs exceptions.
+- [Recovery ownership and guarantees](references/recovery-ownership-and-guarantees.md) — when deciding who recovers from a failure, which state guarantee holds, or how to report unknown outcomes.
 - [Sources](references/sources.md) — fetch status per URL.

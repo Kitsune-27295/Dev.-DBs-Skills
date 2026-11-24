@@ -44,3 +44,5 @@ References: `references/README.md` (index of the scripts, differences between ve
 - [Index health queries explained](references/index-health-queries-explained.md) — read before proposing to drop, rebuild or add an index.
 - [Version differences 16, 17 and 18](references/version-differences-16-17-18.md) — read when a script fails or the server is not on the tested version.
 - [Sources](references/sources.md) — URLs checked and claims not confirmed.
+- [Lock modes, SKIP LOCKED, advisory locks and deadlocks](references/lock-modes-skip-locked-advisory-and-deadlocks.md) — read when a blocking or deadlock result needs the lock mechanics, or a queue claim is proposed.
+- [Connection limits, timeouts and pooling](references/connection-limits-and-pooling.md) — read when connection counts are high, idle-in-transaction appears, or a pooler is proposed.

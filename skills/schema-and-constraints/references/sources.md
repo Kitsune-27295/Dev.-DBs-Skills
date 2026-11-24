@@ -20,3 +20,14 @@ Every source below was checked during skill authoring (2026-11-24).
 - (resolved 2026-11-24: re-read the wiki; its "When should you?" text allows plain `timestamp` for timestamps handled in an abstract way or just saved and retrieved, with no arithmetic. `SKILL.md` no longer says "never compared", which the page does not state; the page allows UTC values in it only when compatibility with non-timezone databases trumps all else.)
 - `SKILL.md` says `foreign key` and `check` can be added `NOT VALID` and validated later. That is standard PostgreSQL behavior but is not in the constraints page as summarized here; marked as not read from source.
 - The video presents the prompt as covering "not null, unique, check"; the handout prompt names foreign keys too. No conflict.
+
+## Added 2026-11-24
+
+| Source | Retrieved status | What it contributed |
+|---|---|---|
+| https://www.postgresql.org/docs/current/ddl-identity-columns.html | 200 (summarizing fetch tool) | identity semantics; no serial comparison on the page (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/datatype-uuid.html | 200 (summarizing fetch tool) | UUIDv4 and v7 support; function versions and ordering benefits are general knowledge, not on the page (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/sql-syntax-lexical.html | 200 (summarizing fetch tool) | case folding and 63-byte truncation (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/ddl-partitioning.html | 200 (summarizing fetch tool) | benefits, key in unique constraints, limits, many-partition caveat (added 2026-11-24) |
+| https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization | 200 after redirect from owasp.org (summarizing fetch tool) | random ids supplement but do not replace access checks (added 2026-11-24) |
+| Third-party skill collection on Postgres and Supabase best practices, read for topic coverage only, no text reused (license: MIT per the collection; not verified here) | read locally | topic coverage only (added 2026-11-24) |

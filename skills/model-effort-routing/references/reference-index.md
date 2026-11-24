@@ -40,6 +40,8 @@ One owner per topic. `SKILL.md` keeps the core rules and links here for the full
 ## Harnesses
 
 - [antigravity-skills-format-and-paths.md](antigravity-skills-format-and-paths.md): Antigravity skill format and install paths.
+- [model-availability-states-and-honest-control.md](model-availability-states-and-honest-control.md): six availability states, evidence order, enforced control versus advice.
+- [isolated-context-delegation-and-long-running-orchestrator.md](isolated-context-delegation-and-long-running-orchestrator.md): isolated briefs, independence test, two-stage review, ruling ledger, orchestrator plus wiki.
 - [quota-aware-subagent-orchestration.md](quota-aware-subagent-orchestration.md): agent counts on quota-limited hosts.
 - [complexity-assessment-and-delegation-triggers.md](complexity-assessment-and-delegation-triggers.md): when a task should be delegated.
 - [phase-based-skill-routing.md](phase-based-skill-routing.md): routing by workflow phase.

@@ -67,6 +67,20 @@ PACK = (
     "setup-pre-commit",
     "to-questionnaire",
     "wait-what",
+    "receiving-code-review",
+    "pr-description",
+    "application-performance",
+    "simplification-audit",
+    "ops-safety",
+    "incident-analyst-brief",
+    "blameless-postmortem",
+    "worst-case-data-ui-check",
+    "multi-agent-coordination",
+    "mcp-apps",
+    "text-quality-gate",
+    "agent-cost-report",
+    "agent-config-migration",
+    "zabbix-diagnostics",
 )
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")

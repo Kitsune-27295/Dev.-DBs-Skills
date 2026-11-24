@@ -23,6 +23,7 @@ Two rules: every schema change is a numbered file in the repository, and a comma
 - A migration already applied is never edited; add a new one.
 - Never drop a column, index or table that exists only in the live database without the owner's OK.
 - Show the plan and the environment table before creating or changing files.
+- Objects the ORM cannot express (checks, filtered indexes, denies) are reconciled in SQL and verified from the catalog after a table rebuild; never verify a change against a shared database unless asked, and refuse push or reset commands there (see the ORM-gaps reference).
 - Backups are `backup-restore-drill`; tests of migrations use a throwaway database, see `integration-tests`.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "migrations and separate environments").
@@ -31,3 +32,4 @@ Source: the handout of the second database lesson of mano deyvin (prompt "migrat
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
 - [Migrations, drift and environment separation](references/migrations-drift-and-environment-separation.md) — when you set up baselines, drift checks, dev/prod split or an app role
+- [DDL an ORM cannot express, and shared databases](references/orm-gaps-and-shared-databases.md) — when a table rebuild may drop hand-written constraints or someone wants to test a change on a shared database

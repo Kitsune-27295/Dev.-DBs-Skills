@@ -71,3 +71,4 @@ Ask two questions about the sentence or page you are writing:
 ## Deep references
 
 - [Four forms, map and compass](references/four-forms-map-and-compass.md) — read when classifying or splitting documentation pages
+- [Should this be a new page? Join versus split](references/new-page-or-not-join-vs-split.md) — read before creating a page, folder or section, or when asked to split or merge pages.

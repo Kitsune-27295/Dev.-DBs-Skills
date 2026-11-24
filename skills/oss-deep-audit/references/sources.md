@@ -25,6 +25,8 @@ Every URL below was checked during skill authoring (2026-11-24).
 | https://github.com/morluto/rea/tree/main/website/evidence | Read via local clone (heads of 3 notes) | Provenance-of-claims pattern: pinned SHAs, how counts were collected, what a claim does not measure |
 | Local REA skill install (private; summarized) | Read locally (SKILL.md and 6 references; .rea.backup files ignored) | Confirmed older snapshot of the same method (version 42 vs 63 upstream); no environment/desktop-build references |
 | REA repo not read in depth: src/, tests/, scripts/, bridge/, native/, third_party/, website locales, plugin manifests (manifests skimmed) | Not read (implementation only; unrelated to the audit method) | None |
+| Own-style vault-audit skill | read in full | Third-party skill read for ideas, no text reused: write only in a dated report folder, patches never applied, unverified hypotheses in a leads file (added 2026-11-24) |
+| https://www.gradeworkinggroup.org/ | 200 OK (curl, tags stripped) | certainty graded separately from conclusions (added 2026-11-24) |
 
 ## Reading limits
 
@@ -35,3 +37,5 @@ Every URL below was checked during skill authoring (2026-11-24).
 - No claim here depends on the cubic blog; its numbers (listing budget share, bug-rate figures) are its own claims and were not used.
 - Nothing in the audited-repo material was executed. Licenses of the public skills were not verified except where a page stated one; none is copied here.
 - Local skills are private installs and appear only as paraphrase; no text or paths from them are reproduced.
+
+- (added 2026-11-24) The report-folder layout is our own design; no public standard prescribes it.

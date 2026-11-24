@@ -128,3 +128,6 @@ One topic branch, a clean ordered series, each commit explained; rebase on the c
 - [Staging and history rewriting](references/staging-and-history-rewriting.md) — read when using `git add -p`, amend, `rebase -i`, fixup/autosquash, or building a patch series.
 - [Force-push safety](references/force-push-safety.md) — read before any push of rewritten history.
 - [Secrets hygiene](references/secrets-hygiene.md) — read when preventing, detecting or responding to committed secrets.
+- [Stacked PRs: landing A <- B <- C](references/stacked-prs-landing.md) — read when landing dependent PRs; verify native stack support first, hard stop, rebase fallback.
+- [Proportional pre-push checks](references/proportional-pre-push-checks.md) — read before pushing, to pick the minimal check set covering the diff.
+- [Git worktrees for isolation](references/worktrees-for-isolation.md) — read when a second checkout is needed; submodule caveat.

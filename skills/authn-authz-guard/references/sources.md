@@ -13,3 +13,17 @@ Every URL below was checked during skill authoring (2026-11-23).
 | https://datatracker.ietf.org/doc/html/rfc6749 | 200 OK (WebFetch, two chunks; all targeted sections covered) | Roles, grants, endpoints, token/error responses, refresh, section 10 security considerations |
 
 Note: all pages were read through WebFetch digests (a summarizing model), not raw markdown, because Firecrawl returned an insufficient-credits error. Treat exact numbers as digest-derived.
+
+## Added 2026-11-24
+
+| Source | Retrieved status | What it contributed |
+|---|---|---|
+| https://www.postgresql.org/docs/current/ddl-rowsecurity.html | 200 OK (curl, HTML stripped) | Default-deny, BYPASSRLS and owner bypass, FORCE ROW LEVEL SECURITY |
+| https://www.postgresql.org/docs/current/sql-set.html | 200 OK | SET LOCAL lasts to end of transaction |
+| https://www.postgresql.org/docs/current/functions-admin.html | 200 OK | set_config with is_local |
+| https://www.postgresql.org/docs/current/sql-discard.html | 200 OK | DISCARD ALL resets session state |
+| https://learn.microsoft.com/en-us/sql/relational-databases/security/row-level-security | 200 OK | Filter and block predicates, session-context pattern |
+| https://learn.microsoft.com/en-us/sql/t-sql/functions/session-context-transact-sql | 200 OK | Session context is per connection |
+| https://docs.sqlalchemy.org/en/20/core/pooling.html | 200 OK | Reset-on-return rolls back transactional state |
+| https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html | 200 OK (re-read) | Validate permissions on every request, deny by default |
+| Two internal procedures read for method only | local | Dual-resolver parity and tenant-session method; no names reused |

@@ -70,6 +70,8 @@ Details: [RFC 9700](references/oauth-security-bcp-rfc9700.md), [RFC 6749 mechani
 
 Details: [authorization models](references/authorization-models-and-enforcement.md).
 
+**Same rule in two resolvers (web edge plus backend)?** Keep one route/permission catalog, one written decision order (kill-switch, entitlement, active account, bypass, suspension, roles, deny), pure steps mirrored in both languages and proven by one shared case file, with database row-level security as the floor. **Tenant data over a pooled connection?** Set the tenant context per transaction, clear it when the connection returns to the pool, use the exempt account only for pre-tenant lookups, and never change account to make a query pass. Details: [dual-resolver parity and tenant session](references/dual-resolver-parity-and-tenant-session.md).
+
 ## 6. Placement in the Architecture
 
 - Authentication and coarse authorization at the edge or middleware; fine-grained, resource-aware decisions in the application/domain layer where the aggregate is loaded (`hexagonal-architecture`, `clean-architecture`). A gateway check alone does not protect internal callers.
@@ -103,3 +105,4 @@ Details: [authorization models](references/authorization-models-and-enforcement.
 - [Authorization models and enforcement](references/authorization-models-and-enforcement.md) — least privilege, deny-by-default, RBAC vs ABAC vs ReBAC, IDOR.
 - [OAuth 2.0 Security BCP (RFC 9700)](references/oauth-security-bcp-rfc9700.md) — normative requirements and attack catalog.
 - [OAuth 2.0 core mechanics (RFC 6749)](references/oauth2-core-rfc6749-mechanics.md) — roles, grants, endpoints, token responses, security considerations.
+- [Dual-resolver parity and tenant session](references/dual-resolver-parity-and-tenant-session.md) — read when one access rule is implemented twice, or when tenant isolation relies on row-level security over pooled connections.
