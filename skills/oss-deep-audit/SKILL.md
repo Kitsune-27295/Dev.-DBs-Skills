@@ -69,6 +69,8 @@ Pick the tier before reading; state it in the report. Escalate only when a named
 - **Release practices**: signed tags or artifacts, provenance attestations, committed lockfile, pinned CI actions.
 - **Supply-chain signals**: typosquat-like or very new dependencies, install-time scripts, git/URL dependencies, unpinned ranges.
 
+For dependency hygiene see `dependency-management-and-versioning`; for provenance, SBOM, OSV lookups and license flags see `software-supply-chain-security`.
+
 ## 6. Final output: exactly these sections
 
 1. **Executive Summary** (verdict, decision, top 3 findings, tier, commit audited)
