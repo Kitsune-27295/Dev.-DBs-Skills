@@ -74,3 +74,4 @@ xerj.org (updated 2026-11-14) and claude-howto agree with the official docs on 2
 - Write each rule so it is checkable (command, path, number), and avoid ALL-CAPS emphasis.
 - After any edit, verify with `/context all` or `/memory`, and run `/doctor prompt-audit` when available.
 - State the Claude Code version when citing a limit; flag version-gated facts as such.
+- Remember that a CLAUDE.md rule does not constrain calls made inside agent-written code (Claude Code's experimental Code Mode); only deny rules, hooks and the sandbox act there. Details: `model-effort-routing`, `references/code-mode-and-tool-call-batching.md`.

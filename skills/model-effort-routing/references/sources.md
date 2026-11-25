@@ -62,6 +62,10 @@ Every URL below was checked during skill authoring (2026-11-23).
 | https://code.claude.com/docs/en/sub-agents | 200 OK (WebFetch, first 100k of 115k chars) | Fresh context, model resolution order, subagents vs main conversation, shared usage limits (added 2026-11-24) |
 | https://www.anthropic.com/engineering/building-effective-agents | 200 OK (WebFetch) | Orchestrator-workers, parallelization, simplicity rule (added 2026-11-24) |
 | Third-party skills read for ideas, no text reused (a built-in routing skill; two MIT plugin skills on subagent development and parallel dispatch; an MIT coordinator skill) | Read locally | Availability states, review order, ruling ledger, orchestrator plus wiki (added 2026-11-24) |
+| https://code.claude.com/docs/en/code-mode | Read from a user-supplied clipping of the page dated 2026-11-25; not re-fetched | What Code Mode is, requirements, limits, permission and hook behavior, subagent `REPL` rule (added 2026-11-25) |
+| https://code.claude.com/docs/en/changelog | 200 OK (WebFetch; first 39,946 of about 1.44M chars read verbatim) | Newest entry 2.1.332 (2026-11-25); 2.1.331 added cloud-provider support (added 2026-11-25) |
+| https://www.anthropic.com/engineering/code-execution-with-mcp | 200 OK (WebFetch, full page, 17k chars) | Two context problems, code-execution approach, 150,000 to 2,000 token example, sandbox cost (added 2026-11-25) |
+| https://www.youtube.com/watch?v=8Ofrox5ycgQ | Transcript supplied by the user; video not watched; the linked prompts Gist was not read | One-run comparison with and without Code Mode (added 2026-11-25) |
 
 ## Reading limits
 
@@ -80,3 +84,5 @@ Every URL below was checked during skill authoring (2026-11-23).
 - Fable price multiple over Opus (2x in one repo, 2.5x in another): sources disagree; check the vendor price page.
 - Per-agent tier maps and effort starting points from community repos: author opinion tied to their own workloads; none is a vendor recommendation.
 - Local baseline (60 of 999 built-in launches named a model): one machine, one date; and documented skill-header behaviors were not locally measured.
+- Code Mode figures (about 21% lower cost, about half the tokens and round trips; longer wall time): one run per arm of one sponsored video, measured by the presenter's own script; anecdotal. The 98.7% (150,000 to 2,000 tokens) figure is a vendor worked example of a best case. Neither is a general rate.
+- Code Mode facts depend on Claude Code 2.1.332 and a feature marked experimental that "may change or be removed in any release"; the later changelog text was not read, and the Gist with the video's prompts was not opened.

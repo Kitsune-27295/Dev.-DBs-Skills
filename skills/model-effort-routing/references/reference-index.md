@@ -27,6 +27,7 @@ One owner per topic. `SKILL.md` keeps the core rules and links here for the full
 - [best-of-n-and-verifier-routing.md](best-of-n-and-verifier-routing.md): sampling plus a verifier.
 - [confidence-based-escalation.md](confidence-based-escalation.md): which signals may trigger escalation.
 - [claims-vs-evidence-on-savings.md](claims-vs-evidence-on-savings.md): evidence status table; how to quote a saving.
+- [code-mode-and-tool-call-batching.md](code-mode-and-tool-call-batching.md): the experimental Code Mode as a spend lever: requirements, one-run evidence, control-model changes. (added 2026-11-25)
 
 ## Policies and delegation
 

@@ -42,6 +42,9 @@ After:  search_logs(query, limit?)   description: "Search service logs."
 ## Measure first-turn tokens
 Before and after any definition change, compare the first-turn prompt tokens (provider usage field, a count-tokens endpoint, or the host's context breakdown). Keep the change only if tokens fell and a small task set still passes. Anthropic's article stresses evaluation on realistic multi-call tasks with verifiable outcomes and held-out tasks, tracking accuracy, calls, tokens and tool errors.
 
+## Code execution as the other lever
+Trimming definitions cuts the cost of every call. Letting the model write code that calls tools, filters results and returns only a summary cuts the number of model round trips and keeps large intermediate results out of context. Claude Code ships this as the experimental Code Mode; its requirements, one-run evidence and changed control model are owned by `model-effort-routing` (`references/code-mode-and-tool-call-batching.md`).
+
 ## What this file does not own
 Tool contracts and ACI ergonomics at the application level belong to `agentic-rag-architecture`. Instruction-file governance, routing and spec limits belong to `skill-orchestrator`. Model/effort and spend levers belong to `model-effort-routing`.
 

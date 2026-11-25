@@ -29,6 +29,8 @@ Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summar
 
 Third-party skills read locally for ideas, no text reused (license unverified or not applicable): a tool-definition guidance skill, an internal capability-admission page, and a skill-review skill. Their ideas were re-derived from sources 3, 8 and 9.
 
+(added 2026-11-25) `tool-definition-context-economy.md` gained a short pointer to Code Mode, sourced from https://www.anthropic.com/engineering/code-execution-with-mcp (200 OK, full page).
+
 New reference files: `tool-definition-context-economy.md`, `skill-admission-and-baseline-first.md`, `context-stack-audit-report.md`.
 
 Claims not adopted as fact: the "delete obvious constraints / say each fact once" framing and the five admission questions are this skill's own synthesis, not quotations; the 25,000-token tool-response cap is one product's default, and the 2.6 to 3.5 bytes-per-token range is the cited audit skill's calibration.

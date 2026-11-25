@@ -96,6 +96,7 @@ echo '{"tool_input":{"command":"git status"}}' | <path-to-script>             # 
 - It is a **guardrail against accidents, not a security boundary**. A shell alias, a script that runs git inside, `eval`, or an encoded command can bypass pattern matching. For hard guarantees use server-side branch protection and least-privilege credentials.
 - It does not stop the user from running the commands by hand; it only stops the agent's Bash tool.
 - Blocking `git push` means the agent cannot publish work; the user pushes. That is the intended default.
+- In Claude Code's experimental Code Mode, git commands issued by the agent's code still reach a `Bash` hook, but the text can differ (for example `cd 'dir' && git push`), so match each part of a compound command. See `model-effort-routing` (`references/code-mode-and-tool-call-batching.md`).
 
 ## Quick Decision Checklist
 
