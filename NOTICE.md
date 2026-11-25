@@ -1,6 +1,6 @@
 # Notice: where these skills come from
 
-This repository combines five families of self-contained engineering skills (127 skills total):
+This repository combines five families of self-contained engineering skills (128 skills total):
 
 ## 1. Software Architecture, Design Principles & Documentation Skills (65 skills)
 

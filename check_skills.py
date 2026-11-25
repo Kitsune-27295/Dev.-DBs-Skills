@@ -81,6 +81,7 @@ PACK = (
     "agent-cost-report",
     "agent-config-migration",
     "zabbix-diagnostics",
+    "transactional-email-engineering",
 )
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
