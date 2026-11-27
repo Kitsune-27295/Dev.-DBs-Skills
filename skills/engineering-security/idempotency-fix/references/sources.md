@@ -1,16 +1,26 @@
 # Sources — Idempotency fix
 
-Every source below was checked during skill authoring (2026-11-24).
+Every URL below was re-fetched during the rebuild (2026-11-27).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| Video "Fundamentos de Engenharia de Software para Vibe Coders", channel "mano deyvin", published 2026-10-27, https://www.youtube.com/watch?v=G8SeOH0qerk, chapter "Idempotência: garantindo ações únicas" (7:11-13:26) | Page 200 OK; transcript read in full (local export), but the export has a gap between about 11:33 and 13:21 (only music markers), so the end of the chapter is not available | The payment-webhook retry story (slow or deploying receiver, gateway retries up to a configured count), the processed-events table (event id plus timestamp), "answer 200 when already processed", and why an in-process `if` is not enough |
-| Author's handout, https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software, section "2. Idempotência" and its prompt | Page 200 OK; handout read in full (local export) | Signature check on the raw body, insert-id-first, no reliance on arrival order, fast 2xx, idempotency keys on outbound calls, `Idempotency-Key` header on own endpoints, duplicate and concurrent tests, no personal data as a key |
+| Stripe, Receive events in your webhook endpoint, https://docs.stripe.com/webhooks | 200 OK, read | Raw-body signature verification, 5-minute default tolerance (0 disables), retries up to three days in live mode, duplicates and event-id logging, ordering not guaranteed, quick 2xx, async queue advice |
+| Stripe, Idempotent requests, https://docs.stripe.com/api/idempotent_requests | 200 OK, read | Key semantics: V4 UUID suggestion, up to 255 characters, saved first response including 500s, parameter mismatch error, 24-hour pruning (API v1), POST only |
+| Stripe, Advanced error handling, https://docs.stripe.com/error-low-level | 200 OK, read | Retry only within 24 hours with same key and parameters, reconcile after, 409 for a concurrent same-key request, cart-id-derived keys, persist keys across restarts |
+| IETF draft, https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/ | 200 OK, read: draft `-09`, active, updated 2026-11-21, expires 2027-05-25, not an RFC | `Idempotency-Key` header as a structured-field string; 422, 409 and 400 behaviors |
+| Author's handout, https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software, section "2. Idempotência" | 200 OK, read | Check order (signature, insert id first, no arrival-order reliance, fast 2xx), outbound keys, `Idempotency-Key` on own endpoints, tests, no personal data as key |
+| Video https://www.youtube.com/watch?v=G8SeOH0qerk | 200 OK but text truncated: only the title was readable | Nothing newly verified; the retry story rests on the 2026-11-24 read of a saved transcript, which had a gap near the end of the chapter |
 
-## Claims and caveats
+## Reading limits
 
-- Video claims: that a webhook can be retried "10 times" is the speaker's illustrative configuration, not a gateway default; the multiplication-by-thousands loss story is rhetorical, not measured.
-- The video says the table holds only the event id and a timestamp; the handout says the id is a unique key. SKILL.md combines both ("id plus timestamp"); consistent.
-- Gap: the video's explanation of why an `if` is insufficient is cut off in the export; SKILL.md's wording (process memory is not shared, state not persisted) matches the visible part and the handout rationale.
-- Items in SKILL.md that come only from the handout prompt, not the video: raw-body signature verification, not relying on arrival order, outbound idempotency keys, the `Idempotency-Key` header, not using personal data as key.
-- No external pages are cited for this topic; the gateway's own idempotency documentation was not consulted, so nothing here is verified against a vendor spec.
+- No scripts in this skill; none run. The SQL sketch is illustrative and was not executed.
+- Gateway facts come from Stripe only; other gateways were not read, so the skill says to check the one in use.
+- Rebuild changes: Stripe retry duration, timestamp tolerance, key limits and retention, the in-flight 409 rule, the two-events-for-one-fact dedupe, "do not dedupe on created time" and the IETF draft status added; "id plus timestamp" reworded so the id alone is the key (about 8 corrections or additions).
+
+## Claims not adopted as fact
+
+- "Retried 10 times" from the video: the speaker's illustration, not a gateway default (Stripe documents up to three days of retries, not a count).
+- The thousands-of-customers loss story: rhetorical, not measured.
+- Anything in the lost part of the video transcript: not available; the SKILL wording rests on the visible part and the handout.
+- The IETF draft: still a draft, so its status codes are suggestions, not a standard.
+- That every gateway keeps keys for 24 hours or replays 500s: Stripe v1 behavior only.

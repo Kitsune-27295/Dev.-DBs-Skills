@@ -1,6 +1,6 @@
 # Triage and Evidence Checks
 
-Sources: https://conventionalcomments.org/ · https://google.github.io/eng-practices/review/developer/handling-comments.html · https://google.github.io/eng-practices/review/reviewer/pushback.html · Last verified 2026-11-24
+Sources: https://conventionalcomments.org/ · https://google.github.io/eng-practices/review/developer/handling-comments.html · https://google.github.io/eng-practices/review/reviewer/pushback.html · Last verified 2026-11-27
 
 ## What the sources say
 
@@ -14,19 +14,19 @@ Sources: https://conventionalcomments.org/ · https://google.github.io/eng-pract
 
 | Label or decoration | Default weight | Author action |
 |---|---|---|
-| `issue` | Blocking unless marked otherwise | Verify, then fix; ask for a suggestion if none was given |
+| `issue` | A specific problem; the site does not make it blocking by itself (`issue (non-blocking)` is a documented example), so read the decoration | Verify, then fix; the site recommends pairing it with a suggestion, so ask for one if missing |
 | `suggestion` | Optional unless `(blocking)` | Evaluate on merit; accept, adapt or decline with reason |
 | `todo`, `chore` | Required, small | Do it; a `chore` should link to the process that explains how |
-| `question` | Needs an answer | Answer with a fact; check whether the code should change |
+| `question` | Needs an answer; the site uses it for a concern the reviewer is unsure is real | Answer with a fact; check whether the code should change |
 | `nitpick`, `quibble`, `polish`, `typo` | Optional | Apply if trivial and consistent with the repo; otherwise reply briefly |
 | `thought`, `note` | Non-blocking | Read, reply only if it changes a plan |
 | `praise` | None | Nothing required |
 | `(non-blocking)` | Does not hold up approval | Do not stall on it; decide quickly |
 | `(blocking)` | Holds up approval | Resolve before re-requesting review |
 | `(if-minor)` | Author discretion | Apply only if the change stays small |
-| No label at all | Unknown | Infer from content; ask when the weight changes the plan |
+| No label at all | Unknown; the site says some organizations treat comments as blocking by default and others as non-blocking, which is why the decorations exist | Infer from content; ask when the weight changes the plan |
 
-Inference rule (own judgment, not from a source): treat an unlabelled comment that asserts a defect, a security risk or a contract break as blocking until verified otherwise; treat style-only comments as optional unless a written project standard backs them.
+Inference rule (own judgment, not from a source): treat an unlabelled comment or an `issue` without a decoration that asserts a defect, a security risk or a contract break as blocking until verified otherwise; treat style-only comments as optional unless a written project standard backs them.
 
 ## Evidence checks before acting
 

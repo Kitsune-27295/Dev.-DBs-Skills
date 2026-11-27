@@ -1,6 +1,6 @@
 # Reviewing Analyst Proposals and Capturing the Lesson
 
-Sources: https://sre.google/sre-book/managing-incidents/ · https://sre.google/sre-book/emergency-response/ · https://docs.pagerduty.com/ops-guides/incident-response-guide/effective-postmortems · Last verified 2026-11-24
+Sources: https://sre.google/sre-book/managing-incidents/ · https://sre.google/sre-book/emergency-response/ · https://docs.pagerduty.com/ops-guides/incident-response-guide/effective-postmortems · Last verified 2026-11-27
 
 ## A proposal is a hypothesis
 

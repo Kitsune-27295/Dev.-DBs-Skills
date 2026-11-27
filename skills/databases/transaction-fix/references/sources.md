@@ -1,21 +1,24 @@
 # Sources — Transaction fix
 
-Every source below was checked during skill authoring (2026-11-24).
+Every URL below was re-fetched during the rebuild (2026-11-27).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 03 "Transação" (11:46-15:50) | Transcript read from a saved copy; video page not re-fetched | The transfer scenario (debit, credit, crash), begin/commit/rollback, the "separate API calls" risk on backend-as-a-service, the ERP sale example, "wrap, do not change business rules", ORMs not adding transactions unprompted |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "2. Transação" | Saved copy read; page not re-fetched | The prompt (find multi-write operations, state what breaks, merge into one transaction, forced-error test, external calls outside the transaction) |
+| PostgreSQL docs, Transactions tutorial, https://www.postgresql.org/docs/current/tutorial-transactions.html | 200 OK, read (page header: PostgreSQL 19) | All-or-nothing wording, implicit per-statement transactions, aborted state after an error, savepoints |
+| PostgreSQL docs, Explicit locking, https://www.postgresql.org/docs/current/explicit-locking.html | 200 OK, read | Row locks last until transaction end and block other writers; long-open transactions discouraged |
+| microservices.io, Transactional Outbox, https://microservices.io/patterns/data/transactional-outbox.html | 200 OK, read | Outbox row in the same local transaction; relay publishes at least once |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, section "2. Transação" | 200 OK, read | The four-step prompt (find multi-write operations, one-sentence inconsistency, one transaction, forced-error test) and rules (no business-rule changes, plan first, external calls outside) |
+| Video "Banco de Dados / Fundamentos para Vibe Coders #EP2", https://www.youtube.com/watch?v=TL4T9ZESamI | 200 OK but text truncated: only the title was readable; channel, date and chapters not confirmed | Nothing newly verified; its scenarios (transfer, ERP sale, backend-as-a-service calls) rest on the 2026-11-24 read of a saved transcript |
 
-No external web page is cited for this topic.
+## Reading limits
 
-## Claims and caveats
+- No scripts or SQL files in this skill; none were run.
+- Engine behavior (aborted state, implicit transactions) is verified for PostgreSQL only; MySQL, SQL Server and SQLite were not read.
+- Rebuild additions from the PostgreSQL docs: the aborted-state trap and short transactions (2 additions, 0 reversals).
 
-- The "ACID" remark (atomicity is the A) is general database knowledge stated by the video; no page was read for it.
-- The Supabase remark (three separate API calls are not atomic; a database function or one server endpoint can bundle them) is the video's claim; it matches how HTTP-based table APIs work (inference: each call is its own transaction), but no Supabase page was read for it.
-- The video's example SQL uses an informal `saldo` update; treat it as an illustration, not a pattern to copy.
+## Claims not adopted as fact
 
-## Discrepancies with SKILL.md (not edited)
-
-- The handout prompt says external calls (email, payment gateway) stay outside the transaction; the video does not mention this at all. `SKILL.md` follows the handout. The advice to "commit first, then call" or record intent inside the transaction (an outbox-style pattern) is `SKILL.md`'s own addition, not from either source (resolved 2026-11-24: `SKILL.md` now labels these as the skill's own).
-- `SKILL.md` adds "keep reads that decide the outcome inside it"; neither source says this (also now labeled as the skill's own).
+- "ACID's A is atomicity" and the transfer story: general knowledge, not tied to a page beyond the PostgreSQL atomicity wording.
+- Backend-as-a-service claim (each API call is its own operation, bundle in a function or endpoint): the video's claim; no provider page read, so the mechanism is left to the provider's documentation.
+- "Commit first, then call", "record intent inside the transaction" and "keep decision reads inside": this skill's own practice, not from a source (the outbox shape is described in the microservices.io page).
+- The video's chapter times and the saved-transcript details: not re-verified.

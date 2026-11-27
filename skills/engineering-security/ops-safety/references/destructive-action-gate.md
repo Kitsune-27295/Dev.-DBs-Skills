@@ -1,10 +1,10 @@
 # Destructive-Action Gate in Practice
 
-Sources: https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ · https://sre.google/sre-book/emergency-response/ · Last verified 2026-11-24
+Sources: https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ · https://sre.google/sre-book/emergency-response/ · Last verified 2026-11-27
 
 ## What the gate is for
 
-A gate is a deliberate pause between "the agent decided" and "the system changed", placed only where the change cannot be cheaply undone. It exists because three things tend to be false at the moment of a destructive command, even when the person typing it is skilled: the target is what you think it is, a recovery path exists, and the scope is what you meant. The 2017 database outage written up by GitLab is a compact case of all three: a data directory was removed on the wrong server (target), none of five backup or replication mechanisms was usable when needed (recovery path), and the only copy that worked was hours old (scope of loss). The people involved were working a long incident late at night, which is exactly when a pause is worth the most and is least likely to happen unprompted.
+A gate is a deliberate pause between "the agent decided" and "the system changed", placed only where the change cannot be cheaply undone. It exists because three things tend to be false at the moment of a destructive command, even when the person typing it is skilled: the target is what you think it is, a recovery path exists, and the scope is what you meant. The 2017 database outage written up by GitLab is a compact case of all three: a data directory was removed on the wrong server (target), none of the backup and replication mechanisms in place gave a quick, usable restore (recovery path), and the only copy that worked was hours old (scope of loss). The people involved were working a long incident late at night, which is exactly when a pause is worth the most and is least likely to happen unprompted.
 
 ## The card, field by field
 

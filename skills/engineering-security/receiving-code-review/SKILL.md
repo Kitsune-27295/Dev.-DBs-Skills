@@ -1,6 +1,6 @@
 ---
 name: receiving-code-review
-description: "Act on feedback you received on your own pull request or patch, as an author or an agent: read all comments first, restate each one, verify every claim against the code before touching it, ask when a comment is unclear instead of guessing, sort blocking from optional (Conventional Comments labels), fix the code rather than only explaining it, decline politely with evidence, batch fixes into reviewable commits, re-run checks, answer every thread, file out-of-scope items as issues and re-request review. Rejects performative agreement and blind implementation. Use when a reviewer, bot or human has left comments, a comment seems wrong, unclear or out of scope, or you are preparing the reply. Not for performing a review of a diff (use code-review) or writing the PR body (use pr-description)."
+description: "Handle review comments on your own pull request or patch, as author or agent: read every comment first, restate it, verify its claim against the code before editing, ask once when it is unclear, sort blocking from optional, fix the code instead of only explaining it, decline with evidence, batch fixes, re-run checks, answer every thread, file out-of-scope items and re-request review. Rejects performative agreement and blind implementation. Not for reviewing someone else's diff (use code-review) or writing the PR body (use pr-description). Use when a human or bot reviewer left comments, a comment seems wrong, unclear or out of scope, or you are drafting the reply."
 ---
 
 # Receiving Code Review
@@ -60,7 +60,7 @@ Sort before you plan the work. Use the reviewer's own marker when there is one; 
 
 | Class | Typical signals | What you do |
 |---|---|---|
-| **Blocking** | "issue", "must", "request changes", correctness, security, data loss, broken contract, failing test, `blocking` decoration | Fix or resolve by evidence before asking for re-review |
+| **Blocking** | `(blocking)` decoration, "must", "request changes", correctness, security, data loss, broken contract, failing test (an `issue` label alone does not decide it: `issue (non-blocking)` exists) | Fix or resolve by evidence before asking for re-review |
 | **Optional** | `nitpick`, `suggestion (non-blocking)`, `thought`, `polish`, `if-minor`, "consider" | Cheap and clearly better: just do it. Otherwise decide on merit and reply either way |
 | **Question** | `question`, "why", "what happens if" | Answer in the thread with a fact; change the code too if the question exposed a gap |
 | **Praise / note** | `praise`, `note` | No action; no thanks-ritual either |
@@ -135,7 +135,7 @@ Only when the blocking items are fixed or answered and the checks ran:
 
 1. Push the batch, confirm CI or the local suite is green or state which part is not.
 2. Post the round summary (section 8).
-3. Re-request review from the same reviewers, using the platform's re-request control; a stale approval may be dismissed automatically after new commits when the repository requires it.
+3. Re-request review from the same reviewers, using the platform's re-request control; on GitHub an approval is dismissed by a code-changing push only when required reviews and stale-review dismissal are both enabled.
 4. If your change altered the approach substantially, update the pull-request description too (`pr-description`).
 
 Do not merge. Do not mark a PR ready, approve it, or change protections unless the user explicitly asked for that action.
@@ -174,3 +174,4 @@ Do not merge. Do not mark a PR ready, approve it, or change protections unless t
 - [Triage and evidence checks](references/triage-and-evidence-checks.md) — read when a comment must be classified (Conventional Comments labels, blocking markers) or verified before acting.
 - [Replying, pushing back and closing threads](references/replying-pushing-back-and-closing-threads.md) — read when drafting replies, declining a suggestion, handling a disagreement or an out-of-scope item.
 - [Batching fixes and re-requesting review](references/batching-fixes-and-re-requesting-review.md) — read when applying a round of fixes, using suggestion batches, or preparing the re-review request.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking this skill against near-miss neighbors.

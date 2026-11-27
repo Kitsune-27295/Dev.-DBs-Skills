@@ -1,6 +1,6 @@
 # Audit Deliverable Template (skill content, part of the sql-server-audit skill)
 
-Sources: https://learn.microsoft.com/en-us/sql/relational-databases/backup-restore/back-up-and-restore-of-sql-server-databases · https://learn.microsoft.com/en-us/sql/t-sql/database-console-commands/dbcc-checkdb-transact-sql · https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit · https://ola.hallengren.com/sql-server-backup.html · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/sql/relational-databases/backup-restore/back-up-and-restore-of-sql-server-databases · https://learn.microsoft.com/en-us/sql/t-sql/database-console-commands/dbcc-checkdb-transact-sql · https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit · https://ola.hallengren.com/sql-server-backup.html · Last verified 2026-11-27
 
 This file is reference text of the `sql-server-audit` skill: the shape an agent gives its deliverable when it runs an audit. The reader is an owner who must decide, so it leads with the verdict, ranks by risk, separates facts from assumptions and holds no statement the evidence ledger cannot back. The template is this skill's own design; the content rules about backups and repair come from the cited vendor pages.
 
@@ -105,13 +105,7 @@ BACKLOG
 
 ## 6. Handoffs
 
-| Finding type | Hand to |
-|---|---|
-| Restore never proven | `backup-restore-drill` |
-| Exposure, grants, keys | `database-exposure` |
-| Slow query design | `query-performance` |
-| Constraints, types, orphans | `schema-and-constraints` |
-| Generic safety around the fix | `fundamentals-audit` |
+The owner table is `SKILL.md` section 1; name the owner skill in the finding's recommendation line.
 
 ## How an agent should apply this
 

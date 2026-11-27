@@ -1,6 +1,6 @@
 # Safe Removal and Delegation
 
-Sources: https://martinfowler.com/bliki/ParallelChange.html · https://martinfowler.com/bliki/BranchByAbstraction.html · https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.com/ · https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-24
+Sources: https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.com/ · https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-27
 
 ## Choosing the removal route
 
@@ -9,12 +9,12 @@ Sources: https://martinfowler.com/bliki/ParallelChange.html · https://martinfow
 | Private, unreachable, evidence complete | Delete in small steps with the suite after each; no migration needed |
 | Behavior with consumers you control, signature or contract change | Parallel Change: expand, migrate, contract |
 | Consumers you cannot edit (published API, other teams, stored data) | Deprecation plan first, then Parallel Change |
-| Replacing a whole dependency or subsystem gradually | Branch by Abstraction: put an interface in front, route clients through it, build the replacement behind it, switch, delete the old one, optionally remove the abstraction |
+| Replacing a whole dependency or subsystem gradually | Branch by Abstraction, owned by `parallel-change-expand-contract` |
 | Candidate buried in an oversized file | Split with `layered-refactor` first, then remove |
 
-## Parallel Change in brief
+## Parallel Change
 
-Fowler's three phases: **expand** (add the new alongside the old so existing clients keep working), **migrate** (move clients incrementally; the long phase, and for external clients it depends on their cooperation), **contract** (remove the old once no client uses it). The article warns that skipping the contract step leaves a codebase worse than it started, so the transition needs discipline: mark the old version with a deprecation note or TODO, and track migration to its end. Full recipe: `parallel-change-expand-contract`.
+Expand, migrate, contract: the recipe, variants and the warning about never skipping contract are owned by `parallel-change-expand-contract`. For an audit, plan the contract step in the proposal so the old path does not linger.
 
 ## Deprecation practice
 
@@ -69,5 +69,4 @@ Compare its independent diff against the current base, port only supported, non-
 - Pick the route from the situation table; use Parallel Change whenever any consumer is outside your control.
 - Brief domain agents with the template; require evidence and rejected alternatives in every record.
 - Write proposals in the skeleton and wait for approval before implementing unless asked to implement.
-- Plan the contract step up front so the old path does not linger.
 - Record what you did not search and what would raise confidence.

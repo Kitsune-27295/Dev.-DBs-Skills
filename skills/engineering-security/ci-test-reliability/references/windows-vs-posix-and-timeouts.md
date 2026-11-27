@@ -1,6 +1,6 @@
 # Windows vs POSIX and Timeouts
 
-Sources: https://nodejs.org/api/process.html · https://nodejs.org/api/child_process.html · https://nodejs.org/api/fs.html · https://vitest.dev/config/testtimeout · https://vitest.dev/config/hooktimeout · https://jestjs.io/docs/cli · https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax · https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations · https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-challenges.html · Last verified 2026-11-24
+Sources: https://nodejs.org/api/process.html · https://nodejs.org/api/child_process.html · https://nodejs.org/api/fs.html · https://vitest.dev/config/testtimeout · https://vitest.dev/config/hooktimeout · https://jestjs.io/docs/cli · https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax · https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations · https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-challenges.html · Last verified 2026-11-27
 
 Labels used below: **[read]** = stated in a page fetched for this skill; **[known]** = well-established platform behavior not re-read from a source here; **[inferred]** = this skill's own reasoning.
 
@@ -14,7 +14,7 @@ A matrix that includes Windows and Linux runs the same test against two operatin
 |---|---|---|
 | Environment variables | Names are case-insensitive on Windows **[read]** (Node process and child_process docs). Passing two keys that differ only by case to a child on Windows can cause issues **[read]**. | Use one canonical casing; never seed `http_proxy` and `HTTP_PROXY` as independent values |
 | Signals | Windows does not support signals; Node emulates termination in `process.kill()` and `subprocess.kill()`, and lists `SIGTERM` as unsupported there **[read]** | Do not assert signal delivery or exit-by-signal on Windows; explicit platform skip with reason, or assert on the observable outcome (process gone) |
-| Spawning scripts | `.bat` and `.cmd` files cannot be run by `execFile` on Windows without a shell **[read]** | Spawn real executables, or invoke through the documented shell route, quoting names with spaces |
+| Spawning scripts | `.bat` and `.cmd` files cannot be run by `execFile` on Windows without a shell **[read]** | Spawn real executables, or invoke through the documented shell route, quoting names with spaces; `spawn` with `shell` set works but Node's docs mark it not recommended (DEP0190) |
 | File removal/rename | Busy-file errors (`EBUSY`, `EPERM`, `ENOTEMPTY`) on Windows when a handle is open or released late **[known]**; Node's recursive `rm` retries those codes via `maxRetries` and `retryDelay`, default 0 retries **[read]** | Close handles and await child exit first; then use a small bounded retry sized to measured contention |
 | Path separators | Backslash vs slash, drive letters **[known]** | Build with the path API; compare normalized paths; never embed absolute machine paths in expectations |
 | Line endings | CRLF vs LF, especially with VCS autoconversion **[known]** | Normalize when comparing text, or pin the checkout setting; do not read a fixture in a mode that differs per OS |

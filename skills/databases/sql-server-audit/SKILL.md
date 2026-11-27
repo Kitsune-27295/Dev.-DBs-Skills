@@ -1,6 +1,6 @@
 ---
 name: sql-server-audit
-description: "Audit a SQL Server instance or database so the verdict is something a professional would sign: scope and business inputs first, read-only evidence before opinion, one finding per issue with severity and confidence, popular myths rejected, coverage gaps reported instead of read as healthy, and a prioritized report whose fixes are proposed scripts that are never run. Covers configuration, backups and restores, integrity checks, indexes and statistics, waits and blocking, security and HA/DR. Use when asked for a signed-off audit, to judge pasted sp_Blitz or DMV output, or to turn collector results into a ranked remediation plan. Not for running the ready-made read-only query scripts (use sql-server-diagnostics) or an app-level database audit across seven fundamentals (use database-audit)."
+description: "Audit a SQL Server instance or database so the verdict can be signed: read-only evidence before opinion, one finding per issue with severity and confidence, popular myths rejected, unchecked areas reported as gaps and never as healthy, and a ranked plan whose fixes are proposed scripts that are never run. Covers configuration, backups, integrity checks, indexes and statistics, waits, security and HA/DR. Boundaries: the ready query scripts belong to sql-server-diagnostics, the app-level seven-fundamentals audit to database-audit, restore drills to backup-restore-drill. Use when asked for a signed-off SQL Server audit, to judge pasted sp_Blitz or DMV output, or to turn collector results into a ranked remediation plan."
 ---
 
 # SQL Server audit (method)
@@ -95,4 +95,5 @@ Severity and confidence are separate: a `needs-confirmation` CRITICAL is still r
 - [Common myths debunked](references/common-myths-debunked.md) — read before accepting any rule of thumb as a finding.
 - [Audit deliverable template](references/audit-deliverable-template.md) — read when writing findings, the summary and the plan.
 - [Evidence and safety rules](references/evidence-and-safety-rules.md) — read before connecting, handling output, or reviewing pasted tool output.
+- [Trigger evals](references/trigger-evals.md) — read to check the description against sample requests.
 - [Sources](references/sources.md) — read for URL status and claims not adopted.

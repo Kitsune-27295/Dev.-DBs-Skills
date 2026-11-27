@@ -1,6 +1,6 @@
 # Action Items and Follow-Through
 
-Sources: https://www.atlassian.com/incident-management/handbook/postmortems · https://sre.google/workbook/postmortem-culture/ · https://sre.google/sre-book/postmortem-culture/ · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · Last verified 2026-11-24
+Sources: https://www.atlassian.com/incident-management/handbook/postmortems · https://sre.google/workbook/postmortem-culture/ · https://sre.google/sre-book/postmortem-culture/ · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · Last verified 2026-11-27
 
 ## Why follow-ups decide whether it was worth writing
 

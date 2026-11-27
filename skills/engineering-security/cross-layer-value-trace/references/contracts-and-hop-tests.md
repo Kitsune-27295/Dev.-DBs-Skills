@@ -1,6 +1,6 @@
 # Contracts and Hop Tests
 
-Sources: https://martinfowler.com/bliki/ContractTest.html · https://docs.pact.io · https://www.rfc-editor.org/rfc/rfc9413 · Last verified 2026-11-24
+Sources: https://martinfowler.com/bliki/ContractTest.html · https://docs.pact.io · https://www.rfc-editor.org/rfc/rfc9413 · Last verified 2026-11-27
 
 ## Why the break usually lives at a boundary
 

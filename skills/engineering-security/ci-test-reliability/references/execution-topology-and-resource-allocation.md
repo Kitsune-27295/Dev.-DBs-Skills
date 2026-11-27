@@ -1,6 +1,6 @@
 # Execution Topology and Resource Allocation
 
-Sources: https://vitest.dev/guide/parallelism · https://vitest.dev/guide/improving-performance · https://vitest.dev/guide/cli · https://jestjs.io/docs/cli · https://pytest-xdist.readthedocs.io/en/stable/distribution.html · https://docs.pytest.org/en/stable/how-to/tmp_path.html · https://nodejs.org/api/test.html · https://nodejs.org/api/net.html · https://nodejs.org/api/fs.html · https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations · https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency · https://martinfowler.com/articles/nonDeterminism.html · Last verified 2026-11-24
+Sources: https://vitest.dev/guide/parallelism · https://vitest.dev/guide/improving-performance · https://vitest.dev/guide/cli · https://jestjs.io/docs/cli · https://pytest-xdist.readthedocs.io/en/stable/distribution.html · https://docs.pytest.org/en/stable/how-to/tmp_path.html · https://nodejs.org/api/test.html · https://nodejs.org/api/net.html · https://nodejs.org/api/fs.html · https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations · https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency · https://martinfowler.com/articles/nonDeterminism.html · Last verified 2026-11-27
 
 ## Why topology comes first
 

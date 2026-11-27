@@ -1,8 +1,8 @@
 # Playwright Test Agents, init-agents, MCP and CLI
 
-Sources: https://playwright.dev/docs/test-agents · https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/generateAgents.ts · https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md · https://playwright.dev/docs/getting-started-mcp · https://playwright.dev/agent-cli/introduction · https://playwright.dev/docs/release-notes · Last verified 2026-11-24
+Sources: https://playwright.dev/docs/test-agents · https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/generateAgents.ts · https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md · https://playwright.dev/docs/getting-started-mcp · https://playwright.dev/agent-cli/introduction · https://playwright.dev/docs/release-notes · Last verified 2026-11-27
 
-Doc version reflected: the release-notes page lists Playwright 1.65 as the newest release (no date shown on the page); the agents were introduced in 1.56 and had no changes in 1.63-1.65 per those notes. Treat names below as "as of 1.65"; regenerate definitions after every upgrade.
+Doc version reflected: the release-notes page lists Playwright 1.65 as the newest release (no date shown; only its first 100k characters were read); the agents were introduced in 1.56. Treat names below as "as of 1.65"; regenerate definitions after every upgrade.
 
 ## What the three agents are
 
@@ -27,7 +27,7 @@ What `--loop=claude` writes, read from the Playwright repository source on `main
 - A default seed file if none is found, and `specs/` with a short `specs/README.md`.
 - The docs page's own layout diagram shows `.github/` for agent definitions (the VS Code loop) and, oddly, its "Claude Code subagents" example prints `--loop=vscode`; that is a docs inconsistency, not a different command.
 
-The source also supports prompt templates (`.claude/prompts`) when a prompts option is on; whether a CLI flag exposes it was not visible in the files read: unverified.
+The source also writes prompt templates to `.claude/prompts` when a prompts option is on; whether a CLI flag exposes it was not visible: unverified. The agents folder in the repo holds the three `.agent.md` definitions and three `.prompt.md` templates.
 
 ## Healer behavior versus a strict QA policy
 
@@ -36,7 +36,7 @@ The healer definition (repo source) says: run the suite, debug each failure with
 ## MCP and CLI for agent-driven browsing
 
 - Playwright MCP (`npx @playwright/mcp@latest`; Claude Code: `claude mcp add playwright npx @playwright/mcp@latest`) drives pages through accessibility snapshots with element refs such as `ref=e5`, no vision model needed; Node 20+. `browser_run_code_unsafe` is RCE-equivalent: enable only for trusted clients. WebMCP page tools are treated as untrusted input.
-- `@playwright/cli` (`npm install -g @playwright/cli`) is the shell-command alternative aimed at coding agents: a persistent daemon, each command prints URL, title and a snapshot file (accessibility tree with refs), commands include `open`, `goto`, `click`, `fill`, `snapshot`, `generate-locator`, `tracing-start`, `state-save`. The docs call it lower token cost than MCP; MCP suits exploratory loops.
+- `@playwright/cli` (`npm install -g @playwright/cli`) is the shell-command alternative aimed at coding agents: a persistent daemon, each command prints URL, title and a snapshot file (accessibility tree with refs), commands include `open`, `goto`, `click`, `fill`, `snapshot`, `generate-locator`, `tracing-start`, `state-save`. The CLI page asserts lower token cost than MCP but gives no measurements; MCP suits exploratory loops.
 
 Seed-style example (own code):
 

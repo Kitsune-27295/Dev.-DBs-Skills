@@ -1,6 +1,6 @@
 ---
 name: application-performance
-description: "Make an application faster with evidence: name the user-visible journeys and a target, measure first at every layer (backend timings, browser Core Web Vitals, profiler, realistic benchmarks), keep network and model or third-party latency out of code blame, find the single dominant cost (USE method, Amdahl's law, flame graphs), triage in order (query, N+1, index, payload, cache, rendering, bundle), apply one small targeted fix, re-measure with a negative control, and turn the result into a benchmark or budget gate in CI. Use when a screen, endpoint, job, build or interaction is slow by design or growth, when someone says make it faster, or when adding performance gates to CI. Not for a sudden regression with an unknown cause or anything broken (use diagnosing-bugs) or database-only slowness (use query-performance)."
+description: "Make a slow screen, endpoint, job, build or interaction faster with evidence: define the user-visible journey and a target, measure first at every layer (backend timings, browser Core Web Vitals, profiler, realistic benchmarks), keep network and model or third-party latency out of code blame, find the single dominant cost (USE method, Amdahl's law, flame graphs), triage in order (query, N+1, index, payload, cache, rendering, bundle), apply one small fix, re-measure with a negative control, and keep the gain as a benchmark or budget gate in CI. Not for a sudden regression with an unknown cause or anything broken (`diagnosing-bugs`), SQL plans and indexes alone (`query-performance`) or cache design (`caching-strategies`). Use when something is slow by design or growth, when someone says make it faster, or when adding performance gates to CI."
 ---
 
 # Application Performance — Measure, Find the Dominant Cost, Fix Small, Re-measure
@@ -138,3 +138,4 @@ N+1 hides in single-request profiles: count the queries or calls per request and
 - [Triage order and fix patterns](references/triage-order-and-fix-patterns.md) — when you have a slow screen or endpoint and need the order of suspects and the smallest fix for each
 - [Frontend and browser cost](references/frontend-and-browser-cost.md) — when the slow part is in the browser: Core Web Vitals, LCP subparts, INP phases, DevTools, bundles
 - [Sources and claims not adopted](references/sources.md) — when you must check what was read and which figures are not facts
+- [Trigger evals](references/trigger-evals.md) — when you tune the description

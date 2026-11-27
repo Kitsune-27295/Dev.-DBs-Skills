@@ -1,6 +1,6 @@
 # CI, Workers, Sharding, Reporters and Choosing the Test Level
 
-Sources: https://playwright.dev/docs/ci-intro · https://playwright.dev/docs/test-parallel · https://playwright.dev/docs/test-sharding · https://playwright.dev/docs/test-reporters · https://playwright.dev/docs/api-testing · https://playwright.dev/docs/best-practices · https://playwright.dev/docs/api/class-testconfig · Last verified 2026-11-24
+Sources: https://playwright.dev/docs/ci-intro · https://playwright.dev/docs/test-parallel · https://playwright.dev/docs/test-sharding · https://playwright.dev/docs/test-reporters · https://playwright.dev/docs/api-testing · https://playwright.dev/docs/best-practices · https://playwright.dev/docs/api/class-testconfig · Last verified 2026-11-27
 
 Doc version reflected: Playwright docs "stable", newest release listed 1.65 (undated).
 
@@ -10,7 +10,7 @@ Doc version reflected: Playwright docs "stable", newest release listed 1.65 (und
 
 ## Workers and parallelism
 
-Files run in parallel across worker processes; tests inside a file run in order unless `fullyParallel: true` or describe mode `parallel`. Default workers: half of the logical cores (testconfig page); `--workers=N` or `workers` overrides; the parallelism page's CI example sets 2. `maxFailures`/`--max-failures` stops a run early (default 0, unlimited). Workers cannot talk to each other.
+Files run in parallel across worker processes; tests inside a file run in order unless `fullyParallel: true` or describe mode `parallel`. Default workers: half of the logical cores (testconfig page); `--workers=N` or `workers` overrides; the parallelism page's CI example sets 2. `maxFailures`/`--max-failures` (`-x`) stops a run early (default 0, unlimited). Workers cannot talk to each other.
 
 ## Sharding and merging
 
@@ -18,7 +18,7 @@ Files run in parallel across worker processes; tests inside a file run in order 
 
 ## Reporters
 
-Built-ins: `list` (local default), `dot` (CI default), `line`, `html` (open default `on-failure`), `json`, `junit`, `github` (annotations), `blob`. Several at once via an array.
+Built-ins: `list` (local default), `dot` (CI default), `line`, `failures`, `html` (open default `on-failure`, also `always` and `never`), `json`, `junit`, `perfetto`, `github` (annotations; the docs advise against it with a matrix strategy), `blob`. Several at once via an array.
 
 ```ts
 reporter: process.env.CI
@@ -42,6 +42,6 @@ The API-testing page says `request` (APIRequestContext) suits three jobs: testin
 ## How an agent should apply this
 
 - This file owns LEVEL: cover rules at the API level, keep UI tests to critical journeys, use API for setup and teardown.
-- Scaffold CI with explicit `retries`, `workers`, `trace: 'on-first-retry'` (RETRY, TRACE), `forbidOnly` (inferred best practice: block committed `test.only` on CI) and an uploaded report artifact.
+- Scaffold CI with explicit `retries`, `workers`, `trace: 'on-first-retry'` (RETRY, TRACE), `forbidOnly` (inferred best practice: block committed `test.only` on CI; the docs show it only as an example value) and an uploaded report artifact. `--fail-on-flaky-tests` (config `failOnFlakyTests`, since 1.52) can turn a flaky pass into a failed run.
 - Shard only when suite time justifies it; use `blob` plus `merge-reports`.
 - Use the `github` reporter plus `html` with `open: 'never'` in CI (HEADLESS).

@@ -1,6 +1,6 @@
 # Retries, Quarantine and Masking Fixes
 
-Sources: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html · https://martinfowler.com/articles/nonDeterminism.html · https://vitest.dev/config/retry · https://nodejs.org/api/test.html · Last verified 2026-11-24
+Sources: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html · https://martinfowler.com/articles/nonDeterminism.html · https://vitest.dev/config/retry · https://nodejs.org/api/test.html · Last verified 2026-11-27
 
 ## Why retries feel good and are dangerous
 
@@ -12,7 +12,7 @@ Fowler's reasoning is the same from another angle: when a test goes red and non-
 
 - **Vitest** `retry` defaults to 0; it accepts a number or an object with `count`, `delay` and `condition` (a regular expression tested against the error message, or a function given in the test file; the object form is documented as available from 4.1.0). It can be set per test or suite in the file.
 - **Google's approach** (read from the 2016 post): re-run only failing tests, automatically re-run on failure, and a "flaky" marker that reports failure only after three consecutive failures. The authors note the cost: a 15-minute integration test marked flaky and broken by a change is not discovered until three runs complete (45 minutes), and developers are encouraged to ignore flakiness in their own tests.
-- **Node's test runner** documents an experimental tag filter (`--experimental-test-tag-filter`, for example `not flaky`), which is a mechanism for a separate lane rather than a retry. It is marked experimental, so check the Node version in use before relying on it.
+- **Node's test runner** documents an experimental tag filter (`--experimental-test-tag-filter`, for example `not flaky`), which is a mechanism for a separate lane rather than a retry. It is marked Stability 1.0 (early development; added v26.2.0), so check the Node version in use before relying on it.
 
 ## When a retry is acceptable
 

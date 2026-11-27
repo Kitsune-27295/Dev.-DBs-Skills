@@ -1,6 +1,6 @@
 # Absence and Failure Semantics
 
-Sources: https://www.rfc-editor.org/rfc/rfc9413 · https://martinfowler.com/eaaCatalog/specialCase.html · https://sre.google/sre-book/monitoring-distributed-systems/ · https://opentelemetry.io/docs/concepts/signals/traces/ · Last verified 2026-11-24
+Sources: https://www.rfc-editor.org/rfc/rfc9413 · https://martinfowler.com/eaaCatalog/specialCase.html · https://sre.google/sre-book/monitoring-distributed-systems/ · https://opentelemetry.io/docs/concepts/signals/traces/ · Last verified 2026-11-27
 
 This file expands questions 2 (ABSENCE) and 4 (FAILURE). They are one family: "no value" and "failed to get a value" are both routinely turned into a value of the type's zero, and the result looks like healthy data.
 
@@ -55,7 +55,7 @@ In tracing terms, a span ends with status Unset (completed without error), Error
 
 ## Why silent tolerance travels
 
-RFC 9413 (the IAB's critique of the robustness principle, "be liberal in what you accept") argues that silently tolerating faulty or unexpected input lets problems accumulate, entrenches the tolerated behavior as a de facto standard, and hides faults that could have been fixed. It recommends "virtuous intolerance": define explicit handling for aberrant conditions and surface faults so they get fixed, ideally in a way humans can see. It also states a limit: the advice applies where implementations can be updated and redeployed. The RFC is about protocols, so applying it to internal data layers is this skill's analogy; the mechanism is the same, because a layer that repairs bad input quietly passes it on as valid-looking data.
+RFC 9413 (Informational, June 2023, an IAB document; critique of the robustness principle, "be liberal in what you accept") says tolerating unexpected input is no longer best practice in all cases: silent tolerance lets problems accumulate (protocol decay, section 4.1), entrenches the tolerated behavior as a de facto standard, and hides faults that could have been fixed (section 6). It recommends "virtuous intolerance" (section 5.1): clearly specified fatal errors that give fast feedback. It also states a limit: the advice assumes implementations can be updated and redeployed, and temporary workarounds should document an end state and a removal plan. The RFC is about protocols, so applying it to internal data layers is this skill's analogy; the mechanism is the same, because a layer that repairs bad input quietly passes it on as valid-looking data.
 
 Practical reading for a trace:
 

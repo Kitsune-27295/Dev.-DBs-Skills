@@ -1,6 +1,6 @@
 # Keyboard, Focus and Semantics Checks
 
-Sources: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Keyboard · https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Text_labels_and_names · https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/Tooling · https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/ · https://playwright.dev/docs/aria-snapshots · https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html · Last verified 2026-11-24
+Sources: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Keyboard · https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Text_labels_and_names · https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/Tooling · https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/ · https://playwright.dev/docs/aria-snapshots · https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html · Last verified 2026-11-27
 
 Playwright call names below (`keyboard.press`, `toBeFocused`, `evaluate`) are standard Playwright API used from general knowledge; the pages above were read for the ARIA-snapshot shape only.
 

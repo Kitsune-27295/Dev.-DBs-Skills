@@ -1,6 +1,6 @@
 # Severity and Evidence Format
 
-Sources: https://www.w3.org/TR/WCAG22/ · https://www.w3.org/WAI/WCAG22/Understanding/ · https://www.w3.org/WAI/test-evaluate/preliminary/ · https://playwright.dev/docs/accessibility-testing · https://developer.chrome.com/docs/lighthouse/accessibility/scoring · https://web.dev/learn/accessibility · Last verified 2026-11-24
+Sources: https://www.w3.org/TR/WCAG22/ · https://www.w3.org/WAI/WCAG22/Understanding/ · https://www.w3.org/WAI/test-evaluate/preliminary/ · https://playwright.dev/docs/accessibility-testing · https://developer.chrome.com/docs/lighthouse/accessibility/scoring · https://web.dev/learn/accessibility · Last verified 2026-11-27
 
 The severity model below is this skill's own design (inference from user impact), not taken from a standard. The standards read give conformance levels, not a severity scale.
 

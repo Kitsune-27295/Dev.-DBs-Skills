@@ -1,10 +1,10 @@
 # Removal Candidates Catalog
 
-Sources: https://martinfowler.com/bliki/Yagni.html · https://refactoring.guru/smells/dead-code · https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.com/ · Last verified 2026-11-24
+Sources: https://martinfowler.com/bliki/Yagni.html · https://refactoring.guru/smells/dead-code · https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.com/ · Last verified 2026-11-27
 
 ## Why removal is worth the effort
 
-Fowler's YAGNI model names four costs of a feature built before it is needed: build, delay, carry and repair. The one that matters for an audit is **carry**: extra complexity that slows every change to other features for as long as the feature stays, plus the cost of removing it later. Fowler also cites a study suggesting that at least two in three presumptive features turn out not to be needed, so a codebase accumulates carry cost by default. The software-engineering-at-Google deprecation chapter frames the same idea as "code is a liability, not an asset": value lies in functionality delivered, so removing unneeded code is a real gain, though removal is hard because heavily used systems attract unexpected dependencies.
+Fowler's YAGNI article names four costs of a presumptive feature: build, delay, carry and repair (cost model owned by `yagni-evolutionary-architecture`). The one that matters for an audit is **carry**: extra complexity that slows every change to other features for as long as the feature stays, plus the cost of removing it later. Fowler puts the odds that a presumptive feature is unnecessary at least two in three, citing Kohavi et al., who found that only a third of features deployed at one company improved the metrics they targeted (a statement about metrics, not proof a feature is unused; the study itself was not read). The software-engineering-at-Google deprecation chapter frames the same idea as "code is a liability, not an asset": value lies in functionality delivered, so removing unneeded code is a real gain, though removal is hard because heavily used systems attract unexpected dependencies.
 
 Refactoring (behavior-preserving change in small steps, with frequent tests) is what makes deletion safe enough to try. The dead-code smell description recommends deleting unused code and files and, for structure, Inline Class, Collapse Hierarchy or Remove Parameter; it also says a good IDE finds dead code fastest, which is true only for static, in-project references (see the consumer-evidence reference).
 

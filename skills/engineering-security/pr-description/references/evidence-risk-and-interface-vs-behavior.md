@@ -1,12 +1,12 @@
 # Evidence, Risk and Interface Versus Behavior
 
-Sources: https://google.github.io/eng-practices/review/developer/cl-descriptions.html · https://google.github.io/eng-practices/review/developer/small-cls.html · https://www.conventionalcommits.org/en/v1.0.0/ · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/reviewing-proposed-changes-in-a-pull-request · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/developer/cl-descriptions.html · https://google.github.io/eng-practices/review/developer/small-cls.html · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/reviewing-proposed-changes-in-a-pull-request · Last verified 2026-11-27
 
 ## What the sources say and what is own judgment
 
-The Google pages say a description should include relevant background such as benchmark results, mention shortcomings of the approach, and explain why the chosen approach is best. The small-change page says a change should include its related tests, should keep the system working afterwards, and that small changes are simpler to roll back because large ones touch files that change before a revert. Conventional Commits ties breaking changes to a `BREAKING CHANGE:` footer or a `!` marker and to a major version, which is the standard way to flag interface breaks. GitHub's review docs note that approvals can be dismissed when new code is pushed under certain branch rules, so the description should stay accurate across rounds.
+The Google pages say a description should include relevant background such as benchmark results, mention shortcomings of the approach, and explain why the chosen approach is best. The small-change page says a change should include its related tests, should keep the system working afterwards, and that small changes are simpler to roll back because large ones touch files that change before a revert. Breaking-change markers (`!`, `BREAKING CHANGE:`) are owned by `git-atomic-commits`. GitHub's review docs note that when required reviews and stale-review dismissal are both enabled, a code-changing push dismisses an approval, so the description should stay accurate across rounds.
 
-The specific section layout below (interface versus behavior, door, blast radius, rollback, test design) is **own synthesis** from those sources plus general release-engineering practice; it is not a quoted standard. A local third-party skill read for ideas suggested separating interface from behavior changes, showing before and after evidence, and stating how reversible a merge is; the wording and structure here were written independently.
+The specific section layout below (interface versus behavior, door, blast radius, rollback, test design) is **own synthesis** from those sources plus general release-engineering practice; it is not a quoted standard. A third-party skill read for ideas (no text reused) suggested separating interface from behavior changes, showing before and after evidence, and stating how reversible a merge is; the wording and structure here were written independently.
 
 ## Evidence
 

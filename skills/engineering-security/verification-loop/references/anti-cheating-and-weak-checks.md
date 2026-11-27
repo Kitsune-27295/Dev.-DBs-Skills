@@ -1,6 +1,6 @@
 # Anti-Cheating and Weak Checks
 
-Sources: https://en.wikipedia.org/wiki/Mutation_testing · https://en.wikipedia.org/wiki/Test_oracle · https://martinfowler.com/bliki/TestCoverage.html · https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html · Last verified 2026-11-24
+Sources: https://en.wikipedia.org/wiki/Mutation_testing · https://en.wikipedia.org/wiki/Test_oracle · https://martinfowler.com/bliki/TestCoverage.html · https://google.github.io/eng-practices/review/reviewer/looking-for.html · Last verified 2026-11-27
 
 ## The problem
 

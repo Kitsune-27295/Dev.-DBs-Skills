@@ -1,57 +1,58 @@
 # Atomicity scenarios and the external-call boundary
 
-Sources: video "Banco de Dados | Fundamentos para Vibe Coders #EP2" (mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI) chapter 03 11:46-15:50; handout https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe section "2. Transação" · Last verified 2026-11-24
+Sources: PostgreSQL docs, Transactions tutorial (https://www.postgresql.org/docs/current/tutorial-transactions.html); microservices.io Transactional Outbox (https://microservices.io/patterns/data/transactional-outbox.html); the handout section "2. Transação" (https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe); the video of the same series, chapter 03 (https://www.youtube.com/watch?v=TL4T9ZESamI, page text not readable, chapters unverified) · Last verified 2026-11-27
 
 ## What a transaction promises
 
-Several writes become one unit: all land (commit) or none do (rollback). The lesson's story: move 100 from João to Maria; if the server dies after the debit and before the credit, the money vanishes. With a transaction the database undoes the partial work. The video ties this to the "A" in ACID (atomicity).
+Several steps become one unit: from other transactions' point of view it happens completely or not at all, and if an error prevents completion none of the steps take effect. Changes stay invisible to others until commit, then appear together. Commit is durable once acknowledged. `ROLLBACK` cancels everything since `BEGIN`. The classic story: move 100 from account A to B; if the server dies after the debit and before the credit, the money vanishes unless both writes sit in one transaction.
+
+An error inside a PostgreSQL transaction block puts it in an aborted state; only `ROLLBACK` (or `COMMIT`, which also rolls back) or `ROLLBACK TO` a savepoint recovers it. Other engines differ; check the one in use.
 
 ## Scenarios worth hunting for
 
 | Scenario | What breaks without a transaction |
 |---|---|
-| Checkout: create order, decrement stock, record payment | Order exists with no stock change, or payment recorded without an order |
+| Checkout: create order, take stock, record payment | Order with no stock change, or payment without an order |
 | Balance transfer | Money disappears or duplicates |
 | Cancellation or refund | Status changed but ledger entry missing |
 | Signup writing several tables | User without profile or settings |
-| ERP-style sale (video example): sale, installments, delivery address, payment | A sale with half its parts, hard to detect later |
+| Sale with installments and address | A sale with half its parts, hard to detect later |
 
-The video's backend-as-a-service warning: three separate API calls (debit, credit, status change) are three independent operations. If one fails, the others stay. The remedy it names is to send them as one package: in practice a database function or a server endpoint that opens the transaction (the video says these services offer ways to bundle calls; specific mechanisms are not named, so check the provider's documentation).
+Backend-as-a-service warning (handout claim, consistent with the PostgreSQL rule that each statement commits alone): three separate API calls (debit, credit, status) are three independent operations. Bundle them in a database function or a server endpoint that opens one transaction; check the provider's documentation for the mechanism.
 
-## ORMs
+ORMs usually support transactions but will not use them unless the code asks; name the operations explicitly.
 
-The video notes most ORMs support transactions but the AI will not use them unless told the problem exists. This is why the prompt names the operations explicitly.
+## The external-call boundary
 
-## The external-call boundary (handout rule)
-
-Email, payment gateway and webhooks stay outside the transaction. Reasons (partly inference): a rollback cannot recall an email already sent, and holding a transaction open over a slow network call keeps locks and connections busy. Typical shapes:
+Handout rule: email, payment gateway and webhooks stay outside the transaction. Reasons: a rollback cannot recall an email already sent, and a transaction open over a slow call keeps row locks and connections busy (PostgreSQL's locking docs discourage long-open transactions). Shapes (this skill's own practice):
 
 ```
 # commit first, then call
 tx: insert order, items; commit
-then: send confirmation email   # if this fails, retry; the order is already correct
+then: send confirmation email   # on failure retry; the order is already correct
 
 # record intent, act afterwards
-tx: insert order, insert outbox(row: send_email)   # atomic together
+tx: insert order, insert outbox(send_email)   # atomic together
 worker: read outbox, send, mark done
 ```
 
-A payment taken at a provider cannot be rolled back by the database; name the compensation (refund, reversal) in the report.
+Commit-then-call can lose the call if the process dies right after commit; the outbox shape avoids that but delivers at least once, so the receiver must tolerate duplicates (owner: `saga-transactional-outbox-pattern`; dedupe: `idempotency-fix`). A payment taken at a provider cannot be rolled back by the database; name the compensation (refund, reversal).
 
-## Forced-failure test (the proof)
+## Forced-failure test
 
 ```
-test: make the second write throw
-expect: first write is absent (nothing stored)
-expect: caller receives the error
+make the second write throw
+expect: the first write is absent
+expect: the caller receives the error
 ```
 
-The test must fail on the original code; that failure is the evidence that the fix matters.
+It must fail on the original code; that failure is the evidence the fix matters.
 
 ## How an agent should apply this
 
-- List every operation that writes in more than one place, with order of writes and `file:line`, before editing.
-- Write the one-sentence invariant and a failing forced-error test first.
-- Wrap only existing writes; do not change business rules or values.
-- Keep email, payment and webhook calls outside the transaction and describe how failures are retried or compensated.
-- If the steps are separate client calls, propose one endpoint or database function instead of piecemeal calls.
+- List multi-write operations with order of writes and `file:line` before editing.
+- Write the one-sentence invariant and the failing forced-error test first.
+- Wrap only existing writes; keep decision reads inside; never change business rules.
+- Do not catch and continue inside the transaction; let the error reach the caller after rollback.
+- Keep email, payment and webhook calls outside; say how failures are retried or compensated.
+- If the steps are separate client calls, propose one endpoint or function.

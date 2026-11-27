@@ -1,6 +1,6 @@
 ---
 name: worst-case-data-ui-check
-description: "Check a screen or component against realistic worst-case data and report what breaks, without fixing it: very long and very short strings, one-letter names, unbreakable e-mails and URLs, missing optional fields, zero, one and thousands of items, null versus zero, unicode and right-to-left text, large and many-decimal numbers, plural forms, slow, failed and partial responses, a 320 px viewport, 200% zoom, text-only zoom, WCAG text spacing and keyboard use. Worst cases enter through mocked network routes (Playwright), never through edited markup. Report only: one finding per break with severity, the value that caused it and a suggested fix. Use when someone asks to stress-test a screen, check an empty state, long names, overflow, truncation, pluralization or edge cases before a release."
+description: "Stress-test a screen or component with realistic worst-case data and report what breaks, without fixing it: very long and very short strings, unbreakable e-mails and URLs, missing optional fields, zero, one and thousands of items, null versus zero, right-to-left text, many-decimal numbers, plural forms, slow, failed and partial responses, 320 px width, 200% zoom, text-only zoom and WCAG text spacing. Worst cases enter through mocked Playwright routes, never edited markup. Output is findings with severity, causing value and suggested fix. Not a WCAG audit (`a11y-audit`) or committed browser tests (`playwright-qa-orchestrator`). Use when someone asks to stress-test a screen, check an empty state, long names, overflow, truncation, pluralization or edge cases before a release."
 ---
 
 # Worst-case data UI check
@@ -90,4 +90,5 @@ Truncation guidance per field (a recommendation to put in the report, not a ruli
 - [Layout failure signatures](references/layout-failure-signatures.md) — read to turn a visible break into a cause and the usual fix.
 - [Zoom, reflow and text-only checks](references/zoom-reflow-and-text-only-checks.md) — read for the 320 px, 200% zoom, text-only zoom, text spacing and keyboard passes.
 - [Playwright mocked routes recipes](references/playwright-mocked-routes-recipes.md) — read to build fixtures, slow, failed and partial responses and the overflow assertions.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking that this skill, not a neighbor, should fire.
 - [Sources](references/sources.md) — URLs checked and claims not adopted.

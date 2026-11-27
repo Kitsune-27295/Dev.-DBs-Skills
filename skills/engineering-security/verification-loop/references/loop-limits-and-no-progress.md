@@ -1,6 +1,6 @@
 # Loop Limits, No-Progress Detection and Escalation
 
-Sources: https://www.anthropic.com/research/building-effective-agents · https://code.claude.com/docs/en/best-practices · Last verified 2026-11-24
+Sources: https://www.anthropic.com/research/building-effective-agents · https://code.claude.com/docs/en/best-practices · Last verified 2026-11-27
 
 ## What the sources say
 
@@ -52,7 +52,7 @@ while any AC is not PASS:
 final: independent verification pass per the lane (see verifier-independence-and-lanes.md)
 ```
 
-Cap loops that continue automatically (a goal condition, a Stop hook, a scheduled loop) with an explicit block or iteration limit: those run while nobody watches, which is exactly when a stuck loop burns money.
+Cap loops that continue automatically (a goal condition, a Stop hook, a scheduled loop) with an explicit block or iteration limit: those run while nobody watches, which is exactly when a stuck loop burns money. Claude Code's own Stop hook ends the turn after eight blocks in a row with no tool call between them (raisable through `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`; best-practices page, read 2026-11-27), so a hook-driven loop already has a harness cap; still write your own.
 
 ## When to stop and ask
 

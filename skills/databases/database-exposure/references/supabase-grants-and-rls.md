@@ -1,39 +1,47 @@
 # Supabase access layers: grants, RLS and the default-grant change
 
-Sources: Supabase changelog https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically; Wiz https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys; video "Banco de Dados | Fundamentos para Vibe Coders #EP2" (mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI) chapter 06 24:10-26:37 · Last verified 2026-11-24
+Sources: Supabase changelog https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically; Supabase RLS guide https://supabase.com/docs/guides/database/postgres/row-level-security; Wiz https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys; Firebase https://firebase.google.com/docs/firestore/security/insecure-rules · Last verified 2026-11-27
 
 ## Two separate layers
 
-1. **Grants** decide whether a role (for example `anon` or `authenticated`) may touch a table at all. Postgres checks this first; a missing grant returns a permission-denied error (code 42501) before any row rule applies.
-2. **Row-level security (RLS) policies** decide which rows that role sees or changes.
+Grants decide whether a role (for example `anon` or `authenticated`) may touch a table at all; row-level security (RLS) policies decide which rows. A missing grant fails with error 42501 before any policy runs. How RLS behaves and what an auditor confirms in it is owned by `security-audit` (its tenant-isolation reference); this file keeps what is specific to exposure: the grant side and the default change.
 
-The changelog states the two are independent and RLS is unchanged by the new behavior. Safe exposure needs both: the minimum grants, plus policies that match the intended audience.
+## The change (changelog, re-read 2026-11-27)
 
-## The change
+| Date (2026) | What happens |
+|---|---|
+| 28 April | Opt-out available: a new project can be created with new `public` tables not exposed to the Data API or GraphQL |
+| 18 May | `pg_graphql` stops being enabled by default |
+| 30 May | Not exposed by default for all new projects, rolled out gradually over a few weeks |
+| 30 October | Applies to all existing projects |
 
-Until now every new table in the `public` schema was reachable through the Data API (REST and GraphQL) at creation. The new model needs an explicit grant. Timeline as read: available 28 April 2026 (new projects can opt out of auto-exposure), `pg_graphql` off by default 18 May, opt-out default for new projects from 30 May (gradual), applied to all existing projects on 30 October 2026. Existing tables keep their current grants; only new tables are affected. Direct connections with a connection string are not affected. The video's summary ("old tables stay as they were: open stays open, closed stays closed") matches.
+Not affected: existing tables (they keep their grants), direct connections with a connection string, and the `auth`, `storage`, `realtime` and custom schemas. The page says the Security Advisor flags affected tables before 30 October. An existing project can opt in earlier with `alter default privileges ... revoke`, which changes only future objects. Because today is after 30 October, new tables in any project need an explicit grant; old tables are the ones to audit.
 
 ```sql
 -- table meant to be read and written by signed-in users, rows limited by policy
 grant select, insert, update, delete on public.notes to authenticated;
 alter table public.notes enable row level security;
-create policy notes_owner on public.notes
+create policy notes_owner on public.notes to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 -- no grant to anon unless the table is meant to be public
 ```
-(Policy syntax is my own sketch of common usage; check the provider docs.)
+(Own sketch; the changelog says to keep grants and policies in the same migration.)
+
+## What the RLS guide adds for the review
+
+- A table in an exposed schema without RLS is readable and writable by any role with a grant on it. With RLS on and no policy, the API returns nothing.
+- Policies do not remove grants. On projects that granted the API roles everything by default, revoke and grant back only what each role needs.
+- Always name the role with `to`: a policy without it applies to `public`, which includes `anon`. A policy `to anon using (true)` exposes every row to unauthenticated visitors.
+- Anonymous sign-ins run as `authenticated`; do not treat that role as "known users".
+- The secret (service) key bypasses RLS when the request carries no user token, and must never reach the browser or customers.
 
 ## Why "the key is public" is not the problem
 
-Wiz explains that Supabase client keys are designed to be public, but only safe when RLS policies exist. In Moltbook's case the key sat in client JavaScript and there were no policies, so it gave full read and write. Write access was treated as a bigger risk than reads. The lesson's separate rule is different: the service-role key and database password never go to the browser.
+Wiz explains that Supabase client keys are designed to be public, but only safe when RLS policies exist. In Moltbook's case the key sat in client JavaScript and there were no policies, so it gave unauthenticated read and write. The separate rule: the service key and the database password never go to the browser.
 
-## Review checklist
+## Firebase
 
-- every table the public API sees: who can select, insert, update, delete;
-- policies written `using (true)` or `with check (true)` open everything;
-- tables with RLS switched off;
-- grants broader than the app needs (the changelog says to grant only needed privileges and to treat `anon` and `authenticated` differently);
-- tables that existed before 30 October 2026 keep their old grants: audit them, do not assume the new default protects them.
+Firebase's page marks `allow read, write: if true` (under a match on every document) as not recommended: anyone who guesses the project ID could read, change or delete data. It suggests ownership checks on `request.auth.uid`, closed rules (`if false`) for server-only backends, and testing with the emulator or Rules Playground. Server client libraries bypass rules, so their access is governed by IAM. The page does not discuss time-limited test-mode rules, so this pack makes no claim about them.
 
 ## How an agent should apply this
 

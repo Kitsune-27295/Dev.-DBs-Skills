@@ -1,73 +1,65 @@
 # Sources — Playwright QA Orchestrator
 
-Every URL below was checked during skill authoring (2026-11-24).
+Every URL below was re-fetched on 2026-11-27 unless a row says otherwise (first authored 2026-11-24). All fetches were summarizing (WebFetch); Firecrawl was not available.
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| https://github.com/lackeyjb/playwright-skill (README.md, skills/playwright-skill/SKILL.md, LICENSE via raw.githubusercontent.com) | 200 OK; MIT | Dev-server detection with ask-first, env-based credentials, no-sleep locator guidance; visible-browser default rejected |
-| https://github.com/currents-dev/playwright-best-practices-skill (README, SKILL.md, core/locators, assertions-waiting, fixtures-hooks, configuration, test-data, global-setup, debugging/flaky-tests, debugging, console-errors, advanced/authentication, architecture/when-to-mock; LICENSE.md) | 200 OK (root LICENSE returned 404, LICENSE.md used); MIT, Currents Software Inc. 2026 | Locator order, web-first assertions, isolation, mocking matrix, retry budget, flakiness taxonomy |
-| https://github.com/microsoft/playwright-cli (skills/playwright-cli/SKILL.md, references/tracing.md, playwright-tests.md, storage-state.md; LICENSE) | 200 OK; Apache-2.0 | Snapshot-driven exploration, refs vs durable locators, trace contents, debug-attach flow, untrusted page tools |
-| https://github.com/microsoft/playwright/tree/main/packages/playwright/src/agents (planner, generator, healer .agent.md) | 200 OK (read via raw.githubusercontent.com; directory listing via GitHub API); Apache-2.0 | Role separation, seed test and specs convention, healer behaviors incl. fixme and unbounded loop (conflict) |
-| https://github.com/Ycsyyds/codebase-analysis-skill (SKILL.md, README, docs/PHASE1_ENHANCED.md, Gotchas.md, LICENSE) | 200 OK; MIT | Evidence-only claims, inventory before action; heavy 9-phase pipeline rejected |
-| https://github.com/obra/superpowers (skills/systematic-debugging SKILL.md + root-cause-tracing.md + condition-based-waiting.md, verification-before-completion, test-driven-development, LICENSE) | 200 OK; MIT | Root-cause-first order, 3-attempt cap, verification gate, red-green proof, condition-based waiting |
-| https://playwright.dev/docs/test-agents | 200 OK (WebFetch summarized + curl; read in two passes) | init-agents loops, what each loop generates, planner/generator/healer, seed, specs/tests layout, healer-may-skip caveat |
-| https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/generateAgents.ts | 200 OK (WebFetch, summarized) | Claude loop outputs: .claude/agents, .mcp.json, seed, specs |
-| https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md | 200 OK (WebFetch, summarized) | healer workflow, test.fixme behavior |
-| https://api.github.com/repos/microsoft/playwright/contents/packages/playwright/src/agents | 200 OK | agent file names |
-| https://playwright.dev/docs/best-practices | 200 OK | locator priority, isolation, traces, CI, lint |
-| https://playwright.dev/docs/locators | 200 OK | locator order, strictness, filtering, testIdAttribute |
-| https://playwright.dev/docs/test-assertions | 200 OK | web-first, expect.poll, toPass, timeouts |
-| https://playwright.dev/docs/actionability | 200 OK | actionability checks per action |
-| https://playwright.dev/docs/api/class-page | 200 OK (curl, waitForTimeout section) | waitForTimeout marked Discouraged |
-| https://playwright.dev/docs/test-isolation | 404 | not available; isolation read from browser-contexts |
-| https://playwright.dev/docs/browser-contexts | 200 OK | per-test context isolation |
-| https://playwright.dev/docs/test-fixtures | 200 OK | fixtures, auto/worker/option, mergeTests |
-| https://playwright.dev/docs/test-projects | 200 OK | projects, dependencies, teardown, --no-deps |
-| https://playwright.dev/docs/auth | 200 OK | storage state, playwright/.auth gitignore, setup project |
-| https://playwright.dev/docs/test-retries | 200 OK | retry semantics, flaky definition |
-| https://playwright.dev/docs/trace-viewer-intro | 200 OK | trace on-first-retry, report |
-| https://playwright.dev/docs/api/class-testoptions | 200 OK | trace/screenshot/video modes |
-| https://playwright.dev/docs/api/class-testconfig | 200 OK | defaults: workers, retries, timeouts |
-| https://playwright.dev/docs/debug | 200 OK | --debug, pause, PWDEBUG, DEBUG=pw:api |
-| https://playwright.dev/docs/codegen-intro | 200 OK | codegen, assertions, locator pick |
-| https://playwright.dev/docs/test-ui-mode | 200 OK | UI mode features and setup caveat |
-| https://playwright.dev/docs/ci-intro | 200 OK | GitHub Actions workflow, artifacts, globalTimeout |
-| https://playwright.dev/docs/test-sharding | 200 OK | --shard, blob, merge-reports |
-| https://playwright.dev/docs/test-reporters | 200 OK | reporters and defaults |
-| https://playwright.dev/docs/test-parallel | 200 OK | workers, fullyParallel, modes, isolation tips |
-| https://playwright.dev/docs/api-testing | 200 OK | request fixture, API vs UI roles |
-| https://playwright.dev/docs/getting-started-mcp | 200 OK | Playwright MCP, snapshots |
-| https://playwright.dev/agent-cli/introduction | 200 OK | @playwright/cli for agents |
-| https://playwright.dev/docs/release-notes | 200 OK (first 100k chars of 215k read) | version 1.65 latest, agents since 1.56 (undated) |
-| https://playwright.dev/docs/intro | 200 OK (curl; nav links not extractable) | version context only |
-| Pack author's draft skill (private notes; not a public URL) | Provided by the author; not fetched | Six-phase cycle, three modes, four guardrails; every claim checked in draft-claims-check.md |
+| https://playwright.dev/docs/test-agents | 200 OK | init-agents loops (vscode, claude, codex, opencode), planner/generator/healer, `tests/seed.spec.ts`, healer may leave a skipped test, VS Code 1.105 needed; the page's Claude example prints `--loop=vscode` and its layout shows `.github/` |
+| https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/generateAgents.ts | 200 OK | Claude loop writes `.claude/agents/<name>.md`, `.mcp.json` with server `playwright-test` (Windows via `cmd /c`), `specs/README.md`, a default seed if none, `.claude/prompts` only when a prompts option is on |
+| https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md | 200 OK | Healer: run suite, debug each failure, one fix at a time, no `networkidle`, no questions to the user, `test.fixme()` when confident the app is wrong, loops until green |
+| https://api.github.com/repos/microsoft/playwright/contents/packages/playwright/src/agents | 200 OK | Eleven files incl. planner, generator and healer `.agent.md`, three `.prompt.md` templates, `generateAgents.ts` |
+| https://playwright.dev/docs/release-notes | 200 OK; first 100k of about 215k characters read | 1.65 newest listed, no dates; agents introduced in 1.56; `--shuffle` (1.64), `--add-reporter` (1.63) |
+| https://playwright.dev/docs/test-cli | 200 OK (added 2026-11-27) | `--repeat-each`, `--fail-on-flaky-tests`, `--max-failures`, `--shard`, `--workers`, `--retries`, `--trace`, `--project`, `--no-deps`, `--last-failed` |
+| https://playwright.dev/docs/test-webserver | 200 OK (added) | webServer option names and defaults, array form, baseURL interplay |
+| https://playwright.dev/docs/best-practices | 200 OK | Locators, web-first assertions, isolation, stub third parties, trace on first retry not `on`, Linux CI, install needed browsers only, `no-floating-promises` lint, `tsc --noEmit` |
+| https://playwright.dev/docs/locators | 200 OK | Locator order, test id attribute, strictness, `filter`, `and`, `or`, `first`/`nth` discouraged |
+| https://playwright.dev/docs/test-assertions | 200 OK | Expect timeout 5 s, `expect.poll` 5 s and intervals, `toPass` timeout 0, `expect.soft`, messages, non-retrying matcher list |
+| https://playwright.dev/docs/actionability | 200 OK | Checks per action; `force` skips non-essential checks |
+| https://playwright.dev/docs/api/class-page (waitForTimeout section, offset 300000) | 200 OK | waitForTimeout marked Discouraged, "added before v1.9" |
+| https://playwright.dev/docs/browser-contexts | 200 OK | Fresh context per test, two isolation strategies, benefits, multi-context tests |
+| https://playwright.dev/docs/test-isolation | 404 again | Not available; isolation read from browser-contexts |
+| https://playwright.dev/docs/test-fixtures | 200 OK | auto, worker scope, option, box, `mergeTests`, setup and teardown around `use()`, built-in fixtures |
+| https://playwright.dev/docs/test-projects | 200 OK | dependencies, teardown, filters pull dependencies, `--no-deps`, `testMatch`/`testIgnore` |
+| https://playwright.dev/docs/auth | 200 OK | Storage state, `playwright/.auth` ignored in Git, setup project, per-worker accounts, API login, roles, session storage, `indexedDB`, UI mode caveat |
+| https://playwright.dev/docs/test-retries | 200 OK | Retry default 0, passed/flaky/failed, worker restart, `testInfo.retry`, serial group retries |
+| https://playwright.dev/docs/trace-viewer-intro | 200 OK | `trace: 'on-first-retry'` with `retries: process.env.CI ? 2 : 0`, `--trace on`, trace contents, `show-report`; `show-trace` not covered |
+| https://playwright.dev/docs/api/class-testoptions | 200 OK | Seven trace/video modes (default off), screenshot modes, `testIdAttribute` |
+| https://playwright.dev/docs/api/class-testconfig | 200 OK | workers half the logical cores, retries 0, timeout 30 s, expect 5 s, `maxFailures` 0, `globalTimeout` 0, `failOnFlakyTests` (since 1.52), reporter default dot on CI else list |
+| https://playwright.dev/docs/debug | 200 OK | `--debug` headed and no timeout, `page.pause`, `PWDEBUG=console`, `DEBUG=pw:api` |
+| https://playwright.dev/docs/codegen-intro | 200 OK | codegen, assertion tools, locator picker favors role, text, test id |
+| https://playwright.dev/docs/test-ui-mode | 200 OK | `--ui`, watch mode, locator picker, setup projects not run |
+| https://playwright.dev/docs/ci-intro | 200 OK | Workflow steps, `install --with-deps`, report artifact with `if: !cancelled()` and 30-day retention (`upload-artifact@v5`), `globalTimeout` recommended over job timeout |
+| https://playwright.dev/docs/test-sharding | 200 OK | `--shard`, blob reporter, `merge-reports`, matrix, per-test balance with `fullyParallel` |
+| https://playwright.dev/docs/test-reporters | 200 OK | Reporters: list, line, dot, failures, html, blob, json, junit, perfetto, github; html `open` values; github reporter discouraged with matrix |
+| https://playwright.dev/docs/test-parallel | 200 OK | `fullyParallel`, describe modes, CI `workers: 2` example, `testInfo` isolation helpers, serial not recommended; default worker count not stated here |
+| https://playwright.dev/docs/api-testing | 200 OK | Three jobs for `request`, cookie sharing of `page.request` vs `newContext()` |
+| https://playwright.dev/docs/getting-started-mcp | 200 OK | MCP install, Claude Code command, snapshots with refs, Node 20+, unsafe code tool, WebMCP tools untrusted |
+| https://playwright.dev/agent-cli/introduction | 200 OK | `@playwright/cli`, install command, command groups, snapshot refs, docs claim fewer tokens than MCP (no figures) |
+| https://playwright.dev/ | 200 OK | Product overview |
+| https://github.com/lackeyjb/playwright-skill | 200 OK; MIT | Visible browser by default (rejected for unattended runs); server detection, env credentials |
+| https://github.com/currents-dev/playwright-best-practices-skill | 200 OK; MIT | 57 reference documents; README shows an install command with the full repo URL; flaky-tests page: four flakiness families, decision tree, retries for diagnosis only, burn-in with `--repeat-each` |
+| https://github.com/microsoft/playwright-cli | 200 OK; Apache-2.0 | Skills folder, tracing, storage state commands |
+| https://github.com/Ycsyyds/codebase-analysis-skill | 200 OK; MIT | Nine-phase documentation method (rejected as too heavy); evidence-only idea kept; the page's install commands name a different account |
+| https://github.com/obra/superpowers (root, systematic-debugging and verification-before-completion SKILL.md raw) | 200 OK; MIT | Four-phase debugging, stop at the third failed fix, one change at a time; verification gate (fresh command, read output, no hedged claims) |
+| https://playwright.dev/docs/intro | not re-fetched | Version context only (2026-11-24: 200 OK, nav links not extractable) |
 
 ## Licenses of the compared repos
 
-As recorded when each LICENSE file was read; no repository text is copied, only behavior restated in our own words.
-
-- lackeyjb/playwright-skill: MIT.
-- currents-dev/playwright-best-practices-skill: MIT (LICENSE.md; the root LICENSE path returned 404).
-- microsoft/playwright-cli: Apache-2.0.
-- microsoft/playwright (Test Agents source): Apache-2.0.
-- Ycsyyds/codebase-analysis-skill: MIT.
-- obra/superpowers: MIT.
+Behavior restated in our own words; no repository text is copied. MIT: lackeyjb/playwright-skill, currents-dev/playwright-best-practices-skill, Ycsyyds/codebase-analysis-skill, obra/superpowers. Apache-2.0: microsoft/playwright-cli, microsoft/playwright (Test Agents source). Licenses are those shown on the repo pages on 2026-11-27 (earlier LICENSE-file reads on 2026-11-24 agree).
 
 ## Reading limits
 
-- The release-notes page was read only in its first 100k of about 215k characters; the version statement (1.65 newest, agents since 1.56) comes from that part and the page shows no date.
-- Several pages were read through summarizing fetches rather than raw text (test-agents page, agents source files); anything depending on exact wording is flagged in the reference as source-based.
-- `https://playwright.dev/docs/test-isolation` returned 404; isolation facts come from the browser-contexts page.
-- `https://playwright.dev/docs/intro` returned 200 but its navigation links were not extractable; used for version context only.
-- The `webServer` config key was not fetched from its own docs page; `stack-adapters.md` marks its option names as unverified.
-- Source repositories were read as data; nothing was cloned or executed.
+- The release-notes page was read only in its first 100k of about 215k characters.
+- Several pages were summarized, not read verbatim; wording-sensitive points are flagged as source-based in the references.
+- The `.claude/agents` and `.mcp.json` outputs come from repository source, not a docs page.
+- Nothing was cloned or executed. Code snippets in the references are own examples and were not run.
+- The deleted draft-claims reference and the removed per-stack table are covered under claims not adopted below.
 
 ## Claims not adopted as fact
 
-- `--fail-on-flaky-tests` and `--repeat-each`: not covered by the Playwright pages read; confirm with `npx playwright test --help` before use.
-- Extra `init-agents` flags beyond `--loop` (for example prompts or project options): only function parameters were seen in source; the CLI parsing file was not read.
-- The install command `npx skills add currents-dev/playwright-best-practices-skill`: no page read verifies it.
-- The `.claude/agents` and `.mcp.json` outputs of `--loop=claude` come from repository source, not a docs page; the docs page's own Claude example prints `--loop=vscode`, a docs inconsistency.
-- The healer's "do whatever passes" behavior and its `test.fixme()` ending: documented as behavior, rejected as policy (INTEG, REPAIRCAP).
-- Third-party claims about token savings, for example that the CLI uses fewer tokens than MCP, rest on the Playwright docs' own wording only and are not measured here.
-- Stack-specific advice in `stack-adapters.md`: general practice, not verified against a source.
+- Extra `init-agents` flags beyond `--loop`: the agents page documents none; the CLI parsing file was not read.
+- The healer's "do whatever passes" behavior and `test.fixme()` ending: documented behavior, rejected as policy (INTEG, REPAIRCAP).
+- Token-saving claims for the CLI over MCP: the Playwright page asserts it with no measurements.
+- Per-stack start, seed, auth and flaky-cause advice (Next.js, Express, Django, Laravel, Rails, .NET, static sites): general practice, never source-checked; removed from `stack-adapters.md`.
+- The third-party install command `npx skills add ...`: shown in the currents README, never required here and not run.
+- `.claude/prompts` output of `init-agents`: needs a prompts option whose CLI exposure was not seen.

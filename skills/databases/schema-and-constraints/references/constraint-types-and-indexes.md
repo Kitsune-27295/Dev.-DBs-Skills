@@ -1,27 +1,34 @@
 # Constraint types, their edge cases and the indexes they imply
 
-Sources: PostgreSQL docs https://www.postgresql.org/docs/current/ddl-constraints.html; video "Banco de Dados | Fundamentos para Vibe Coders #EP2" (mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI) chapter 02 06:25-11:46 · Last verified 2026-11-24
+Sources: PostgreSQL docs https://www.postgresql.org/docs/current/ddl-constraints.html and https://www.postgresql.org/docs/current/sql-altertable.html (both re-read 2026-11-27; the pages served were the PostgreSQL 19 docs); author's handout https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, section "1. Modelagem e constraints" · Last verified 2026-11-27
 
 ## The idea
 
-A constraint is a rule stored in the database that rejects any write breaking it, whether it comes from the app, a script, an AI tool or an admin session. The lesson's image: a doorman. Front-end validation (the video mentions Zod) saves a round trip; it does not replace validation on the server or in the database.
+A constraint is a rule stored in the database that rejects any write breaking it, whether it comes from the app, a script, an AI tool or an admin session. Code validation does not always run (handout); front-end validation saves a round trip but does not replace validation on the server or in the database.
 
 ## Types as the documentation describes them
 
 | Type | What it enforces | Edge cases to know | Index created? |
 |---|---|---|---|
-| NOT NULL | Column never null | Same as `CHECK (col IS NOT NULL)` but cheaper | No |
-| UNIQUE | No duplicates | NULLs are not equal by default, so duplicates containing NULL pass; `NULLS NOT DISTINCT` changes that | Yes (unique B-tree) |
-| PRIMARY KEY | Unique and not null, one per table | The docs note PostgreSQL does not force a table to have one | Yes (unique B-tree) |
-| CHECK | A boolean expression per row | Passes when the result is true or NULL; cannot look at other rows or tables | No |
-| FOREIGN KEY | Value must exist in the referenced table | Null in a referencing column skips the check unless `MATCH FULL` | No (on the referencing side) |
+| NOT NULL | Column never null | Equivalent to `CHECK (col IS NOT NULL)` but more efficient | No |
+| UNIQUE | No duplicates | NULLs are distinct by default, so duplicates containing NULL pass; `NULLS NOT DISTINCT` changes that | Yes (unique B-tree) |
+| PRIMARY KEY | Unique and not null, one per table | The docs recommend one; PostgreSQL does not require it | Yes (unique B-tree) |
+| CHECK | A boolean expression per row | Passes when the result is true or NULL; cannot see other rows or tables; assumed immutable, so a function whose behavior changes can leave rows violating it unnoticed | No |
+| FOREIGN KEY | Value must exist in the referenced table | A null in a referencing column skips the check unless `MATCH FULL` (declare the columns `NOT NULL` to prevent skipping altogether) | No (referencing side) |
 | EXCLUSION | No two rows satisfy given operator comparisons (e.g. overlapping ranges) | Needs a suitable index type | Yes |
 
-Foreign key actions on delete or update: `NO ACTION` (default, checked at statement end, can be deferred), `RESTRICT` (immediate), `CASCADE` (delete or update the children), `SET NULL`, `SET DEFAULT`. Choose deliberately: cascade is convenient and also deletes more than expected.
+Foreign key actions: `NO ACTION` (default; checked at statement end, can be deferred), `RESTRICT` (immediate, not deferrable), `CASCADE` (delete or update the children), `SET NULL`, `SET DEFAULT`. `ON DELETE SET NULL` accepts a column list (so a tenant column stays intact); `ON UPDATE` does not. Choose deliberately: cascade is convenient and also deletes more than expected.
+
+## Adding a rule to a table that already has rows
+
+- `NOT VALID` on `ADD CONSTRAINT` skips the check of existing rows; new writes are checked at once. The ALTER TABLE page (PostgreSQL 19) allows it for foreign-key, `CHECK` and not-null constraints, not for `UNIQUE` or `PRIMARY KEY`. Whether not-null `NOT VALID` exists in older versions was not checked: read your version's page.
+- `VALIDATE CONSTRAINT` scans for violations under `SHARE UPDATE EXCLUSIVE`, which does not block concurrent updates (a foreign key also needs `ROW SHARE` on the referenced table). Plain `ADD FOREIGN KEY` takes `SHARE ROW EXCLUSIVE` on both tables; most other `ADD` forms take `ACCESS EXCLUSIVE`.
+- Unique or primary key without a long lock: build `CREATE UNIQUE INDEX CONCURRENTLY` first, then `ADD CONSTRAINT ... USING INDEX` (the index must be a plain b-tree, not partial, no expressions; not supported on partitioned tables; for a primary key, columns not yet `NOT NULL` need a full scan).
+- Rollout order and the large-table playbook belong to `parallel-change-expand-contract`.
 
 ## The index asymmetry
 
-Referenced columns always have an index (they must be a primary key or unique); the referencing column does not get one from the foreign key declaration. The rule and the fix are owned by `query-performance`.
+Referenced columns always have an index (they are a primary key or unique); the referencing column does not get one from the foreign key declaration, and the docs recommend indexing it because deletes and updates on the referenced table scan the referencing table. The rule and the fix are owned by `query-performance`.
 
 ## Example: rule in the database, not only the code
 
@@ -37,7 +44,7 @@ CREATE INDEX orders_customer_id_idx ON orders (customer_id);
 SELECT count(*) FROM orders o LEFT JOIN customers c ON c.id = o.customer_id WHERE c.id IS NULL;
 ```
 
-Partial uniqueness ("one active subscription per user") cannot be a unique constraint but can be a unique partial index (the docs say so).
+A rule that applies to only some rows ("one active subscription per user") cannot be a unique constraint; the docs point to a unique partial index.
 
 ## How an agent should apply this
 

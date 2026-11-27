@@ -1,6 +1,6 @@
 ---
 name: integration-tests
-description: "Cover an application's critical flows (signup, login, checkout, payment webhooks, anything touching money, permission or another user's data) with route-level integration tests against a real test database, written from behavior sentences the human approves first. Also the home of the test golden rule (never delete, skip or loosen a test to make it pass). Use when an app has no tests on the flows that matter or you must choose which flows to cover. Not for driving a red-green-refactor loop on a new feature (use tdd), browser end-to-end suites (use playwright-qa-orchestrator) or flaky CI runs (use ci-test-reliability)."
+description: "Put tests on the flows that must not break (signup, login, checkout, payment webhooks, anything touching money, permissions or another user's data) as route-level integration tests against a real test database, from behavior sentences the human approves before any code. Also owns the test golden rule: never delete, skip or loosen a test to make it pass. Not for red-green-refactor on a new feature (`tdd`), browser suites (`playwright-qa-orchestrator`), flaky CI (`ci-test-reliability`) or choosing the suite mix (`testing-pyramid-and-shapes`). Use when an app has no tests on critical flows, an AI change broke something far away, or you must pick which flows to cover."
 ---
 
 # Integration tests
@@ -20,7 +20,7 @@ Without them an agent changes one place, breaks another far away, and the custom
 1. **List critical flows** by reading the project: signup, login, checkout, payment webhooks, any route touching money, permissions or another user's data. [each flow named]
 2. **Write behavior sentences** in `describe` / `it` form ("when ..., then ...") for each flow, covering: the happy path; expected errors (payment declined, invalid field, no permission); repetition (double click, duplicate webhook, two requests at once); limits (zero stock, expired plan, zero or negative amount); improper access (user A reading or changing user B's data). [five groups per flow]
 3. **Stop and show the sentences.** The human is the source of truth for expected behavior: they read, correct and approve. You write the sentences; they do not have to write code, only agree with the `it` line. [explicit approval]
-4. **Set up the environment** with the project's existing tool; if none exists, suggest the simplest for the stack and wait for approval. The test database is **separate**: local container, local backend-as-a-service, or a dedicated test project, with the same engine as production. [config points at no production data]
+4. **Set up the environment** with the project's existing tool; if none exists, suggest the simplest for the stack and wait for approval. The test database is **separate**: local container, local backend-as-a-service, or a dedicated test project, with the same engine as production (an in-memory stand-in of another engine can hide real differences). [config points at no production data]
 5. **Write the tests against the routes** (API routes, server actions, edge functions). Mock only external services; the database, business rules and policies run for real. Fire concurrent cases at the same instant (`Promise.all` or equivalent). Illustrative shape (Vitest-style `describe`/`it`; adapt to your runner):
 
    ```ts
@@ -42,7 +42,7 @@ Without them an agent changes one place, breaks another far away, and the custom
 
 ## Golden rule
 
-Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. Add a negative cross-tenant test (user B asks for user A's object and gets nothing); if a calculation needs the database to be tested, the logic is in the wrong layer (see the tenant-isolation reference). **Never connect tests to a production database**; RLS and policy tests are only valid against a real database.
+Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. Add a negative cross-tenant test (user B asks for user A's object and gets nothing); if a calculation needs the database to be tested, the logic is in the wrong layer (see the tenant-isolation reference). **Never connect tests to a production database**; RLS and policy tests are only valid against a real database, run under the application's own database role. Duplicate and simultaneous cases are written here; fixing the code they expose belongs to `idempotency-fix` and `race-condition-fix`.
 
 When an agent changes code, run the test command; green means carry on, red means read the failure and fix the code.
 
@@ -58,6 +58,7 @@ When an agent changes code, run the test command; green means carry on, red mean
 
 ## Deep references
 
-- [Sources](references/sources.md) — provenance and tool-page caveats (Vitest, Playwright)
+- [Sources](references/sources.md) — provenance, fetch statuses, claims not adopted
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for the description
 - [What to test and real database](references/what-to-test-and-real-database.md) — when deciding test scope, database setup or tooling
 - [Tenant-isolation negative test and logic layer](references/tenant-isolation-and-logic-layer.md) — when a route reads tenant data, or a test needs the database only for arithmetic

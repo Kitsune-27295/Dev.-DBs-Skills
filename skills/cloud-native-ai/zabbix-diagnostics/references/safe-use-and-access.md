@@ -1,6 +1,6 @@
 # Safe Use and Access
 
-Sources: https://www.zabbix.com/documentation/7.0/en/manual/api, https://www.zabbix.com/documentation/7.0/en/manual/web_interface/frontend_sections/users/api_tokens, https://www.zabbix.com/documentation/7.0/en/manual/web_interface/frontend_sections/users/user_roles, https://www.zabbix.com/documentation/7.0/en/manual/api/reference/user/login, https://www.zabbix.com/documentation/7.0/en/manual/config/macros/user_macros · Last verified 2026-11-24
+Sources: https://www.zabbix.com/documentation/7.0/en/manual/api, https://www.zabbix.com/documentation/7.0/en/manual/web_interface/frontend_sections/users/api_tokens, https://www.zabbix.com/documentation/7.0/en/manual/web_interface/frontend_sections/users/user_roles, https://www.zabbix.com/documentation/7.0/en/manual/api/reference/user/login, https://www.zabbix.com/documentation/7.0/en/manual/config/macros/user_macros · Last verified 2026-11-27
 
 How to touch a Zabbix server with a diagnostic client without being able to hurt it, and without leaking what it holds. Statements marked "(own)" are the author's recommendations, not claims from the manual.
 

@@ -1,17 +1,26 @@
-# Sources — Never trust the client
+# Sources: Never trust the client
 
-Every source below was checked during skill authoring (2026-11-24).
+Last verified 2026-11-27. Fetched with WebFetch (model-written summaries, not raw HTML).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Status 2026-11-27 | Used for |
 |---|---|---|
-| Video "Fundamentos de Engenharia de Software para Vibe Coders", channel "mano deyvin", published 2026-10-27, https://www.youtube.com/watch?v=G8SeOH0qerk, chapter "Por que você não deve confiar no usuário" (13:26-20:32) | Page 200 OK; transcript read in full (local export), apart from a gap before 13:26 that belongs to the previous chapter | The DevTools price-tampering example (79 to 1), "recompute on the server", public vs secret keys, the `NEXT_PUBLIC_` / `VITE_` prefix warning, per-user data access (orders filtered by the authenticated user), and what the prompt does (move rules, hunt leaked keys, explain policies in plain language, produce a report) |
-| Author's handout, https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software, section "3. Nunca confie no cliente" and its prompt | Page 200 OK; handout read in full (local export) | The checklist: client-only rules, secret classification with the `EXPO_PUBLIC_` prefix, RLS review steps (a to e), report columns, report-first then one-fix-at-a-time with separate migrations, never disabling existing protections |
+| https://www.youtube.com/watch?v=G8SeOH0qerk (video, channel "mano deyvin", chapter 13:26-20:32) | Page loads but shows only the title; transcript, channel and date not re-checked (a local transcript was read 2026-11-24) | DevTools price example, public vs secret idea, owner-filtered listing |
+| https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software (section 3) | 200 OK, re-read | Prompt steps: client-only rules, secret classification, policy review, report columns, report first then one fix at a time, never disable protections |
+| https://top10.owasp.org/2021/A01_2021-Broken_Access_Control (the old owasp.org URL answers 308) | 200 OK | Server-side enforcement, deny by default, ownership, rate limits |
+| https://nextjs.org/docs/app/guides/environment-variables | 200 OK (page dated 2026-08-25) | `NEXT_PUBLIC_` inlined at build time |
+| https://vite.dev/guide/env-and-mode | 200 OK | `VITE_` exposure and secrets warning |
+| https://docs.expo.dev/guides/environment-variables/ | 200 OK | `EXPO_PUBLIC_` visible in the bundle |
+| https://supabase.com/docs/guides/api/api-keys | 200 OK; the page carried an instruction aimed at an assistant to send feedback, ignored as page text | Publishable vs secret keys, row-level security bypass; legacy keys planned for deprecation in early 2027 |
+| https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html | 200 OK | Read; the IDOR rule is owned by `authn-authz-guard` and not repeated here |
 
-## Claims and caveats
+## Reading limits
 
-- Statistic: the video says "170 of 1,645" low-code apps had broken row-level security; the handout attributes it to a named researcher analyzing apps built on one low-code platform, looking only at the landing page. Both are the author's citations; the underlying study was not opened. SKILL.md does not repeat the figure.
-- The video claims bots scan for leaked LLM keys and that a black market resells them; plausible but stated without a source. SKILL.md repeats it as fact ("bots hunt because leaked paid keys are resold"); flagged here. (resolved 2026-11-24: SKILL.md now words it as "reportedly" and "can be resold")
-- The video says an unauthenticated call to the filtered query "returns 500"; the handout does not. SKILL.md says "fails with an error"; consistent in substance.
-- Items in SKILL.md not found in the video or handout: step 4's IDOR check on every by-id access and rate limits against id enumeration, and step 5 (input validation, output escaping, upload checks). They are the skill author's additions (the video covers the list-by-owner part only); they are common practice but not sourced here. (left as is: SKILL.md never presents them as the video's; they stay marked here as the skill's own guidance)
-- The video's remark that AI models may skip server recomputation unless told is the speaker's observation.
-- No external pages are cited for this topic.
+- The fetch tool returns summaries; details not stated were not adopted.
+- The video was not re-transcribed this round.
+
+## Claims not adopted
+
+- "170 of 1,645 low-code apps had broken row-level security": the handout (re-read) repeats it, citing a study of one platform; the study was not opened, so SKILL.md omits it.
+- Bots hunting leaked LLM keys and a resale market: stated without a source in the video; SKILL.md no longer says it.
+- The video's "returns 500" for an unauthenticated filtered query: not in the handout; SKILL.md says "fails with an error".
+- The IDOR and input-validation steps were the skill author's additions, not the video's; they now point to their owners.

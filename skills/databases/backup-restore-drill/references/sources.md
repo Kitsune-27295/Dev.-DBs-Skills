@@ -1,23 +1,30 @@
 # Sources — Backup restore drill
 
-Every source below was checked during skill authoring (2026-11-24).
+Every URL below was re-checked on 2026-11-27 (fetched through a summarizing fetch tool; the page text was not read in full).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 08 "Backup que volta" (28:48-30:37) | Transcript read from a saved copy; video page not re-fetched | The GitLab story as told, "never restored means unknown", `pg_dump` and `pg_restore` into a test database, daily and off-server, same-server backup dies with the server |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "7. Backup que volta" | Saved copy read; page not re-fetched | The prompt (inventory, daily script with 7 daily and 4 weekly copies, restore test with row counts, short runbook) |
-| GitLab postmortem, https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ | 200 (read through a summarizing fetch tool) | Timeline, why each backup method failed, losses, remediation list |
-| GitLab incident report, https://about.gitlab.com/2017/02/01/gitlab-dot-com-database-incident/ | 200 (read through a summarizing fetch tool) | Live-notes style account: db1/db2 mix-up, 300 GB to 4.5 GB, six-hour-old restore point |
+| GitLab postmortem, https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ | 200 | Timeline, four recovery procedures and why each failed, losses, remediation list, "failed completely" quote |
+| GitLab incident report, https://about.gitlab.com/2017/02/01/gitlab-dot-com-database-incident/ | 200 (some images broken) | 17:20 to 23:25 UTC window, removal stopped 23:27, 300 GB to about 4.5 GB, six-hour restore point |
+| PostgreSQL pg_dump, https://www.postgresql.org/docs/current/app-pgdump.html (added 2026-11-27) | 200 | Formats, version compatibility, consistency, "generally not the right choice" note |
+| PostgreSQL pg_restore, https://www.postgresql.org/docs/current/app-pgrestore.html (added 2026-11-27) | 200 | Archive formats, `-d`, `--create`, `--clean` |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe | 200, section "Backup that comes back" re-read | The prompt: inventory, daily script, 7 daily and 4 weekly copies, restore test, runbook |
+| Video "Banco de Dados / Fundamentos para Vibe Coders #EP2", mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI | Page content truncated; only the title was confirmed | Lesson framing (chapter 08); transcript from an earlier saved copy |
 
-## Claims and caveats
+## Corrections made on 2026-11-27
 
-- Verified: about 300 GB deleted on the primary by mistake, about 18 hours of downtime, roughly six hours of database changes lost, five backup and replication mechanisms none working reliably; the S3 bucket was empty; `pg_dump` ran as 9.2 against a 9.6 server; failure emails were rejected (DMARC); Azure snapshots covered NFS but not database servers; LVM snapshot existed only because of a manual copy about six hours earlier.
-- Loss window (resolved 2026-11-24: reconciled by re-reading both pages): both start at 17:20 UTC on 31 January 2017. The incident report (written during the incident) gives 5:20 pm to 11:25 pm UTC and says the removal was terminated at 11:27 pm UTC; the postmortem's data-loss section gives 17:20 to 23:30 UTC and its summary paragraph rounds the end to 00:00 UTC. Treat the window as about six hours, ending around 23:25-23:30 UTC. The two pages also tell the cause of the load differently; this skill does not depend on that.
-- Verified counts of loss from the postmortem: at least 5,000 projects, 5,000 comments and roughly 700 user accounts; repositories and wikis were stored separately and not lost.
-- The video's "lost 300 GB" refers to the data directory removed on the primary; the data actually unrecoverable was about six hours.
+1. "Five backup mechanisms" is not what the postmortem lists: it numbers four recovery procedures (pg_dump, LVM snapshots, Azure snapshots, replication) and notes WAL archiving was not used. Reworded; the "five" count is not adopted.
+2. The 300 GB to 4.5 GB figure appears only in the incident report, not the postmortem. Attributed accordingly.
+3. Loss window re-read: postmortem gives 17:20 to 23:30 UTC in one place and 00:00 in another, unreconciled; the incident report gives 17:20 to 23:25. Stated as about six hours.
+4. Added: the two snapshots were about 24 and 6 hours old, the cross-account restore detail, the remediation items (backup monitoring, point-in-time recovery, hourly snapshots, recovery testing, owner) and the losses (5,000 projects, 5,000 comments, about 700 accounts).
+5. `pg_dump` docs: it refuses a server newer than itself; the old "check the version" advice is now precise. Added the `--create`/`--clean` hazard and the docs' caution that dumps are not generally right for regular production backups.
 
-## Discrepancies with SKILL.md (not edited)
+## Reading limits
 
-- `SKILL.md` quotes that finding and using the backups "failed completely" per the postmortem. The summary of the page read here confirms the substance (none worked reliably) but did not surface that exact phrase (resolved 2026-11-24: re-fetched the postmortem; it says "the process of both finding and using backups failed completely", so the `SKILL.md` quote stands; it also lists the empty S3 bucket, the pg_dump version mismatch with silent failure, and broken replication).
-- `SKILL.md` says "only a six-hour-old snapshot not meant for disaster recovery saved the data"; consistent with the pages (a manually taken LVM snapshot used for staging).
-- The 7 daily and 4 weekly retention rule is the handout's own recommendation, not from GitLab.
+Pages were read through a summarizing tool. The video page returned only a title. Chapter timings were not re-verified. The 7 daily and 4 weekly retention is the handout's own recommendation, not from GitLab or PostgreSQL. The version-check shell sketch and the test anatomy are the pack's own and were not run.
+
+## Claims not adopted as fact
+
+- "Five backup mechanisms, none working" (postmortem lists four).
+- "Lost 300 GB" (the unrecoverable data was about six hours of changes).
+- Any claim of which cause applies to the owner's own system.

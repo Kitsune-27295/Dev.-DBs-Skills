@@ -1,8 +1,8 @@
 # Locators, Assertions and Auto-Waiting
 
-Sources: https://playwright.dev/docs/locators · https://playwright.dev/docs/best-practices · https://playwright.dev/docs/test-assertions · https://playwright.dev/docs/actionability · https://playwright.dev/docs/api/class-page · https://playwright.dev/docs/api/class-testconfig · Last verified 2026-11-24
+Sources: https://playwright.dev/docs/locators · https://playwright.dev/docs/best-practices · https://playwright.dev/docs/test-assertions · https://playwright.dev/docs/actionability · https://playwright.dev/docs/api/class-page · https://playwright.dev/docs/api/class-testconfig · Last verified 2026-11-27
 
-Doc version reflected: Playwright docs "stable", latest release listed as 1.65 (release-notes page, undated). `page.waitForTimeout` is marked "Added before v1.9".
+Doc version reflected: Playwright docs "stable", latest release listed as 1.65 (release-notes page, undated). `page.waitForTimeout` is marked "Added before v1.9" and Discouraged (re-read 2026-11-27).
 
 ## Locator priority
 
@@ -40,7 +40,7 @@ Before an action Playwright waits for checks and fails with `TimeoutError` if th
 
 ## Why waitForTimeout is discouraged (verified)
 
-The API page marks `page.waitForTimeout()` "Discouraged": it says waiting for time in production tests is inherently flaky, should be used only for debugging, and to use Locator actions and web assertions or signals like network events and visibility. The best-practices and actionability pages do not mention it. The healer definition in the repo also bans `networkidle`-style waits (see agents file). A fixed sleep is either too short (flaky) or too long (slow).
+The API page marks `page.waitForTimeout()` "Discouraged": tests that wait for time are inherently flaky, so use it only for debugging and prefer Locator actions, web assertions or signals like network events and visibility. The healer definition in the repo also bans `networkidle`-style waits (see agents file). A fixed sleep is either too short (flaky) or too long (slow).
 
 ## How an agent should apply this
 

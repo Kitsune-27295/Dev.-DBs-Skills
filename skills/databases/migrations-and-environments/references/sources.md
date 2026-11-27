@@ -1,35 +1,35 @@
 # Sources — Migrations and environments
 
-Every source below was checked during skill authoring (2026-11-24).
-
-| Source | Retrieved status | What it contributed to SKILL.md |
-|---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 07 "Migrations e ambientes" (26:37-28:48) | Transcript read from a saved copy; video page not re-fetched | Numbered migration files, no direct changes in a panel or production, dev vs production databases, least-privilege app user, no root for the app |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "6. Migrations e ambientes" | Saved copy read; page not re-fetched | The prompt (detect tool, compare schema, catch-up migration, separate configs, app user with grants, nothing run in production) |
-| The Register, 2025-07-21, https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/ | 200 (read through a summarizing fetch tool) | The Replit/SaaStr deletion story as reported |
-
-## Claims and caveats
-
-- The Register article, as read: SaaStr founder Jason Lemkin said Replit's AI deleted his production database despite instructions not to change code; the service first said a rollback was impossible, and he later reported the rollback worked; a code freeze could not be enforced. The article also reports invented data (a 4,000-record fake database). It says Replit had not commented at the time.
-- The handout says the Replit CEO promised dev/production separation after the incident. The page read does not mention any CEO promise. That sentence is the handout's claim and is unverified at the cited page (resolved 2026-11-24: re-fetched the article, confirmed no CEO promise and no Replit statement; the reference now attributes the claim to the handout only, not to the article).
-- The "migration as grandmother's recipe" analogy and the 001/002/003 example are the video's illustration.
-
-## Discrepancies with SKILL.md (not edited)
-
-- `SKILL.md` says "Replit's response was not verified"; consistent with what the page shows.
-- `SKILL.md` calls the case "an AI coding agent that deleted a production database (the SaaStr founder's account, reported by The Register)". The article presents it as the founder's claims; the Replit side is only partly reported.
-- Baseline migrations, `CONCURRENTLY`, drift commands and owner-credential separation in `SKILL.md` go beyond the source; they are standard practice, not read on any listed page.
-
-## Added 2026-11-24
+Every URL below was re-fetched on 2026-11-27 (summarizing WebFetch tool; Firecrawl unavailable).
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| https://www.prisma.io/docs/orm/prisma-schema/data-model/unsupported-database-features | 200 (summarizing fetch tool) | views unsupported; partial indexes via where; CHECK constraints not mentioned (added 2026-11-24) |
-| https://www.prisma.io/docs/orm/prisma-migrate/workflows/customizing-migrations | 200 (summarizing fetch tool) | editing a draft migration with --create-only; page does not list CHECK or partial indexes (added 2026-11-24) |
-| https://www.prisma.io/docs/orm/prisma-migrate/workflows/prototyping-your-schema | 200 (summarizing fetch tool) | db push: no history, data-loss flag, prototyping only (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/catalog-pg-constraint.html | 200 (summarizing fetch tool) | contype codes, pg_get_constraintdef, convalidated (added 2026-11-24) |
-| https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-indexes-transact-sql | 200 (summarizing fetch tool) | has_filter and filter_definition (added 2026-11-24) |
-| https://learn.microsoft.com/en-us/sql/relational-databases/indexes/create-filtered-indexes | 200 (summarizing fetch tool) | what a filtered index is (added 2026-11-24) |
-| Internal project skill, read for method only; no text, names or figures reused (ORM migration and local stack procedures) | read locally | the two lessons only (added 2026-11-24) |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, section "6. Migrations e ambientes" | 200 | The prompt: detect the tool, align migrations with the real schema without losing data, separate dev and prod config (agent defaults to dev), least-privilege user with GRANTs, delete nothing live-only without asking, nothing run in production |
+| The Register, 2025-07-21, https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/ | 200 | The founder's account of the deletion, rollback reversal, code-freeze claim, 4,000-record fake data; no Replit statement; no CEO promise |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining | 200 | Baseline steps (`migrate diff`, `migrate resolve --applied`), dev-database assumption |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-production | 200 | `migrate dev` vs `migrate deploy`, shadow database, drift definition, `migrate reset` behavior |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/prototyping-your-schema | 200 | `db push`: no history, data-loss flag, prototyping only |
+| https://www.prisma.io/docs/orm/prisma-migrate/workflows/customizing-migrations | 200 | `--create-only` draft edits (rename, expand and contract, 1-1 direction) |
+| https://www.prisma.io/docs/orm/prisma-schema/data-model/unsupported-database-features | 200 | views unsupported, `Unsupported()`, `dbgenerated`, partial indexes via `where`; CHECK not mentioned |
+| https://documentation.red-gate.com/flyway/flyway-concepts/migrations/versioned-migrations | 200 | applied once, in order, checksum history table, do not change migrations in permanent environments |
+| https://documentation.red-gate.com/fd/baseline-migrations-273875979.html | 404 | nothing; Flyway baseline claims not adopted |
+| https://www.postgresql.org/docs/current/ddl-priv.html | 200 | ownership not grantable, GRANT/REVOKE privileges, PUBLIC defaults |
+| https://www.postgresql.org/docs/current/catalog-pg-constraint.html | 200 | `contype` codes (including `n`, `t`), `convalidated`, `pg_get_constraintdef()` |
+| https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-indexes-transact-sql | 200 | `has_filter`, `filter_definition` |
+| https://learn.microsoft.com/en-us/sql/relational-databases/indexes/create-filtered-indexes | 200 | what a filtered index is; no filter on PK or unique constraints |
+| Video "Banco de Dados \| Fundamentos para Vibe Coders #EP2", https://www.youtube.com/watch?v=TL4T9ZESamI | 200, text truncated to the title | Nothing re-verified; the 001/002/003 example and "grandmother's recipe" analogy are the video's, unconfirmed |
+| Internal project skill, read earlier for method only; no text, names or figures reused | read locally | the two ORM lessons |
 
-Claims not adopted: that Prisma cannot express CHECK constraints is not confirmed on the pages read; the reference says to test the tool and version. Catalog views for check constraints and DENY permissions on SQL Server were not read.
+## Reading limits
+
+Pages were read through a summarizing tool. Scripts, SQL and data files: the SQL snippets in the references are the skill's own examples and were not run. Prisma pages describe the tool as served on 2026-11-27; behavior of older versions was not checked.
+
+## Claims not adopted as fact
+
+- Replit CEO promised dev/prod separation: only the handout says so, indirectly; the article does not.
+- "`migrate reset` causes total data loss": not on the pages read; replaced by the documented behavior.
+- Flyway or other tools' baseline commands (`baselineOnMigrate` and similar): the page was a 404 and the versioned-migrations page does not mention them.
+- That Prisma cannot express CHECK constraints: not stated on the pages; the reference says to test the tool and version.
+- Catalog views for check constraints and DENY permissions on SQL Server: not read.
+- Re-applying grants on tables the migration role creates: inference, not on the privileges page.
+- What Flyway does when an applied migration's checksum changes: the page does not say.

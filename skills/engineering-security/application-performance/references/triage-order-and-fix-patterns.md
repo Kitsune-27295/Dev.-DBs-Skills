@@ -1,6 +1,6 @@
 # Triage Order and Fix Patterns
 
-Sources: https://sre.google/sre-book/monitoring-distributed-systems/ · https://nodejs.org/en/learn/getting-started/profiling · https://www.brendangregg.com/usemethod.html · Last verified 2026-11-24
+Sources: https://sre.google/sre-book/monitoring-distributed-systems/ · https://nodejs.org/en/learn/getting-started/profiling · https://www.brendangregg.com/usemethod.html · Last verified 2026-11-27
 
 This file is mostly the skill's own synthesis, built on the measurement and profiling pages above and on a method abstracted from skills read for ideas only (see `sources.md`). The ordering is a frequency-and-cost heuristic, not a published standard: it comes from experience and is justified here only as "check cheap, common causes first". Where a step restates general engineering knowledge not read from a source, it is labeled so.
 
@@ -29,7 +29,7 @@ Prefer, in this order: do not do it; do it once; do it in a batch; do it later; 
 - **Batch instead of loop.** Replace per-item queries or calls with one request carrying the set of ids; join in memory by key. Verify the count dropped, not just the time.
 - **Select less.** Fields nobody reads, rows beyond the first page, or whole documents when an aggregate was needed. Cursor pagination replaces deep offset pagination (details in `query-performance`).
 - **Stream instead of buffering.** Transform and send in chunks to bound memory and cut time to first byte; keep validation and ownership rules intact.
-- **Move blocking work off the hot path.** The Node profiling guide's example is a synchronous hashing call that blocked the event loop; switching to the asynchronous form raised throughput in that test. General rule: never run long synchronous CPU work on the thread that serves interactive requests.
+- **Move blocking work off the hot path.** The Node profiling guide's example is a synchronous hashing call that blocked the event loop; switching to the asynchronous form raised throughput about 3.7x in that one test (5.33 to 19.46 requests per second). General rule: never run long synchronous CPU work on the thread that serves interactive requests.
 - **Parallelize independent awaits.** Calls that do not depend on each other should start together; bound the concurrency and check the downstream capacity (Little's law in [finding-the-dominant-cost.md](finding-the-dominant-cost.md)).
 - **Compute once, reuse.** Memoize pure results; cache expensive reads with a defined invalidation (`caching-strategies`). A cache that makes a benchmark repeat fast but not the first request is not a fix.
 - **Defer, do not delete.** Postpone work for hidden or collapsed views; measure the first activation too.

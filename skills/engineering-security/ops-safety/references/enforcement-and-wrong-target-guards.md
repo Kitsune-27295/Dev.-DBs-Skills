@@ -1,6 +1,6 @@
 # Enforcement and Wrong-Target Guards
 
-Sources: https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ · https://sre.google/sre-book/emergency-response/ · https://docs.aws.amazon.com/wellarchitected/latest/framework/ops_mit_deploy_risks_plan_for_unsuccessful_changes.html (page body not readable; see Reading limits) · Last verified 2026-11-24
+Sources: https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/ · https://sre.google/sre-book/emergency-response/ · https://docs.aws.amazon.com/wellarchitected/latest/framework/ops_mit_deploy_risks_plan_for_unsuccessful_changes.html (page body not readable; see Reading limits) · Last verified 2026-11-27
 
 ## Convention is not enforcement
 
@@ -52,4 +52,4 @@ Cloud well-architected guides list "plan for unsuccessful changes" as a standard
 
 ## Reading limits
 
-The AWS page is a script-rendered shell: both a summarizing fetch and a direct request returned only a generic title, so no text from it was read. The paragraph above is labeled general practice, not read from source.
+The AWS page is a script-rendered shell: the fetch on 2026-11-27 again returned only a generic title, so no text from it was read. The paragraph above is labeled general practice, not read from source.

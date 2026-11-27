@@ -1,6 +1,6 @@
 # Read-Only Method Catalog
 
-Sources: https://www.zabbix.com/documentation/7.0/en/manual/api, https://www.zabbix.com/documentation/7.0/en/manual/api/reference_commentary and the 7.0 method and object pages named in the table · Last verified 2026-11-24 (Zabbix 7.0, parameters compared with 8.0)
+Sources: https://www.zabbix.com/documentation/7.0/en/manual/api, https://www.zabbix.com/documentation/7.0/en/manual/api/reference_commentary and the 7.0 method and object pages named in the table · Last verified 2026-11-27 (Zabbix 7.0, parameters compared with 8.0)
 
 Every method below is a `.get` method (or a documented read-like helper) whose page was read. Request shape (from the API overview): HTTP POST to `api_jsonrpc.php` in the frontend directory, `Content-Type` of `application/json-rpc`, `application/json` or `application/jsonrequest`, body with `jsonrpc` "2.0", `method`, `params` and `id`. Credentials go in the `Authorization: Bearer <token>` header. Example host in this skill: `https://zabbix.example.com/api_jsonrpc.php`.
 

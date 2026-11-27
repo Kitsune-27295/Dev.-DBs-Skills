@@ -1,25 +1,30 @@
 # Sources — Database cost guard
 
-Every source below was checked during skill authoring (2026-11-24).
+Every URL below was re-checked on 2026-11-27 (fetched through a summarizing fetch tool; the page text was not read in full).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 05 "Susto no final do mês" (21:28-24:10) | Transcript read from a saved copy; video page not re-fetched | Meter vs rent pricing, the runaway-scraper story, N+1 (501 reads), listeners, offset billing, "alert is not a cap", the prompt's steps |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "4. Susto no final do mês" | Saved copy read; page not re-fetched | The prompt (billing model, loops/listeners/offset/unbounded, 10x estimate, simplest fix, real cut-off) |
-| The Register, 2020-12-10, https://www.theregister.com/2020/12/10/google_cloud_over_run/ | 200 (read through a summarizing fetch tool) | The 116 billion reads, about US$72,000 bill, US$7 budget, waived once |
-| Firebase "Avoid surprise bills", https://firebase.google.com/docs/projects/billing/avoid-surprise-bills | 200 (read through a summarizing fetch tool) | Budget alerts do not pause services; spend caps only for a few named services |
-| Firestore pricing, https://firebase.google.com/docs/firestore/pricing | 200 (read through a summarizing fetch tool) | What counts as a read, offset billing, listener billing, free quota |
+| The Register, 2020-12-10, https://www.theregister.com/2020/12/10/google_cloud_over_run/ | 200 | 116 billion reads, 33 million writes, just under US$72,000, US$7 budget, defaults, waiver |
+| Firebase "Avoid surprise bills", https://firebase.google.com/docs/projects/billing/avoid-surprise-bills | 200 | Alerts do not pause services; spend caps for four services; options; daily Firestore usage; query limits |
+| Firestore pricing, https://firebase.google.com/docs/firestore/pricing | 200 | What counts as a read, offset, listeners, 30-minute rule, free quota, rules reads |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe | 200, section "End-of-month scare" re-read | The prompt steps (billing model, loops/listeners/offset/unbounded, 10x estimate, fix, real cut-off) |
+| Video "Banco de Dados / Fundamentos para Vibe Coders #EP2", mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI | Page content truncated; only the title was confirmed | Lesson framing (chapter 05); transcript from an earlier saved copy |
 
-## Claims and caveats
+## Corrections made on 2026-11-27
 
-- Verified at The Register: Milkie Way, about 116 billion Firestore reads and 33 million writes, bill about US$72,000, budget US$7, Google waived the bill as a one-time gesture, bill rose for about two hours at the end before settling.
-- The video says "2 hours, 116 billion reads"; the article says the cost built up overnight after a day of testing and the bill kept rising for about two hours before settling. Not the same claim; the article's wording is the safer one (resolved 2026-11-24: re-fetched; the overnight run built the bill, and the total settled at just under US$72,000 about two hours after the founder woke to roughly US$5,000; `SKILL.md` and the case reference make no "two hours of reads" claim).
-- The video says the cause was a scraper in a loop; the article says infinite recursion from pages linking to each other, high Cloud Run defaults (1,000 max instances, concurrency 80) and background services left running. Also an article note: billing data and the Firebase dashboard lagged by about a day.
-- Verified at the Firebase page: "Budget alerts do not pause services"; spend caps exist only for Firebase AI Logic, App Hosting, Cloud Functions for Firebase and Extensions; Firestore and Realtime Database are not on that list; Firestore usage is calculated daily.
-- Verified at the pricing page: offset skipped documents are billed; per-document reads for listener updates; 30-minute disconnect rule; free daily quota. The video's "listener listens to the whole collection" is an oversimplification: you are billed per document added or updated in the result set.
-- The video's "same thing happened at AWS" is unsourced (resolved 2026-11-24: it appears in no SKILL.md or reference file of this pack; it stays an unverified anecdote of the video and is not cited as fact).
+1. The old case text said the founder had "a card with a US$100 limit"; the page read does not say so. Removed.
+2. Added from the article: the free plan auto-upgrade, about 16,000 Cloud Run compute hours, the dashboard showing usage within limits, the founder's remark about instance and concurrency values.
+3. SKILL.md said spend caps exist "for a few named services"; now names the four. The old "per-key limit" suggestion (the skill's own, absent from the Firebase page) was dropped in favor of listed options: billing shutdown by notification and lower provider defaults.
+4. Pricing: added that deletes do not trigger listener reads, index-entry exception, 1 GiB and 10 GiB quotas, and the `getAfter()` rule reads; the offset, 30-minute and minimum-read claims were confirmed unchanged.
+5. The cost formula no longer hard-codes per-100,000 pricing.
 
-## Discrepancies with SKILL.md (not edited)
+## Reading limits
 
-- `SKILL.md` says "a little short of US$72,000 after a runaway Cloud Run job"; the article supports this (Cloud Run plus Firestore reads). The video attributes it to a scraper only. No conflict with the page.
-- `SKILL.md` suggests "a quota, an alert wired to a manual or scripted shutdown, a per-key limit"; the Firebase page mentions using budget notifications to disable billing on a project and Pub/Sub for custom logic, but not a per-key limit; that item is `SKILL.md`'s own suggestion.
+Pages were read through a summarizing tool. The Firebase page says Firestore usage is calculated daily; any claim about alert latency is inference. Prices were not read or adopted. The video page returned only a title.
+
+## Claims not adopted as fact
+
+- The video's "2 hours, 116 billion reads" (the article says the bill built overnight after a day of testing).
+- The video's "same thing happened at AWS" (unsourced).
+- The US$100 card limit (not confirmed).
+- That the vendor will waive a bill again.

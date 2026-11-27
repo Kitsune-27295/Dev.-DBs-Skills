@@ -1,6 +1,6 @@
 ---
 name: blameless-postmortem
-description: "Write a blameless incident postmortem an agent or team can trust: impact quantified from sources, a timeline where every entry names its source, known cause kept apart from assumed cause, trigger versus contributing factors, what went well, where we got lucky, follow-ups each with one owner and a date, [PENDING VALIDATION] markers for anything unproven, and no secrets or personal data copied from logs. Systems, signals and decisions are described, never a person named as the cause. Use when something broke and has been mitigated, an outage ended, data was lost or a guard failed. Not for a routine retrospective on a coding session (use retro)."
+description: "Write a blameless incident postmortem after something broke and was mitigated: quantified impact, a timeline where every entry names its source, known cause kept apart from assumed cause, trigger versus contributing factors, what went well, where we got lucky, follow-ups each with one owner and a date, [PENDING VALIDATION] markers for unproven claims, and no secrets or personal data copied from logs. Describes systems, signals and decisions, never a person as the cause. Use when an outage ended, data was lost, a guard failed or someone intervened by hand and the team needs the written record. Not for live debugging (use diagnosing-bugs) or a routine session retrospective (use retro)."
 ---
 
 # Blameless Postmortem
@@ -116,4 +116,5 @@ Do not generate remediation items to satisfy the urge to "do something". An item
 - [Timeline, evidence and redaction](references/timeline-evidence-and-redaction.md) — sourcing entries, known versus assumed, pending validation, keeping secrets out.
 - [Blameless language and facilitation](references/blameless-language-and-facilitation.md) — wording rules, descriptions before explanations, running a review conversation.
 - [Action items and follow-through](references/action-items-and-follow-through.md) — types, wording, owners and dates, review and closing.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
 - [Sources](references/sources.md) — URLs read, status, claims not adopted.

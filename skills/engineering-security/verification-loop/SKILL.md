@@ -1,6 +1,6 @@
 ---
 name: verification-loop
-description: "Closed-loop verification for agent work: a task is done only when every falsifiable acceptance criterion (AC-1..n) has evidence from a command or observation run in this session, certified by a party other than the maker. Covers criteria, an evidence ledger, evidence-before-claims, a read-only fresh-context verifier, risk lanes (tiny, normal, full, bug), retry caps, budget, no-progress detection, escalation, proof that a check can fail, runtime observation, and the completion states Implemented, Validated, Partially validated, Blocked. Use when finishing or reviewing non-trivial work, before saying done, fixed or passing, when delegating work and accepting a subagent's report, when designing an agent loop with a verifier, or when a green result looks too easy."
+description: "Closed-loop verification for agent work: a task is done only when every falsifiable acceptance criterion (AC-1..n) has evidence from a command or observation run in this session, certified by someone other than the maker. Covers criteria, an evidence ledger, a read-only fresh-context verifier, risk lanes (tiny, normal, full, bug), retry caps, no-progress detection, escalation, proof that a check can fail, and the completion states Implemented, Validated, Partially validated, Blocked. Not for writing tests (`tdd`), diff review (`code-review`) or browser QA (`playwright-qa-orchestrator`). Use when finishing or reviewing non-trivial work, before saying done, fixed or passing, when accepting a subagent report, when designing an agent loop with a verifier, or when a green result looks too easy."
 ---
 
 # Verification Loop
@@ -153,4 +153,5 @@ List the checks that ran, those that did not, and any exit that fired. Never wri
 - [Verifier independence and lanes](references/verifier-independence-and-lanes.md) — read when choosing the lane, briefing a verifier, or certifying delegated work.
 - [Loop limits and no-progress](references/loop-limits-and-no-progress.md) — read when a loop repeats, a cap or budget is near, or you must escalate.
 - [Anti-cheating and weak checks](references/anti-cheating-and-weak-checks.md) — read when a check passes too easily, before trusting a new test, or when tempted to edit a failing check.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking that this skill, not a neighbor, should fire.
 - [Sources](references/sources.md) — read for the origin and retrieval status of a claim.

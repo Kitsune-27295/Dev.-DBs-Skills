@@ -1,6 +1,6 @@
 # Avoiding Duplication, Pipeline Placement and Test Code Hygiene
 
-Sources: https://martinfowler.com/articles/practical-test-pyramid.html · https://kentcdodds.com/blog/write-tests · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/practical-test-pyramid.html · https://kentcdodds.com/blog/write-tests · Last verified 2026-11-27
 
 ## Contents
 - Two rules against duplication
@@ -17,10 +17,10 @@ Fowler/Vocke give a compact policy for a growing suite:
 Pruning follows: delete high-level tests whose coverage is already provided below, and resist the sunk-cost fallacy about the effort spent on them. A related choice for clients of other services: use a consumer contract test or an integration test for the same client, not both.
 
 ## Pipeline placement
-Order pipeline stages by speed and scope, not by test label. Fast, narrow integration tests (in-memory or local DB) can run with unit tests in the first stage to shorten feedback; slow, broad ones (deployed E2E, browser) come later. The source notes terminology varies, so name pipeline stages by what they do ("fast checks", "deployed smoke") rather than by "integration".
+Order pipeline stages by speed and scope, not by test label. Fast, narrow integration tests (in-memory or local DB) can run with unit tests in the first stage to shorten feedback; slow, broad ones (deployed E2E, browser) come later. The article says stages follow speed and scope, not test type. Naming stages by what they do ("fast checks", "deployed smoke") rather than "integration" is this skill's own suggestion, since the terminology varies.
 
 ```
-stage 1 (<2 min): static analysis + unit + narrow integration
+stage 1 (illustrative budget, under 2 min): static analysis + unit + narrow integration
 stage 2: contract verification + component tests
 stage 3: deployed smoke of 3-5 journeys
 nightly: exploratory findings turned into regression tests
@@ -28,8 +28,8 @@ nightly: exploratory findings turned into regression tests
 
 ## Writing clean test code
 - Treat tests as production code: one condition per test, a readable name, Arrange-Act-Assert or Given-When-Then.
-- Favor readability (DAMP) over strict DRY; apply the Rule of Three before extracting shared helpers.
-- Assert behavior, not internals (shared with Dodds: tests coupled to implementation details make refactoring costly).
+- Balance DRY with DAMP (the article's wording) and use the Rule of Three before extracting shared helpers; the single owner of the extraction rule is `kiss-yagni-aha`.
+- Assert behavior, not internals (the article: private methods are an implementation detail; Dodds: tests coupled to implementation details give false confidence and slow refactoring).
 - Keep third-party mocks minimal; each mock removes confidence in the real connection.
 
 ## Failure signals and responses

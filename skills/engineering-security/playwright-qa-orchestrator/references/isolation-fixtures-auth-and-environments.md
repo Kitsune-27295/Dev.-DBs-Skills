@@ -1,6 +1,6 @@
 # Isolation, Fixtures, Projects, Authentication and Environments
 
-Sources: https://playwright.dev/docs/browser-contexts · https://playwright.dev/docs/test-fixtures · https://playwright.dev/docs/test-projects · https://playwright.dev/docs/auth · https://playwright.dev/docs/test-parallel · https://playwright.dev/docs/best-practices · Last verified 2026-11-24
+Sources: https://playwright.dev/docs/browser-contexts · https://playwright.dev/docs/test-fixtures · https://playwright.dev/docs/test-projects · https://playwright.dev/docs/auth · https://playwright.dev/docs/test-parallel · https://playwright.dev/docs/best-practices · Last verified 2026-11-27
 
 Doc version reflected: Playwright docs "stable", newest release listed 1.65 (undated). Note: `https://playwright.dev/docs/test-isolation` returned 404; the isolation material lives on the browser-contexts page.
 

@@ -1,10 +1,10 @@
 # DFD and Trust Boundaries
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://shostack.org/resources/threat-modeling · https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · Last verified 2026-11-24
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://shostack.org/resources/threat-modeling · https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · Last verified 2026-11-27
 
 ## What the model must answer
 
-The first of the four questions ("what are we working on?") is answered by a model that everyone shares. Shostack's page recommends data flow diagrams (DFDs) because threats tend to follow data; it adds message sequence diagrams to expand one DFD arrow into the actual calls. The OWASP cheat sheet agrees that DFDs are the most common approach, adds that a whiteboard is fine, and asks that the result be saved in a form the team can update. The Microsoft tool guide describes the same notation: an outside entity as a square, a process as a circle, a data store as two parallel lines, and trust boundaries as dotted lines showing where different parties are in control.
+The first of the four questions ("what are we working on?") is answered by a model that everyone shares. Shostack's page recommends data flow diagrams (DFDs) because threats tend to follow data; it adds message sequence diagrams to expand one DFD arrow into the actual calls. The OWASP cheat sheet agrees that DFDs are the most common approach and says a DFD should show trust boundaries, data flows, data stores, processes and external entities. The Microsoft tool guide describes the same notation: an outside entity as a square, a process as a circle, a data store as two parallel lines, and trust boundaries as dotted lines showing where different parties are in control.
 
 ## Element types and what they mean for code
 
@@ -30,7 +30,7 @@ The OWASP cheat sheet notes that boundaries often mark likely attack points and 
 
 ## Levels of detail
 
-OWASP suggests an overview plus detailed diagrams of individual components for complex systems. The Windows driver guide shows the same idea: one circle ("handle I/O requests") expanded into separate processes per request type. Rule of thumb: stop descending when each element has one owner and one trust level. Expand only the flows that cross a boundary, carry sensitive data, or have no known control.
+An overview plus detail diagrams for the risky areas is this skill's practice. The Windows driver guide shows the same idea: one circle ("handle I/O requests") expanded into separate processes per request type. Rule of thumb: stop descending when each element has one owner and one trust level. Expand only the flows that cross a boundary, carry sensitive data, or have no known control.
 
 ## Worked example (text diagram)
 

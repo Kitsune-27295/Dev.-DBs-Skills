@@ -1,13 +1,13 @@
 ---
 name: cross-layer-value-trace
-description: "Trace a wrong, missing, stale or disputed value hop by hop from its source of truth to the screen (source or collector, service or domain, API or router, backend-for-frontend, client cache, UI), asking four questions at each hop: value, absence, freshness, failure. Works in the direction of the data, records evidence per hop, finds the first hop where the truth is lost, and hands the fix to the right skill. Use when a number on screen is wrong, empty, stale or differs between screens, an empty result looks healthy, or each layer passes review but the composition lies. Not for crashes, exceptions or slowness (use diagnosing-bugs)."
+description: "Find where a wrong, missing, stale or disputed value stops being true by tracing it hop by hop, in the direction of the data, from its source of truth to the screen (collector, service or domain, API or router, backend-for-frontend, client cache, UI), asking four questions at each hop (value, absence, freshness, failure), recording evidence per hop, stopping at the first hop where truth is lost and handing the fix to the owning skill. Not for crashes, exceptions or a failing test (`diagnosing-bugs`), slowness (`application-performance`) or a whole-app review (`fundamentals-audit`). Use when a number on screen is wrong, empty, stale or differs between screens, an empty result looks healthy, or each layer passes review but the composition lies."
 ---
 
 # Cross-Layer Value Trace
 
 One idea: in a layered system each layer can be correct on its own and the composition can still show the user a lie, so a bad value is found by **walking it forward from its source of truth, one hop at a time, and stopping at the first hop where it stops meaning what it meant** — never by arguing from the screen backwards or from blame. The method borrows the trace-and-span vocabulary of distributed tracing as an evidence format, and it pairs with contract tests to pin the fix. Sources and claims: [references/sources.md](references/sources.md).
 
-Boundary: this skill is an **investigation of one value**. The general reproduce-and-bisect loop is `diagnosing-bugs`; a five-area audit of a whole app is `fundamentals-audit`; designing the layers themselves belongs to the pattern skills listed in section 7.
+Boundary: this skill is an **investigation of one value**. The general reproduce-and-bisect loop is `diagnosing-bugs`; slowness is `application-performance`; a five-area audit of a whole app is `fundamentals-audit`; designing the layers themselves belongs to the pattern skills listed in section 7.
 
 ---
 
@@ -18,7 +18,8 @@ Boundary: this skill is an **investigation of one value**. The general reproduce
 | A number on screen differs from the database, a report or another screen | Yes |
 | A panel is empty, zero or "all green" while the system is plainly not healthy | Yes (absence and failure questions) |
 | A value is "right but old", or right after reload and wrong later | Yes (freshness question) |
-| A crash with a stack trace, a failing test, a slow endpoint | No: use `diagnosing-bugs` (or the matching fix skill) |
+| A crash with a stack trace or a failing test | No: use `diagnosing-bugs` (or the matching fix skill) |
+| A slow screen or endpoint | No: use `application-performance` |
 | "Is this app sound?" with no specific value | No: use `fundamentals-audit` |
 | Two layers both look correct and the product owner must pick the meaning | Trace to find where they disagree, then stop: which side is right is a product decision |
 
@@ -162,3 +163,5 @@ This skill finds the hop; it does not own the repair.
 - [Value and freshness checks](references/value-and-freshness-checks.md) - read for questions 1 and 3: unit, scale, window and identity drift, timestamps that die in a mapper, averages that hide a tail.
 - [Absence and failure semantics](references/absence-and-failure-semantics.md) - read for questions 2 and 4: how "unknown" becomes zero, silent tolerance, implicit errors, special-case values.
 - [Contracts and hop tests](references/contracts-and-hop-tests.md) - read when checking producer/consumer agreement at the broken hop and pinning the fix with a contract or hop-level test.
+- [Sources](references/sources.md) - read to see fetch statuses, reading limits and claims not adopted.
+- [Trigger evals](references/trigger-evals.md) - read when tuning the description.

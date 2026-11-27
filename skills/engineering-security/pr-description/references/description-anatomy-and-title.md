@@ -1,14 +1,14 @@
 # Description Anatomy and Title
 
-Sources: https://google.github.io/eng-practices/review/developer/cl-descriptions.html · https://www.conventionalcommits.org/en/v1.0.0/ · https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request · https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/developer/cl-descriptions.html · https://www.conventionalcommits.org/en/v1.0.0/ · https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request · https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue · Last verified 2026-11-27
 
 ## What the sources say
 
 **Google, writing good descriptions.** A description is a public record of a change and must say *what* is being changed (enough that a reader need not read the whole diff) and *why* (context the author had, decisions not visible in the code). It becomes permanent history that people will search later by faint memory, so important information belongs in the description, not only in the code. The first line is a short, standalone summary written as an order (imperative), followed by a blank line; it is what appears in history listings. The body fills in the problem, why this approach is best, shortcomings, and background such as bug numbers, benchmark results and design links. External links may become inaccessible, so include enough context in the text. Inadequate examples: "Fix bug", "Fix build", "Add patch", "Phase 1". Tags such as `[area]` are optional and should stay short in the first line. Generated descriptions should follow the same advice, and a description should be re-read before submitting because changes during review can make it stale.
 
-**Conventional Commits 1.0.0.** Structure: `<type>[optional scope][!]: <description>`, optional body, optional footers. `fix` patches a bug (SemVer PATCH), `feat` adds a feature (MINOR), a `BREAKING CHANGE:` footer or `!` marks a breaking change (MAJOR) on any type. Other types such as `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` are allowed by convention and carry no SemVer effect unless breaking. A scope is a noun in parentheses. The description follows the colon and space.
+**Conventional Commits 1.0.0.** Used here only as the title shape, `<type>[optional scope][!]: <description>`. The specification defines `feat` and `fix`; other types are allowed but not defined by it (the Angular-derived set is a convention), and `BREAKING CHANGE` must be uppercase. Grammar, SemVer effect and breaking-change rules are owned by `git-atomic-commits`.
 
-**GitHub.** Creating a pull request asks for a title and a description; a draft can be opened instead. A pull request linked to an issue closes it on merge into the default branch when a keyword is used: `close(s/d)`, `fix(es/ed)`, `resolve(s/d)` followed by `#N`, or `owner/repo#N` for another repository; each issue needs its own keyword. Linking is also possible manually from the sidebar.
+**GitHub.** Creating a pull request asks for a title and a description; a draft can be opened instead. A pull request linked to an issue by a keyword in its description or in a commit message closes the issue on merge, and the PR must target the default branch: `close(s/d)`, `fix(es/ed)`, `resolve(s/d)` followed by `#N`, or `owner/repo#N` for another repository; each issue needs its own keyword; a colon after the keyword and upper case are accepted. Linking is also possible manually from the sidebar.
 
 ## Anatomy of a good description
 
@@ -35,8 +35,7 @@ Reading order for the reviewer: title (what), motivation (why), changes (scope),
 |---|---|
 | Imperative, present tense ("add", "fix", "remove") | Matches history and release-note tooling |
 | One idea and specific noun | Stands alone in a log |
-| Type reflects the user-visible effect (`feat`, `fix`) | Drives version and changelog tools |
-| `!` or `BREAKING CHANGE:` only for true breaks | Avoids alarming noise |
+| Type reflects the user-visible effect; `!` only for true breaks (rules: `git-atomic-commits`) | Drives version and changelog tools; avoids alarming noise |
 | Short; avoid long tag stacks | Clarity first |
 | No ticket-only titles ("PROJ-123") | Meaningless without the tracker |
 

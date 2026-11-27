@@ -1,6 +1,6 @@
 # Worst-Case Data Catalog
 
-Sources: https://www.w3.org/International/questions/qa-personal-names, https://www.w3.org/International/questions/qa-html-dir, https://www.w3.org/International/articles/inline-bidi-markup/, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat · Last verified 2026-11-24
+Sources: https://www.w3.org/International/questions/qa-personal-names, https://www.w3.org/International/questions/qa-html-dir, https://www.w3.org/International/articles/inline-bidi-markup/, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat · Last verified 2026-11-27
 
 How to choose the hostile value for each kind of field. The rule is the same everywhere: the value must be something a real person, a real integration or a real translation could produce, or the actual limit in the schema. Anything marked "(own)" below is the author's judgment, not a quotation from a source.
 

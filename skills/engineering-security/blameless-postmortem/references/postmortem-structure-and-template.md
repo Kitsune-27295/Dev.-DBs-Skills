@@ -1,6 +1,6 @@
 # Postmortem Structure and Template
 
-Sources: https://sre.google/workbook/postmortem-culture/ · https://sre.google/sre-book/postmortem-culture/ · https://www.atlassian.com/incident-management/handbook/postmortems · https://docs.pagerduty.com/ops-guides/incident-response-guide/postmortem-process · Last verified 2026-11-24
+Sources: https://sre.google/workbook/postmortem-culture/ · https://sre.google/sre-book/postmortem-culture/ · https://www.atlassian.com/incident-management/handbook/postmortems · https://docs.pagerduty.com/ops-guides/incident-response-guide/postmortem-process · Last verified 2026-11-27
 
 ## What the public guides agree on
 

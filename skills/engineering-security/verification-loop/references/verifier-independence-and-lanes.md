@@ -1,6 +1,6 @@
 # Verifier Independence and Lanes
 
-Sources: https://www.nasa.gov/ivv-overview/ · https://en.wikipedia.org/wiki/Verification_and_validation · https://code.claude.com/docs/en/best-practices · https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://sre.google/sre-book/postmortem-culture/ · Last verified 2026-11-24
+Sources: https://www.nasa.gov/ivv-overview/ · https://en.wikipedia.org/wiki/Verification_and_validation · https://code.claude.com/docs/en/best-practices · https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://sre.google/sre-book/postmortem-culture/ · Last verified 2026-11-27
 
 ## Maker and checker
 

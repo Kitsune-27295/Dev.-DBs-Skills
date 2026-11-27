@@ -1,24 +1,33 @@
 # Sources — Verification Loop
 
-Every URL below was checked during skill authoring (2026-11-24). Pages were read with a fetch tool that summarizes the page; statuses are real. Statements marked "this skill's synthesis" in the references are own inferences, not claims of the sources.
+Every URL below was re-fetched during the rebuild on 2026-11-27 (WebFetch). Pages were read through a fetch tool that summarizes the page; statuses are real. Statements marked "this skill's synthesis" in the references are own inferences, not claims of the sources.
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| https://www.anthropic.com/research/building-effective-agents | 200 OK | Evaluator-optimizer workflow and when it fits; stopping conditions such as a maximum number of iterations; ground truth from the environment at each step; sandbox testing because errors compound. Page notes some tooling has changed since its publication. |
-| https://code.claude.com/docs/en/best-practices | 200 OK | Give the agent a pass/fail check; ask for evidence (command and output); fresh-subagent review that did not see the reasoning; read-only reviewer enforced by tool limits; Stop-hook block limit; "skip style" warning for reviewers; runtime verification catches what tests miss. |
-| https://scrumguides.org/scrum-guide.html | 200 OK | Definition of Done as a formal state work must reach; work that does not meet it does not count toward the increment. |
-| https://google.github.io/eng-practices/review/reviewer/looking-for.html | 200 OK | Reviewers ask whether tests would fail when the code breaks and whether they can give false positives; tests are code to maintain. |
-| https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html | 200 OK (only the first ~100,000 characters of the page were read, mostly reader comments after the post) | A useful test is a fast, reliable signal that points to the cause; slow flaky suites lengthen feedback loops. |
-| https://martinfowler.com/bliki/TestCoverage.html | 200 OK | Coverage shows untested code, not test quality; tests without assertions inflate it; targets invite gaming. |
-| https://martinfowler.com/bliki/SelfTestingCode.html | 200 OK | A self-testing suite catches new bugs soon after they appear, which is what makes changes safe. |
-| https://en.wikipedia.org/wiki/Mutation_testing | 200 OK | Mutants, killed versus survived, mutation score, equivalent-mutant problem. |
-| https://en.wikipedia.org/wiki/Test_oracle | 200 OK | Oracle kinds (specified, derived, implicit, human) and their pitfalls. |
-| https://en.wikipedia.org/wiki/Verification_and_validation | 200 OK | Verification versus validation; independent V&V as a disinterested third party. |
-| https://www.nasa.gov/ivv-overview/ | 200 OK | IEEE's three independence parameters (technical, managerial, financial) as cited by NASA IV&V; added value of independence. |
-| https://sre.google/sre-book/postmortem-culture/ | 200 OK | Postmortems are reviewed for completeness of data, impact and root cause; the unreviewed-postmortem remark. It does not say reviewers must be independent of the incident team. |
-| https://en.wikipedia.org/wiki/Independent_verification_and_validation | 404 (page does not exist under this title; the Verification_and_validation page above was used instead) | Nothing. |
-| https://testing.googleblog.com/2008/10/testing-on-toilet-test-behavior-not.html | 404 (guessed slug, not a real page) | Nothing; not used. |
-| https://martinfowler.com/bliki/TestingLanguage.html | 200 OK but off-topic (acceptance-test languages) | Nothing; not used. |
-| Third-party skill read for ideas, no text reused (closed-loop verification harness with numbered acceptance criteria, evidence rows, fresh-context read-only verifier, retry cap; MIT license) | Read locally (private install) | Idea: acceptance IDs tied to evidence rows; the maker is not the grader; lane-based ceremony. Own wording and structure throughout. |
-| Third-party skill read for ideas, no text reused (shared loop-engineering reference: verifier, hard cap, budget, no-progress detection, human escalation; MIT license) | Read locally (private install) | Idea: layered termination exits with a verifier plus at least one safety exit. Own wording throughout. |
-| Third-party skill read for ideas, no text reused (verification-before-completion: no completion claim without fresh evidence; MIT license) | Read locally (private install) | Idea: evidence before claims; revert-the-fix proof for regression tests. Own wording throughout. |
+| https://www.anthropic.com/research/building-effective-agents | 200 OK, re-read | Evaluator-optimizer workflow; stopping conditions such as a maximum number of iterations; ground truth from the environment at each step; sandbox testing |
+| https://code.claude.com/docs/en/best-practices | 200 OK, re-read | Give the agent a pass/fail check; ask for evidence (command and output); `/code-review` runs in a fresh subagent that never saw the conversation; custom reviewer limited to read-only tools, enforced by the harness; Stop hook blocks and ends the turn after eight consecutive blocks by default (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` raises it); "skip style" warning; `/verify` runs the app to catch what tests miss (added 2026-11-27) |
+| https://scrumguides.org/scrum-guide.html | 200 OK, re-read | Work that does not meet the Definition of Done cannot be released or presented and returns to the backlog |
+| https://google.github.io/eng-practices/review/reviewer/looking-for.html | 200 OK, re-read | Reviewers ask whether tests will fail when the code is broken and whether they start giving false positives |
+| https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html | 200 OK; only comments and the first 100,000 characters were captured, article body not confirmed | Nothing adopted; no longer cited by any reference |
+| https://martinfowler.com/bliki/TestCoverage.html | 200 OK, re-read | Coverage finds untested code, not test quality; assertion-free tests inflate it; targets invite gaming |
+| https://martinfowler.com/bliki/SelfTestingCode.html | 200 OK, re-read | Self-testing code catches a bug soon after it appears, so recent changes are the suspects |
+| https://en.wikipedia.org/wiki/Mutation_testing | 200 OK, re-read | Mutants, killed versus survived, score as killed over total, equivalent mutants |
+| https://en.wikipedia.org/wiki/Test_oracle | 200 OK, re-read | Specified, derived, implicit and human oracles and their pitfalls |
+| https://en.wikipedia.org/wiki/Verification_and_validation | 200 OK, re-read | Verification versus validation; independent V&V by a disinterested third party; terms are not used consistently |
+| https://www.nasa.gov/ivv-overview/ | 200 OK, re-read | IEEE technical, managerial and financial independence; value of independence |
+| https://sre.google/sre-book/postmortem-culture/ | 200 OK, re-read | "An unreviewed postmortem might as well never have existed"; review criteria. It does not require reviewers to be independent of the incident team |
+| Third-party skills on closed-loop verification, loop engineering and verification-before-completion (MIT, private install) | Read for ideas, no text reused | Acceptance IDs tied to evidence rows; maker is not the grader; layered termination exits; revert-the-fix proof |
+
+Dropped: Wikipedia "Independent verification and validation" (404); the Google 2008 "test behavior not implementation" post (404, guessed slug); the Fowler "TestingLanguage" page (off-topic).
+
+## Reading limits
+
+- Pages were read through a summarizing fetch tool; quotes are from its output, not the raw HTML. The Google 2015 post body was not captured.
+- Lane names, the default of 3 rounds per AC, the 6 and 10 task-round caps and the L0 to L3 independence levels are this skill's own defaults, not figures from any source.
+- No scripts or data files exist in this skill.
+
+## Claims not adopted as fact
+
+- That an independent verifier always catches what the maker missed: sources show independence adds value, not a guarantee.
+- That mutation score or coverage proves test quality: sources say they are signals only.
+- Any rate or threshold for retry caps beyond the "maximum number of iterations" principle.

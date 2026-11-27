@@ -1,6 +1,6 @@
 # The Practical Test Pyramid, Layer by Layer
 
-Sources: https://martinfowler.com/articles/practical-test-pyramid.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/practical-test-pyramid.html · Last verified 2026-11-27 (article dated 2018-02-26, re-read in full on the points below)
 
 ## Contents
 - Principle and naming caveat
@@ -11,12 +11,12 @@ Sources: https://martinfowler.com/articles/practical-test-pyramid.html · Last v
 - How an agent should apply this
 
 ## Principle
-Group tests by granularity: many fast tests at the bottom, fewer broad ones above, very few end-to-end at the top. The inverse (ice-cream cone) is slow and brittle. Layer names (unit/service/UI) are loose; teams may rename them if they stay consistent. "Integration", "component" and "service" tests have no settled meaning, so agree on scope locally.
+Group tests by granularity: many fast tests at the bottom, fewer broad ones above, very few end-to-end at the top. The article credits Mike Cohn with the concept (Succeeding with Agile) and names the ice-cream cone as the anti-pattern to avoid: slow and brittle. Layer names (unit/service/UI) are loose; teams may rename them if they stay consistent. "Integration", "component" and "service" tests have no settled meaning, so agree on scope locally.
 
 ## Unit tests
 - A "unit" varies: a function in functional code, a class or method in OO. Sociable tests use real collaborators; solitary tests stub all of them. Use either, chosen for confidence.
 - Stubs return canned answers; mocks verify interactions. Different tools.
-- Must be fast: no DB, filesystem or HTTP; thousands should finish in minutes.
+- Must be fast: no DB, filesystem or HTTP; the article expects thousands to run within a few minutes.
 - Test the public interface, roughly one test class per production class. Needing to test a private method signals too many responsibilities: extract a class.
 - Assert observable behavior (input -> output), not call sequences; skip trivial getters/setters and branch-free code.
 - Structure: Arrange-Act-Assert or Given-When-Then.
@@ -29,10 +29,10 @@ def test_unknown_person_returns_fallback():
 ```
 
 ## Integration tests
-Check one external integration point at a time (DB, filesystem, other service) with the rest doubled. Required wherever data is serialized or deserialized: REST calls, DB access, queues, file I/O. Run real dependencies locally or a dedicated test instance, never production. Use the production database type where feasible: the source warns that an in-memory substitute of a different engine carries risk. For outbound HTTP, stub the remote with a local stub server and point the client's base URL config at it. Limitation: the stub can drift from the real service, which is why contract tests exist.
+Check one external integration point at a time (DB, filesystem, other service) with the rest doubled. Required wherever data is serialized or deserialized: REST calls, DB access, queues, file I/O. Run real dependencies locally or a dedicated test instance, never production. Use the production database type where feasible: the source warns that an in-memory substitute of a different engine carries risk. For outbound HTTP, stub the remote with a local stub server (the article uses WireMock) and point the client's base URL config at it. Limitation: the stub can drift from the real service, which is why contract tests exist.
 
 ## Consumer-driven contract tests
-Problem: handing a spec over the fence plus a big manual system test is slow and fragile. CDC flips it: the consumer writes tests stating what it needs; these are published as a contract file; the provider replays them in its own pipeline; a failure starts a conversation between teams, and the provider builds only what is consumed. Mechanics with Pact: consumer test emits a pact file; provider test loads it and implements each named "state"; provider names and state strings must match exactly. Share pacts via version control first, an artifact store or broker later. For a given client use a consumer test **or** an integration test, not both.
+Problem: handing a spec over the fence plus a big manual system test is slow and fragile. CDC flips it: the consumer writes tests stating what it needs; these are published as a contract file; the provider replays them in its own pipeline; a failure starts a conversation between teams, and the provider builds only what is consumed. Mechanics with Pact (the article calls it probably the most prominent tool): the consumer test writes a pact file in a JSON format; the provider test loads it and implements each named state, and the provider's state string must match the consumer's `given()` string. Share pacts through version control, or an artifact repository or pact broker. For a given client use a consumer test **or** an integration test, not both.
 
 ## UI, end-to-end, acceptance, exploratory
 - "UI" includes REST APIs and CLIs. SPAs: unit-level JS test tools; server-rendered: browser automation; layout regressions: screenshot comparison; usability cannot be automated (exploratory, hallway tests, demos). UI testing is not the same as end-to-end testing.

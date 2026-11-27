@@ -1,6 +1,6 @@
 # Timeline, Evidence and Redaction
 
-Sources: https://docs.pagerduty.com/ops-guides/incident-response-guide/postmortem-process · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · https://sre.google/sre-book/postmortem-culture/ · Last verified 2026-11-24
+Sources: https://docs.pagerduty.com/ops-guides/incident-response-guide/postmortem-process · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · https://sre.google/sre-book/postmortem-culture/ · Last verified 2026-11-27
 
 ## The timeline is the spine
 

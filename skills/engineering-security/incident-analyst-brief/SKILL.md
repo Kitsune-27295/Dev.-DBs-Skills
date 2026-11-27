@@ -1,6 +1,6 @@
 ---
 name: incident-analyst-brief
-description: "How to brief a background analyst agent when something unexpected fails during agent work (a test, build, gate or guard refusal, a fix that did not work, a regression, a user-reported defect). Write a structured brief (symptom, evidence, expected, tried so far, scope, base commit, constraints, where the result goes), search for a recorded lesson first so the same failure is not investigated twice, keep fixing the symptom meanwhile, and keep one rule: the analyst only proposes (a report and a patch), the lead applies, reviews and records the lesson. Use when an unexpected failure needs a second pair of eyes in parallel, when delegating a root-cause analysis to a subagent, or when a failure has resisted one focused attempt."
+description: "How to brief a background analyst agent when something unexpected fails during agent work (a test, build, gate or guard refusal, a fix that did not work, a regression, a user-reported defect). Write a structured brief (symptom, evidence, expected, tried so far, scope, base commit, constraints, where the result goes), search for a recorded lesson first, keep fixing the symptom meanwhile, and keep one rule: the analyst only proposes (a report and a patch), the lead applies. Not for the root-cause method itself (`diagnosing-bugs`) or the post-incident write-up (`blameless-postmortem`). Use when an unexpected failure needs a second pair of eyes in parallel, when delegating root-cause analysis to a subagent, or when a failure has resisted one focused attempt."
 ---
 
 # Incident Analyst Brief
@@ -140,4 +140,5 @@ The analyst's final message is the report (a subagent often cannot write files; 
 - [Analyst brief template](references/analyst-brief-template.md) — the nine fields with a worked example and common mistakes.
 - [Roles and live state for agent incidents](references/roles-and-live-state.md) — lead, analyst and scribe mapped onto human incident roles; one actor changes the system; the running state note; handoff.
 - [Reviewing analyst proposals and capturing the lesson](references/reviewing-analyst-proposals.md) — how the lead tests a proposal, evidence grades, and recording the lesson.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
 - [Sources](references/sources.md) — URLs read, status, claims not adopted.

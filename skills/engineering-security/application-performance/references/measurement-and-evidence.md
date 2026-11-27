@@ -1,6 +1,6 @@
 # Measurement and Evidence
 
-Sources: https://web.dev/articles/vitals · https://web.dev/articles/performance-budgets-101 · https://sre.google/sre-book/monitoring-distributed-systems/ · https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Server-Timing · Last verified 2026-11-24
+Sources: https://web.dev/articles/vitals · https://web.dev/articles/performance-budgets-101 · https://sre.google/sre-book/monitoring-distributed-systems/ · https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Server-Timing · Last verified 2026-11-27
 
 ## Why measurement comes first
 
@@ -46,7 +46,7 @@ The `Server-Timing` response header carries named durations from the server into
 
 ## Benchmarks as CI gates
 
-A performance budget is a limit on a metric that affects speed. The web.dev budget article distinguishes quantity-based budgets (asset sizes and counts), milestone timings (for example FCP, TTI), and rule-based scores (Lighthouse). It recommends combining quantity and user-centric measures, setting a separate budget per page type, enforcing budgets in the build (bundle-size checks, Lighthouse CI) and continuing to measure real users after launch. Its default numbers (for example TTI under 5 s and under 170 KB of critical-path resources) assume baseline devices and slow networks; treat them as a starting point, not a standard for your audience.
+A performance budget is a limit on a metric that affects speed. The web.dev budget article distinguishes quantity-based budgets (asset sizes and counts), milestone timings (for example FCP, TTI), and rule-based scores (Lighthouse). It recommends combining quantity and user-centric measures, setting a separate budget per page type, enforcing budgets in the build (bundle-size checks, Lighthouse CI) and continuing to measure real users after launch. Its default numbers (for example TTI under 5 s and under 170 KB of critical-path resources, which the page shows without a date) assume baseline devices and slow networks; treat them as a starting point, not a standard for your audience.
 
 Rules for gates that stay useful (the first four are this skill's synthesis; the budget-type list above is from the source):
 1. Run the production code path on a fixed generated workload; do not copy the algorithm into the benchmark.

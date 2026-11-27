@@ -1,6 +1,6 @@
 # Automated Tooling: axe-core, Lighthouse, Playwright
 
-Sources: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md · https://github.com/dequelabs/axe-core/blob/develop/doc/API.md · https://developer.chrome.com/docs/lighthouse/accessibility/scoring · https://playwright.dev/docs/accessibility-testing · https://playwright.dev/docs/aria-snapshots · https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/Tooling · Last verified 2026-11-24
+Sources: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md · https://github.com/dequelabs/axe-core/blob/develop/doc/API.md · https://developer.chrome.com/docs/lighthouse/accessibility/scoring · https://playwright.dev/docs/accessibility-testing · https://playwright.dev/docs/aria-snapshots · https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/Tooling · Last verified 2026-11-27
 
 Command lines for Lighthouse and install names are from general knowledge, not from the pages read; confirm against the installed version.
 
@@ -30,7 +30,7 @@ Impact levels run critical, serious, moderate, minor. They describe the rule, no
 - In the rule list read, the WCAG 2.2 AA rules were off by default and the AAA and deprecated groups too. Enable 2.2 on purpose (tag `wcag22aa`) when the target is 2.2, or the new criteria such as target size are silently absent.
 - Best-practice rules are not WCAG failures. Report them separately and say so; do not map them to a criterion.
 - For very large pages the API notes `resultTypes` can limit returned nodes to speed runs; keep `incomplete` out of that limit when auditing.
-- axe checks nested iframes by default and supports open shadow DOM; closed shadow roots and cross-origin frames can be partial: note that in coverage.
+- axe checks nested iframes by default and supports open shadow DOM; closed shadow roots and cross-origin frames can be partial (cross-origin frames need `allowedOrigins` set in each frame); `axe.configure()` does not reach into iframes; hidden regions are not tested until rendered. Note that in coverage.
 
 ## 4. Playwright wiring
 

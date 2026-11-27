@@ -1,6 +1,6 @@
 # Project Discovery Checklist for Test Setup
 
-Sources: https://github.com/Ycsyyds/codebase-analysis-skill · https://github.com/lackeyjb/playwright-skill · https://github.com/microsoft/playwright/tree/main/packages/playwright/src/agents · https://playwright.dev/docs/test-agents · https://github.com/currents-dev/playwright-best-practices-skill/blob/main/playwright-best-practices/core/configuration.md · Last verified 2026-11-24
+Sources: https://github.com/Ycsyyds/codebase-analysis-skill · https://github.com/lackeyjb/playwright-skill · https://github.com/microsoft/playwright/tree/main/packages/playwright/src/agents · https://playwright.dev/docs/test-agents · https://github.com/currents-dev/playwright-best-practices-skill/blob/main/playwright-best-practices/core/configuration.md · Last verified 2026-11-27
 
 Owner of rule DISC in `ssot-rule-registry.md`. Borrowed from the codebase-analysis skill: every statement about the project must be traceable to a file or a live observation, and the work is planned from a short inventory before deep work. Left behind: its 9 phases, auto-initialization and multi-thousand-line outputs, which are far too costly for test setup.
 

@@ -1,6 +1,6 @@
 # Report and Plan Templates
 
-Sources: author's workflow (see `sources.md`); field choices follow the REPORT and FCLASS rules in `ssot-rule-registry.md` · Last reviewed 2026-11-24
+Sources: own templates; field choices follow the REPORT and FCLASS rules in `ssot-rule-registry.md` · Last reviewed 2026-11-27
 
 The only home for the copyable templates the skill uses. `SKILL.md` links here and never repeats a template. Fill every field or write "none" or "not verified"; delete nothing silently.
 

@@ -1,6 +1,6 @@
 # Replying, Pushing Back and Closing Threads
 
-Sources: https://google.github.io/eng-practices/review/developer/handling-comments.html · https://google.github.io/eng-practices/review/reviewer/pushback.html · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/commenting-on-a-pull-request · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/incorporating-feedback-in-your-pull-request · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/developer/handling-comments.html · https://google.github.io/eng-practices/review/reviewer/pushback.html · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/commenting-on-a-pull-request · https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/incorporating-feedback-in-your-pull-request · Last verified 2026-11-27
 
 ## What the sources say
 
@@ -8,7 +8,7 @@ Sources: https://google.github.io/eng-practices/review/developer/handling-commen
 
 **Pushback (Google, reviewer side).** The mirror advice: reviewers should consider whether the author is right and concede if so; if not, explain further while staying polite. The page also records an experience-based warning about "I will clean it up in a later change": it usually does not happen, so new complexity should be fixed before merge unless it is an emergency, and if the change exposes surrounding problems that cannot be fixed now, file a bug assigned to the author and optionally reference it from a TODO.
 
-**GitHub conversations.** You can reply inside an existing line or file comment thread. A conversation on the Files changed tab can be resolved by the pull-request author or by anyone with write access; resolving collapses it and makes unresolved ones easier to find. A suggestion that is out of scope can be tracked by opening a new issue that links back to the original comment. The conversations menu lists unresolved, resolved and outdated threads.
+**GitHub conversations.** You can reply inside an existing line or file comment thread. A conversation on the Files changed tab can be resolved by whoever opened the pull request or anyone with write access; resolving collapses it and makes unresolved ones easier to find. A suggestion that is out of scope can be tracked by opening a new issue that links back to the original comment. The conversations menu lists unresolved, resolved and outdated threads.
 
 ## Reply anatomy
 

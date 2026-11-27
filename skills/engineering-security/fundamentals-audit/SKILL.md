@@ -1,6 +1,6 @@
 ---
 name: fundamentals-audit
-description: Use to audit an application, especially AI-built, against five engineering fundamentals at once (integration tests, client trust, race conditions, idempotency, separation of responsibilities) without changing anything, and to decide which fix to run first. Also holds the run order and the safety rules every fix skill follows before it touches code.
+description: "Read-only audit of an application, especially an AI-built one, against five engineering fundamentals at once (integration tests, client trust, race conditions, idempotency, separation of responsibilities), ending in an AUDIT.md that ranks the top five risks and names which fix skill to run first. Also the single home of the fix run order and the pre-run safety rules (branch, plan first, human-reviewed migrations, one process at a time). Not for the fixes themselves (`integration-tests`, `race-condition-fix`, `idempotency-fix`, `layered-refactor`), a deep security review (`security-audit`) or a database audit (`database-audit`). Use when someone asks what is wrong with an AI-built app before changing it, which fix to run first, or what rules to follow before running fix prompts."
 ---
 
 # Fundamentals audit and run order
@@ -49,7 +49,7 @@ The database has its own audit and run order (exposure, backups, usage cost, tra
 
 ## Deep references
 
-- [Sources](references/sources.md) — what the video, handout and cited pages contributed, plus caveats
-- [How the five audits compose](references/how-the-five-audits-compose.md) — when you need the reasoning behind the run order
-- [Combined audit prompt and report shape](references/combined-audit-prompt-and-report-shape.md) — when writing or checking the read-only audit report
-- [Common failure scenarios](references/common-failure-scenarios.md) — when you need concrete signals to look for while auditing
+- [Sources](references/sources.md) — fetch statuses, reading limits and claims not adopted
+- [How the five audits compose](references/how-the-five-audits-compose.md) — the reasoning behind the run order and how each audit step maps to a fix skill
+- [Common failure scenarios](references/common-failure-scenarios.md) — concrete signals to look for while auditing
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts for the description

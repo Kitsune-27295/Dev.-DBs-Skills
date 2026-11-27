@@ -1,6 +1,6 @@
 # What to test, real database versus mocks, and tooling notes
 
-Sources: video chapter "Testes de integração: a garantia do seu projeto" (24:07-31:40, https://www.youtube.com/watch?v=G8SeOH0qerk); handout section "5. Teste de integração" (https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software); https://vitest.dev/guide/; https://playwright.dev/ · Last verified 2026-11-24
+Sources: video chapter "Testes de integração: a garantia do seu projeto" (24:07-31:40, https://www.youtube.com/watch?v=G8SeOH0qerk); handout section "5. Teste de integração" (https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software); https://vitest.dev/guide/; https://playwright.dev/ · Last verified 2026-11-27 (handout and tool pages re-read; the video transcript was not re-read)
 
 ## Where integration sits
 
@@ -14,12 +14,12 @@ The handout lists five groups to cover per flow: happy path, expected errors, re
 
 ## Real database, not a mock
 
-Rule in both sources: tests run against the same engine as production, locally (the video: a local copy of the backend service, not a different engine such as SQLite standing in), and never against production data. The handout adds that row-level-security tests are only meaningful against a real database. Mock only what is external.
+Both sources say tests never touch production data and use a separate database (the handout: a local container, local backend service or test-only project). The same-engine point is the video's; Fowler's pyramid article independently calls an in-memory database of another type risky for the same reason. Row-level-security tests are only meaningful against a real database. Mock only what is external.
 
 ## Tooling facts from the pages read
 
-- Vitest: Vite-powered; install as a dev dependency; files named `*.test.*` or `*.spec.*`; `vitest run` runs once, plain `vitest` watches; the page states Node 22.12+ and Vite 6.4+. The page did not cover `describe`/`it`, concurrency or integration setups; for those, read the project's installed Vitest docs.
-- Playwright: cross-browser (Chromium, Firefox, WebKit) with auto-waiting and a trace viewer; the handout allows at most one smoke test (signup to checkout) and only if approved.
+- Vitest (guide re-read 2026-11-27): install with `npm install -D vitest`; default test files contain `.test.` or `.spec.`; the `test` script runs `vitest`, and `vitest run` runs once without watching; requires Node 22.12+ and Vite 6.4+. With Bun use `bun run test`, because `bun test` starts Bun's own runner. The page did not cover `describe`/`it`, concurrency or integration setups; read the installed Vitest docs for those.
+- Playwright (home page re-read): one API for Chromium, Firefox and WebKit, auto-waiting, retrying assertions and a trace viewer; the handout allows at most one smoke test (signup to checkout) and only if approved. Browser suites belong to `playwright-qa-orchestrator`.
 
 Own sketch of a concurrent case: fire both requests with `Promise.all`, then assert on the database state (one subscription row), not on response codes alone.
 

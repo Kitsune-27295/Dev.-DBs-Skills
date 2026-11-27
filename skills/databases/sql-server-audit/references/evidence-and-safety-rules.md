@@ -1,6 +1,6 @@
 # Evidence and Safety Rules
 
-Sources: https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit · https://ola.hallengren.com/sql-server-backup.html · https://ola.hallengren.com/sql-server-integrity-check.html · https://ola.hallengren.com/sql-server-index-and-statistics-maintenance.html · https://learn.microsoft.com/en-us/sql/relational-databases/backup-restore/back-up-and-restore-of-sql-server-databases · https://learn.microsoft.com/en-us/sql/relational-databases/security/sql-server-security-best-practices · https://www.sqlskills.com/blogs/paul/wait-statistics-or-please-tell-me-where-it-hurts/ · Last verified 2026-11-24
+Sources: https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit · https://ola.hallengren.com/sql-server-backup.html · https://ola.hallengren.com/sql-server-integrity-check.html · https://ola.hallengren.com/sql-server-index-and-statistics-maintenance.html · https://learn.microsoft.com/en-us/sql/relational-databases/backup-restore/back-up-and-restore-of-sql-server-databases · https://learn.microsoft.com/en-us/sql/relational-databases/security/sql-server-security-best-practices · https://www.sqlskills.com/blogs/paul/wait-statistics-or-please-tell-me-where-it-hurts/ · Last verified 2026-11-27
 
 This page holds the rules that make an audit trustworthy and safe: how evidence is recorded and rated, what may be run, how pasted output from community tools is read, and what to hand over instead of executing.
 
@@ -26,12 +26,9 @@ Rules:
 
 ## 2. Confidence rules
 
-- `verified`: result proves the claim and the window is known.
-- `likely`: result fits, a named alternative remains; add the check that separates them.
-- `heuristic`: a rule of thumb, tool default or inference; say so ("this is the tool's default, not a standard").
-- `needs-confirmation`: depends on an owner fact or a check not run.
+For `likely`, add the check that separates the named alternative; for `heuristic`, say so ("this is the tool's default, not a standard").
 
-A finding with only `heuristic` or `needs-confirmation` evidence may be rated by the worst plausible impact, but the report states the single action that would upgrade or retire it. Never convert a gap into health: "not checked" and "healthy" are different words in the report.
+The four levels are defined in `SKILL.md` section 4. A finding with only `heuristic` or `needs-confirmation` evidence may be rated by the worst plausible impact, but the report states the single action that would upgrade or retire it. Never convert a gap into health: "not checked" and "healthy" are different words in the report.
 
 ## 3. What is allowed to run
 
@@ -45,9 +42,9 @@ Not allowed on a server the owner did not name disposable, even if it looks harm
 - index and statistics maintenance, shrink, `DBCC` repair options, cache or counter clearing (clearing counters destroys the evidence of the period);
 - killing sessions (the First Responder Kit session killer only kills when its execute switch is set; do not set it);
 - creating event sessions, tables, jobs or procedures to hold tool output (installing community procedures is a change to the audited server);
-- running a tool's self-update that downloads and executes code from the internet (the kit's update procedure does that; the project advises pinning a release tag instead of the main branch).
+- running a tool's self-update that downloads and executes code from the internet (the kit's optional update procedure does that and needs SQL Server 2025 or Azure SQL DB; the project advises pinning a release tag instead of the main branch).
 
-Maintenance solutions generate commands; the integrity-check procedure documents a switch that prints the commands without running them (`Execute = 'N'`, default `Y`), and the same pattern is expected in its sibling procedures (not read for each one). That is the safe way to show the owner what would run.
+Maintenance solutions generate commands; the integrity-check procedure documents a switch that prints the commands without running them (`Execute = 'N'`, default `Y`), and the backup and index procedures were not checked for the same switch. That is the safe way to show the owner what would run.
 
 ## 4. Least-privilege audit login
 
@@ -72,7 +69,7 @@ When the owner pastes output instead of giving access, first identify, then judg
 3. **Tool priorities are not your severity.** Re-rate with this skill's scale and context; downgrade or drop items that do not apply (version, platform, compensating control), and say why.
 4. **Tool defaults are not standards.** A maintenance solution's defaults (for example its fragmentation thresholds or its choice not to verify backups unless asked) are choices; say "default of the tool".
 5. **Platform limits.** The kit states support for Windows and Linux instances and managed RDS; for Azure SQL Database it says some procedures work but support is not a goal. Note any item that depends on unavailable features as a coverage gap.
-6. **Check completeness.** A procedure that skips user databases above a database-count limit unless a "bring the pain" switch is given leaves a gap; record it.
+6. **Check completeness.** A main health check that skips user-database checks above 50 databases unless a "bring the pain" switch is given leaves a gap; record it. Its priorities 1-49 mean act now, which is still not your severity.
 
 ## 7. Heavy and risky diagnostics: protocol
 

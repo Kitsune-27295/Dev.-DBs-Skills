@@ -1,6 +1,6 @@
 ---
 name: pr-description
-description: "Write or update a pull request description that a reviewer and a future maintainer can use without reading the whole diff: a Conventional Commits style title, motivation (the why, with linked issues), a summary of what changed split into interface changes and behavior changes, how it was tested with real evidence, risk, blast radius and rollback, reviewer guidance, size and splitting advice, and an AI-involvement disclosure line when the project requires one. Covers templates, draft PRs, keeping the text true after review rounds, and bad-description patterns. Instructions only: never publishes anything. Use when opening or drafting a pull request, writing or fixing a PR body or merge request text, filling a PR template, or when a PR is too large to describe."
+description: "Draft or fix a pull request description that lets a reviewer decide without reading the whole diff and a future maintainer see why: title, motivation with linked issues, changes split into interface and behavior changes, testing evidence, risk and rollback, reviewer guide, draft status, template use, and an AI-involvement line only when the project requires one. Drafts text only; never opens, pushes or posts. Not for commit messages, Conventional Commits grammar or splitting a change (use git-atomic-commits), judging a diff (use code-review) or answering review comments (use receiving-code-review). Use when opening or drafting a pull request or merge request, writing or repairing a PR body, filling a PR template, or when a PR is too large to describe."
 ---
 
 # Pull Request Description
@@ -13,8 +13,7 @@ Boundary: commit messages and commit splitting belong to `git-atomic-commits`; j
 
 ## 1. Title
 
-- Form: `<type>[(scope)][!]: <imperative summary>` (Conventional Commits), unless the project's own template or contributing guide says otherwise.
-- Types: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`. A `!` after the type or scope, or a `BREAKING CHANGE:` line in the body, marks a breaking change.
+- Form: `<type>[(scope)][!]: <imperative summary>`, unless the project's own template or contributing guide says otherwise. Types, scopes, `!` and `BREAKING CHANGE` rules are owned by `git-atomic-commits` (the specification defines only `feat` and `fix`; other types are convention).
 - Imperative mood, one idea, specific enough to stand alone in a history list: `fix(export): handle empty row list`, not `fix bug` or `Updates`.
 - The title is what squash-merge usually turns into the commit subject, so write it as that.
 - Details: [references/description-anatomy-and-title.md](references/description-anatomy-and-title.md).
@@ -82,13 +81,12 @@ A small PR is also cheaper to revert; see [references/size-splitting-and-ai-disc
 
 ## 6. Size and Splitting
 
-A reviewer is the scarce resource. One self-contained change per PR, with its own tests, that leaves the system working after merge.
+A reviewer is the scarce resource: one self-contained change per PR, with its own tests, leaving the system working after merge. Size heuristics and split strategies (by layer, by slice, stacking, refactors apart from behavior) are owned by `git-atomic-commits`; the PR-specific part is below.
 
-- Rule of thumb from Google's guidance: about 100 lines is usually fine and about 1000 is usually too large; file count matters as well as line count. Treat these as soft heuristics, not rules.
-- Separate refactors, mechanical renames, formatting and dependency bumps from behavior changes.
-- If you cannot describe the PR in a short title and two sentences of motivation, it is probably two PRs.
-- Split strategies (stacking, by layer, by feature slice, config separate from code) are in the size reference. Each split PR gets its **own** description covering only its own diff and naming its siblings.
-- Large mechanical or generated changes can be acceptable when the reviewer's job is only to confirm; say what generated them and how to reproduce.
+- If you cannot describe the PR in a short title and two sentences of motivation, propose a split to the user instead of describing a monolith.
+- Each split PR gets its **own** description covering only its own diff, names its siblings and states the merge order.
+- Large mechanical or generated changes can be acceptable when the reviewer only confirms; say what generated them and how to reproduce.
+- Smaller PRs are also cheaper to revert; see [references/size-splitting-and-ai-disclosure.md](references/size-splitting-and-ai-disclosure.md).
 
 ---
 
@@ -103,7 +101,7 @@ Check `CONTRIBUTING`, the PR template and `AGENTS.md`/`CLAUDE.md` first. If the 
 - Re-read the description before requesting review and again after each review round; edit the sections that no longer match (`receiving-code-review`).
 - Add new test evidence rather than overwriting old evidence silently.
 - Mark the PR as draft while it is not ready for review; do not request review from owners until it is ready.
-- Link issues with closing keywords only when the PR really resolves them (`Fixes #123`, `Closes owner/repo#45`); use "Refs" for context.
+- Link issues with closing keywords only when the PR really resolves them (`Fixes #123`, `Closes owner/repo#45`; GitHub closes the issue when the PR merges into the default branch); use "Refs" for context.
 
 ---
 
@@ -130,7 +128,7 @@ Check `CONTRIBUTING`, the PR template and `AGENTS.md`/`CLAUDE.md` first. If the 
 - [ ] Testing lists commands, results, scenarios, and what was not run; evidence attached for visible or performance changes
 - [ ] Door (one-way or two-way), blast radius and rollback are written down
 - [ ] Reviewer guide points to what needs judgment and names follow-ups
-- [ ] PR is one self-contained change; unrelated work split out
+- [ ] PR is one self-contained change (sizes and splits: `git-atomic-commits`); unrelated work split out
 - [ ] AI disclosure follows the project's required format, only if required
 - [ ] No secrets, personal paths or internal hostnames; nothing published without the user's request
 
@@ -138,4 +136,5 @@ Check `CONTRIBUTING`, the PR template and `AGENTS.md`/`CLAUDE.md` first. If the 
 
 - [Description anatomy and title](references/description-anatomy-and-title.md) — read when writing the title, the opening paragraph and the Motivation or Changes sections, or when fixing a vague description.
 - [Evidence, risk and interface versus behavior](references/evidence-risk-and-interface-vs-behavior.md) — read when writing Testing, Risk and Rollback, or deciding what counts as an interface or a behavior change.
-- [Size, splitting and AI disclosure](references/size-splitting-and-ai-disclosure.md) — read when a PR is large, when splitting or stacking changes, when drafting, or when the project requires an AI-involvement line.
+- [Size, splitting and AI disclosure](references/size-splitting-and-ai-disclosure.md) — read when a PR is large, when each split PR needs its own description, when using templates or draft status, or when the project requires an AI-involvement line.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking this skill against near-miss neighbors.

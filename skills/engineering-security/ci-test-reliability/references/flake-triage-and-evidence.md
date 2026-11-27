@@ -1,6 +1,6 @@
 # Flake Triage and Evidence
 
-Sources: https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-challenges.html · https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html · https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html · https://martinfowler.com/articles/nonDeterminism.html · https://docs.pytest.org/en/stable/how-to/tmp_path.html · https://jestjs.io/docs/cli · Last verified 2026-11-24
+Sources: https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-challenges.html · https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html · https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html · https://martinfowler.com/articles/nonDeterminism.html · https://docs.pytest.org/en/stable/how-to/tmp_path.html · https://jestjs.io/docs/cli · Last verified 2026-11-27
 
 This file covers classification and proof for a flake. The generic loop (reproduce, minimize, hypothesize, instrument, fix, regression test) belongs to `diagnosing-bugs`; the evidence discipline belongs to `verification-loop`.
 
@@ -26,7 +26,7 @@ Fowler's list of recurring causes: lack of isolation, asynchronous behavior, rem
 1. **Record the failure signature:** test id, OS cell, worker count and shard, order, seed, first-attempt result, error text, time of day.
 2. **Compare first-attempt results across runs.** Flaky means both outcomes on the same commit. If always red on one cell, it is deterministic: an OS or config difference.
 3. **Reproduce under the CI shape.** Same worker count, shard, OS, isolation setting and seed. Use `--runInBand` or an equivalent single-process mode only as a contrast run (it also changes timing and isolation).
-4. **Bisect the interaction.** Run the file alone, with its previous neighbors, then with the full set; run the same test many times in a loop; randomize order if the tool supports it.
+4. **Bisect the interaction.** Run the file alone, with its previous neighbors, then with the full set; run the same test many times in a loop; randomize order if the tool supports it (`node:test --test-randomize` prints a seed and `--test-random-seed` replays it; the docs mark both Stability 1.0, early development, since v26.1.0).
 5. **Classify** with the four components above and Fowler's five causes; write one sentence naming the shared resource, uncontrolled input or unsynchronized wait.
 6. **Fix the cause** with the matching rule (allocation, restore, control, synchronization, teardown).
 7. **Prove it** (below), then remove any retry or quarantine added during the investigation.

@@ -1,20 +1,20 @@
 # Repo Skills Compared
 
-Sources: https://github.com/lackeyjb/playwright-skill · https://github.com/currents-dev/playwright-best-practices-skill · https://github.com/microsoft/playwright-cli · https://github.com/microsoft/playwright/tree/main/packages/playwright/src/agents · https://playwright.dev/docs/test-agents · https://github.com/Ycsyyds/codebase-analysis-skill · https://github.com/obra/superpowers · Last verified 2026-11-24
+Sources: https://github.com/lackeyjb/playwright-skill · https://github.com/currents-dev/playwright-best-practices-skill · https://github.com/microsoft/playwright-cli · https://github.com/microsoft/playwright/tree/main/packages/playwright/src/agents · https://playwright.dev/docs/test-agents · https://github.com/Ycsyyds/codebase-analysis-skill · https://github.com/obra/superpowers · Last verified 2026-11-27
 
 All text was read as data; nothing was cloned or executed. Rule ids (LOC, INTEG, ...) refer to `ssot-rule-registry.md`. Licenses are those visible in each repo's LICENSE file when read.
 
-## 1. lackeyjb/playwright-skill (MIT, v5.0.0 in frontmatter)
+## 1. lackeyjb/playwright-skill (MIT)
 
 - **Purpose:** an agent skill for ad hoc browser automation: detect a running dev server, write a throwaway script, run it through a bundled executor, report with screenshots.
 - **Strengths:** pragmatic workflow (detect server, ask when several, put the URL in a constant); modern locator order and "no fixed sleeps/networkidle" guidance; credentials from environment variables; warns that attaching to a real Chrome session carries the user's access; reports artifact paths and forbids claiming success without checking the page.
-- **Gaps:** not a test-suite skill (scripts live in temp files, no plan, no assertions-first design, no failure classification, no repair loop); visible browser by default; port scanning picks targets by heuristics.
+- **Gaps:** not a test-suite skill (scripts live in temp files, no plan, no assertions-first design, no failure classification, no repair loop); visible browser by default (confirmed on the README 2026-11-27); port scanning picks targets by heuristics.
 - **Adopt:** server-detection as discovery input with ask-first (ENV); env-based credentials (AUTH); artifact-path reporting (REPORT).
 - **Reject:** visible-by-default (HEADLESS); temp-script model as the main deliverable.
 
-## 2. currents-dev/playwright-best-practices-skill (MIT, "Copyright 2026 Currents Software Inc."; v1.2)
+## 2. currents-dev/playwright-best-practices-skill (MIT)
 
-- **Purpose:** an activity-indexed library of about 50 reference files (core, debugging, architecture, advanced, CI, patterns, frameworks) behind one SKILL.md.
+- **Purpose:** an activity-indexed library of 57 reference documents in 8 categories behind one SKILL.md.
 - **Strengths:** the most complete and consistent rule source: locator priority, web-first vs generic assertions, fixtures with worker scope for parallel data isolation, storage-state auth, mocking decision matrix ("mock at the boundary"), flakiness taxonomy with a decision tree, retry budget, burn-in with `--repeat-each`, config tables (timeouts, retries, trace on first retry, webServer reuse).
 - **Gaps:** reads as a manual, not a workflow; no discovery step, no gate on claims, no stance on what an agent must never do to make a test pass; some examples hard-code credentials for illustration.
 - **Adopt:** the rules behind LOC, WFA, ISO, FIX, MOCK, RETRY, TRACE and the flakiness decision tree (folded into the failure classes).
@@ -44,12 +44,12 @@ All text was read as data; nothing was cloned or executed. Rule ids (LOC, INTEG,
 - **Adopt:** evidence-only discovery and a short inventory before action (DISC).
 - **Reject:** the full 9-phase pipeline, auto-initialization side effects, long deliverables.
 
-## 6. obra/superpowers (MIT, "Copyright 2025 Jesse Vincent")
+## 6. obra/superpowers (MIT)
 
 - **Purpose:** process skills for coding agents; the relevant ones are systematic-debugging (with root-cause tracing and condition-based waiting), verification-before-completion and test-driven-development.
-- **Strengths:** a hard order (investigate, compare with working cases, one hypothesis, minimal fix); a stop at three failed fixes; a gate requiring a fresh command run before any success claim; red-green proof for regression tests; a table of rationalizations that agents use to skip the process.
+- **Strengths:** a hard order (investigate, compare with working cases, one hypothesis, minimal fix); a stop at three failed fixes; a gate requiring a fresh command run and a read of its output before any success claim (the gate's pack owner is `verification-loop`); red-green proof for regression tests.
 - **Gaps:** generic, no browser evidence sources; absolutist wording ("delete means delete") that needs adapting to QA artifacts; some examples are not Playwright.
-- **Adopt:** RCF, REPAIRCAP, VBC, red-green proof for new or repaired tests, condition-based waiting.
+- **Adopt:** REPAIRCAP and the root-cause-first order (RCF), condition-based waiting; VBC and red-green proof are now pointers to `verification-loop`.
 - **Reject:** nothing as policy; adapt tone to concise checklists.
 
 ## How an agent should apply this

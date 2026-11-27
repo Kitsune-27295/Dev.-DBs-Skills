@@ -1,6 +1,6 @@
 # Roles and Live State for Agent Incidents
 
-Sources: https://sre.google/sre-book/managing-incidents/ · https://docs.pagerduty.com/ops-guides/incident-response-guide · https://docs.pagerduty.com/ops-guides/incident-response-guide/incident-commander · Last verified 2026-11-24
+Sources: https://sre.google/sre-book/managing-incidents/ · https://docs.pagerduty.com/ops-guides/incident-response-guide · https://docs.pagerduty.com/ops-guides/incident-response-guide/incident-commander · Last verified 2026-11-27
 
 ## What human practice says
 

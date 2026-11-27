@@ -1,26 +1,26 @@
 # The seven audits: order, rationale and report shape
 
-Sources: video "Banco de Dados | Fundamentos para Vibe Coders #EP2" (mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI), chapter "A ordem que eu rodaria" 30:37-end; handout https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, sections "Antes de colar qualquer prompt", "A ordem que eu rodaria" and "Prompt de auditoria" · Last verified 2026-11-24
+Sources: author's handout https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, sections "A ordem que eu rodaria" and "Prompt de auditoria" (re-read); video https://www.youtube.com/watch?v=TL4T9ZESamI (not re-verified) · Last verified 2026-11-27
 
 ## The order and why
 
-| Step | Area (skill) | Rationale stated by the author |
+| Step | Area (skill) | Rationale |
 |---|---|---|
-| 1 | Open door (`database-exposure`) | A leak has no way back |
-| 2 | Backup (`backup-restore-drill`) | The safety net for everything after it (handout: "your insurance for the rest") |
-| 3 | Monthly bill (`database-cost-guard`) | Matters when the database bills per read |
-| 4-6 | Transaction, constraints, migrations (`transaction-fix`, `schema-and-constraints`, `migrations-and-environments`) | Organizing the house; the video lists them in this sequence, the handout groups them |
-| 7 | Performance (`query-performance`) | Last: first organize the house, then see whether it is fast |
+| 1 | Open door (`database-exposure`) | Handout: a leak cannot be undone |
+| 2 | Backup (`backup-restore-drill`) | Safety net for the fixes that follow (the video's framing; unconfirmed this round) |
+| 3 | Monthly bill (`database-cost-guard`) | Handout: matters when the database charges per read |
+| 4-6 | Transaction, constraints, migrations (`transaction-fix`, `schema-and-constraints`, `migrations-and-environments`) | Handout lists them as one block (its prompts 2, 1 and 6); this skill orders them as the video does |
+| 7 | Performance (`query-performance`) | Handout: last, after the house is in order |
 
-Underlying logic (the author's, restated): irreversible harms first (leak, data loss), then silent recurring harms (cost), then correctness, then speed. Note that backup comes before the changes that follow because every later fix touches the schema or data.
+Underlying logic (restated): irreversible harms first (leak, data loss), then silent recurring harms (cost), then correctness, then speed. Backup precedes the fixes because every later fix touches the schema or data.
 
-## Safety rules shared by every prompt (handout)
+## Preconditions before any fix prompt (handout)
 
-Branch, backup and tests before any fix: `fundamentals-audit`. Each fix prompt also carries its own "rules" line (never delete data to pass a constraint, no business-rule changes, no production runs).
+A separate branch, read the plan the AI proposes before accepting, and the AI never touches production: it hands over the command and a human runs it. The generic version is owned by `fundamentals-audit`; each fix skill adds its own rules line (never delete data to pass a constraint, no business-rule changes, no production runs).
 
 ## Anatomy of the general audit prompt
 
-The prompt is read-only: no file edits, no writes to the database. It fixes seven checks in the order above and asks for a report with, per finding, the risk (high, medium, low) and which fix skill resolves it, ending with "where to start". Each check is one question answerable from code and settings, defined by its owner skill in the table above.
+Read-only: no file edits, no writes to the database. Seven checks in the order above; a report listing each finding with its risk (high, medium, low) and which fix resolves it, ending with where to start. Each check is one question answerable from code and settings, defined by its owner skill in the table above.
 
 ## Report shape
 
@@ -32,11 +32,9 @@ Correct: <what already holds>
 Start here: <first area with a high-risk finding>
 ```
 
-## Evidence discipline (differences from the source prompt)
-
-The source prompt lists seven checks in the video's "door, backup, cost, transaction, schema, migrations, performance" order; `SKILL.md` adds an evidence column and a "not applicable" label for parts that do not apply. That is a refinement, not a conflict.
+The evidence column and the "not applicable" label are this skill's additions to the source prompt: a refinement, not a conflict.
 
 ## How an agent should apply this
 
-- Follow `SKILL.md` (steps, Run order, Rules); this file adds the rationale and the report shape.
+- Follow `SKILL.md` (steps, run order, rules); this file adds the rationale and the report shape.
 - Quote the lesson's statistics only as the author's claims.

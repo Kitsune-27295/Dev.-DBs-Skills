@@ -1,6 +1,6 @@
 ---
 name: threat-modeling
-description: "Build and maintain a lightweight threat model for a system, feature or change: state scope and assumptions, draw a data flow diagram with trust boundaries, enumerate threats per element with STRIDE (plus LINDDUN when personal data is involved), rate them, choose mitigate / eliminate / transfer / accept, turn the result into requirements and tests, validate it against the real code, and keep it living as the design changes. Design-time and review-time; reads code and docs, changes nothing. Use when starting or reshaping a feature, adding an integration, a new trust boundary, new data class or deployment path, asked 'what can go wrong', or before a security audit."
+description: "Decide what could go wrong in a system, feature or change before and around the code: scope and assumptions, a data flow diagram with trust boundaries, STRIDE threats per element (LINDDUN when personal data flows), ratings, a response per threat (mitigate, eliminate, transfer, accept), requirements and tests, validation against the real code, and a model kept current. Design-time and read-only. Use when starting or reshaping a feature, adding an integration, boundary, data class or deployment path, asked 'what can go wrong', or before a security audit. Not for hunting flaws in existing code (use security-audit) or judging one scanner or bug report (use vulnerability-triage)."
 ---
 
 # Threat Modeling (design-time security thinking)
@@ -101,6 +101,8 @@ Store the model beside the code (a Markdown file with a text diagram) and update
 
 ## 10. Anti-patterns to refuse
 
+The first four are the Threat Modeling Manifesto's; the last three are this skill's own.
+
 - **Hero modeler**: one expert produces a model nobody else understands. Anyone can do it; use varied viewpoints.
 - **Admiration for the problem**: a long threat list with no responses. Every threat ends in a decision.
 - **Over-focus**: only adversaries, or only assets, or only one technique; lose the big picture.
@@ -124,6 +126,7 @@ Store the model beside the code (a Markdown file with a text diagram) and update
 ## Deep references
 
 - [Sources](references/sources.md) — origin, retrieval status and claims not adopted.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
 - [DFD and trust boundaries](references/dfd-and-trust-boundaries.md) — read when drawing the diagram: element types, boundary placement, levels of detail, worked web example, fast path.
 - [STRIDE and privacy threat enumeration](references/stride-and-privacy-threat-enumeration.md) — read when enumerating: STRIDE per element, web/API prompts, LINDDUN, attack trees, CAPEC and ATT&CK as vocabularies.
 - [Rating, mitigation and validation](references/rating-mitigation-and-validation.md) — read when ranking threats, choosing responses, writing requirements and tests, and keeping the model current.

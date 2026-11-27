@@ -1,6 +1,6 @@
 # STRIDE and Privacy Threat Enumeration
 
-Sources: https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · https://shostack.org/resources/threat-modeling · https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://linddun.org · https://linddun.org/threat-types/ · https://capec.mitre.org/about/index.html · https://attack.mitre.org/resources/ · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · https://shostack.org/resources/threat-modeling · https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://linddun.org · https://linddun.org/threat-types/ · https://capec.mitre.org/about/index.html · https://attack.mitre.org/resources/ · Last verified 2026-11-27
 
 ## STRIDE: what it is and why it works
 
@@ -58,7 +58,7 @@ Use LINDDUN when the design stores or moves personal data, profiles users, or se
 - **MITRE ATT&CK**: a knowledge base of adversary tactics and techniques from real observations; its own page warns against aiming for full coverage or treating the matrix as a complete list. It is mainly for detection and intelligence work; use it when the model needs a "how would we notice this" column.
 - **Misuse and abuse cases**: brief stories of how a feature could be used against its purpose; good for business-logic threats that STRIDE words poorly.
 
-OWASP warns against adding techniques just to look thorough: choose by scope.
+Choose techniques by scope, not to look thorough (this skill's rule; OWASP's page says STRIDE is used for illustration and other approaches may fit).
 
 ## Failure modes
 

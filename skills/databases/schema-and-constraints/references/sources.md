@@ -1,33 +1,30 @@
 # Sources — Schema and constraints
 
-Every source below was checked during skill authoring (2026-11-24).
-
-| Source | Retrieved status | What it contributed to SKILL.md |
-|---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 02 "Modelagem e constraints" (06:25-11:46) | Transcript read from a saved copy; video page not re-fetched | Primary and foreign keys, float vs numeric for money, timestamp with zone, the four constraints, "validate in the back end too", the prompt's "never delete data to pass a constraint" rule |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "1. Modelagem e constraints" | Saved copy read; page not re-fetched | The schema review prompt (list columns, missing foreign keys, equivalent constraints, count violating rows first, one migration per subject) |
-| PostgreSQL wiki "Don't Do This", https://wiki.postgresql.org/wiki/Don%27t_Do_This | 200 (read through a summarizing fetch tool) | `money`, `timestamp` vs `timestamptz`, `char(n)`, `varchar(n)`, `serial`, `NOT IN`, `BETWEEN` on timestamps |
-| PostgreSQL docs "Constraints", https://www.postgresql.org/docs/current/ddl-constraints.html | 200 (read through a summarizing fetch tool) | Each constraint type, which ones create an index, foreign key actions |
-
-## Claims and caveats
-
-- `0.1 + 0.2 = 0.30000000000000004` is floating-point behavior stated by the video and handout. The wiki page, as read, does not discuss `float`; it warns against `money`. The `float` rule is therefore the lesson's claim backed by general knowledge, not by that page (resolved 2026-11-24: re-read the wiki, confirmed it has no float section; `SKILL.md` now labels the `float` rule as the skill's own guidance and no longer credits the wiki for it).
-- The video says to store dates in "timestamp Z", meaning `timestamptz`. The wiki confirms `timestamptz` for points in time and says `timestamp(0)` style rounding and `BETWEEN` on timestamps are traps.
-- Video example (Manaus order at 11 pm landing on the next day in a report) is illustrative, not from a source.
-
-## Discrepancies with SKILL.md (not edited)
-
-- (resolved 2026-11-24: re-read the wiki; its "When should you?" text allows plain `timestamp` for timestamps handled in an abstract way or just saved and retrieved, with no arithmetic. `SKILL.md` no longer says "never compared", which the page does not state; the page allows UTC values in it only when compatibility with non-timezone databases trumps all else.)
-- `SKILL.md` says `foreign key` and `check` can be added `NOT VALID` and validated later. That is standard PostgreSQL behavior but is not in the constraints page as summarized here; marked as not read from source.
-- The video presents the prompt as covering "not null, unique, check"; the handout prompt names foreign keys too. No conflict.
-
-## Added 2026-11-24
+Every URL below was re-fetched on 2026-11-27 (summarizing WebFetch tool; Firecrawl unavailable). The PostgreSQL pages served were the version 19 documentation.
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| https://www.postgresql.org/docs/current/ddl-identity-columns.html | 200 (summarizing fetch tool) | identity semantics; no serial comparison on the page (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/datatype-uuid.html | 200 (summarizing fetch tool) | UUIDv4 and v7 support; function versions and ordering benefits are general knowledge, not on the page (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/sql-syntax-lexical.html | 200 (summarizing fetch tool) | case folding and 63-byte truncation (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/ddl-partitioning.html | 200 (summarizing fetch tool) | benefits, key in unique constraints, limits, many-partition caveat (added 2026-11-24) |
-| https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization | 200 after redirect from owasp.org (summarizing fetch tool) | random ids supplement but do not replace access checks (added 2026-11-24) |
-| Third-party skill collection on Postgres and Supabase best practices, read for topic coverage only, no text reused (license: MIT per the collection; not verified here) | read locally | topic coverage only (added 2026-11-24) |
+| PostgreSQL wiki "Don't Do This", https://wiki.postgresql.org/wiki/Don%27t_Do_This | 200 | `money`, `timestamp` vs `timestamptz`, `timestamp(0)`, `BETWEEN`, `char(n)`, `varchar(n)`, `serial`, `NOT IN`, `timetz`, inheritance, rules, `trust` auth; confirmed: no `float` section |
+| https://www.postgresql.org/docs/current/ddl-constraints.html | 200 | Each constraint type, null behavior, MATCH FULL, FK actions and column-list form, index advice, immutability assumption of CHECK |
+| https://www.postgresql.org/docs/current/sql-altertable.html | 200 | `NOT VALID` for foreign key, check and not-null (not unique or primary key), `VALIDATE CONSTRAINT` lock, `USING INDEX` |
+| https://www.postgresql.org/docs/current/ddl-identity-columns.html | 200 | identity semantics, no uniqueness guarantee, no serial comparison |
+| https://www.postgresql.org/docs/current/datatype-uuid.html | 200 | UUIDv4 and v7 generation; no ordering or release remarks |
+| https://www.postgresql.org/docs/current/sql-syntax-lexical.html | 200 | case folding, quoting, 63-byte truncation |
+| https://www.postgresql.org/docs/current/ddl-partitioning.html | 200 | benefits, when it pays, key in unique constraints, concurrent index workaround, many partitions, attach |
+| https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization | 200 | random ids are a prevention step; authorization checks are the main one |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe, section "1. Modelagem e constraints" | 200 | numeric or cents never float, timestamptz, count violators first, reversible migrations, never alter data to pass a constraint, nothing run in production |
+| Video "Banco de Dados \| Fundamentos para Vibe Coders #EP2", https://www.youtube.com/watch?v=TL4T9ZESamI | 200, text truncated to the title | Nothing re-verified; chapter timestamps and the Manaus example are unconfirmed |
+
+## Reading limits
+
+Pages were read through a summarizing tool, not verbatim. Third-party Postgres/Supabase skill collection (MIT per the collection) was read earlier for topic coverage only, no text reused; not re-read.
+
+## Claims not adopted as fact
+
+- `0.1 + 0.2` float drift and the "never float" rule: general knowledge and the lesson; the wiki does not discuss `float`, so the skill labels it its own guidance.
+- Not-null `NOT VALID` in older PostgreSQL versions: only the version 19 page was read.
+- `uuidv7()` introduced in PostgreSQL 18, and its B-tree benefit: not on the type page (general knowledge, verify).
+- Gapless sequences are not guaranteed: not on the identity page; general knowledge.
+- `OVERRIDING SYSTEM VALUE` syntax: used by the identity page's text but its example is not shown there.
+- "Use snake_case, short names": the skill's rule, not a docs requirement.
+- Manaus 11 pm report example: illustrative only.

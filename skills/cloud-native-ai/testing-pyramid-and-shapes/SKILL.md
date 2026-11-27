@@ -1,73 +1,81 @@
 ---
 name: testing-pyramid-and-shapes
-description: Use when designing, evaluating, or rebalancing an automated testing strategy across modern test shapes — comparing Mike Cohn's Test Pyramid, Kent C. Dodds's Testing Trophy, and Spotify's Testing Honeycomb for microservices. Gives test allocation ratios, execution speed vs confidence trade-offs, solitary vs sociable unit tests, contract testing, and anti-pattern avoidance (Ice Cream Cone, Hourglass).
+description: "Choose and rebalance the mix of automated tests across a suite: where each behavior is proven (unit, integration, contract, UI, end-to-end), whether the pyramid, the testing trophy or the microservice honeycomb fits the architecture, solitary vs sociable tests, how to prune duplicated high-level tests and stage a pipeline by speed and scope, and how to spot the ice-cream cone. Not for writing route tests on critical flows (`integration-tests`), browser suites (`playwright-qa-orchestrator`), intermittent CI failures (`ci-test-reliability`) or test-first loops (`tdd`). Use when a suite is slow, brittle or unbalanced, when deciding what level a new test belongs at, or when a team argues about shapes and mocking."
 ---
 
-# Automated Testing Shapes: Pyramid, Trophy & Honeycomb
+# Automated Testing Shapes: Pyramid, Trophy and Honeycomb
 
-One idea: balance your automated testing portfolio so you achieve **maximum confidence per second of CI build time** — selecting the test shape that matches your system architecture instead of dogmatically insisting on one rigid formula. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: **get the most confidence per second of CI time by placing each behavior at the lowest level that can prove it, and pick the shape from the architecture, not from a slogan.** The shapes mostly disagree about words (what "unit" and "integration" mean), so define the terms first. Sources, fetch statuses and claims not adopted: [references/sources.md](references/sources.md).
 
-## Comparison of the Three Major Testing Shapes
+## 1. The three shapes (as their authors describe them)
 
 ```mermaid
 flowchart TD
-  subgraph Pyramid["1. Classic Test Pyramid (Mike Cohn / Fowler)"]
+  subgraph Pyramid["Test pyramid (Fowler and Vocke, 2018)"]
     direction TB
-    P_UI["E2E / UI (Few, Slow, Expensive)"]
-    P_INT["Service / Integration (Some)"]
-    P_UNIT["Unit Tests (Many, Fast, Cheap)"]
+    P_UI["UI / end-to-end: few, slow, flaky"]
+    P_INT["Integration, contract: some"]
+    P_UNIT["Unit: many, fast"]
     P_UI --- P_INT --- P_UNIT
   end
-
-  subgraph Trophy["2. Testing Trophy (Kent C. Dodds - Web / Fullstack)"]
+  subgraph Trophy["Testing trophy (Dodds)"]
     direction TB
-    T_E2E["End-to-End (Smoke & Critical Paths)"]
-    T_INT["Integration Tests (The Bulk of Effort: High Confidence)"]
-    T_UNIT["Unit Tests (Edge cases & Complex logic)"]
-    T_STAT["Static Analysis (TypeScript, ESLint)"]
+    T_E2E["End-to-end: critical paths"]
+    T_INT["Integration: most effort"]
+    T_UNIT["Unit: pure logic"]
+    T_STAT["Static analysis: types, lint"]
     T_E2E --- T_INT --- T_UNIT --- T_STAT
   end
-
-  subgraph Honeycomb["3. Testing Honeycomb (Spotify - Microservices)"]
+  subgraph Honeycomb["Testing honeycomb (Spotify, microservices)"]
     direction TB
-    H_E2E["Integrated Tests (Very Few)"]
-    H_INT["Integration & Contract Tests (Dominant Body)"]
-    H_UNIT["Detailed Implementation Tests (Few)"]
+    H_E2E["Integrated tests: fewest, ideally none"]
+    H_INT["Integration tests: the bulk"]
+    H_UNIT["Implementation-detail tests: few"]
     H_E2E --- H_INT --- H_UNIT
   end
 ```
 
----
+## 2. Vocabulary to fix before debating ratios
 
-## Vocabulary (Martin Fowler, Kent C. Dodds, Ham Vocke)
+| Term | Meaning |
+|---|---|
+| Solitary unit test | The unit runs with test doubles for its collaborators |
+| Sociable unit test | The unit runs with its real in-process collaborators |
+| Integration test | One integration point (database, filesystem, another service) is real and the rest doubled |
+| Consumer-driven contract test | The consumer states what it needs, the provider replays it in its own pipeline |
+| Ice-cream cone | Few fast tests under a bloated, slow, flaky UI suite (the pyramid upside down) |
 
-| Term | Meaning | Test sentence |
-|---|---|---|
-| Solitary Unit Test | a test that isolates the unit under test using test doubles (mocks/stubs) for all collaborators | "runs purely in memory without touching real dependencies" |
-| Sociable Unit Test | a test that executes the unit along with its real, in-memory domain collaborators without mocking | "tests the module as a cohesive behavioral unit" |
-| Integration Test | tests whether independent modules, databases, network clients, or external subsystems interact correctly | "tests against a real local database or container" |
-| Consumer-Driven Contract Test | verifies that a microservice satisfies the expectations of its consumers without spinning up end-to-end environments | "Pact / Spring Cloud Contract checking boundary schemas" |
-| Ice Cream Cone (Inverted Pyramid) | an anti-pattern with few unit tests, few integration tests, and a bloated, flaky suite of manual/E2E UI tests | "takes 4 hours to run CI and breaks on random CSS changes" |
+Fowler (2021) notes the honeycomb camp's "unit test" is the solitary kind, so much of the pyramid-versus-honeycomb fight is moot once terms are agreed; the deeper issue is tests without clear boundaries that are slow or fail for uninteresting reasons. Detail: [shapes debate](references/shapes-debate-and-integration-first.md).
 
----
+## 3. Which shape fits (this skill's own synthesis, not a source rule)
 
-## Which Shape Fits Your Architecture?
+1. Rich domain logic or an engine: pyramid. Many fast unit tests on invariants, route-level integration tests, a few smoke journeys.
+2. Web front end or full-stack app: trophy. Static types and lint underneath, most effort in integration tests that exercise components as users do. Dodds ties this to modern front-end tooling making such tests cheap.
+3. Service fleet: honeycomb. Test each service through its interaction points, add consumer-driven contracts between teams, keep cross-service end-to-end tests rare.
 
-1. **Rich Domain Monoliths / Framework Engines:** **Classic Test Pyramid**. Thousands of millisecond-fast unit tests protecting domain invariants, backed by route-level integration tests and minimal smoke E2E.
-2. **Modern Web SPAs & Full-Stack Apps:** **Testing Trophy**. Heavy emphasis on integration tests testing components as users interact with them (e.g., React Testing Library), supported by strict TypeScript static typing.
-3. **Microservice Fleets & Distributed APIs:** **Testing Honeycomb**. Focus primarily on integration and contract testing between service boundaries, minimizing fragile cross-service end-to-end tests.
+State the reason in the repo's test docs. If the architecture is mixed, pick per module, not per company.
 
+## 4. Placement rules
+
+- Put each test at the lowest level that proves the behavior; if a high-level test fails and no lower one does, add the lower one; delete high-level tests a lower one already covers (sunk cost is not a reason to keep them). Layer detail: [layer by layer](references/practical-pyramid-layer-by-layer.md).
+- Mock only what you cannot run (payments, email, third-party APIs); each mock removes confidence in the real connection. Write route tests on critical flows with `integration-tests`.
+- Do not mandate a coverage number; Dodds calls a 100% mandate a bad idea and admits his 70% figure is invented. Use incident history to choose the next test.
+- Stage the pipeline by speed and scope, not by test label. Detail: [duplication, pipeline and hygiene](references/duplication-pipeline-and-test-code-hygiene.md).
 
 ## Quick Decision Checklist
 
-- [ ] Did I match the shape to the architecture: Pyramid, Trophy or Honeycomb?
-- [ ] For a rich-domain monolith, are fast unit tests the base with minimal smoke E2E?
-- [ ] For a web SPA or full-stack app, is integration the bulk, supported by static typing?
-- [ ] For microservices, do integration and contract tests dominate over fragile cross-service E2E?
-- [ ] Am I avoiding the ice cream cone of few unit tests and a bloated, flaky E2E suite?
+- [ ] Did we define "unit" and "integration" before arguing about ratios?
+- [ ] Is the shape chosen from the architecture, with the reason written down?
+- [ ] Does each new test sit at the lowest level that proves its behavior?
+- [ ] For each bug that escaped, was a lowest-layer regression test added?
+- [ ] Are third-party boundaries the only mocks?
+- [ ] Is the end-to-end layer a handful of journeys with its flake rate tracked?
+- [ ] Is the pipeline staged by speed and scope?
 
 ## Deep references
 
-- [The Practical Test Pyramid, Layer by Layer](references/practical-pyramid-layer-by-layer.md) — read when deciding what belongs in unit, integration, contract, UI or E2E tests.
-- [Test Shapes Debate and the Integration-First View](references/shapes-debate-and-integration-first.md) — read when choosing pyramid vs trophy vs honeycomb or arguing about mocking and coverage.
-- [Avoiding Duplication, Pipeline Placement and Test Code Hygiene](references/duplication-pipeline-and-test-code-hygiene.md) — read when pruning a suite, staging CI, or reviewing test code quality.
+- [Sources](references/sources.md) — fetch statuses, claims not adopted.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts.
+- [The Practical Test Pyramid, layer by layer](references/practical-pyramid-layer-by-layer.md) — read when deciding what belongs in unit, integration, contract, UI or end-to-end tests.
+- [Test shapes debate and the integration-first view](references/shapes-debate-and-integration-first.md) — read when choosing pyramid vs trophy vs honeycomb or arguing about mocking and coverage.
+- [Duplication, pipeline placement and test code hygiene](references/duplication-pipeline-and-test-code-hygiene.md) — read when pruning a suite, staging CI, or reviewing test code quality.

@@ -1,6 +1,6 @@
 # Blameless Language and Facilitation
 
-Sources: https://sre.google/sre-book/postmortem-culture/ · https://sre.google/workbook/postmortem-culture/ · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · https://docs.pagerduty.com/ops-guides/incident-response-guide/effective-postmortems · https://www.atlassian.com/incident-management/handbook/postmortems · Last verified 2026-11-24
+Sources: https://sre.google/sre-book/postmortem-culture/ · https://sre.google/workbook/postmortem-culture/ · https://extfiles.etsy.com/DebriefingFacilitationGuide.pdf · https://docs.pagerduty.com/ops-guides/incident-response-guide/effective-postmortems · https://www.atlassian.com/incident-management/handbook/postmortems · Last verified 2026-11-27
 
 ## What blameless means (and does not)
 

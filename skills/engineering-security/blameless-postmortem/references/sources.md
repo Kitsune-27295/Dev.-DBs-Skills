@@ -1,6 +1,6 @@
 # Sources — Blameless Postmortem
 
-Every URL below was checked during skill authoring (2026-11-24).
+Every URL below was checked during skill authoring (2026-11-24) and re-checked on 2026-11-27 (rebuild pass).
 
 Pages were read with a fetch tool that returns an extracted view of each page; the PDF was converted to text locally. No text from any source is reproduced.
 
@@ -14,6 +14,10 @@ Pages were read with a fetch tool that returns an extracted view of each page; t
 | [PagerDuty: Effective Postmortems](https://docs.pagerduty.com/ops-guides/incident-response-guide/effective-postmortems) | 200 OK (page text extracted locally and read) | Dos and don'ts: accurate timeline, no changing details, no naming and shaming, avoid "human error", avoid alternate-reality statements, review criteria. |
 | [PagerDuty incident response guide (response.pagerduty.com)](https://response.pagerduty.com) | 301 to docs.pagerduty.com/ops-guides/incident-response-guide, then 200 OK (index read) | Site map used to find the pages above. |
 | Own vault-template skill for incident write-ups, read for ideas, no text reused | Local file read | Idea of: material first, timeline with a source id per line, known cause versus guesses, follow-ups needing an owner and a date, pending-validation markers, never reproduce secrets from logs. Its engine-specific commands were dropped. |
+
+## Re-verification 2026-11-27
+
+All six public sources returned 200 OK. Re-read through a fetch tool: SRE book (triggers, blameless definition, no end-user identifying data, review and sharing), SRE workbook (structure, action item fields, warning signs, reward for closing items), PagerDuty process page (owner, statuses draft / in review / reviewed / closed, timeline first, evidence per item, review within 3 days for SEV-1 or 5 business days for SEV-2) and effective-postmortems page (no "outage" overstatement, no altered details, avoid "human error" and hypotheticals, review criteria). The Etsy PDF came back as binary through the fetch tool; its text was extracted locally and the passages on "how" versus "why", remediation not being the goal, soak time, the dashboard trap and hindsight were confirmed. The Atlassian page was extracted locally (the fetch tool returned only navigation): 4 or 8 week SLO, approvers, six action categories and the "Actionable" criterion confirmed. Corrections: none that change a rule. This skill's status values (draft, in review, approved) are its own; PagerDuty's differ.
 
 ## Reading limits
 

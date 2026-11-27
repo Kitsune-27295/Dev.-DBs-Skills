@@ -1,6 +1,6 @@
 # Measure Before You Fix
 
-Sources: https://sre.google/sre-book/emergency-response/ · https://sre.google/sre-book/managing-incidents/ · Last verified 2026-11-24 (method also drawn from a third-party skill read for ideas, no text reused; see sources.md)
+Sources: https://sre.google/sre-book/emergency-response/ · https://sre.google/sre-book/managing-incidents/ · Last verified 2026-11-27 (method also drawn from a third-party skill read for ideas, no text reused; see sources.md)
 
 ## The problem
 

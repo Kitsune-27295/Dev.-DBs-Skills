@@ -1,6 +1,6 @@
 # Value and Freshness Checks
 
-Sources: https://sre.google/sre-book/monitoring-distributed-systems/ · https://opentelemetry.io/docs/concepts/signals/traces/ · Last verified 2026-11-24
+Sources: https://sre.google/sre-book/monitoring-distributed-systems/ · https://opentelemetry.io/docs/concepts/signals/traces/ · Last verified 2026-11-27
 
 This file expands questions 1 (VALUE) and 3 (FRESHNESS). Cache design itself is owned by `caching-strategies`; this file only covers how to detect that a cache or poll is the hop where truth was lost.
 
@@ -42,9 +42,9 @@ Check at each hop:
 
 ## Averages hide the tail
 
-The Google SRE chapter on monitoring warns that averages can hide a slow tail: a service averaging 100 ms can still have a small percent of requests at seconds, and one backend's slow tail becomes a page's typical latency when a page depends on several backends. It recommends counting requests in latency buckets (a histogram) rather than relying on means. For a value trace this matters when the symptom is "sometimes wrong or late": a single sample or an average at one hop can look fine while a tail of stale or timed-out reads reaches some users. Capture the distribution or several samples, not one.
+Why means and single samples mislead (percentiles, histograms) is owned by `application-performance` (measurement-and-evidence reference; source: the Google SRE chapter on monitoring). For a value trace the consequence is: when the symptom is "sometimes wrong or late", one sample or an average at one hop can look fine while a tail of stale or timed-out reads reaches some users. Capture the distribution or several samples, not one.
 
-The same source notes that measurement resolution should match the goal: a one-minute average can miss short spikes. If a displayed value is an average over a window, check that the window is short enough to show the behavior the user cares about.
+The same source notes that measurement resolution should match the goal: observing CPU load over a minute will not reveal even fairly long-lived spikes that drive high tail latencies, whereas per-second sampling aggregated per minute does. If a displayed value is an average over a window, check that the window is short enough to show the behavior the user cares about.
 
 ## Timestamps in the tracing model
 

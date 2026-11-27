@@ -1,6 +1,6 @@
 # Hop Evidence Ledger
 
-Sources: https://opentelemetry.io/docs/concepts/signals/traces/ · https://sre.google/sre-book/monitoring-distributed-systems/ · Last verified 2026-11-24
+Sources: https://opentelemetry.io/docs/concepts/signals/traces/ · https://sre.google/sre-book/monitoring-distributed-systems/ · Last verified 2026-11-27
 
 ## Why borrow the tracing model
 
@@ -18,7 +18,7 @@ Distributed tracing answers "where did this request go and what happened at each
 
 ## Warning: status is not the answer to "was the value right"
 
-A span (or a hop) can finish with no error and still carry a wrong value. In the tracing model an Unset status only says the operation completed without an error. A value trace therefore records **two separate judgments per hop**: did the hop complete (failure question) and is the value still true (value, absence, freshness questions). Never let "no error" fill the value column.
+A span (or a hop) can finish with no error and still carry a wrong value. In the tracing model an Unset status (the default) only says the operation completed without an error; Ok exists but is set explicitly by an application developer and the docs call it usually unnecessary. A value trace therefore records **two separate judgments per hop**: did the hop complete (failure question) and is the value still true (value, absence, freshness questions). Never let "no error" fill the value column.
 
 ## What to record per hop
 

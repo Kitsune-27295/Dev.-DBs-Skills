@@ -1,6 +1,6 @@
 # Zoom, Reflow and Text-Only Checks
 
-Sources: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html, https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html, https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html, https://playwright.dev/docs/emulation · Last verified 2026-11-24
+Sources: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html, https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html, https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html, https://playwright.dev/docs/emulation · Last verified 2026-11-27
 
 Three WCAG 2.2 success criteria define the environment passes of this skill. This skill runs them against worst-case data to find breaks; conformance judgments and the wider audit belong to `a11y-audit`.
 
@@ -8,7 +8,7 @@ Three WCAG 2.2 success criteria define the environment passes of this skill. Thi
 
 **1.4.10 Reflow (AA).** Vertical-scrolling content must be presentable without loss of information or functionality and without two-dimensional scrolling at a width equivalent to **320 CSS pixels**; horizontal-scrolling content at a height equivalent to **256 CSS pixels**. Note 1 on the page says 320 CSS px equals a 1280 px wide viewport at 400% zoom. Content that needs a two-dimensional layout (images such as maps and diagrams, video, games, presentations, data tables as a whole, interfaces that must keep toolbars in view) is excepted, but the page stresses that each table cell's content still has to meet the criterion. Responsive rearranging (stacking into one column, collapsing navigation behind a button) is not a loss of content so long as everything stays reachable.
 
-**1.4.4 Resize text (AA).** Except captions and images of text, text can be resized without assistive technology **up to 200%** without loss of content or functionality. The page says scaling is mainly the browser's job (zoom, magnification, text-only resizing), and the author's job is not to prevent it. A label control too narrow for its content may truncate if the full content is available on focus or after activation and the user is told in some way other than the truncation itself.
+**1.4.4 Resize text (AA).** Except captions and images of text, text can be resized without assistive technology **up to 200%** without loss of content or functionality. The page says scaling is mainly the browser's job (zoom, magnification, text-only resizing), and the author's job is not to prevent it. Components such as a truncated e-mail subject column or a spreadsheet cell may truncate if the full content is available on focus or after activation and the user is told in some way other than the truncation itself; truncation that clips or hides content at 200% is listed as a failure (F69).
 
 **1.4.12 Text spacing (AA).** No loss of content or functionality when a user sets all of: line height at least **1.5** times the font size, spacing after paragraphs at least **2** times, letter spacing at least **0.12** times, word spacing at least **0.16** times, changing no other property. The page notes the values are not required styling; they are the floor a user override must survive, and authors are encouraged to allow spacing beyond them. Scripts that do not use some of these properties are excepted for those properties.
 

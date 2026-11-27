@@ -1,6 +1,6 @@
 # Acceptance Criteria and the Evidence Ledger
 
-Sources: https://scrumguides.org/scrum-guide.html · https://code.claude.com/docs/en/best-practices · https://en.wikipedia.org/wiki/Verification_and_validation · https://martinfowler.com/bliki/SelfTestingCode.html · Last verified 2026-11-24
+Sources: https://scrumguides.org/scrum-guide.html · https://code.claude.com/docs/en/best-practices · https://en.wikipedia.org/wiki/Verification_and_validation · https://martinfowler.com/bliki/SelfTestingCode.html · Last verified 2026-11-27
 
 ## Why numbered criteria
 

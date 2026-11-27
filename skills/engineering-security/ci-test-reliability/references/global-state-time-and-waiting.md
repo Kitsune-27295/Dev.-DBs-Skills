@@ -1,6 +1,6 @@
 # Global State, Time and Waiting
 
-Sources: https://vitest.dev/api/vi · https://vitest.dev/guide/mocking/timers · https://vitest.dev/guide/common-errors · https://jestjs.io/docs/timer-mocks · https://nodejs.org/api/test.html · https://docs.pytest.org/en/stable/how-to/fixtures.html · https://martinfowler.com/articles/nonDeterminism.html · Last verified 2026-11-24
+Sources: https://vitest.dev/api/vi · https://vitest.dev/guide/mocking/timers · https://vitest.dev/guide/common-errors · https://jestjs.io/docs/timer-mocks · https://nodejs.org/api/test.html · https://docs.pytest.org/en/stable/how-to/fixtures.html · https://martinfowler.com/articles/nonDeterminism.html · Last verified 2026-11-27
 
 ## Global state is a shared resource
 

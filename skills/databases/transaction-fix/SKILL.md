@@ -1,30 +1,37 @@
 ---
 name: transaction-fix
-description: "Make a user action that writes to more than one table or step (create an order and take stock, charge and grant access, transfer between accounts) all-or-nothing, so a failure in the middle cannot leave half-done data. Finds each multi-write operation, wraps it in a database transaction, keeps external calls outside the transaction and proves it with a forced-failure test. Use when a failure between writes leaves partial data. Not for concurrent requests on one value (use race-condition-fix), repeated delivery of one event (use idempotency-fix) or consistency across services (use saga-transactional-outbox-pattern)."
+description: "Make one user action that writes in several places (create an order and take stock, charge and grant access, move money between accounts, signup across tables) all-or-nothing, so a crash or error between writes cannot leave half-done data. Lists each multi-write operation, wraps the writes in one database transaction, keeps email, payment and webhook calls outside it and proves it with a forced-failure test. Use when a failure midway leaves partial rows. Not for two requests racing on one value (use race-condition-fix), the same event arriving twice (use idempotency-fix) or consistency across services (use saga-transactional-outbox-pattern)."
 ---
 
 # Transaction fix (all or nothing)
 
-A transaction makes several writes behave as one: either every write lands or none does. Without it, a crash between two writes leaves an order with no items or a payment with no access. Two requests racing on the same row are a different problem: `race-condition-fix`. Same event delivered twice: `idempotency-fix`. Shared database rules and safety steps: `database-audit`, `fundamentals-audit`.
+One idea: **a transaction makes several writes behave as one, so group the writes that already exist and prove the group fails whole.** Without it, a crash between two writes leaves an order with no items or a payment with no access. Verified facts and claims not adopted: [references/sources.md](references/sources.md). Other problems have owners: two requests racing on one row is `race-condition-fix`; one event delivered twice is `idempotency-fix`; consistency across services (outbox, saga) is `saga-transactional-outbox-pattern`. Shared database rules and safety steps: `database-audit`, `fundamentals-audit`.
 
-## Steps
+## 1. Find every multi-write operation
 
-1. **Find every operation that writes to more than one table, more than one row, or makes separate calls** to the database for one user action. List each with `file:line` and the order of its writes. Done when the list is complete or the search method is stated.
-2. **For each, state in one sentence** what must be true afterwards ("the order exists if and only if its items and the stock change exist"). That sentence is the business rule the test will check.
-3. **Write the failing test first:** force an error after the first write (a stub that throws, a violated constraint) and assert that **nothing was written**. It must fail on the current code.
-4. **Wrap the writes in one transaction** in the server or a database function, using the stack's own mechanism, with rollback on any error. If the steps are separate calls from the client today, propose moving them into one endpoint or function. Keep reads that decide the outcome inside it.
-5. **Move every external call outside the transaction:** an email, a payment provider call, a webhook. Hold the transaction open on a slow network call and locks pile up. Pattern: commit first, then call; or record the intent inside the transaction and send afterwards.
-6. **Run the test again** and the neighboring tests; show the output.
+List each operation that writes to more than one table or row, or issues separate calls to the database for one user action, with `file:line` and the order of its writes. Done when the list is complete or the search method is stated. Show the list before editing anything.
 
-## Rules
+Why separate calls are the bug: with no explicit `BEGIN`, a database such as PostgreSQL wraps each statement in its own tiny transaction, so three separate statements or API calls are three independent commits. Some client libraries open and commit transactions for you; check what yours does.
 
-- One operation per change; do not rewrite unrelated code. Do not change business rules or values: only group the writes that already exist.
-- Never swallow the error to make a test pass: the failure must reach the caller after rollback.
-- A step that cannot be undone by rollback (money moved at a provider) is named in the report with how it is compensated.
-- Tests run against a real test database that is not production; see `integration-tests`.
-- Show the list from step 1 before editing anything.
+## 2. State the rule, then write the failing test
 
-Source: the handout of the second database lesson of mano deyvin (prompt "the half-saved order"). The external-call rule is from the handout; the commit-then-call and record-intent patterns and "keep reads inside" are this skill's own practice, not from a source.
+For each operation write one sentence of what must hold afterwards ("the order exists if and only if its items and the stock change exist"). Then write the test first: force an error after the first write (a stub that throws, a violated constraint) and assert that **nothing was written** and that the caller received the error. It must fail on the current code. Tests run against a real non-production database (`integration-tests`).
+
+## 3. Wrap the writes
+
+Put the writes, and the reads that decide the outcome, in one transaction on the server or in a database function, using the stack's own mechanism, rolling back on any error. If the steps are separate client calls today, propose one endpoint or function. Do not change business rules or values; only group what exists.
+
+- Let the error propagate after rollback. In PostgreSQL an error inside a transaction block leaves it aborted: every command except `ROLLBACK` or `COMMIT` is refused until you roll back, so catching the error and carrying on does not work. To recover part of a transaction, use a savepoint deliberately.
+- Keep the transaction short. A transaction holds its row locks until it ends, and other writers wait; never hold one open across user input or a slow network call.
+- A transaction alone does not stop two concurrent requests from both passing a check. If that is the symptom, go to `race-condition-fix`.
+
+## 4. Keep external calls outside
+
+Email, payment-provider calls and webhooks go outside the transaction: a rollback cannot recall a sent email, and a slow call holds locks. Two shapes, both this skill's own practice: **commit, then call** (if the call fails, retry; the data is already correct), or **record the intent inside the transaction and send afterwards** (an outbox row; the pattern, its relay and the duplicate-delivery caveat belong to `saga-transactional-outbox-pattern`). A step the database cannot undo (money moved at a provider) is named in the report with how it is compensated, for example a refund.
+
+## 5. Re-run
+
+Run the forced-failure test and the neighboring tests; show the output. One operation per change; no unrelated rewrites.
 
 ## Quick Decision Checklist
 
@@ -32,11 +39,12 @@ Source: the handout of the second database lesson of mano deyvin (prompt "the ha
 - [ ] Have I stated the business rule that must hold afterwards, in one sentence?
 - [ ] Is there a failing test that forces an error after the first write and asserts nothing was written?
 - [ ] Are all the writes, plus the reads that decide the outcome, inside one transaction with rollback?
-- [ ] Are external calls (email, payment, webhook) kept outside the transaction?
+- [ ] Are external calls (email, payment, webhook) outside the transaction, and is the transaction short?
 - [ ] Does the error still reach the caller after rollback, rather than being swallowed?
-- [ ] Is any step rollback cannot undo named with how it is compensated, and is this a different problem from a race or duplicate event?
+- [ ] Is any step rollback cannot undo named with how it is compensated, and is this really not a race or a duplicate event?
 
 ## Deep references
 
-- [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own
-- [Atomicity scenarios and external calls](references/atomicity-scenarios-and-external-calls.md) — when you hunt multi-write operations or decide where an email or payment call goes
+- [references/atomicity-scenarios-and-external-calls.md](references/atomicity-scenarios-and-external-calls.md): read when hunting multi-write operations or deciding where an email or payment call goes.
+- [references/trigger-evals.md](references/trigger-evals.md): read when tuning the description or checking the boundary with neighbors.
+- [references/sources.md](references/sources.md): read to see what was verified on 2026-11-27, reading limits and claims not adopted.

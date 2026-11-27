@@ -1,6 +1,6 @@
 # WCAG 2.2 Criteria Map: How to Test Each One
 
-Sources: https://www.w3.org/TR/WCAG22/ · https://www.w3.org/WAI/WCAG22/Understanding/ (target-size-minimum, focus-not-obscured-minimum, reflow, contrast-minimum, status-messages) · https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md · https://www.w3.org/WAI/test-evaluate/preliminary/ · Last verified 2026-11-24
+Sources: https://www.w3.org/TR/WCAG22/ · https://www.w3.org/WAI/WCAG22/Understanding/ (target-size-minimum, focus-not-obscured-minimum, reflow, contrast-minimum, status-messages) · https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md · https://www.w3.org/WAI/test-evaluate/preliminary/ · Last verified 2026-11-27
 
 How to read the map: "Manual" is a procedure a person can run in a browser; "axe" names rules seen on the axe-core rule list on the read date, or says "none" when no rule exists for the criterion in what was read. "Partial" means a tool can find a subset (for example presence, not quality). Version-sensitive: rule ids and default-on status change between axe-core releases; check the installed version.
 
@@ -24,7 +24,7 @@ WCAG 2.2 removed 4.1.1 Parsing (marked obsolete). Report on it only when the use
 | 1.4.5 Images of text (AA) | Look for text rendered as image. | none |
 | 1.4.10 Reflow (AA) | Viewport 320 CSS px wide (400% on 1280) for vertical scrolling; 256 px tall for horizontal. One-direction scrolling only, except parts that need two dimensions (maps, data tables as a whole). Header, search and pagination must still reflow. | none |
 | 1.4.11 Non-text contrast (AA) | 3:1 for control boundaries, icons, focus indicators and state indicators that carry meaning. | none |
-| 1.4.12 Text spacing (AA) | Apply user spacing overrides (the criterion's figures, which the page excerpt read did not show: line height 1.5, paragraph spacing 2x, letter spacing 0.12 em, word spacing 0.16 em; confirm in the criterion text) with a bookmarklet or style injection; nothing clipped. | none |
+| 1.4.12 Text spacing (AA) | Apply user spacing overrides (line height 1.5, paragraph spacing 2x, letter spacing 0.12 em, word spacing 0.16 em, as multiples of font size; confirmed in the WCAG 2.2 text) with a bookmarklet or style injection; nothing clipped. | none |
 | 1.4.13 Hover or focus content (AA) | Popup is dismissible (Escape), hoverable, persistent until dismissed. | none |
 
 ## Operable
@@ -67,7 +67,7 @@ WCAG 2.2 removed 4.1.1 Parsing (marked obsolete). Report on it only when the use
 | 3.3.7 Redundant entry (A, new) | Within one process, data already given is prefilled or selectable. | none |
 | 3.3.8 Accessible authentication, minimum (AA, new) | No memory or transcription test without an alternative: allow paste and password managers, offer an alternative to puzzles. | none |
 | 4.1.2 Name, role, value (A) | Tree entry gives name and role for each control; state and value changes are exposed (expanded, checked, selected). | button-name, link-name, label, aria-allowed-attr, aria-hidden-body: partial |
-| 4.1.3 Status messages (AA) | Trigger the change without moving focus (results count, "saved", cart update, progress); a screen reader announces it; markup uses `role="status"`, `role="alert"` or a live region. Dialogs that take focus are out of scope for this criterion. | none |
+| 4.1.3 Status messages (AA) | Trigger the change without moving focus (results count, "saved", cart update, progress); a screen reader announces it; markup uses `role="status"`, `role="alert"` or a live region. Dialogs that take focus and expand/collapse widgets are out of scope for this criterion (4.1.2 covers the latter); `role="log"` suits sequential updates. | none |
 
 ## How an agent should apply this
 

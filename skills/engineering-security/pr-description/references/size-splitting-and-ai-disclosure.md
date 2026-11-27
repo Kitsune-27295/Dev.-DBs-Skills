@@ -1,33 +1,22 @@
 # Size, Splitting, Templates and AI Disclosure
 
-Sources: https://google.github.io/eng-practices/review/developer/small-cls.html · https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository · https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates · https://ai-declaration.md/en/0.1.2/ · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/developer/small-cls.html · https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository · https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates · https://ai-declaration.md/en/0.1.2/ · Last verified 2026-11-27
 
 ## What the sources say
 
-**Google, small changes.** Small changes are reviewed faster and more thoroughly, introduce fewer bugs, waste less work if rejected, merge more easily, are easier to design well, block less, and are simpler to roll back. The right size is one self-contained change: a minimal change addressing one thing, with its tests, understandable from the change, its description, the codebase or earlier reviewed changes, and leaving the system working. It should not be so small that its meaning is unclear (an added API should include a use). There are no hard rules: about 100 lines is usually reasonable and about 1000 usually too large, and the number of files counts too. Deleting a whole file counts as little, and trusted automatic refactoring can be larger. Reviewers may reject a change for size alone. Splitting strategies: stack changes on each other, split by files that need different reviewers (for example a protocol definition and its users, or code and the configuration that enables it), split horizontally by layer with stubs or shared definitions, split vertically by feature slice, or combine both. Keep refactorings apart from features and bug fixes, with tiny cleanups allowed. Keep related tests in the same change.
+**Google, small changes.** Small changes are reviewed faster and more thoroughly, waste less work if rejected, block less, and are simpler to roll back, because a large change is more likely to touch files that change before a revert. The right size is one self-contained change with its tests that leaves the system working; there are no hard rules, and the reviewer may reject a change for size alone. Trusted automatic refactoring can be larger. The numeric heuristics and the splitting strategies (stack, by reviewer group, horizontal, vertical, refactors apart) are owned by `git-atomic-commits`; this reference keeps only what a PR description adds.
 
 **GitHub templates.** A pull request template (file `pull_request_template.md` in the root, `docs/` or `.github/`, or several under `PULL_REQUEST_TEMPLATE/`) pre-fills the pull request body; it takes effect when merged into the default branch. A template typically asks for a related issue, a description of changes and the people to mention. Draft pull requests cannot be merged and do not automatically request code owners; marking one ready for review requests them.
 
-**AI-DECLARATION specification (0.1.2).** A public, machine-readable convention for stating AI involvement in a repository. Its levels, from least to most AI involvement, are `none`, `hint`, `assist`, `pair`, `copilot`, `auto`; it can also list processes (design, implementation, testing, documentation, review, deployment) with their own levels, and components (paths) with individual levels, plus a human-readable Notes section. It is one example of a disclosure scheme; projects define their own rules, and some require nothing at all. Local third-party description guidelines read for ideas use a similar per-stage idea (breakdown, design, testing, implementation, review); their grading rules are project-specific and not reproduced here.
+**AI-DECLARATION specification (0.1.2).** A public, machine-readable convention for stating AI involvement in a repository: a file with a version, a global level (which must be the highest level present), a required Notes section and optional per-process and per-component levels. Its levels, from least to most AI involvement, are `none`, `hint`, `assist`, `pair`, `copilot`, `auto`; processes not listed count as `none`; it can list processes (design, implementation, testing, documentation, review, deployment) with their own levels, and components (paths) with individual levels, plus a human-readable Notes section. It is one example of a disclosure scheme; projects define their own rules, and some require nothing at all. Third-party description guidelines read for ideas (no text reused) use a similar per-stage idea; their grading rules are project-specific and not reproduced here.
 
-## Size and splitting decision
+## Describing a split
 
-| Situation | Action |
-|---|---|
-| Feature touches data, API and UI | Split by layer or by slice; each PR works alone behind a flag if needed (`feature-flag-toggle-engine`, `vertical-slice-architecture`) |
-| Refactor plus behavior change | Two PRs: refactor first, behavior second |
-| Rename or move plus fix | Rename PR first, fix second |
-| Generated or mechanical change | One PR; say what produced it and how to reproduce |
-| Dependency bump plus code use | Bump separate unless the code cannot compile without it |
-| Cannot summarize in a short title | Probably two or more PRs |
+Choose the split with `git-atomic-commits` (feature flag help: `feature-flag-toggle-engine`, `vertical-slice-architecture`). A generated or mechanical change stays one PR; say what produced it and how to reproduce. Then, for each resulting PR:
 
-Splitting checklist:
-
-1. Does each PR build, pass tests and leave the system consistent on its own?
-2. Does each PR contain the tests for what it changes?
-3. Is the order of merge written in each description ("depends on #1")?
-4. Does each description cover only its own diff against its base?
-5. Are the sibling PRs linked so reviewers have context?
+1. Is the order of merge written in the description ("depends on #1")?
+2. Does it cover only its own diff against its base?
+3. Are the sibling PRs linked so reviewers have context?
 
 Atomic commits within a PR (`git-atomic-commits`) help reviewers read one PR commit by commit, but they do not replace splitting when the PR itself is too big.
 

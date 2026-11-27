@@ -1,6 +1,6 @@
 # Consumer Evidence and Reachability
 
-Sources: https://www.hyrumslaw.com · https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.guru/smells/dead-code · https://martinfowler.com/bliki/ParallelChange.html · Last verified 2026-11-24
+Sources: https://www.hyrumslaw.com · https://abseil.io/resources/swe-book/html/ch15.html · https://refactoring.guru/smells/dead-code · Last verified 2026-11-27
 
 ## The rule
 
@@ -44,7 +44,7 @@ Include every package and app, scripts and runtime wrappers, shipped profiles an
 | Passing the full suite after removal | The suite's covered consumers are fine | Consumers outside the suite |
 | A temporary rename of an implementation-only symbol, or a planned brownout, followed by watching for breakage | Hidden dependents surface | A safe state for all time; keep the window and rollback in mind |
 
-The deprecation chapter lists the same mix: static discovery (code search and dependency graphs), runtime logging and sampling for dynamic dependencies, the global test suite as an oracle that references are gone, and probing with planned outages or renames, plus static analysis to stop new uses appearing after the decision.
+The deprecation chapter lists the same mix: static discovery (code search and dependency graphs), runtime logging and sampling for dynamic dependencies, the global test suite as an oracle that references are gone, and probing (turning the system off temporarily in tests of increasing frequency and duration, or renaming implementation-only symbols), plus static analysis to stop new uses appearing after the decision. It describes these for a large organization with a monorepo.
 
 ## Own checklist for runtime evidence
 

@@ -1,13 +1,13 @@
 ---
 name: zabbix-diagnostics
-description: "Read-only diagnostics of a Zabbix monitoring deployment through its JSON-RPC API, grouped by cause: unsupported items grouped by host and error message, user macros listed by name and type only (never values), problems, triggers in unknown state, history and trends sanity, proxies and their versions, host interface availability, housekeeping settings and the audit log. Gives a catalog of read-only API methods with parameters, ready JSON request bodies (placeholder host zabbix.example.com), and safe-use rules: API token from an environment variable and never printed, a least-privilege role with an allow list of get methods, rate and size limits. Verified against the Zabbix 7.0 manual and compared with 8.0. Use when someone asks why a monitored source stopped answering, why items are not supported, whether a proxy or housekeeping is healthy, or who changed a host or macro in Zabbix."
+description: "Find out, read-only through the Zabbix JSON-RPC API, why a monitored source stopped answering: unsupported items grouped by host and error, user macros by name and type only (never values), problems, triggers in unknown state, history and trend sanity, proxies and versions, interface availability, housekeeping and the audit log (who changed a host or macro). Gives a catalog of get methods, ready JSON request bodies (placeholder host zabbix.example.com) and safe-use rules: token from an environment variable, never printed, least-privilege role, rate and size limits. Verified against the Zabbix 7.0 manual, compared with 8.0. Use when someone asks why items are unsupported, whether a proxy or housekeeping is healthy, or who changed something in Zabbix. Not for the database under Zabbix (use database-audit) or retry logic of the API client."
 ---
 
 # Zabbix diagnostics (API, read-only)
 
 One idea: when a monitored source "stops answering", the useful question is almost never "what is the status of host X" but **which items are unsupported, with which error, since when, and who changed the host or its macros**. This skill answers it with read-only API calls grouped by cause, so a hundred items failing for one reason become one finding. Same pattern as `postgres-diagnostics` and `sql-server-diagnostics` (queries that change nothing, grouped by question, reported with what they do not prove), but the tool is the Zabbix JSON-RPC API instead of SQL files. Sources, versions and what was not verified: [references/sources.md](references/sources.md).
 
-**Version verified:** the method pages, object properties and role rules were read in the **Zabbix 7.0** manual; the same pages in the **8.0** manual (the "current" one on 2026-11-24) were compared and no parameter used here is missing there (8.0 adds some). Other versions: say "not verified". First call is always `apiinfo.version`, because the API version equals the Zabbix version.
+**Version verified:** the method pages, object properties and role rules were read in the **Zabbix 7.0** manual; the same pages in the **8.0** manual (the "current" one on 2026-11-27) were compared and no parameter used here is missing there (8.0 adds some). Other versions: say "not verified". First call is always `apiinfo.version`, because the API version equals the Zabbix version.
 
 Boundaries (one owner per rule):
 
@@ -85,4 +85,5 @@ Reference files: [method catalog](references/read-only-method-catalog.md), [safe
 - [Unsupported items and macros](references/recipes-unsupported-items-and-macros.md) — read when a source stopped answering.
 - [Problems, triggers and history](references/recipes-problems-triggers-and-history.md) — read for alerts that fired, did not fire, or data that looks wrong.
 - [Proxies, housekeeping and audit log](references/recipes-proxies-housekeeping-and-audit.md) — read for site-wide silence, vanishing data and "who changed it".
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
 - [Sources](references/sources.md) — URLs checked, versions and claims not adopted.

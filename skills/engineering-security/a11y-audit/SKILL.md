@@ -1,6 +1,6 @@
 ---
 name: a11y-audit
-description: "Audit a web page or app for accessibility with evidence, mapped to WCAG 2.2 level A and AA. Combines the accessibility tree, keyboard and focus order, accessible names, roles and states, contrast, target size, zoom and reflow, motion, forms, errors and status messages with automated checks (axe-core, Lighthouse, optional Playwright steps), says honestly what automation cannot cover, and ends in a prioritized report with one verifiable finding per issue. Read-only by default. Use when asked to check accessibility, review a page or flow against WCAG 2.2, triage axe or Lighthouse results, or prepare an accessibility report before a release."
+description: "Audit a web page or flow for accessibility against WCAG 2.2 level A and AA, with evidence: accessibility tree, keyboard and focus, names and roles, contrast, target size, reflow, forms and status messages, plus axe-core, Lighthouse and optional Playwright runs, with an honest statement of what automation cannot cover. Ends in a prioritized report with one verifiable finding per issue. Read-only by default. Not for writing or running Playwright suites (`playwright-qa-orchestrator`) or for oversized-data layouts (`worst-case-data-ui-check`). Use when asked to check accessibility, review a page against WCAG 2.2, triage axe or Lighthouse results, or prepare an accessibility report before a release."
 ---
 
 # Accessibility audit (WCAG 2.2 A and AA)
@@ -42,7 +42,7 @@ The criterion-by-criterion method (how to test it by hand, what a tool can say) 
 
 ## 3. Automated checks: what to run, what to trust
 
-- Use axe-core as the engine (directly, through Lighthouse, or through `@axe-core/playwright`). Run it per state, after the UI has settled, with the tag set matching the target level. The WCAG 2.2 rules sit under their own tag and are off by default in the rule list read, so enable them on purpose.
+- Use axe-core as the engine (directly, through Lighthouse, or through `@axe-core/playwright`). Run it per state, after the UI has settled, with the tag set matching the target level. The WCAG 2.2 rules sit under their own tag and are off by default in the rule list read, so enable them on purpose. Hidden regions (closed menus, inactive modals) are not tested: open them and run again; cross-origin frames need extra setup.
 - Treat the four result groups differently: `violations` are candidate defects to verify; `incomplete` ("needs review") are not passes and each needs a human decision; `passes` prove only that one rule found no problem on that node; `inapplicable` says nothing about accessibility.
 - A Lighthouse accessibility score is a weighted average of binary, automated audits, with manual audits excluded. It is a trend metric, not a verdict. Never report "100" as "accessible".
 - Never use a tool result as the whole report. Reproduce each violation by hand once (inspect the element, look at the tree) before it enters the report; discard false positives with the reason.
@@ -69,7 +69,7 @@ Automation cannot decide any of these; each is a manual finding class.
 1. Native element first. A `button`, `a`, `input`, `select`, `dialog` or `details` brings role, name handling and keyboard behavior for free.
 2. A role is a promise: if a `div` has `role="button"`, it must also be focusable and answer Enter and Space. Check the behavior, not just the attribute.
 3. Wrong ARIA is worse than none; it overrides native semantics and misleads assistive technology. Flag `aria-hidden` on focusable content, roles on the wrong element, and `aria-label` that contradicts visible text.
-4. For menus, tabs, comboboxes, dialogs, grids and similar patterns, compare the keyboard interaction with the matching APG pattern, then verify in a real browser; the APG itself warns that assistive technology support differs and must be tested.
+4. For menus, tabs, comboboxes, dialogs, grids and similar patterns, compare the keyboard interaction with the matching APG pattern, then verify in a real browser; the APG read-me-first page says assistive technology interoperability must be tested before production use.
 
 ## 6. Report, prioritization, honesty
 
@@ -91,7 +91,7 @@ The report must also carry: a **coverage statement** (what was automated, what w
 
 - Test execution, healing and CI wiring: `playwright-qa-orchestrator`.
 - Server-side validation behind accessible form messages: the client-side message is user experience, the server still decides; see `never-trust-the-client`.
-- Fresh facts (a new WCAG revision, an axe-core release that changes rules): re-verify with `deep-web-research` before relying on this skill's version-sensitive lines. Facts here reflect sources read on 2026-11-24.
+- Fresh facts (a new WCAG revision, an axe-core release that changes rules): re-verify with `deep-web-research` before relying on this skill's version-sensitive lines. Facts here reflect sources read on 2026-11-27.
 - This is not legal advice; mapping to a regulation (EN 301 549, Section 508, accessibility acts) is the owner's call. Say which standard version the report uses.
 
 ## Quick Decision Checklist
@@ -113,4 +113,5 @@ The report must also carry: a **coverage statement** (what was automated, what w
 - [Keyboard, focus and semantics checks](references/keyboard-focus-and-semantics-checks.md) — step-by-step keyboard, focus, name/role/state and ARIA checks, with Playwright snippets.
 - [Automated tooling: axe, Lighthouse, Playwright](references/automated-tooling-axe-lighthouse-playwright.md) — result groups, tags, scoring, fixtures, fingerprints, and limits.
 - [Severity and evidence format](references/severity-and-evidence-format.md) — finding format, severity model, coverage statement, what not to claim.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
 - [Sources](references/sources.md) — URLs read, statuses, and claims not adopted.

@@ -1,26 +1,33 @@
 # Sources — Database exposure
 
-Every source below was checked during skill authoring (2026-11-24).
+Every URL below was re-checked on 2026-11-27 (fetched through a summarizing fetch tool; the page text was not read in full).
 
-| Source | Retrieved status | What it contributed to SKILL.md |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 06 "A porta aberta" (24:10-26:37) | Transcript read from a saved copy; video page not re-fetched | The three closing rules (database not on the internet, service key never in the browser, grants on new tables), the three incidents, the report-first prompt |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "5. A porta aberta" | Saved copy read; page not re-fetched | The audit prompt (port, secrets in front end and git, per-table access, report then fix one by one) |
-| UpGuard, https://www.upguard.com/blog/everything-everywhere-systemic-data-exposure-in-supabase-apps | 200 (read through a summarizing fetch tool) | 16,326 databases, method, causes, limits |
-| Wiz, https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys | 200 (read through a summarizing fetch tool) | Moltbook: key in client JavaScript, no RLS, about 1.5 million tokens |
-| Tecnoblog, https://tecnoblog.net/noticias/fiesp-expoe-dados-pessoais/ | 200 (read through a summarizing fetch tool) | The 2018 FIESP exposure: open Elasticsearch servers, record counts |
-| Supabase changelog 45329, https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically | 200 (read through a summarizing fetch tool) | The explicit-grant change and its dates |
+| UpGuard, https://www.upguard.com/blog/everything-everywhere-systemic-data-exposure-in-supabase-apps | 200 | 16,326 databases, method, percentages, causes, limits |
+| Wiz, https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys | 200 | Moltbook timeline, counts, cause, recommendations |
+| Tecnoblog, https://tecnoblog.net/noticias/fiesp-expoe-dados-pessoais/ | 200 | FIESP: open Elasticsearch servers, counts, dates |
+| Supabase changelog 45329, https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically | 200 | Rollout dates, affected and unaffected, grant guidance |
+| Supabase RLS guide, https://supabase.com/docs/guides/database/postgres/row-level-security (added 2026-11-27) | 200 | Policy `to` rule, anon/authenticated, secret key bypass |
+| Firebase insecure rules, https://firebase.google.com/docs/firestore/security/insecure-rules (added 2026-11-27) | 200 | `allow read, write: if true` flagged; fixes |
+| PostgreSQL pg_hba.conf, https://www.postgresql.org/docs/current/auth-pg-hba-conf.html (added 2026-11-27) | 200 | `trust` meaning; loopback default for `listen_addresses` |
+| Video "Banco de Dados / Fundamentos para Vibe Coders #EP2", mano deyvin, 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI | Page content truncated; only the title was confirmed | Lesson framing (chapter 06); transcript from an earlier saved copy |
+| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe | 200, section "The open door" re-read | The audit prompt (port, secrets, per-table access, report then fix) |
 
-## Claims and caveats
+## Corrections made on 2026-11-27
 
-- UpGuard: verified 16,326 databases with readable tables, from about 300,000 domains showing signs of Supabase, probing for a `users` table. The article itself lists limits (third-party domain lists, `users`-table bias, mostly schema analysis rather than reading rows) and a commercial interest. The video also flags possible bias.
-- Wiz: verified about 1.5 million agent API tokens, about 35,000 email addresses, 4,060 private conversations, write access; cause a Supabase key in client JavaScript without RLS. Disclosed 2026-01-31 and fixed within hours.
-- Tecnoblog: the headline says 180 million records, but the body reports about 52 million across three databases (34,817,273 + 6,986,604 + 10,558,155); the article does not reconcile this (resolved 2026-11-24: re-fetched; headline and lede say 180 million, itemized figures sum to 52,362,032; the incidents reference now says so, citing the page). The video repeats "up to 180 million". The exposure was open Elasticsearch servers, not a Supabase or Postgres database.
-- Supabase changelog: verified.
+1. Supabase: the old text said "rolled out by project age"; the changelog gives dates (28 April opt-out, 30 May default for new projects, 30 October existing projects). Fixed.
+2. UpGuard: added the 9.7% hard-credential share, the Table Editor versus API distinction and its limits.
+3. Wiz: email figures differ between summary and body; fixed with exact timeline. "Within a few hours" confirmed (21:48 to about 01:00 UTC).
+4. Tecnoblog: the 52,362,032 sum was re-confirmed; added dates.
+5. Supabase RLS rules for `to` clause and anonymous sign-ins added; duplicate RLS explanation replaced by a pointer to `security-audit`.
 
-## Discrepancies with SKILL.md and the video (not edited)
+## Reading limits
 
-- `SKILL.md` says the changelog entry is dated 28 April 2026, rolled out by project age; verified as availability date, with 30 May 2026 as default for new projects and 30 October 2026 for all existing projects. The video says "since 30 October" applies; consistent for existing projects.
-- Date of the UpGuard post: the page is dated 23 September 2026; the video says "in October" (resolved 2026-11-24: re-fetched the post, date is 23 September 2026; `SKILL.md` and the incidents reference now state it).
-- `SKILL.md` says "probing about 300,000 candidate domains for a `users` table"; verified.
-- The video says "Moltbook, a social network of agents, in February, the Supabase key in JavaScript had no RLS rules"; the article's disclosure date is 31 January to 2 February 2026. Close enough.
+Pages were read through a summarizing tool, so exact wording was not checked. The video page returned only a title. The video chapter timings (24:10-26:37) were not re-verified. The claim that the Table Editor enables RLS by default rests on UpGuard alone; the Supabase RLS guide does not mention it.
+
+## Claims not adopted as fact
+
+- Any percentage from UpGuard applied to a specific app.
+- The video's "up to 180 million" FIESP figure (page itemizes about 52 million).
+- Time-limited Firebase test-mode rules (the page read does not cover them).

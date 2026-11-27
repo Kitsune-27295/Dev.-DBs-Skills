@@ -1,10 +1,10 @@
 # Rating, Mitigation and Validation
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://shostack.org/resources/threat-modeling · https://www.threatmodelingmanifesto.org/ · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started · https://owasp.org/www-project-threat-modeling/ · Last verified 2026-11-24
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html · https://shostack.org/resources/threat-modeling · https://www.threatmodelingmanifesto.org/ · https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers · https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started · https://owasp.org/www-project-threat-modeling/ · Last verified 2026-11-27
 
 ## Rating threats
 
-The OWASP cheat sheet says that in theory threats are ranked by likelihood times impact, but both values are hard to estimate and the approach ignores the effort needed to fix, so some practitioners add fix effort. Shostack's page labels DREAD, OCTAVE and Trike deprecated and describes CVSS as a severity-scoring system rather than a threat model. Microsoft's older driver guide still teaches DREAD (five 1 to 10 scores averaged), which shows why teams still meet it; treat it as a legacy option.
+The OWASP cheat sheet says that in theory threats are ranked by likelihood times impact, but both values are hard to estimate and the approach ignores the effort needed to fix, so some practitioners add fix effort. Shostack's page labels DREAD, OCTAVE, Trike and attack trees deprecated (DREAD scores risk rather than finding threats). Microsoft's older driver guide still teaches DREAD (five 1 to 10 scores averaged), which shows why teams still meet it; treat it as a legacy option.
 
 Practical scheme for an agent (this skill's synthesis, not a standard):
 
@@ -21,7 +21,7 @@ Order by risk, then by effort. Do not convert to fake decimals. For a concrete f
 
 Shostack's page lists four responses: mitigate, eliminate the feature that creates the threat, transfer to someone better positioned, or accept. OWASP adds that transfer does not reduce likelihood or impact, so the residual controls and risk owner must be documented. Prefer elimination when the feature is optional (no data stored means nothing to leak), mitigation when it is core, transfer only with a named counterpart and evidence (provider documentation, contract), acceptance only with a named owner, a reason and a review date (this last constraint is the skill's own rule).
 
-OWASP also says agreed mitigations should become actionable security requirements, recording how they will be implemented and why remaining risk is accepted. Example row:
+Turning each mitigation into an actionable requirement is this skill's practice. Example row:
 
 | Threat | Response | Requirement | Test |
 |---|---|---|---|
@@ -29,7 +29,7 @@ OWASP also says agreed mitigations should become actionable security requirement
 
 ## Validating (question 4)
 
-Shostack's validation checklist: the model matches what was built, every threat was found and handled, and tests exist to detect each problem. OWASP adds stakeholder review: is the DFD accurate, were all threats found, does each have an agreed response, do mitigations bring risk to an acceptable level, is the model stored with suitable access, and can mitigations be tested and measured. Microsoft's walkthrough shows a two-meeting rhythm: one to align on the diagram (a missing component surfaced within minutes), a second to review threats and sign off, then check the model into source control. It also records threat status values worth borrowing: not started, needs investigation, mitigated, not applicable.
+Shostack's fourth question says to check the model, each threat, and the tests that detect problems. OWASP adds stakeholder review: is the DFD accurate, were all threats found, does each have an agreed response, do mitigations bring risk to an acceptable level, is the model documented with restricted access, and can mitigations be tested. Microsoft's walkthrough shows a two-meeting rhythm: one to align on the diagram (a missing component surfaced within minutes), a second to review threats and sign off, then check the model into source control. It also records threat status values worth borrowing: not started, needs investigation, mitigated, not applicable.
 
 Agent-side checks, all read-only: compare each element and flow to routes, handlers, config and infrastructure files; search for the code that implements each claimed control; confirm a test exists or flag its absence; list anything that cannot be verified from the repository.
 
@@ -39,13 +39,11 @@ The OWASP cheat sheet says the model should not be a one-time exercise; it shoul
 
 Update triggers (skill rule): new boundary, store, role, dependency or data class; an incident or audit finding that the model missed; a hosting or identity change; a mitigation that is removed or weakened. Make the model diff part of the pull request.
 
-## Team and process pitfalls (from OWASP)
+## Team and process pitfalls (from OWASP: knowledge gaps, time pressure, poor communication; remedies include security involvement, training, tooling, cross-team workshops)
 
 - Knowledge gaps (developers without security training miss threats): involve a security reviewer and rotate who leads.
 - Time pressure: use the fast path and chunk the work by change.
 - Poor communication between development, security and others: run a short joint session over the diagram.
-- Technique padding: pick techniques that fit the scope.
-- Transfer used to look done: record residual risk and owner.
 
 The Manifesto's anti-patterns apply here too: hero threat modeler, admiration for the problem, over-focus, perfect representation.
 

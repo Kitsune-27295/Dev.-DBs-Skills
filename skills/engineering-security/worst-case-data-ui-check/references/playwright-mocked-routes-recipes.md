@@ -1,6 +1,6 @@
 # Playwright Mocked Routes Recipes
 
-Sources: https://playwright.dev/docs/mock, https://playwright.dev/docs/network, https://playwright.dev/docs/emulation · Last verified 2026-11-24
+Sources: https://playwright.dev/docs/mock, https://playwright.dev/docs/network, https://playwright.dev/docs/emulation · Last verified 2026-11-27
 
 How to feed a screen worst-case data without touching its markup or its backend. Playwright's mocking page says requests a page makes, including XHR and fetch, can be tracked, modified and mocked, over HTTP and HTTPS. Code below is the author's own illustration built from the calls shown on those pages; adapt the URL pattern to the product's API.
 
@@ -10,7 +10,7 @@ How to feed a screen worst-case data without touching its markup or its backend.
 |---|---|---|
 | Replace an API response | `page.route(pattern, route => route.fulfill({ json }))` | mock page: the real API is never called |
 | Patch a real response | `const response = await route.fetch(); await route.fulfill({ response, json })` | mock page: "modify API responses" |
-| Fail a request | `route.abort()` | network page: abort requests |
+| Fail a request | `route.abort()` or `route.abort(errorCode)` | network page; API reference for the code list |
 | Let other requests through | `route.continue()` | network page |
 | Replay recorded traffic | `page.routeFromHAR(path, { url, update: false })` | mock page: HAR files; replay matches URL and method strictly |
 | Register before use | call `page.route` before `page.goto` | mock page example |
@@ -51,7 +51,7 @@ await page.route('**/api/items*', async route => {
   await route.fulfill({ json: { items: [] } });
 });
 
-// failed network
+// failed network (the optional error code defaults to 'failed'; 'timedout', 'connectionrefused' and 'internetdisconnected' are other documented values)
 await page.route('**/api/items*', route => route.abort());
 
 // server error with a long problem-details message (shape owned by error-handling-problem-details)

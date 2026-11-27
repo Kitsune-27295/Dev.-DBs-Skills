@@ -1,13 +1,13 @@
 ---
 name: ci-test-reliability
-description: "Method for making automated tests reliable in CI instead of lucky on a quiet workstation: model the execution topology (parallel workers, shards, lanes, jobs sharing a host), allocate resources atomically (ephemeral ports via bind to port 0, private temp directories), restore global state, control time/random/network, synchronize on state or events instead of sleeps, tear down to quiescence, handle Windows vs POSIX differences, budget timeouts per lane, treat retries as a diagnostic, run a quarantine with an expiry, and reject fixes that merely mask flakiness. Use when adding or reviewing tests that touch ports, files, clocks, processes, globals or async work, when CI fails intermittently, or when deciding on retries, serial runs or quarantine."
+description: "Make tests pass for the right reasons in CI instead of by luck on a quiet workstation: model parallel workers, shards and jobs sharing a host; allocate ports and temp directories atomically; restore global state; control time, randomness and network; wait on state, not sleeps; tear down to quiescence; handle Windows vs POSIX; budget timeouts per lane; treat retries as a diagnostic; quarantine with an expiry; reject masking fixes. Not for choosing test shapes (`testing-pyramid-and-shapes`), real-database route tests (`integration-tests`), Playwright retries (`playwright-qa-orchestrator`) or races in application code (`race-condition-fix`). Use when CI fails intermittently, when tests touch ports, files, clocks, processes or globals, or when someone proposes retries, serial runs or quarantine."
 ---
 
 # CI Test Reliability
 
 One idea: a test is reliable only if its result depends on the code under test and nothing else, including under the **real** CI topology (parallel workers, shards, shared hosts, other OSes). Fix the cause (shared resource, uncontrolled input, unsynchronized wait), never the symptom (a bigger timeout, a retry, a serial run). Sources and claims: [references/sources.md](references/sources.md).
 
-Boundaries (one owner per rule): which test shapes to write is `testing-pyramid-and-shapes`; real-database route tests and the golden rule "never delete, skip or loosen a test to make it pass" are `integration-tests`; Playwright retries, traces and locators are in `playwright-qa-orchestrator`; races in application code (read-decide-write) are `race-condition-fix`; the reproduce-and-bisect loop is `diagnosing-bugs`; proof that the fix worked is `verification-loop`. This skill owns test-side isolation, determinism and CI configuration.
+Boundaries (one owner per rule): the golden rule "never delete, skip or loosen a test to make it pass" is `integration-tests`; the reproduce-and-bisect loop is `diagnosing-bugs`; proof that a fix worked is `verification-loop`. Other neighbors are in the description. This skill owns test-side isolation, determinism and CI configuration.
 
 ---
 
@@ -132,4 +132,5 @@ Reject these as root-cause fixes: a longer timeout with no named awaited state; 
 - [Windows vs POSIX and timeouts](references/windows-vs-posix-and-timeouts.md) — read when a suite fails on one OS only, or when setting per-lane and per-job timeouts.
 - [Retries, quarantine and masking fixes](references/retries-quarantine-and-masking-fixes.md) — read before enabling retries, parking a test, or reviewing a "fix" for a flake.
 - [Flake triage and evidence](references/flake-triage-and-evidence.md) — read when investigating an existing intermittent failure and deciding what proof to show.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking that this skill, not a neighbor, should fire.
 - [Sources](references/sources.md) — every URL used, its retrieved status, and claims not adopted as fact.

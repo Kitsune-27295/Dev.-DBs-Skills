@@ -1,6 +1,6 @@
 # Sources — Zabbix Diagnostics
 
-Every URL below was checked during skill authoring (2026-11-24).
+Every URL below was checked during skill authoring (2026-11-24) and re-checked on 2026-11-27 (rebuild pass).
 
 Retrieval used `curl`; pages were converted to text and read (Firecrawl had no credits). "200 OK" means the page returned content. Version of the manual read: **Zabbix 7.0** (all method, object and manual pages below). For the methods used by this skill the same pages of the **8.0** manual (labeled "current" on that date) were fetched and their parameter names compared with 7.0: no parameter used here is missing in 8.0; the differences found were additions (`maxValueSize` on `history.get`, `selectApm` on `proxy.get`, `selectDiscoveryData` and inherited-tag parameters on some methods). No other Zabbix version was read; behavior on 6.0, 7.2, 7.4 and others is **not verified**.
 
@@ -50,7 +50,13 @@ Retrieval used `curl`; pages were converted to text and read (Firecrawl had no c
 | https://www.zabbix.com/documentation/7.0/en/manual/api/changes_7.0_-_7.2 | 404 (not found) | nothing; the API changelog was not read |
 | Internal project skill read for the idea of grouped read-only diagnostics | read locally, no text reused | only the idea (group unsupported items by host and error, list macros by name, check problems, triggers, history and audit read-only); no address, host name, command, file name, convention or role setting was taken |
 
+## Re-verification 2026-11-27
+
+Re-fetched with a fetch tool (extracted text): api overview, apiinfo/version, user/login, user_roles, api_tokens, user_macros, usermacro/object, item/object, proxy/object, housekeeping/object and the frontend housekeeping page, audit_log frontend page, auditlog/get, problem/get, and the 8.0 item/get page (labeled "8.0 (current)"). All 200 OK. Confirmed: Bearer header (it also applies to tokens from `user.login`); `auth` deprecated; API version matches Zabbix version since 2.0.4; `apiinfo.version` only for unauthenticated calls; empty Allow/Deny list is ignored, wildcards supported; macro types 0/1/2 with `value` write-only only for type 1; 2048-character macro limit; item `password` is not write-only (read-only for inherited or discovered); proxy `state`, `compatibility` and `version` encoding; housekeeping defaults (including services 365d, sessions 365d, audit 31d) and the hourly default run with `HousekeepingFrequency`; audit log Super admin only; `problem.get` returns unresolved only unless `recent`. Corrections: none that change a rule. Not re-fetched this pass: the other method and object pages, the 8.0 pages other than item/get, and the changelog page.
+
 ## Reading limits
+
+- Request bodies, scripts and SQL-like examples were not run or re-verified.
 
 - Method pages were read for parameters, return values and object properties; the many worked examples on them were skimmed.
 - The long frontend user-role and audit-log pages were read in the parts that concern API access and the audit columns.

@@ -1,12 +1,12 @@
 # Layout Failure Signatures
 
-Sources: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap, https://developer.mozilla.org/en-US/docs/Web/CSS/min-width, https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values, https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design · Last verified 2026-11-24
+Sources: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap, https://developer.mozilla.org/en-US/docs/Web/CSS/min-width, https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values, https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design · Last verified 2026-11-27
 
 What a break looks like, why it happens, and the usual fix to put in the report. The checker reports; it does not apply the fix. Rows marked "(own)" are the author's synthesis from common practice rather than a statement on the cited page.
 
 ## The mechanism behind most overflow
 
-For a block box, `min-width: auto` resolves to 0. For flex and grid items it does not: MDN states that the automatic minimum is, in most cases, the item's **min-content** size, with an exception when the item is a scroll container. A flex child that holds a long unbreakable string therefore refuses to shrink below the width of that string, and the row overflows its parent. That one rule explains the first four rows below.
+For a block box, `min-width: auto` resolves to 0. For flex and grid items it does not: MDN states that the automatic minimum is, in most cases, the item's **min-content** size, with two exceptions where it is 0: the item is a scroll container, or a grid item spans more than one flexible track. A flex child that holds a long unbreakable string therefore refuses to shrink below the width of that string, and the row overflows its parent. That one rule explains the first four rows below.
 
 `overflow-wrap` has three values on MDN: `normal` (break only at normal break points), `break-word` and `anywhere`. Both of the latter break an unbreakable run only when nothing else fits. The difference that matters here: with `anywhere` the soft wrap opportunities **are** counted when the browser computes min-content sizes, with `break-word` they are **not**. So `overflow-wrap: anywhere` can unblock a flex child; `break-word` alone often cannot, unless the child also has `min-width: 0`.
 
