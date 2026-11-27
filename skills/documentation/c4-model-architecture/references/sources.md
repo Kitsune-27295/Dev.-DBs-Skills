@@ -1,14 +1,24 @@
-# Sources for the c4-model-architecture skill
+# Sources — C4 Model Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was checked during skill rebuild (2026-11-27) with WebFetch.
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Simon Brown, "The C4 model for visualizing software architecture", https://c4model.com/ | Official definition of the 5 pillars of C4: (1) **Hierarchical abstractions** (Person, Software System, Container, Component, Code), (2) **Hierarchical core diagrams** (System Context, Container, Component, Code), (3) **Supporting diagrams** (System Landscape, Dynamic, Deployment), (4) **Notation independent**, and (5) **Tooling independent**. |
-| 2 | Simon Brown, "Introduction to the C4 model", https://c4model.com/introduction | Diagnosis of common ad-hoc "boxes and lines" diagramming problems (inconsistent/unexplained notation, ambiguous element meaning, missing or unlabelled relationships, generic labels like "business logic", missing technology choices, mixed abstraction levels, no clear zoom transition between diagrams); the **Google Maps metaphor** ("maps of your code" at progressive zoom levels); the Software Architecture Diagramming Maturity Model. |
-| 3 | IcePanel / Simon Brown summary, "C4 model for software architecture", https://c4model.info/ | Concise definitions, audiences, and scopes for Person, System, Container ("independently deployable and runnable — not to be confused with Docker containers"), and Component; audience mapping per level (L1 for technical & non-technical business/product; L2 for technical product/architects/devs; L3/L4 for developers inside a container). |
-| 4 | Dr. Milan Milanović, `architecture-docs` — "Software Architecture Documentation with arc42 and C4 Model", https://github.com/milanm/architecture-docs | Practical Docs-as-Code repository layout combining **C4 Model** diagrams (C1 Context, C2 Container, C3 Component via PlantUML/AsciiDoc) directly inside **arc42** sections (Section 3 Context & Scope -> C1; Section 5 Building Block View -> C2/C3; Section 6 Runtime View -> C4 Dynamic; Section 7 Deployment View -> C4 Deployment) and publishing automatically via GitHub Actions. |
+| https://c4model.com/ | 200 OK, 2026-11-27 | Five pillars, abstraction list, core and supporting diagram names |
+| https://c4model.com/introduction | 200 OK, 2026-11-27 | Ad hoc diagram problems, benefits and uses, level descriptions |
+| https://c4model.info/ | 200 OK, 2026-11-27 | Person, system, container, component definitions; audiences per level |
+| https://c4model.com/abstractions/container | 200 OK, 2026-11-27 | Container examples, non-examples, rulings on SPAs, managed services, shared runtimes |
+| https://c4model.com/diagrams | 200 OK, 2026-11-27 | Use only levels that add value; context plus container suffice for most teams |
+| https://c4model.com/diagrams/notation | 200 OK, 2026-11-27 | Title, element, relationship and key rules; one-way lines |
+| https://github.com/milanm/architecture-docs | 200 OK, 2026-11-27 | Example Structurizr, arc42, AsciiDoc pipeline; Apache-2.0 |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Do you need Level 3 (Component) and Level 4 (Code) diagrams?** Brown (Sources 1 & 2) and Milanović (Source 4) explicitly recommend **Level 1 (System Context)** and **Level 2 (Container)** for almost all systems, while advising teams to create Level 3 only when a container's internal structure is large/non-trivial, and to skip manual Level 4 diagrams altogether in favor of IDE/automated generation because code-level diagrams rot immediately.
+Pages were read through a summarizing fetch, not verbatim. The dynamic, deployment, landscape, microservices and queues pages were not read in detail (the diagrams page gives only examples). The DSL sketch and any scripts were not re-verified or run.
+
+## Claims not adopted as fact
+
+- That arc42 sections map to C4 levels: the repo README does not say so; the convention is owned by `arc42-api-contracts-architecture`.
+- Dynamic diagrams use numbered steps, and deployment diagrams use deployment nodes: the pages read do not explain either.
+- Mermaid C4 syntax and Structurizr or PlantUML specifics: not read here; `mermaid` owns Mermaid.
+- Earlier draft claims that Level 4 includes database tables and that components are never separately deployable: not stated by the sources read; removed.

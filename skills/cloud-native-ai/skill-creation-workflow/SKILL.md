@@ -76,7 +76,7 @@ Test on every model tier you plan to support (see `model-effort-routing`).
 
 ## 9. Package, install, record provenance
 
-- Ship the folder (or a zip with the folder as the single top-level entry). Install location is host-specific; see the table in [references/validation-packaging-and-host-paths.md](references/validation-packaging-and-host-paths.md) (Claude Code, Claude.ai and API, Antigravity, Codex, Microsoft Agent Framework). Custom skills do not sync between Claude surfaces.
+- Ship the folder (or a zip with the folder as the single top-level entry). Install location is host-specific; see the table in [references/validation-packaging-and-host-paths.md](references/validation-packaging-and-host-paths.md) (Claude Code, Claude.ai and API, Antigravity, Codex, Microsoft Agent Framework). Surfaces mostly do not sync skills (see the table).
 - Frontmatter portable across hosts: `name`, `description`, and optionally `license`, `compatibility`, `metadata`, `allowed-tools`. Claude-Code-only keys can break uploads elsewhere; keep them out of a portable skill.
 - Write `references/sources.md` while you research: URL, real retrieved status, what it contributed, reading limits, claims **not** adopted, and the licence of anything reused. Reuse third-party text only with a confirmed licence; otherwise take ideas and rewrite in your own words.
 - Before installing someone else's skill, review it as third-party code (`software-supply-chain-security`, `oss-deep-audit`, runtime and approval rules in `agent-skills-context-engineering`).

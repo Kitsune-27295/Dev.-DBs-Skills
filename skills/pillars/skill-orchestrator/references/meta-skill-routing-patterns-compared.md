@@ -1,6 +1,6 @@
 # Meta-Skill Routing Patterns Compared
 
-Sources: https://raw.githubusercontent.com/obra/superpowers/main/skills/using-superpowers/SKILL.md · https://github.com/obra/superpowers · https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md · https://www.agentskills.me/skill/using-superpowers · https://www.atcyrus.com/skills/superpowers-using-superpowers · https://www.verdent.ai/guides/what-is-superpowers-ai-coding-framework · https://github.com/anthropics/skills · https://blakecrosley.com/pt-BR/guides/agent-architecture · Last verified 2026-11-24
+Sources: https://raw.githubusercontent.com/obra/superpowers/main/skills/using-superpowers/SKILL.md · https://github.com/obra/superpowers · https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md · https://www.agentskills.me/skill/using-superpowers · https://www.atcyrus.com/skills/superpowers-using-superpowers · https://www.verdent.ai/guides/what-is-superpowers-ai-coding-framework · https://github.com/anthropics/skills · https://blakecrosley.com/pt-BR/guides/agent-architecture · Last verified 2026-11-27
 
 Meta-skills do not do tasks; they decide which skills run. Two read in full: `using-superpowers` (a router) and `skill-creator` (an authoring and tuning tool). Others are thin or gated.
 

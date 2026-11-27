@@ -1,8 +1,8 @@
 # Code Mode and Tool-Call Batching
 
-Sources: https://code.claude.com/docs/en/code-mode · https://code.claude.com/docs/en/changelog · https://www.anthropic.com/engineering/code-execution-with-mcp · https://www.youtube.com/watch?v=8Ofrox5ycgQ · Last verified 2026-11-25
+Sources: https://code.claude.com/docs/en/code-mode · https://code.claude.com/docs/en/changelog · https://www.anthropic.com/engineering/code-execution-with-mcp · https://www.youtube.com/watch?v=8Ofrox5ycgQ · Last verified 2026-11-27
 
-Code Mode is a spend lever that sits beside model and effort choice: it cuts the number of model round trips, not the price of each one. It is experimental and off by default, so treat every statement below as version-gated (Claude Code 2.1.332 was the newest changelog entry on 2026-11-25).
+Code Mode is a spend lever that sits beside model and effort choice: it cuts the number of model round trips, not the price of each one. It is experimental and off by default, so treat every statement below as version-gated. Code Mode page and changelog were both re-fetched 2026-11-27 and agree with the 2026-11-25 reading; the newest changelog entry was still 2.1.332 (2026-11-25). The page says the feature "may change or be removed in any release".
 
 ## 1. What it changes
 
@@ -36,14 +36,16 @@ Skip it, or test before relying on it, when:
 - the task is a single read, edit or question (no round trips to save);
 - the session must be resumable on a cloud provider after it ran in this mode, or resumed without the setting on (a Code Mode session resumes only with the mode on);
 - the surface is not an interactive terminal session (the documentation lists the VS Code panel, the desktop app and cloud sessions as unsupported);
-- latency matters more than tokens (the long-running code stops after ten minutes unless it runs in the background, which needs an auto or bypass permission mode).
+- latency matters more than tokens (code you wait for stops after ten minutes; background code can run up to two hours but needs an auto or bypass permission mode; before v2.1.328 time spent at a permission prompt counted toward the ten minutes);
+- the setup needs Remote Control, Claude in Chrome or computer use (all unavailable), or a gateway, an API key helper, HIPAA or zero-data-retention.
 
 ## 5. Requirements checklist (as documented on 2026-11-25)
 
-- Claude Code 2.1.323 or later; 2.1.331 or later on a cloud provider; native build; Git for Windows on Windows.
+- Claude Code 2.1.323 or later; 2.1.331 or later on a cloud provider (Bedrock without the Mantle endpoint, Google Cloud Agent Platform, Foundry, Claude Platform on AWS); native build; Git for Windows on Windows. Extra minimums: 2.1.326 with agent teams, 2.1.327 with a hook-based mod, 2.1.329 with telemetry events or feature-flag fetching off (tracing must stay off).
 - A subscription, Console account or supported cloud provider; not a gateway, not an API key helper, not HIPAA or zero-data-retention organizations.
-- Models: Opus 5.5, Sonnet 5.5, Haiku 5.5 or Fable 5.2, by full model name (an alias can resolve to an older model on some providers).
-- Switch: environment variable `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE` set to `1` in the shell or in user settings; a `0` anywhere wins. Organizations block it with the same variable set to `0` in managed settings.
+- Models: Opus 5.5, Sonnet 5.5, Haiku 5.5 or Fable 5.2, by full model name (an alias such as `sonnet` can resolve to an older model on some providers).
+- Surface: an interactive terminal `claude` session; not the VS Code panel, the desktop app or cloud sessions.
+- Switch: environment variable `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE` set to `1` in the shell or in user settings (project settings are ignored on purpose); a `0` anywhere wins. Organizations block it with `0` in managed settings; managed settings cannot turn it on. A first start asks for confirmation, and the session can later be resumed only with the mode on.
 - Subagents with an explicit `tools` list need `REPL` added to that list to use the mode.
 - On start, the session prints a line starting `Code Mode (experimental) isn't available` plus the reason when a requirement fails; run `/status` for the reason.
 
@@ -52,9 +54,9 @@ Skip it, or test before relying on it, when:
 Safety rules written for individual tool calls still apply, but the places they act change:
 - `deny` and `ask` permission rules and `PreToolUse` hooks fire on the usual tool names (for example `Bash`) for calls made by the code. A hook that parses shell text must check each part of a compound command, because a call can arrive as `cd 'dir' && git push`.
 - In auto mode a classifier reviews the code once, not each call, and cannot see values computed at run time. Keep rules or hooks for anything that must never happen.
-- A `PreToolUse` hook on the `REPL` tool can read the program from its input; a `PostToolUse` hook on `REPL` can redact the result before the model reads it.
+- A `PreToolUse` hook on the `REPL` tool can read the program from `tool_input.code`; a `PostToolUse` hook on `REPL` can redact the result (`updatedToolOutput`) before the model reads it. From v2.1.328 a `UserPromptSubmit` hook no longer receives code output, so move such checks to `PostToolUse`. From v2.1.329 a failed `PreToolUse` hook does not block a call by itself: set `"onFailure": "block"` on `command` or `http` hooks to refuse.
 - Sandbox settings cover the shell commands the code runs, not the JavaScript itself or its file, web and MCP calls.
-- Telemetry: events for calls made by code carry the usual tool names; filter by call-id prefix to separate them.
+- Telemetry: events for calls made by code carry the usual tool names; filter on `tool_use_id` prefixes `repl_` or `toolu_cc_` to separate them.
 - Instruction files stay advisory in both styles. Anything that must hold goes in a hook or deny rule (see `skill-orchestrator` and `git-guardrails-claude-code`).
 
 ## 7. What this file does not own
@@ -66,6 +68,7 @@ Tool-definition economy and context hygiene belong to `agent-skills-context-engi
 - Treat Code Mode as an opt-in experiment, never as a default recommendation or a promised saving.
 - Suggest it only for batch-shaped work, after confirming the requirement checklist for the user's version, surface and provider.
 - If the user turns it on, keep the deny rules and hooks that guard destructive commands; do not rely on a rule in an instruction file.
+- An `ask` rule on `REPL` can keep the code from starting a subagent; the page says to remove the rule if that happens.
 - To judge it, compare two comparable sessions with `agent-cost-report` and record model turns, tokens, wall time and a quality check, with several tasks and not one.
 - Quote savings only with their basis: vendor illustration, one-run anecdote or own measurement.
 - Re-check the version-gated facts against the current documentation before repeating them; the feature may change or be removed in any release.

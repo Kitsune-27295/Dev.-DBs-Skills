@@ -1,13 +1,13 @@
 # Memory Channels and Size Caps
 
-Sources: https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · https://arxiv.org/abs/2310.08560 · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · https://arxiv.org/abs/2310.08560 · Last verified 2026-11-27
 
 ## Why four channels
 
 One undifferentiated notes file fails in a predictable way: it grows, everything in it competes for attention, and nobody can tell a current priority from a year-old observation. Splitting by **lifetime and purpose** lets each channel have its own cap and its own rewrite rule. The split is this skill's design; the ingredients are supported by public sources:
 
 - Anthropic's context-engineering article describes agents writing notes outside the context window and reading them back later, so progress survives resets (it names a notes file as an example without prescribing a format).
-- The Claude Code memory docs describe an index loaded at session start (first 200 lines or 25 KB) with detail moved into topic files read on demand, and a reminder to keep one line per entry and to merge or drop stale ones.
+- The Claude Code memory docs describe a concise index loaded at session start with detail moved into topic files read on demand, and a reminder to keep one line per entry and to merge or drop stale ones (index limits: `skill-orchestrator`).
 - MemGPT separates a small, fixed-size, writable "working context" from larger external stores that must be explicitly retrieved, and warns the model when the window approaches its limit so it can save what matters.
 - Nygard's decision-record form keeps one decision per short document and keeps superseded records as history.
 
@@ -54,7 +54,7 @@ A decision is recorded when a choice has lasting consequences and is not obvious
 | About 40 lessons | Beyond this, lessons stop being scanned. Merge duplicates or promote repeated ones to rules. |
 | One page per decision | Same reason as Nygard: long records go unread and unmaintained. |
 
-These numbers are defaults chosen for this skill (inference, not measured values). The platform limits are different: for an auto-memory index they are the documented 200 lines or 25 KB, and anything beyond is not loaded.
+These numbers are defaults chosen for this skill (inference, not measured values). Platform limits for an auto-memory index are different and owned by `skill-orchestrator`.
 
 ## What to write when
 

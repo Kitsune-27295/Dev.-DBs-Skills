@@ -1,6 +1,6 @@
 # Breakdowns and Honest Limits
 
-Sources: https://code.claude.com/docs/en/costs · https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://github.com/ryoppippi/ccusage · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/costs · https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://github.com/ryoppippi/ccusage · Last verified 2026-11-27
 
 ## 1. Breakdowns that answer real questions
 
@@ -38,15 +38,15 @@ rewrite_ratio     = (write5m + write1h) / read
 Reading the numbers:
 
 - A high read share with modest writes means the prefix is stable and reused.
-- Large writes with small reads means the cache is repeatedly rebuilt. The product documentation names causes: a first message after a break longer than the cache lifetime, switching models mid-session (each model has its own cache), changing tool definitions, compaction, and clearing old tool results.
-- Claude Code's own `/usage` Session block can show a prompt-cache line (request count, share of input from cache, misses, warm or cold) on recent versions; the counts come from the same token fields, so your numbers should agree in direction.
+- Large writes with small reads means the cache is repeatedly rebuilt. The product documentation names causes: a first message after a break longer than the cache lifetime, switching models mid-session (each model has its own cache), changing effort on most models, toggling fast mode (separate cache), changing the set of loaded tool definitions, compaction, removal of old images and upgrading Claude Code. A subagent never reads the parent's cache.
+- Claude Code's own `/usage` Session block can show a prompt-cache line (request count, share of input from cache, misses, warm or cold) (Claude Code v2.1.251 or later; main conversation only, not subagents); the counts come from the same token fields, so your numbers should agree in direction.
 - Cache economics, 5-minute writes cost more than reads by 12.5x for a 0.1x read model; whether to use a 1-hour lifetime is an optimization question for `model-effort-routing` or the vendor's caching guide, not a reporting question.
 
 ## 4. Honest limits (copy into the report, drop the ones that do not apply)
 
 1. **Estimate, not invoice.** Tokens are measured; dollars are tokens times a dated list price.
 2. **Format instability.** Transcript fields are an internal format; this run was validated on N sample lines at version V.
-3. **Completeness.** Only logs on this machine and within retention; session files are pruned on a schedule (30 days by default per the costs documentation).
+3. **Completeness.** Only logs on this machine and within retention; session files are pruned on a schedule (30 days by default per the `.claude` directory documentation).
 4. **De-duplication assumptions.** Key and conflict rule stated; ratio of lines to distinct responses shown.
 5. **Billing mode.** Subscription usage is included in the plan; dollars here are a what-if. API usage approximates the bill.
 6. **Prices.** List prices as of the stated date; contracted rates, batch, fast mode, regional multipliers and server-tool fees not modeled unless said.

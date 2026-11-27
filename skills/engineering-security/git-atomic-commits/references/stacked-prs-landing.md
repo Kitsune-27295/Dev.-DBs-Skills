@@ -1,6 +1,6 @@
 # Landing a Stack of Dependent PRs (A <- B <- C)
 
-Sources: https://docs.github.com/en/pull-requests/get-started/about-stacked-prs · https://docs.github.com/en/pull-requests/reference/stacked-prs-cli-commands · https://git-scm.com/docs/git-rebase · Last verified 2026-11-24
+Sources: https://docs.github.com/en/pull-requests/get-started/about-stacked-prs · https://docs.github.com/en/pull-requests/reference/stacked-prs-cli-commands · https://git-scm.com/docs/git-rebase · Last verified 2026-11-27
 
 ## What a stack is
 
@@ -8,13 +8,13 @@ A stack is a chain of dependent PRs in one repository: the bottom PR targets the
 
 ## Step 0: verify the platform feature, do not assume it
 
-GitHub documents native stacks (overview, quickstart, CLI reference; the `gh stack` extension, GitHub CLI 2.90 or later per the quickstart as reported by search, not re-read). Facts read on the official pages:
+GitHub documents native stacks (overview and CLI reference; the `gh stack` extension). The CLI reference read on 2026-11-27 states GitHub CLI 2.0 or later and Git 2.36 or later (an earlier note citing 2.90 came from a search summary and was wrong). Install with `gh extension install github/gh-stack`. Facts read on the official pages:
 
 - All branches must live in the same repository; cross-fork stacks are not supported; GitHub Desktop is not supported.
 - Branch protection and the bottom PR's base set the merge requirements for every PR in the stack.
 - Merging the top PR merges the whole stack; merging a mid-stack PR merges the PRs below it and the ones above retarget automatically. Merges go bottom-up. Merge, squash and rebase methods are supported, and merge queues are understood.
-- The page does not label the feature a preview; linked resources carry a "public preview" tag (inference: it may still change).
-- One discrepancy seen: the rendered reference and its source copy differ on whether the merge yields one commit per PR or one for the group. Check the live page before relying on either.
+- Stacks are exposed in the CLI, web, mobile, REST and GraphQL; API merges need the asynchronous merge API.
+- The page body does not label the feature a preview; linked resources carry a public-preview campaign tag (inference: it may still change). The commit-per-PR versus one-commit-per-group merge result was not re-checked; read the live page before relying on it.
 
 **Hard stop.** Before touching any PR state, run `gh stack --version` and confirm the repository is same-repo. If the extension or server feature is missing, or the chain crosses forks, do not improvise merges with `gh pr merge` plus manual retargeting as if it were a stack: use the fallback below only with the user's go-ahead, or stop and ask.
 

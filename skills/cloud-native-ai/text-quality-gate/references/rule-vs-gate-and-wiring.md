@@ -1,6 +1,6 @@
 # Rule versus Gate, and Wiring the Gate
 
-Sources: https://git-scm.com/docs/githooks · https://code.claude.com/docs/en/hooks · https://docs.vale.sh/topics/cli · Last verified 2026-11-24
+Sources: https://git-scm.com/docs/githooks · https://code.claude.com/docs/en/hooks · https://docs.vale.sh/topics/cli · Last verified 2026-11-27
 
 ## 1. Why advisory rules leak
 
@@ -32,17 +32,16 @@ grep -v '^#' "$1" | python3 tools/text_gate.py -
 
 A local hook is a convenience, not enforcement, because `--no-verify` skips it. Run the same script in CI for the real block. See `setup-pre-commit` for wiring pre-commit tooling and `git-atomic-commits` for what a good message contains.
 
-## 3. Claude Code hooks (read from the hooks reference; first ~100,000 of ~294,000 characters read)
+## 3. Claude Code hooks (read from the hooks reference on 2026-11-27, about 300,000 characters in three passes; the last ~1,700 were not read)
 
 Events relevant to a text gate:
 
 | Event | When | Can it stop the action? |
 |---|---|---|
 | `PreToolUse` | before a tool runs (match `Write`, `Edit`, an MCP tool) | yes |
-| `PostToolUse` | after a tool succeeded | no, the action already happened |
-| `Stop` | when the agent finishes a reply | yes, with a block decision |
+| `Stop` | when the agent finishes a reply (not after a user interrupt) | yes: it prevents stopping, so the agent continues and sees your reason |
 
-Input: a JSON object on stdin with `session_id`, `transcript_path`, `cwd`, `hook_event_name`; tool events add `tool_name` and `tool_input`; `Stop` events include the last assistant message text. The transcript file can lag the live conversation, so read the message from the payload when it is there.
+Input: a JSON object on stdin with `session_id`, `transcript_path`, `cwd`, `hook_event_name`; tool events add `tool_name`, `tool_input` and `tool_use_id`; `Write` carries `file_path` and `content`, `Edit` carries `file_path`, `old_string`, `new_string`, `replace_all`; `Stop` adds `stop_hook_active` and `last_assistant_message`. The transcript file can lag the live conversation, so read the message from the payload when it is there.
 
 Exit codes for command hooks:
 
@@ -66,9 +65,11 @@ Two equivalent ways to block, never both for the same decision:
 { "decision": "block", "reason": "reply contains hard tells; list below" }
 ```
 
-The first (exit 0 plus JSON) is for `PreToolUse`; the second is the top-level form used by events such as `Stop` and `PostToolUse`. On `PreToolUse`, exit 2 keeps the call blocked even if JSON says allow.
+The first (exit 0 plus JSON) is for `PreToolUse`; the second is the top-level form used by `Stop`. On `Stop`, exit 2 routes the same way (stderr is the reason); if both are present the JSON reason wins. On `PreToolUse`, exit 2 keeps the call blocked even if JSON says allow. Other `permissionDecision` values are `allow`, `ask` and `defer`; silence is not approval.
 
-Failure policy: by default a hook that fails or times out lets the action proceed; the docs describe an `onFailure: block` option on newer versions for command hooks, not available for `Stop`. If the gate must fail closed, set it deliberately and test the failure path.
+Loop guard: a `Stop` hook that always blocks would loop. Read `stop_hook_active` (true when Claude Code is already continuing because of a stop hook); Claude Code also overrides the block after 8 consecutive continuations (resets when a tool is called; `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` raises it).
+
+Failure policy: by default a hook that fails to start, times out or exits with anything but 0 or 2 lets the action proceed. `"onFailure": "block"` on a `command`, `http` or `mcp_tool` hook makes such failures block (documented from Claude Code 2.1.295; no effect on `Stop`, `SubagentStop` or background hooks). If the gate must fail closed, set it deliberately and test the failure path.
 
 Matcher configuration example (structure from the docs, command is yours):
 

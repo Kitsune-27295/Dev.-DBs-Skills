@@ -1,6 +1,6 @@
 # Should This Be a New Page? Join Versus Split
 
-Sources: https://diataxis.fr/start-here/ (read in the skill's original authoring, see `sources.md`) · Method adapted from a note-taking granularity skill (MIT) read 2026-11-24, generic part only · Last verified 2026-11-24
+Sources: https://diataxis.fr/start-here/ (re-read 2026-11-27, see `sources.md`) · Method adapted from a note-taking granularity skill (MIT) read 2026-11-24, generic part only · Last verified 2026-11-27
 
 `SKILL.md` and [four-forms-map-and-compass.md](four-forms-map-and-compass.md) decide which quadrant a piece of content belongs to. This file decides an earlier question: whether the content deserves its own page at all. Page proliferation is a common failure when people adopt the four quadrants: four empty folders, then a thin page per idea.
 

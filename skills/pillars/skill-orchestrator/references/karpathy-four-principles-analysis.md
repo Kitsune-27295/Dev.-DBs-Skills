@@ -1,6 +1,6 @@
 # Karpathy-Style Behavioral Rules: The Four Principles Analyzed
 
-Sources: https://github.com/multica-ai/andrej-karpathy-skills (CLAUDE.md, README.md, EXAMPLES.md read raw), https://www.skillleaderboard.com/skill/multica-ai-andrej-karpathy-skills, https://www.orcarouter.ai/blog/karpathy-claude-md-file-explained · Last verified 2026-11-24
+Sources: https://github.com/multica-ai/andrej-karpathy-skills (CLAUDE.md, README.md, EXAMPLES.md read raw), https://www.skillleaderboard.com/skill/multica-ai-andrej-karpathy-skills, https://www.orcarouter.ai/blog/karpathy-claude-md-file-explained · Last verified 2026-11-27
 
 ## What the artifact is (verified facts)
 

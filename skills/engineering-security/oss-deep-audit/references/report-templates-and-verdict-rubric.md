@@ -1,6 +1,6 @@
 # Report Templates and Verdict Rubric
 
-Sources: https://github.com/morluto/rea/blob/main/.agents/skills/reverse-engineer-anything/SKILL.md · https://github.com/Ycsyyds/codebase-analysis-skill · https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://github.com/Consensys/repo-security-review · Last verified 2026-11-24
+Sources: https://github.com/morluto/rea/blob/main/.agents/skills/reverse-engineer-anything/SKILL.md · https://github.com/Ycsyyds/codebase-analysis-skill · https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://github.com/Consensys/repo-security-review · Last verified 2026-11-27 (REA skill and Consensys README re-read; other listed skill pages not re-read)
 
 Phase 4 of `oss-deep-audit`. The audit output has exactly five sections; this file owns their shape (template ownership: structure lives here, method lives in `SKILL.md`).
 

@@ -1,6 +1,6 @@
 # Mapping and Lossy Conversions
 
-Sources: https://code.claude.com/docs/en/mcp · https://cursor.com/docs/context/mcp · https://cursor.com/docs/context/rules · https://learn.chatgpt.com/docs/extend/mcp · https://code.claude.com/docs/en/memory · https://agentskills.io/specification · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/mcp · https://cursor.com/docs/context/mcp · https://cursor.com/docs/context/rules · https://learn.chatgpt.com/docs/extend/mcp · https://code.claude.com/docs/en/memory · https://agentskills.io/specification · Last verified 2026-11-27
 
 The mappings below follow what the three tools document; where a rule is my inference it is marked "inference". A third-party built-in migration skill (read for ideas only) showed the value of listing what cannot convert and of rewriting variable syntax; the tables here are original.
 
@@ -10,10 +10,10 @@ The mappings below follow what the three tools document; where a rule is my infe
 |---|---|---|---|
 | Container | `mcpServers` map | `mcpServers` map | `[mcp_servers.<name>]` table per server |
 | Local process | `type: "stdio"`, `command`, `args`, `env` | `type: "stdio"`, `command`, `args`, `env`, `envFile` | `command`, `args`, `env`, `env_vars`, `cwd` |
-| Remote | `type: "http"`, `url`, `headers` | `url`, `headers`, optional `auth` | `url`, `http_headers`, `env_http_headers`, `bearer_token_env_var` |
-| Legacy streaming transport | `type: "sse"` (deprecated) | HTTP/SSE under `url` | not documented on the page read |
+| Remote | `type: "http"`, `url`, `headers` | `url`, `headers`, optional `auth` | `url`, `http_headers`, `env_http_headers`, `bearer_token_env_var`, `auth` |
+| Legacy streaming transport | `type: "sse"` (deprecated); `type: "ws"` WebSocket has no equivalent elsewhere | SSE and Streamable HTTP under `url` | not documented on the page read |
 | Variable syntax | `${VAR}`, `${VAR:-default}` | `${env:VAR}`, `${workspaceFolder}`, `${userHome}` | names only (`env_vars`, `bearer_token_env_var`, header-env maps) |
-| Disable without deleting | not shown on the page read | not shown | `enabled = false` |
+| Disable without deleting | no JSON field; `/mcp` toggle stores `disabledMcpServers` in the user config | not shown | `enabled = false` |
 
 Conversion rules:
 

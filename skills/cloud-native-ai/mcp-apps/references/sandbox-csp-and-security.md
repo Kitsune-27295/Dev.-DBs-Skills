@@ -1,6 +1,6 @@
 # Sandbox, CSP and Security
 
-Sources: https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/draft/apps.mdx · https://modelcontextprotocol.io/extensions/apps/overview · https://apps.extensions.modelcontextprotocol.io/api/documents/Patterns.html · Last verified 2026-11-24
+Sources: https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/draft/apps.mdx · https://modelcontextprotocol.io/extensions/apps/overview · https://apps.extensions.modelcontextprotocol.io/api/documents/Patterns.html · Last verified 2026-11-27
 
 Boundary: authentication, authorization, input parsing and the error contract belong to `authn-authz-guard`, `validator-input-parser`, `never-trust-the-client` and `error-handling-problem-details`. Here: what the spec guarantees, what it leaves to you, and how to apply those skills to an MCP App.
 

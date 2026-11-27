@@ -1,6 +1,6 @@
 # Source Quality Gates and Anti-SEO
 
-Sources: https://github.com/robertnowell/deep-research · https://github.com/199-biotechnologies/claude-deep-research-skill · https://www.aihero.dev/skills-research · https://mcpmarket.com/tools/skills/deep-web-researcher · Last verified 2026-11-24
+Sources: https://github.com/robertnowell/deep-research · https://github.com/199-biotechnologies/claude-deep-research-skill · https://www.aihero.dev/skills-research · https://mcpmarket.com/tools/skills/deep-web-researcher · Last verified 2026-11-27
 
 ## Source tiers (robertnowell, MIT)
 - Tier 1 primary: official docs, specs, standards bodies, peer-reviewed papers, filings, the author's own repo or announcement.

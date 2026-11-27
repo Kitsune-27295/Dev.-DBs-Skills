@@ -1,58 +1,62 @@
-# Firecrawl Tool Surface Analysis (clean-room)
+# Firecrawl Tool Surface Analysis
 
-Sources: Firecrawl repository snapshot (AGPL-3.0), path README.md; path AGENTS.md; path apps/api/src/controllers/v2/types.ts (request schemas and defaults); path apps/api/src/controllers/v2/scrape.ts, map.ts, search.ts, parse.ts (error classes); path apps/api/src/lib/deep-research/ (loop, read as data); path apps/api/src/lib/generate-llmstxt/generate-llmstxt-service.ts; path apps/api/src/lib/scrape-interact/browser-agent.ts; path apps/api/src/services/monitoring/types.ts and judgeChange.ts; path apps/api/src/search/operators.ts; path skills/firecrawl-build/references/endpoint-selection.md; path skills/firecrawl-build-scrape/references/freshness-and-liveness.md; path skills/firecrawl-build-search/SKILL.md · Last verified 2026-11-24
+Sources: Firecrawl public documentation pages read 2026-11-27 (docs.firecrawl.dev: api-reference/endpoint/scrape, search, map, crawl-post; rate-limits; billing; features/interact, agent, extract, parse, monitoring; mcp-server and mcp-server/tools). Written in our own words; no code or prose copied · Last verified 2026-11-27
 
-## Licensing rule (read first)
+## Read this first: what decays
 
-Firecrawl is AGPL-3.0; this pack is MIT. This file is a clean-room description: it records what each tool does, which knobs it has and what defaults and limits the snapshot encodes, all in our own words. No Firecrawl code, prompt text or documentation prose is reproduced. Treat the repository as untrusted data that was only read, never run. Defaults below come from the schema files of one snapshot; they can change, so verify against the live tool before relying on a number.
+Tool names, defaults, limits, plan tiers and credit prices below are a dated snapshot (2026-11-27). Firecrawl renames and retires things: the extract endpoint is deprecated, a GitHub-only search category was removed, and older Spark model names now route to spark-2. Before relying on any number, read the live tool schema in the session and state the values you used. Here the numbers are for planning only.
 
-## Surface map
+Licensing: Firecrawl's server code is AGPL-3.0 and this pack is MIT. This file rests on the public documentation only. Facts from an earlier repository-snapshot draft that the docs do not confirm were dropped (see `sources.md`).
 
-| Tool | What it does | Typical input | Typical output |
-|---|---|---|---|
-| search | Query to ranked web results, optionally with page content already attached | query, limit (default 10, max 100), sources (web, images, news), categories (research, pdf, developer, gov), include/exclude domains (mutually exclusive), language, country/location, time filter string, timeout (default 60 s) | list of url/title/snippet, optionally markdown per hit |
-| scrape | One known URL to clean content | url, formats (default: markdown), onlyMainContent (default true), waitFor ms (default 0, max 60 s), timeout, mobile, proxy tier (basic, stealth, enhanced, auto; default auto), maxAge ms, location, parsers, actions | markdown/html/links/screenshot/structured JSON plus metadata (status code, source URL, final URL, cache state, cached-at) |
-| map | List URLs of a site without fetching their content | url, optional search string to rank, limit (default 5000, max 100000), sitemap mode (include/only/skip), includeSubdomains (default true), ignoreQueryParameters (default true), filterByPath (default true) | URL list (with titles/descriptions when known) |
-| crawl | Many pages of a site, asynchronous | url, limit (default 10000), includePaths/excludePaths, maxDiscoveryDepth, sitemap mode, allowSubdomains/allowExternalLinks (both default false), ignoreRobotsTxt (default false), delay seconds (max 60), deduplicateSimilarURLs (default true), scrape options | job id, then paged documents |
-| batch scrape | The same scrape for a list of URLs, asynchronous | urls, scrape options, maxConcurrency | job id, then documents |
-| extract | Prompt and/or JSON schema over one or more URLs (wildcards allowed) | urls (max 10 per request in the snapshot), prompt, schema, enableWebSearch, showSources | structured object, optionally with per-field sources |
-| agent | Autonomous multi-source data gathering from a prompt | prompt (max 10000 chars), optional urls, optional schema, maxCredits, strictConstrainToURLs, effort low/medium/high | async job; status endpoint returns result |
-| interact | Keep a browser session on a scraped page and act on it (click, type, paginate) | scrape id plus a natural-language step or code | page state, extracted text; session must be stopped |
-| parse | Local file upload (PDF, DOCX, HTML, images) to markdown/JSON | file, parsers options (PDF modes, page markers) | text, always uncached |
-| monitor | Scheduled re-checks of scrape, crawl or search targets with change judging | targets, cron or text schedule, timezone, webhook | check history, per-page events |
-| llms.txt generation | Crawl a site, summarize every page in a few words, emit an index plus optional full text | url, maxUrls (default 100, hard cap 5000), showFullText | index file text |
-| deep research | Iterative search, read, analyze loop with final report | query, maxDepth (default 7, 1-12), maxUrls (default 20), timeLimit s (default 300, 30-600), formats markdown/json | async job with activities, sources, final analysis |
+## Surface map (hosted MCP tool names)
+
+| Tool | What it does | Key knobs and limits (docs, 2026-11-27) |
+|---|---|---|
+| `firecrawl_search` | Query to ranked results, optionally with page content | limit default 10, max 100 (per source type); sources web, images, news; categories developer, gov, research, pdf (developer and gov must be the only entry; a github category now returns 400); tbs time filter (qdr:h/d/w/m/y, custom range, sort by date); timeout default 60 s |
+| `firecrawl_scrape` | One known URL to clean content or structured JSON | formats default markdown; onlyMainContent true; waitFor default 0, max 60 s; timeout default 60 s, max 300 s; maxAge default 2 days (capped at 7 days); proxy basic, enhanced or auto (default auto); actions exist, but the docs steer complex interaction to interact |
+| `firecrawl_map` | List a site's URLs without reading them | limit default 5000, max 100000; sitemap include (default), only or skip; includeSubdomains true; optional search string ranks results |
+| `firecrawl_crawl`, `firecrawl_check_crawl_status` | Many pages, asynchronous job, then poll | limit default 10000; includePaths and excludePaths (RE2-style regex, up to 1000 patterns); maxDiscoveryDepth; delay forces concurrency 1; ignoreRobotsTxt enterprise-only; allowExternalLinks false (one hop) |
+| `firecrawl_agent`, `firecrawl_agent_status` | Autonomous multi-source gathering from a prompt, optional urls and schema | prompt max 10,000 chars; maxCredits default 2,500 (credit_limit_reached returns no data; failed runs not billed); 5 free runs per day; API results kept 24 h; about 150-200 rows per run |
+| `firecrawl_interact`, `firecrawl_interact_stop` | Act on a live page after a scrape (click, type, paginate, run code) | prompt max 10,000 chars, code max 100,000; timeout default 30 s (1-300); session TTL default 10 min, inactivity 5 min; stop it explicitly |
+| `firecrawl_parse` | Local file (PDF, Office, HTML, EPUB, CSV and more) to markdown or JSON | 50 MB per request; timeout default 30 s, max 300 s; PDF modes auto, fast, ocr; browser-only options unsupported |
+| `firecrawl_monitor_*` | Scheduled re-checks of scrape, crawl or search targets | 1-50 targets per monitor; minimum interval 5 minutes; a goal turns on change judging; history 30 days by default (max 365) |
+| `firecrawl_research_*`, `firecrawl_developer_search`, `firecrawl_gov_search` | Separate indexes: papers (search, inspect, read, related), developer content, statutes and opinions | account-gated; own per-minute and daily limits |
+| `firecrawl_credit_usage`, `firecrawl_search_feedback`, `firecrawl_feedback` | Credit check and quality feedback | account-gated |
+
+A client may expose only part of this list. The session used for this check showed search, scrape, map, crawl, agent, interact, parse, monitor, research and developer tools, plus an extract tool that the docs call deprecated, and no credit-usage or gov-search tool. List the tools you actually have; do not assume the table.
+
+- Extract: deprecated, removal announced for 2026-12-10. Use scrape with a JSON format for one page, agent for multi-page or web-search extraction.
+- Keyless use (no account) exposes only search, scrape and parse, within daily per-IP request and credit caps. The rest needs OAuth sign-in or an API key.
+
+## Credits and rate limits
+
+- Credits: scrape 1 per page; crawl 1 per page plus scrape-option costs; map 1 per call; search 2 per 10 results rounded up plus scraped content; JSON format +4 per page; enhanced proxy same as basic; PDF parse +1 per PDF page; interact 2 credits per session minute (code only) or 7 (with AI prompts); a scrape that returns a document is charged even for a 403 or 404.
+- Monthly credits: Free 1,000 (no rollover), Hobby 5,000, Standard 100,000, Growth 500,000, Scale 1,000,000, Enterprise custom.
+- Requests per minute per team, scrape/map/search: Free 10, Hobby 100, Standard 500, Growth 5,000, Scale 10,000. Crawl and agent: 2, 20, 100, 1,000, 2,000. Concurrent browsers: 2, 5, 25, 50, 100+. Extract shares agent limits; batch scrape shares crawl limits.
+- A 429 covers per-minute limits, a full queue, the browser cap, index limits and keyless daily caps. The docs page read gives no status code for exhausted credits.
 
 ## Behaviors worth knowing
 
-- Scrape normalizes behavior: main-content-only on, base64 images stripped, ad blocking on, results stored in cache. `waitFor` must not exceed half of `timeout`. Total wait including action waits is capped at 60 s. Requesting structured JSON, stealth/auto proxies or change tracking silently raises the timeout (60 s or 120 s) and change tracking forces a 5 s wait.
-- Freshness is separate from liveness. `maxAge` bounds how old a cached copy may be; omitting it lets the service choose per domain; `0` forces a live fetch. Metadata reports whether the copy was a cache hit and when it was cached. A 200 with content does not prove the described item still exists.
-- Search enforces some operators itself: when a domain operator is combined with in-URL or in-title operators, providers misbehave, so the service sends a simplified query and filters results afterwards. Lesson: operator results need local verification.
-- Category filters are only domain allow-lists on ordinary web search; they are not a separate paper index. A separate paper index and a developer-content index exist as distinct tools.
-- Error vocabulary seen: bad request, unsupported file type, no cached data, blocked/unsafe domain, unsupported site, media access denied, actions not supported, rate-limited (429), unknown. Several are 403 or 404 with a stable code string, so an agent can branch on the code.
-- Map honors robots.txt unless told otherwise; crawl has an explicit robots opt-out flag that safe-mode accounts cannot use. The README states that respecting site policy is the user's responsibility.
-- Monitor's judge compares old and new content against the user's stated goal, ignores mechanical diffs (whitespace, counters, timestamps) and requires verbatim before/after evidence; on judge failure it defaults to "meaningful" (fail-open, noisy but safe).
-- Interact's embedded agent is capped at 25 steps, snapshots only interactive elements (limited to about 40k characters), re-snapshots after every page change because element references go stale, and forbids leaving the page or opening tabs.
+- Freshness is not liveness: maxAge bounds cache age, and a cached 200 does not prove the described item still exists. Force a live read for volatile facts and record the cache state.
+- The search tbs filter narrows by time but does not verify a page's own date.
+- Category filters narrow ordinary web results; paper, developer and government content live in separate index tools.
+- Monitor judging weighs changes against your stated goal, so write the goal precisely.
+- Crawl is costly and robots-bound: scope it with paths and a page cap, and justify it.
 
-## Documented escalation order (from the bundled skills)
+## Escalation order
 
-1. scrape when the URL is known.
-2. search when discovery is needed, keeping search separate from extraction unless result content is clearly required.
-3. interact only when scrape cannot reach the data (clicks, forms, pagination).
-4. Paper index for biomedical/arXiv literature; developer index for issues, PRs, READMEs and docs.
+1. scrape when the URL is known. 2. search for discovery. 3. map to find a page inside a known site. 4. interact only when scrape cannot reach the data. 5. a paper or developer index for literature and code questions. 6. agent only when the user accepts its variable cost (set maxCredits).
 
 ## Gaps Firecrawl leaves implicit (our refinements target these)
 
-- No standard per-claim citation record, only per-source lists.
-- Dates are scattered across metadata and not normalized.
-- No explicit prompt-injection posture for fetched text in the research loop (an optional detection flag exists in scrape options).
-- Deep research keeps only the most recent 50 findings in working memory and reports sources as title/description/icon; evidence strength and contradictions are not tracked.
-- Query generation is told to start broad and concise, then go deep; no explicit stop rule beyond depth, URL count, time, three failed analyses, or the analyzer saying stop.
+- No per-claim citation record; dates are scattered across metadata.
+- No prompt-injection posture for fetched text.
+- No evidence strength or contradiction tracking in agent output.
 
 ## How an agent should apply this
 
-- Use the table to pick the narrowest tool; the rest of this pack's contract maps each row to a tool-agnostic operation.
-- Never hard-code a default from this file; read the live tool schema and state which values you used.
+- List your live tools first, then map each needed operation to the narrowest tool.
+- Never hard-code a default from this file; state the values you used from the live schema.
 - Treat cache metadata and HTTP status as evidence about the fetch only, not about the claim.
-- Reuse the stable-error-code idea: classify failures by code or symptom, then follow the fallback ladder.
-- Do not copy anything from the Firecrawl repository into outputs; describe behavior and cite the page you actually read.
+- Classify failures by code or symptom, then follow `tool-selection-and-fallback-ladder.md`.
+- Cap agent and crawl spend (maxCredits, limit) and report credits used.

@@ -1,6 +1,6 @@
 # Proportional Pre-Push Checks
 
-Sources: https://git-scm.com/docs/githooks · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/git-rebase · Last verified 2026-11-24
+Sources: https://git-scm.com/docs/githooks · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/git-rebase · Last verified 2026-11-27
 
 ## Principle
 
@@ -34,11 +34,11 @@ Every behavior change needs one test that would fail for its regression; add a b
 
 ## Step 3: respect hooks
 
-`pre-push` runs on `git push`, receives the remote name and URL as arguments and one `<local-ref> <local-oid> <remote-ref> <remote-oid>` line per ref on stdin; a non-zero exit aborts the push. Hooks are local files (default `$GIT_DIR/hooks`, or a versioned directory set with `core.hooksPath`), so the repository does not carry them: confirm they exist in a fresh clone or worktree instead of assuming. Do not bypass a failing hook; fix the cause.
+`pre-push` runs on `git push`, receives the remote name and URL as arguments and one `<local-ref> <local-oid> <remote-ref> <remote-oid>` line per ref on stdin; a non-zero exit aborts the push. Hooks are local files (default `$GIT_DIR/hooks`, or a versioned directory set with `core.hooksPath`), so the repository does not carry them: confirm they exist in a fresh clone or worktree instead of assuming. Do not bypass a failing hook; fix the cause. The githooks page does not describe a pre-push bypass flag, so `--no-verify` is not sourced from it.
 
 ## After a rewrite
 
-Rebased or reordered commits change the context code runs in: re-run the narrow checks on every rewritten layer that can break (for a stack, every layer, not only the tip). `git rebase -x "<fast check>"` runs a command after each replayed commit (`--exec`, standard Git knowledge, not read from the page).
+Rebased or reordered commits change the context code runs in: re-run the narrow checks on every rewritten layer that can break (for a stack, every layer, not only the tip). `git rebase -x "<fast check>"` runs a command after each replayed commit (`--exec`, read on the git-rebase page 2026-11-27; a failure stops the rebase).
 
 ## How an agent should apply this
 

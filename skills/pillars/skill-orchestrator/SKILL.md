@@ -1,6 +1,6 @@
 ---
 name: skill-orchestrator
-description: "Start-of-task protocol and instruction-file governance: decides which instructions and skills apply to a task and in which order, keeps CLAUDE.md, AGENTS.md, GEMINI.md and Cursor rules lean, consistent and honest about what is advisory versus enforced by hooks or permissions, and carries the Karpathy-style behavioral rules for CLAUDE.md (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution) as a short template. Pairs with `model-effort-routing`, which picks model, effort and delegation. Use when auditing, writing or updating CLAUDE.md or AGENTS.md, adopting Karpathy-style rules, deciding which skills apply to a task, writing or reviewing a router or meta-skill, resolving skill conflicts or over- and under-triggering, reducing instruction-file sprawl, or deciding what must be enforced by hooks or permissions."
+description: "Decides which instructions and skills apply to a task and in what order, and keeps CLAUDE.md, AGENTS.md, GEMINI.md and Cursor rules lean, consistent and honest about what is advisory versus enforced by hooks or permissions; carries the Karpathy-style CLAUDE.md template (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution). Pairs with `model-effort-routing` (model, effort, delegation); skill file structure and context theory belong to `agent-skills-context-engineering`. Use when auditing, writing or trimming CLAUDE.md or AGENTS.md, adopting Karpathy-style rules, choosing which skills apply to a task, designing or reviewing a router or meta-skill, resolving skill conflicts or over- and under-triggering, or deciding what must be enforced by a hook instead of prose."
 ---
 
 # Skill Orchestrator
@@ -62,7 +62,7 @@ Three layers: global instructions (a pointer to this protocol plus a few hard ru
 | Convention for one subtree | nested file or `paths` rule | nothing: scoping only |
 | Multi-step procedure | skill | nothing: advisory |
 
-A line the model keeps missing is lost in a long file or is a zero-exception rule: shorten the file or move it to a hook; capitals are not a fix (EMP-01). Only command, http and tool hooks are deterministic (ENF-02). Keep the enforced set small. Mechanisms: [claude-md-official-guidance-and-limits.md](references/claude-md-official-guidance-and-limits.md).
+A line the model keeps missing is lost in a long file or is a zero-exception rule: shorten the file or move it to a hook; capitals are not a fix (EMP-01). Only command, http and mcp_tool hooks are deterministic (ENF-02). Keep the enforced set small. Mechanisms: [claude-md-official-guidance-and-limits.md](references/claude-md-official-guidance-and-limits.md).
 
 ## 5. Karpathy-style behavioral rules as a CLAUDE.md template
 
@@ -120,4 +120,4 @@ Registry (start here): [rule-registry.md](references/rule-registry.md) lists eve
 
 - **Instruction files:** [CLAUDE.md guidance](references/claude-md-official-guidance-and-limits.md) · [memory and imports](references/memory-hierarchy-imports-and-rules.md) · [AGENTS.md](references/agents-md-standard-and-interoperability.md) · [placement](references/context-engineering-for-instruction-files.md)
 - **Karpathy-style rules:** [analysis](references/karpathy-four-principles-analysis.md) · [examples](references/karpathy-examples-before-after.md) · [audit procedure](references/karpathy-claude-md-audit-and-update-procedure.md)
-- **Skills and routing:** [spec](references/agent-skills-spec-and-progressive-disclosure.md) · [descriptions](references/skill-description-and-trigger-design.md) · [router patterns](references/meta-skill-routing-patterns-compared.md) · [three layers](references/three-layer-orchestration-architecture.md)
+- **Skills and routing:** [trigger evals](references/trigger-evals.md) · [spec](references/agent-skills-spec-and-progressive-disclosure.md) · [descriptions](references/skill-description-and-trigger-design.md) · [router patterns](references/meta-skill-routing-patterns-compared.md) · [three layers](references/three-layer-orchestration-architecture.md)

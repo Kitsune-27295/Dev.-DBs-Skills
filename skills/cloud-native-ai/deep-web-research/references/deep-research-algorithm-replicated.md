@@ -1,40 +1,24 @@
 # Deep Research Algorithm: Replicated and Refined
 
-Sources: Firecrawl repository snapshot (AGPL-3.0), path apps/api/src/lib/deep-research/deep-research-service.ts (loop); path apps/api/src/lib/deep-research/research-manager.ts (state, query generation, analysis, final report); path apps/api/src/controllers/v1/deep-research.ts (parameters and limits); path apps/test-site/src/content/blog/open-researcher-interleaved-thinking.md (tool-using agent variant, read as a description only). Clean-room: behaviors paraphrased, no code or prompts copied (AGPL-3.0 vs MIT) · Last verified 2026-11-24
+Sources: the public research skills listed in `research-skills-compared.md` (read 2026-11-27); the Firecrawl public docs index (docs.firecrawl.dev, 2026-11-27), which no longer documents a stand-alone deep-research endpoint; our own design. Last verified 2026-11-27
 
-## Part 1: what the Firecrawl loop does (prose)
+## Part 1: the generic loop (what vendor research loops do)
 
-Inputs: a query, a maximum depth (default 7, allowed 1-12), a maximum number of URLs (default 20, up to 1000), a time limit in seconds (default 300, allowed 30-600), optional analysis instructions, optional agent instructions, and an output format (markdown report or JSON against a schema).
-
-State kept: the current depth, the next topic to search, a set of seen URLs, a rolling list of findings (only the latest 50 are kept in memory), a list of sources, an activity log, a failed-analysis counter (stops at 3).
-
-Each iteration:
-1. Check the clock and the URL budget; stop if exhausted.
-2. Generate a few search queries (the generator is asked for 3-5, only the first 3 are used). It is told to avoid repeats, use today's date, make the first query a short plain version of the topic, then go deep rather than wide, and build on earlier findings. Each query comes with a stated goal.
-3. Run all queries in parallel. Each search also fetches page content (main content, markdown, short timeout, cached copies up to 4 hours old are acceptable).
-4. Drop results with no URL or already seen; count each new URL against the budget; record title, description and icon as a source entry.
-5. If nothing new, log it and loop again (the same depth counter has advanced).
-6. Append each page's text to the findings, tagged with its URL.
-7. Analysis step: a model is given the current topic, the minutes remaining and all findings, and returns gaps, next steps, a continue flag and an optional narrower next topic. If under a minute remains it is told to stop. If analysis fails, count a failure.
-8. Stop if the analyzer says stop or reports no gaps; otherwise the next topic becomes the first gap.
-
-Final synthesis: one larger-model call over all findings writes a markdown report (title first, sections, citations throughout, aim for several pages) or fills the JSON schema. Billing is one credit per URL analyzed, capped by the URL limit. Progress is reported as typed activities (search, analyze, synthesis) with status processing/complete/error and a depth number, plus a progress count of 5 steps per depth level.
-
-Pseudo-steps:
+An earlier draft described one vendor's deep-research loop from a repository snapshot (depth, URL and time limits, a rolling findings list, an analyzer that names gaps). That behavior could not be re-confirmed against current public docs, so its numbers are not adopted (see `sources.md`). What generalizes, as our own pattern:
 
 ```
-while depth < maxDepth and urls < maxUrls and time left:
-    queries = generate(topic, findings)[:3]
-    pages   = parallel(search_and_read(q) for q in queries)
-    new     = [p for p in pages if p.url not in seen]
-    findings += new; sources += new
-    verdict = analyze(findings, topic, time_left)
+while sub-questions open and budget left:
+    queries = generate(topic, findings)        # few, distinct, dated, broad then deep
+    pages   = parallel(search_and_read(q))     # full pages, not snippets
+    new     = pages not seen (dedupe by origin)
+    findings += new
+    verdict = analyze(findings, topic)         # gaps, single-source claims, stop flag
     if verdict.stop or no gaps: break
-    topic = verdict.gaps[0]
-final = write_report(query, findings)
+    topic = next named gap
+final = write_report(from the ledger)
 ```
 
-Observations (our reading, marked as inference): the whole findings text goes into each analysis call, so quality degrades as pages pile up; nothing records which finding supports which claim; no source quality ranking; contradictions are left to the writer model; the topic narrows to the first gap only, so other gaps are dropped unless re-found; the source list reported to users is title/description/icon, not evidence.
+Weak points of the naive loop (our inference): all findings feed every analysis call, so quality degrades as pages pile up; nothing links a finding to a claim; no source ranking; contradictions are left to the writer; narrowing to the first gap drops the others; the source list holds titles, not evidence. Part 2 fixes these.
 
 ## Part 2: our refined version for an agent with only native tools
 

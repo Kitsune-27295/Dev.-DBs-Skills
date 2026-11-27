@@ -1,6 +1,6 @@
 # Portable SKILL.md Frontmatter vs Claude Code Extensions
 
-Sources: https://code.claude.com/docs/en/skills (first ~100k of ~120k chars read) · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://code.claude.com/docs/pt/best-practices · secondary (low trust, never sole basis): https://www.cubic.dev/blog/claude-code-skills · https://neuraltrust.ai/blog/claude-code-skills · https://www.zently.com.br/blog/melhores-skills-claude-code-2026-guia-completo · Last verified 2026-11-23
+Sources: https://code.claude.com/docs/en/skills (first ~100k of ~120k chars read) · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://code.claude.com/docs/pt/best-practices · secondary (low trust, never sole basis): https://www.cubic.dev/blog/claude-code-skills · https://neuraltrust.ai/blog/claude-code-skills · https://www.zently.com.br/blog/melhores-skills-claude-code-2026-guia-completo · Last verified 2026-11-27
 
 ## 1. Field table (Claude Code docs)
 
@@ -13,8 +13,8 @@ Frontmatter is YAML between `---`, starting on line 1. All fields optional (`des
 | `license`, `compatibility` (<=500 chars), `metadata` | Agent Skills spec | Accepted everywhere, not acted on by Claude Code. |
 | `allowed-tools` | Accepted by API/claude.ai too | Tools usable without asking during the invoking turn; does not restrict other tools. |
 | `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `disallowed-tools`, `paths`, `shell`, `hooks` | Claude Code only | Invocation control and activation. `disable-model-invocation: true` removes the description from context and blocks subagent preloading and scheduled runs. `user-invocable: false` hides from `/` menu, Claude can still load it. `disallowed-tools` clears at your next message. `hooks` stay active for the session. |
-| `model` | Claude Code only | Override for the rest of the current turn only; session model resumes next prompt; `inherit` keeps active. With `context: fork` it sets the subagent's model. |
-| `effort` | Claude Code only | low/medium/high/xhigh/max for the rest of the current turn (or the whole forked run). Does not beat `CLAUDE_CODE_EFFORT_LEVEL`; org caps still apply. |
+| `model` | Claude Code only | Applies only to the turn where the user runs the skill with `/name`; when Claude runs the skill the session keeps its model. `inherit` keeps the active model. With `context: fork` it sets the subagent's per-invocation model. |
+| `effort` | Claude Code only | low/medium/high/xhigh/max for the rest of the current turn (with `context: fork`, the forked subagent's level); available levels depend on the model. Does not beat `CLAUDE_CODE_EFFORT_LEVEL`; org caps still apply. |
 | `context: fork`, `agent`, `background` | Claude Code only | Run the skill body as a subagent task; `agent` defaults to `general-purpose` (also Explore, Plan, custom); `background` defaults true, only with fork. |
 
 ## 2. Portability rule (important)
@@ -24,7 +24,7 @@ Per the Claude Code docs: claude.ai uploads, the Skills API and `package_skill.p
 ## 3. Lifecycle facts that affect routing
 
 - Invoked SKILL.md enters the conversation as one message and stays; it is not re-read, so write standing instructions.
-- `allowed-tools`, `disallowed-tools`, `model`, `effort` apply only for the invoking turn; re-invoking re-applies them.
+- `allowed-tools`, `disallowed-tools` and `effort` apply for the invoking turn, `model` only on a user-typed `/name`; re-invoking re-applies them.
 - Identical re-invocation adds a short "already loaded" note; changed content is appended again.
 - After auto-compaction the latest invocation of each skill keeps its first 5,000 tokens, sharing a 25,000-token budget (most recent first); older skills may be dropped.
 
@@ -38,7 +38,7 @@ Per the Claude Code docs: claude.ai uploads, the Skills API and `package_skill.p
 ## How an agent should apply this
 
 - Put routing hints in portable fields only (`name`, `description`) and treat `model`/`effort`/`context` as optional Claude Code overlays, never required for correctness.
-- Use `effort:` on a skill to raise or lower depth for one turn; use `model:` with `context: fork` when the work should run on a cheaper or stronger model in isolation.
+- Use `effort:` on a skill to raise or lower depth for one turn; use `model:` with `context: fork` when the work should run on a cheaper or stronger model in isolation (a bare `model:` acts only on a user-typed `/name`).
 - Validate a skill against the target surface before uploading: remove non-portable keys for the API/claude.ai.
 - Never rely on a `model:` pin without testing the skill on that model; never expect the override to persist past the turn.
 - Re-check field lists against the live docs; the Claude Code page is the single source for the extension fields.

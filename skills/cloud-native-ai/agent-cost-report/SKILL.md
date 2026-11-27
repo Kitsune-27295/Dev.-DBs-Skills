@@ -1,6 +1,6 @@
 ---
 name: agent-cost-report
-description: "A minimal, honest method for measuring what a coding-agent session or period cost from local transcripts and usage logs: read per-reply token usage, de-duplicate repeated lines, price the tokens against a dated vendor price list and label the result ESTIMATED, account for cache reads and cache writes (5-minute and 1-hour) separately, break the total down per model, per session or task and per date window, and state the limits (unstable log format, pruned history, subscription versus API billing, other machines). A method, not a product: about 40 lines of script plus rules for what to report. Use when asked what an agent session, task, week or project cost, when comparing models or routing choices with numbers, when reconciling an estimate against a bill or usage screen, or when building a small cost report from transcripts."
+description: "Measure what a coding-agent session, task, week or project cost from local transcripts: read per-reply token usage, de-duplicate repeated lines, price tokens against a dated vendor price list and label every dollar ESTIMATED, price cache reads and 5-minute and 1-hour cache writes separately, break totals down per model, session, task and day, and state the limits (unstable log format, pruned history, subscription versus API billing, other machines). A method of about 40 lines of script plus reporting rules, not a product. Use when asked what an agent session or period cost, when comparing models or routing with numbers, when reconciling an estimate with a bill or usage screen. For choosing models or cutting cost use model-effort-routing; for trimming context use agent-skills-context-engineering."
 ---
 
 # Agent Cost Report
@@ -21,7 +21,7 @@ Boundary: choosing models, effort and delegation to cut cost is `model-effort-ro
 | **Extrapolated** | Filled in for data you do not have, with a stated ratio | your assumption; low confidence |
 | **Unavailable** | No data | write "unavailable", never `$0` |
 
-Claude Code itself works this way: its session cost figure is computed locally from token counts at list price, is an estimate, and for subscription plans the session dollar figure is not relevant for billing; the console cost page or invoice is the authority (see [references/sources.md](references/sources.md)).
+Claude Code itself works this way: the Session block of `/usage` computes the dollar figure locally from token counts at list price (unless an administrator set a `modelPricing` table for contracted rates), calls it an estimate, and for Pro, Max and Ultra subscribers says the session dollar figure is not relevant for billing; the console cost page or invoice is the authority (see [references/sources.md](references/sources.md)).
 
 ## 2. Define the question before reading logs
 
@@ -53,10 +53,10 @@ cost = input * P_in + output * P_out
 ```
 
 - Take `P_*` from the vendor price page at run time and write the date next to the number. Do not hardcode prices into the skill or into long-lived scripts without a date.
-- Cache multipliers relative to base input on the vendor page: 5-minute write 1.25x, 1-hour write 2x, cache read 0.1x on most models. The read multiplier is **model-specific** on newer models (0.05x and 0.025x appear on the page), so use the listed per-model cache price, not a global 0.1.
-- No `cache_creation` split in a response: treat all cache writes as 5-minute and label that assumption.
+- Cache multipliers relative to base input on the vendor page: 5-minute write 1.25x, 1-hour write 2x, cache read 0.1x on most models. The read multiplier is **model-specific** on the newest models (0.05x on Opus 5.5 and Sonnet 5.5, 0.025x on Fable and Mythos 5.1 and 5.2, as of 2026-11-27), so use the listed per-model cache price, not a global 0.1.
+- No `cache_creation` split in a response: treat all cache writes as 5-minute and label that assumption. The split matters in Claude Code: on a subscription within plan usage the main conversation requests the 1-hour lifetime, while API-key and cloud sessions default to 5 minutes.
 - A model that is not in your table is **UNPRICED**: list its name and token counts, add nothing, never silently zero it. Placeholder entries (for example a synthetic model name with no real request) carry no real cost; list and exclude them.
-- Other modifiers visible in usage data: `speed` (fast mode has its own prices), `inference_geo` (US-only inference has a 1.1x multiplier on supported models), and long-prompt tiers on some models. Apply them when the field says they applied; otherwise note them as ignored.
+- Other modifiers visible in usage data: `speed` (fast mode has its own prices), `inference_geo` (US-only inference has a 1.1x multiplier on all token categories for Claude 4.6 and later on the first-party API), and, on Haiku 5.5, higher prices for a request whose prompt exceeds 100,000 tokens (cache reads and writes count toward that length). Apply them when the field says they applied; otherwise note them as ignored.
 - Server-side tool charges (for example web search per 1,000 searches) are not token costs; count them separately from `server_tool_use` or list them as not included.
 
 Pricing and labels in depth: [references/pricing-and-estimate-labeling.md](references/pricing-and-estimate-labeling.md).
@@ -83,7 +83,7 @@ A runnable example of about 40 lines (dedupe, window, per-model cost, unpriced m
 ## 7. Limits to state in every report
 
 - **Format instability**: transcript JSONL is an internal format and field names can change between versions; validate on a few lines before trusting a run, and print the count of replies and of skipped lines.
-- **Retention**: Claude Code removes session files older than `cleanupPeriodDays` (30 days by default per the costs documentation); old periods may be incomplete.
+- **Retention**: Claude Code deletes transcripts older than `cleanupPeriodDays` (30 days by default, minimum 1, per the `.claude` directory documentation); old periods may be incomplete.
 - **Machine scope**: only logs on this machine; other devices and web sessions are absent.
 - **Billing mode**: on an API or console plan the estimate approximates the bill; on a subscription plan usage is included and dollars are a what-if, not an invoice.
 - **Contracted rates**: list prices ignore discounts; if rates differ, apply the multiplier and say so.
@@ -106,4 +106,5 @@ A runnable example of about 40 lines (dedupe, window, per-model cost, unpriced m
 - [transcript-usage-accounting.md](references/transcript-usage-accounting.md) - read when parsing logs: fields, de-duplication, windows and time zones, subagents, a runnable example.
 - [pricing-and-estimate-labeling.md](references/pricing-and-estimate-labeling.md) - read when pricing tokens: multipliers, model-specific cache rates, modifiers, labels, reconciliation.
 - [breakdowns-and-honest-limits.md](references/breakdowns-and-honest-limits.md) - read when slicing the numbers or writing the limits section.
+- [trigger-evals.md](references/trigger-evals.md) - should-trigger and near-miss prompts for this skill.
 - [sources.md](references/sources.md) - sources, retrieval status and claims not adopted.

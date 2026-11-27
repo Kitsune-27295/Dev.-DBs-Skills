@@ -1,6 +1,6 @@
 # Commit Message Craft
 
-Sources: https://cbea.ms/git-commit/ · https://git-scm.com/docs/SubmittingPatches · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · Last verified 2026-11-23
+Sources: https://cbea.ms/git-commit/ · https://git-scm.com/docs/SubmittingPatches · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · Last verified 2026-11-27
 
 ## Why messages matter
 
@@ -47,7 +47,7 @@ Paragraphs: (1) old behavior and why it was wrong, (2) new behavior and why this
 
 ## Trailers and footers
 
-Git trailers: `Signed-off-by:` (DCO certification, `git commit -s`), `Reviewed-by:`, `Tested-by:`, `Reported-by:`, `Suggested-by:`, `Helped-by:`, `Co-authored-by:`, plus issue references (`Refs: #12`, `Closes #12`). Capitalize only the first letter of each token; keep one trailer per line in the last paragraph; your own `Signed-off-by:` goes last. Credit lines are always footers, never in the subject.
+Git trailers: `Signed-off-by:` (DCO certification, `git commit -s`; required by the Git project, so use it only where the project asks), `Reviewed-by:`, `Tested-by:`, `Reported-by:`, `Suggested-by:`, `Helped-by:`, `Co-authored-by:`, plus issue references (`Refs: #12`, `Closes #12`). Capitalize only the first letter of each token; keep one trailer per line in the last paragraph; your own `Signed-off-by:` goes last. Credit lines are always footers, never in the subject.
 
 ## Hard-to-summarize subjects
 

@@ -1,8 +1,8 @@
 # Antigravity Skills: Format, Install Paths and Frontmatter
 
-Sources: https://antigravity.google/docs/skills/ · https://codelabs.developers.google.com/getting-started-with-antigravity-skills · https://github.com/rmyndharis/antigravity-skills · https://github.com/google-deepmind/science-skills · Last verified 2026-11-23
+Sources: https://antigravity.google/docs/skills/ · https://codelabs.developers.google.com/getting-started-with-antigravity-skills · https://github.com/rmyndharis/antigravity-skills · https://github.com/google-deepmind/science-skills · Last verified 2026-11-27
 
-Pages were read through WebFetch summaries (Firecrawl had no credits), so wording is paraphrased from those extractions.
+The official skills page was re-read 2026-11-27 (install paths, frontmatter and loading unchanged from the earlier read); the codelab and community-repo pages were not re-fetched.
 
 ## Install locations (official docs)
 

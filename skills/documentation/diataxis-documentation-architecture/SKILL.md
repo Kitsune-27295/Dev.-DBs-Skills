@@ -1,84 +1,64 @@
 ---
 name: diataxis-documentation-architecture
-description: Use when structuring, writing, auditing, or refactoring technical documentation using Daniele Procida's Diátaxis framework — organizing documentation into the 4 distinct user-need quadrants (Tutorials, How-to Guides, Reference, Explanation) mapped across Action vs Cognition and Acquisition (Study) vs Application (Work). Gives the Diátaxis Compass, quadrant rules, and anti-contamination fixes.
+description: Classify, write, split or audit technical documentation with the Diátaxis framework: place each page or paragraph in one of four forms (tutorial, how-to guide, reference, explanation) with the two-question compass (action or cognition, study or work), fix pages that blur forms, and decide whether new content deserves its own page. Not for architecture chapters (see `arc42-api-contracts-architecture`), decision records (see `adr-architecture`) or prose style (see `text-quality-gate`). Use when asked to structure, restructure, review or write product or developer docs, to decide where content belongs, or whether to add or split a documentation page.
 ---
 
 # Diátaxis (Technical Documentation Information Architecture)
 
-One idea: documentation rots and confuses readers when a single page tries to teach a beginner, solve an advanced task, list every CLI flag, and debate design philosophy all at once — fix it by separating documentation into **four distinct quadrants** (**Tutorials**, **How-to Guides**, **Reference**, **Explanation**) defined by two axes of user need: **Action vs. Cognition** and **Acquisition (Study) vs. Application (Work)**. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: documentation confuses readers when one page tries to teach a beginner, solve a task, list every option and debate design at once. Separate it into four forms by what the reader needs: **tutorial**, **how-to guide**, **reference**, **explanation**, placed by two questions (action or cognition; study or work). Sources, statuses and claims not adopted: [references/sources.md](references/sources.md).
 
-## The Diátaxis Map & Compass (Daniele Procida)
+## 1. The map and the compass
 
-| Quadrant | Axis 1: Mode | Axis 2: Context | User's Question | Real-World Analogy |
-|---|---|---|---|---|
-| **1. Tutorials** | Practical (**Action**) | **Study** (Acquisition of skill) | *"I am new — can you take me by the hand through a safe lesson so I gain confidence?"* | A driving lesson with an instructor |
-| **2. How-to Guides** | Practical (**Action**) | **Work** (Application to a goal) | *"I already know the basics — what steps solve this specific real-world problem?"* | A recipe for a dish or a GPS route from A to B |
-| **3. Reference** | Theoretical (**Cognition**) | **Work** (Application while coding) | *"What are the exact facts, flags, signatures, error codes, and constraints?"* | An encyclopedia map or dictionary entry |
-| **4. Explanation** | Theoretical (**Cognition**) | **Study** (Acquisition of understanding) | *"Why was it designed this way, what are the trade-offs, and how do the concepts connect?"* | A book on culinary history or architectural theory |
+| Form | Informs | Serves | Reader's question |
+|---|---|---|---|
+| Tutorial | action | study | "Lead me through a lesson so I learn by doing." |
+| How-to guide | action | work | "How do I achieve this specific goal?" |
+| Reference | cognition | work | "What are the exact facts?" |
+| Explanation | cognition | study | "Why is it this way, and how does it connect?" |
 
-### Using the Diátaxis Compass (When unsure where a section belongs)
-Ask two questions about the sentence or page you are writing:
-1. **Does this inform the reader's *Action* (steps to do) or *Cognition* (knowledge/thinking)?**
-2. **Does it serve their *Acquisition/Study* (learning) or their *Application/Work* (getting a job done)?**
-   - Action + Study $\to$ **Tutorial**
-   - Action + Work $\to$ **How-to Guide**
-   - Cognition + Work $\to$ **Reference**
-   - Cognition + Study $\to$ **Explanation**
+Compass, asked of any page or paragraph: does it inform what the reader **does** or what they **know**; does it serve **acquiring** a skill (study) or **applying** it (work)? Many documentation faults come from crossing or blurring these boundaries. Detail and a worked split: [references/four-forms-map-and-compass.md](references/four-forms-map-and-compass.md).
 
-## Strict Rules per Quadrant (Preventing Quadrant Contamination)
+## 2. Rules per form
 
-### 1. Tutorials (Learning-Oriented Lessons)
-- **The author is responsible for the learner's safety and guaranteed success:** Every command must produce a concrete, visible, repeatable result on the first try.
-- **No branching choices or edge-case alternatives:** Never write *"You can also use Postgres, MySQL, or SQLite here, or pass `--flag-x`..."* inside a Tutorial. Pick one paved path and guide the learner straight through it.
-- **Teach through doing, not lecturing:** Keep conceptual explanations out of the tutorial; link to an **Explanation** page at the end instead.
+**Tutorial.** The writer carries the responsibility for what the learner learns, as no instructor is present. Every step produces a visible, comprehensible result, with expected output shown. Leave out side paths (other options, alternative approaches). No explanation: link to it.
 
-### 2. How-to Guides (Goal-Oriented Recipes)
-- **Assume competence and start from a clear real-world goal:** Title it *"How to configure zero-downtime webhook retries"*, never *"Webhook configuration"*.
-- **Focus strictly on the steps to achieve the outcome:** Omit beginner onboarding lessons (that's a **Tutorial**) and omit exhaustive lists of every possible parameter (link to **Reference**).
-- **Allow real-world conditional branching:** Unlike a tutorial, a How-to Guide addresses real work environments (*"If deploying behind a VPC proxy, set X; otherwise set Y"*).
+**How-to guide.** Starts from a real goal and is titled for exactly what it shows ("How to integrate monitoring", not a bare noun). Assumes a competent reader; no teaching, no digression, no list of every option (link to reference). Real work forks, so conditional steps ("if you want x, do y") are right here and wrong in a tutorial.
 
-### 3. Reference (Information-Oriented Facts)
-- **Austerity, neutrality, and structural consistency:** Reference pages describe the machinery as it is — CLI commands, API endpoints, configuration schemas, error codes, limits, and defaults.
-- **Mirror the structure of the codebase/API:** Organize Reference in the same hierarchy as the product's modules, commands, or packages so a developer at work can look up a symbol in 5 seconds.
-- **Never instruct or philosophize:** Do not embed multi-step workflow narratives or long design justifications inside a Reference table; link out to How-to Guides and Explanations.
+**Reference.** Neutral description only: no instruction, explanation, opinion or speculation. Uses consistent patterns, mirrors the structure of the thing it describes, and may carry short usage examples. Auto-generated output alone is not enough.
 
-### 4. Explanation (Understanding-Oriented Discussion)
-- **Answer "Why?", explore trade-offs, alternatives, and background context:** This is where architectural overview, design rationale, historical context, and ADRs (`adr-architecture`) live.
-- **No step-by-step instructions or exhaustive API tables:** An Explanation can be read away from the keyboard (on a train or before reviewing a system).
+**Explanation.** Understanding-oriented and bounded by a topic: why things are this way, history, constraints, alternatives, reasoned opinions. Read away from the product. Decision records are one source of rationale (`adr-architecture`); architecture chapters live in `arc42-api-contracts-architecture`.
 
-## Iterative Workflow (How to apply Diátaxis without a big-bang rewrite)
+## 3. Workflow (iterate, do not scaffold)
 
-1. **Do not create 4 empty top-level folders and freeze:** Procida warns against top-down structural paralysis. Start from the piece of documentation you are editing right now.
-2. **Apply the Compass to one page:** Identify which single quadrant the page *wants* to be.
-3. **Extract contaminating blocks:**
-   - If a **Tutorial** has a 500-word architectural digression in the middle, cut that block into an **Explanation** page and leave a 1-line link.
-   - If a **How-to Guide** has a 40-row parameter table, move the table to **Reference** and link to it.
-4. **Surface the four quadrants at the top level once content exists:** Organize your `README.md` or docs sidebar clearly around:
-   - `Tutorials` (Getting Started / First Steps)
-   - `How-to Guides` (Task & Operations Playbooks)
-   - `Reference` (CLI, API, Configuration, Schemas)
-   - `Explanation` (Architecture, Concepts, ADRs)
+1. Look at the documentation in front of you (or note there is none).
+2. Ask whether it could be better.
+3. Pick one small change and make it; repeat.
 
-## Verification checklist for any documentation PR
+The source does not require planning a structure first; the four-part layout can emerge from repeated compass use. As a convention (not a source rule), avoid creating four empty top-level folders before content exists. Whether new content needs a page at all: [references/new-page-or-not-join-vs-split.md](references/new-page-or-not-join-vs-split.md).
 
-| Check | Failure symptom | Fix |
-|---|---|---|
-| Tutorial vs. How-to confusion | A "Tutorial" that assumes existing setup and jumps straight into an advanced edge case, or a "How-to" that spends 3 pages teaching basic installation | Split beginner lesson (`tutorials/`) from specific task recipe (`how-to/`) |
-| Reference polluted with tutorial steps | An API/CLI reference page where the only way to find a flag's default value is reading a 10-paragraph story | Extract a clean, scannable Reference table with types, defaults, and constraints |
-| Explanation hiding inside a Tutorial | A newcomer trying to run their first command is hit with 6 paragraphs explaining why the engine uses SQLite FTS5 instead of BM25 | Move the "Why" to `explanation/` |
-| Vague headings | Headings like `Webhooks` or `Database` that don't signal which quadrant the page belongs to | Name by quadrant: `Tutorial: Build your first webhook`, `How to rotate webhook secrets`, `Webhook payload reference`, `Why webhooks use at-least-once delivery` |
+## 4. Review table for a documentation change
+
+| Symptom | Fix |
+|---|---|
+| A tutorial assumes setup or explains theory mid-lesson | keep one guided path; move theory to an explanation page and link |
+| A how-to teaches basics or lists every parameter | cut to the goal; table to reference |
+| Reference tells a story or argues | strip to facts; stories to how-to, arguments to explanation |
+| Explanation buried in a procedure | move the why to its own page, leave a one-line link |
+| Vague heading ("Webhooks") | name the form: "Tutorial: build your first webhook", "How to rotate webhook secrets", "Webhook payload reference", "Why webhooks deliver at least once" |
 
 ## Quick Decision Checklist
 
-- [ ] Did I decide if this page serves action or cognition, and study or work, before writing?
-- [ ] Does this page belong to exactly one quadrant: Tutorial, How-to, Reference or Explanation?
-- [ ] Is the Tutorial a single paved path with no branching choices or lectures?
-- [ ] Does the How-to start from a real goal and link to Reference instead of listing every parameter?
-- [ ] Is Reference neutral, structured like the product, and free of instructions or design debate?
-- [ ] Is any contaminating block moved to its own quadrant page with a one-line link?
-- [ ] Does the heading signal its quadrant instead of a vague noun like Webhooks?
+- [ ] Did I answer both compass questions before writing or editing?
+- [ ] Does each page belong to exactly one form?
+- [ ] Is the tutorial one guided path, with a visible result per step and no explanation?
+- [ ] Does the how-to start from a goal and link out for option lists?
+- [ ] Is reference neutral and shaped like the product?
+- [ ] Did I move contaminating blocks to their own form and link them?
+- [ ] Did I check whether a new page is justified, or whether a section will do?
 
 ## Deep references
 
-- [Four forms, map and compass](references/four-forms-map-and-compass.md) — read when classifying or splitting documentation pages
-- [Should this be a new page? Join versus split](references/new-page-or-not-join-vs-split.md) — read before creating a page, folder or section, or when asked to split or merge pages.
+- [Four forms, map and compass](references/four-forms-map-and-compass.md): read when classifying or splitting documentation pages.
+- [Should this be a new page? Join versus split](references/new-page-or-not-join-vs-split.md): read before creating a page, folder or section, or when asked to split or merge pages.
+- [Trigger evals](references/trigger-evals.md): read when tuning the description.
+- [Sources](references/sources.md): retrieval statuses, reading limits, claims not adopted.

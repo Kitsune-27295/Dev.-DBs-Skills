@@ -1,6 +1,6 @@
 # Skill Description and Trigger Design
 
-Sources: https://agentskills.io/specification · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf · https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md · https://blakecrosley.com/pt-BR/guides/agent-architecture (Portuguese, paraphrased) · Last verified 2026-11-24
+Sources: https://agentskills.io/specification · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf · https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md · https://blakecrosley.com/pt-BR/guides/agent-architecture (Portuguese, paraphrased) · Last verified 2026-11-27
 
 The description is the only text the router sees before choosing. Authoring basics (structure, size, bodies) live in `agent-skills-context-engineering`; this page covers description-as-routing-condition, collisions and trigger tests.
 

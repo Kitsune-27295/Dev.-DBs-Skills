@@ -1,6 +1,6 @@
 # Hard Tells, Counted Signals, Masking and Exemptions
 
-Sources: https://docs.vale.sh/ · https://docs.vale.sh/topics/styles · https://github.com/DavidAnson/markdownlint · https://developers.google.com/style/highlights · https://developers.google.com/style/tone · Last verified 2026-11-24
+Sources: https://docs.vale.sh/ · https://docs.vale.sh/topics/styles · https://github.com/DavidAnson/markdownlint · https://developers.google.com/style/highlights · https://developers.google.com/style/tone · Last verified 2026-11-27
 
 ## 1. How prose linters organize checks
 

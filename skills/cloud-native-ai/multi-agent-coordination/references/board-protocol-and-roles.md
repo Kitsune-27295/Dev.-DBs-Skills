@@ -1,6 +1,6 @@
 # Board Protocol and Roles
 
-Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/engineering/multi-agent-research-system · https://cognition.com/blog/dont-build-multi-agents · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/engineering/multi-agent-research-system · https://cognition.com/blog/dont-build-multi-agents · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-27
 
 The board is the group's single shared memory of who said what. It exists so that a replacement coordinator, a monitor or a reviewer can reconstruct the state from the log alone. The format below is this skill's own design, informed by the sources; it is a recommendation, not a standard.
 

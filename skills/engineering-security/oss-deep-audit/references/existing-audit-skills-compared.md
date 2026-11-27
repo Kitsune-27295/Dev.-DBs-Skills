@@ -1,6 +1,6 @@
 # Existing Audit Skills Compared
 
-Sources: https://mcpmarket.com/tools/skills/repo-research-analysis · https://github.com/Consensys/repo-security-review · https://www.skillsdirectory.com/skills/mrwangjusttodo-open-source-repo-analysis · https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://github.com/Ycsyyds/codebase-analysis-skill · Last verified 2026-11-24
+Sources: https://mcpmarket.com/tools/skills/repo-research-analysis · https://github.com/Consensys/repo-security-review · https://www.skillsdirectory.com/skills/mrwangjusttodo-open-source-repo-analysis · https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://github.com/Ycsyyds/codebase-analysis-skill · Last verified 2026-11-27 (only the Consensys README was re-read; the other four listings were not reached, so their rows keep the 2026-11-24 summaries)
 
 All pages were read through a summarizing fetch tool, so details below are what those summaries reported; none of the repos' full files were read except where stated in `sources.md`.
 

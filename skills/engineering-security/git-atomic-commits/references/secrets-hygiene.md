@@ -1,6 +1,6 @@
 # Secrets Hygiene: Keeping Credentials Out of Git History
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html · https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History · Last verified 2026-11-23
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html · https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History · Last verified 2026-11-27
 
 Scope: only what concerns committing and leaking secrets. Broader exposure audits live in `security-audit` and `database-exposure`; environment config rollout in `migrations-and-environments`.
 
@@ -12,7 +12,7 @@ Scope: only what concerns committing and leaking secrets. Broader exposure audit
 
 ## Prevention: detect before the commit
 
-OWASP: move detection left, at the developer level (IDE, test cycle, **pre-commit hook**) so secrets never enter a commit/PR. Yelp detect-secrets is named as a mature option. Run more than one tool and de-duplicate to find coverage gaps; track false positives with standard test secrets; re-evaluate tools regularly.
+OWASP: move detection left, at the developer level (IDE, test cycle, **pre-commit hook**) so secrets never enter a commit/PR. Yelp detect-secrets is named as a mature option. Running more than one scanner and re-evaluating tools over time is the author's inference, not re-read on the page.
 
 Practical layers (mostly inference beyond OWASP):
 1. `.gitignore` for `.env`, `*.pem`, key stores, dumps, local config; commit `.env.example` with fake values.
@@ -46,8 +46,7 @@ Safe approach:
 
 ```
 # unpushed, secret in the last commit only
-git restore --staged .env      # or remove file from tracking
-git rm --cached .env
+git rm --cached .env           # untrack; the file stays on disk
 git commit --amend --no-edit   # only after the user agrees to amend
 ```
 

@@ -1,6 +1,6 @@
 # Context Stack Audit (Report-Only)
 
-Sources: https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://github.com/garrytan/gbrain (MIT, context-audit skill) · Last verified 2026-11-24
+Sources: https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://raw.githubusercontent.com/garrytan/gbrain/master/skills/context-audit/SKILL.md (MIT repository) · Last verified 2026-11-27
 
 ## Contents
 - What to audit
@@ -14,17 +14,19 @@ Audit what this harness loads on every turn: user-global and project instruction
 
 ## Procedure
 1. **Enumerate** the always-loaded files for this harness; do not assume a fixed list.
-2. **Measure.** If the host reports an exact breakdown, use it. Otherwise estimate from bytes with a stated divisor (roughly 2.6 to 3.5 bytes per token for markdown heavy with paths and code, per the cited skill; print your divisor so anyone can recompute).
+2. **Measure.** If the host reports an exact breakdown, use it. Otherwise estimate from bytes with a stated divisor. The cited audit skill uses 2.8 bytes per token as a calibrated midpoint for Claude-family tokenizers on Markdown and prints the divisor so readers can recompute; use that or your own calibrated value, and print it.
 3. **Read each file fully** and test six dimensions: token efficiency, redundancy, contradictions, skill-worthiness, staleness, clarity.
 4. **Classify risk** per finding and **rank** by savings.
 5. **Report, do not edit.** Every row needs quoted evidence and the place the fix belongs (for generated files, the template or source, never the generated output). Apply changes in a separate, deliberate step.
 
 ## Ranking and risk classes
+The cited skill names its classes green, yellow and red; this file uses descriptive labels for the same ideas.
+
 | Class | Meaning | Typical finding |
 |---|---|---|
-| Zero | Pure deletion of exact duplicate or dead content | same rule in two files; removed feature still described |
-| Low | Compression or extraction with a clear trigger | workflow detail moved into a skill that loads on demand |
-| Medium | Could shift edge-case behavior | merging or rewording a safety rule |
+| Zero (green) | Pure deletion of exact duplicate or dead content | same rule in two files; removed feature still described |
+| Low (yellow) | Compression or extraction with a clear trigger | workflow detail moved into a skill that loads on demand |
+| Medium (red) | Could shift edge-case behavior | merging or rewording a safety rule |
 
 Order by tokens recoverable, descending; list contradictions first regardless of size because they cost correctness. Anthropic's context-engineering article supplies the rationale: the smallest high-signal token set, and rules added for observed failures, not speculation.
 

@@ -1,10 +1,10 @@
 # Staleness, Contradiction and Schedule
 
-Sources: https://arxiv.org/html/2605.26112 · https://arxiv.org/html/2304.03442v2 · https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://docs.letta.com/configuration/memory · Last verified 2026-11-24
+Sources: https://arxiv.org/html/2605.26112 · https://arxiv.org/html/2304.03442v2 · https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://docs.letta.com/configuration/memory · Last verified 2026-11-27
 
 ## Why stale memory is dangerous
 
-Retrieval and loading do not check truth. The Claude Code memory docs describe an index loaded at session start and topic files read on demand: nothing in that path asks whether a path or ID in a note still exists. Anthropic's context-engineering article describes context rot, where recall degrades as the window fills, so a wrong note competes with correct facts for a shrinking budget. The harness paper read for this skill (arXiv 2605.26112, section 4.2 as extracted) makes the sharper point that stale items rarely stop being retrieved: they keep ranking high while their targets have changed, and it proposes penalizing staleness relative to the last verification time. Generative Agents already uses a recency factor in retrieval scoring (exponential decay since last access), but access recency is not verification recency: a note read often can be wrong for months (inference).
+Retrieval and loading do not check truth. The Claude Code memory docs describe an index (`MEMORY.md`, first 200 lines or 25 KB loaded at session start) and topic files read on demand: nothing in that path asks whether a path or ID in a note still exists. Anthropic's context-engineering article describes context rot, where recall degrades as the window fills, so a wrong note competes with correct facts for a shrinking budget. The harness paper read for this skill (arXiv 2605.26112, section 4.2 as extracted) makes the sharper point that stale items rarely stop being retrieved: they keep ranking high while their targets have changed, and it proposes penalizing staleness relative to the last verification time. Generative Agents already uses a recency factor in retrieval scoring (exponential decay since last access), but access recency is not verification recency: a note read often can be wrong for months (inference).
 
 ## Prioritizing the queue
 
@@ -31,7 +31,7 @@ Detect: same subject (same path, tool, person, setting) with different values in
 | Decision vs decision | Neither automatically | Propose an explicit superseding decision; a person accepts (`adr-architecture`) |
 | Memory vs instruction file | The instruction file owns rules (`skill-orchestrator`) | Remove or link the memory copy; one owner (`ssot-and-dry`) |
 
-The Claude Code docs warn that two contradictory instructions may be followed arbitrarily and advise reviewing instruction files periodically for outdated or conflicting content; the same applies to memory entries.
+The Claude Code docs warn that two contradictory instructions may be followed arbitrarily and advise reviewing instruction files periodically for outdated or conflicting content; the same applies to memory entries. The docs' `/doctor prompt-audit` checks instruction files for outdated or conflicting content and proposes edits without applying them; auto-memory entries are not among the files it is described as covering, which is why this skill exists.
 
 Example (own):
 
@@ -44,7 +44,7 @@ entry B (2026-10-19): "integration tests run with `just test-int`"
 
 ## Consolidation without silent loss
 
-Some systems consolidate memory automatically in the background (the Letta page describes background review that can merge lessons, with an option that revises updates without asking). Consolidation is convenient but merges can erase the evidence that made a claim trustworthy. This skill's rule: merging or rewriting entries is a **proposal** listed in the report, applied only after confirmation, and always keeping a backup or the superseded originals. Letta's own page describes backing up before restructuring; the same precaution applies here.
+Some systems consolidate memory automatically in the background (the Letta page describes "dreaming": background subagents that review conversations and consolidate lessons, with an "agent reviews before applying" option that revises updates without asking the user, and a `/doctor` audit of placement and duplication). Consolidation is convenient but merges can erase the evidence that made a claim trustworthy. This skill's rule: merging or rewriting entries is a **proposal** listed in the report, applied only after confirmation, and always keeping a backup or the superseded originals. Letta's page describes backing up the repository before splitting, merging or restructuring; the same precaution applies here.
 
 ## Schedule
 
@@ -54,7 +54,7 @@ Some systems consolidate memory automatically in the background (the Letta page 
 | A recalled fact turned out wrong | Entry and its neighbors on the same subject, immediately |
 | Environment change (rename, migration, version upgrade, repo move) | Entries mentioning the changed thing |
 | Before an irreversible action based on old notes | The specific entries relied on |
-| Memory index nearing its size limit | Merge or archive proposals (limits owned by `skill-orchestrator`) |
+| Memory index nearing its size limit (Claude Code reminds the agent near 200 lines or 25 KB; text past the limit is dropped on load) | Merge or archive proposals (limits owned by `skill-orchestrator`) |
 
 How to schedule: in an interactive session, note the next sweep date in the last report's "Waiting on you" line; for recurring runs use the harness's scheduler or a calendar reminder that opens a new session with this skill. A sweep never needs to run unattended with write access beyond stamps and logged corrections.
 

@@ -1,6 +1,6 @@
 # Skill Admission, Contract Checklist and Baseline-First Authoring
 
-Sources: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://github.com/anthropics/skills (skills/skill-creator) · https://github.com/obra/superpowers (MIT, writing-skills) · Last verified 2026-11-24
+Sources: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md · https://github.com/obra/superpowers (MIT, writing-skills) · Last verified 2026-11-27
 
 ## Contents
 - Admission questions
@@ -8,6 +8,8 @@ Sources: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-
 - Baseline-first method
 - Evals and description tuning
 - How an agent should apply this
+
+The creation procedure itself (intent capture, trigger evals, packaging) is owned by `skill-creation-workflow`; this file owns the admission gate and the contract lens.
 
 ## Admission questions
 A skill's description is resident in every session; its body costs tokens when loaded. Before writing, answer five questions. These are this skill's synthesis, grounded in the best-practices guide ("only add context Claude doesn't already have"; build evaluations before extensive documentation).
@@ -33,16 +35,16 @@ Review a skill as an execution contract, tracing how an agent enters, loads, del
 Findings rank: invalid or missing resources (an agent can follow and fail) first; wasted context or duplicated ownership next; style last.
 
 ## Baseline-first method
-The best-practices guide prescribes evaluation-driven development: run the task without the skill and note specific failures, write three scenarios for those gaps, measure the baseline, write minimal instructions, iterate against the baseline. The MIT-licensed `writing-skills` skill in the superpowers plugin frames the same idea as test-driven development for documentation (credit: Jesse Vincent; method restated here in new words):
+The best-practices guide prescribes evaluation-driven development: run the task without the skill and note specific failures, write three scenarios for those gaps, measure the baseline, write minimal instructions, iterate against the baseline. The MIT-licensed `writing-skills` skill in the superpowers plugin (credit: Jesse Vincent) frames this as test-driven development for documentation; the method is restated here in new words:
 
 1. **RED:** run pressure scenarios with no skill; record exactly how the agent fails or rationalizes.
 2. **GREEN:** write the smallest skill that closes those gaps; rerun and confirm compliance.
-3. **REFACTOR:** pressure-test with new loopholes (time pressure, conflicting goals); plug each and rerun.
+3. **REFACTOR:** find new loopholes, plug each and rerun.
 
-Do not create a skill for what automation can enforce (a validator beats prose) or for one-off solutions.
+That skill lists when not to create a skill: one-off solutions, practices already well documented elsewhere, project-specific conventions (they belong in the instruction file), and mechanical constraints a regex or validator can enforce (automate those).
 
 ## Evals and description tuning
-The `skill-creator` skill in the public Anthropic skills repository (checked present on 2026-11-24, with `agents`, `scripts`, `eval-viewer`, `references`) runs each test prompt twice in the same turn, with the skill and against a baseline (no skill for a new skill, a snapshot of the old version when improving), then compares and iterates. It also has a separate description-optimization step because skills tend to undertrigger. Treat its details as upstream behavior; read them there.
+The `skill-creator` skill in the public Anthropic skills repository runs each test case twice in the same turn, with the skill and against a baseline (no skill for a new skill, a snapshot of the old version when improving), and warns against running the baselines later. It has a separate description-optimization step because Claude tends to undertrigger skills: about 20 realistic queries mixing should-trigger and near-miss cases, split into train and held-out sets, with the best description picked by held-out score. Its folders (`agents`, `scripts`, `eval-viewer`, `references`) were read from its `SKILL.md`. Treat its details as upstream behavior and read them there; the pack's own trigger-eval procedure is in `skill-creation-workflow`.
 
 ## How an agent should apply this
 - Run the five admission questions first; stop at the first honest "no".

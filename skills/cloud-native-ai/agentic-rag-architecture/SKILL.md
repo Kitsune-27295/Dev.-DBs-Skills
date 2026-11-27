@@ -1,88 +1,82 @@
 ---
 name: agentic-rag-architecture
-description: Use when designing, reviewing, or evaluating an AI Agent, LLM Workflow, or Retrieval-Augmented Generation (Standard RAG vs Agentic RAG) system — choosing the minimum complexity tier (Direct Call, Deterministic Workflow, Single Agent with Tools, Multi-Agent Orchestration), designing tool contracts (ACI), hybrid indexing/chunking pipelines, loop guardrails, and scientific RAG/Agent evaluation. Synthesizes Anthropic and Microsoft Azure AI Architecture guidelines.
+description: "Choose and design the smallest AI system that works for a task needing retrieval or tool use: a direct call, standard RAG, a deterministic workflow, one agent with retrieval tools (agentic RAG) or multi-agent orchestration. Covers when agentic RAG earns its latency and cost, retrieval exposed as a typed tool, an ingest pipeline with hybrid search, access control enforced in the index query, loop caps, and staged evaluation (retrieval, tool selection, groundedness, cost). Not for picking model tiers or delegation briefs (use `model-effort-routing`) or for running a team of agents (use `multi-agent-coordination`). Use when designing, reviewing or evaluating a RAG, agent or LLM-workflow architecture, or when deciding whether a RAG feature needs an agent at all."
 ---
 
-# Agentic & RAG (Retrieval-Augmented Generation) Architecture
+# Agentic & RAG Architecture
 
-One idea: **start with the lowest level of complexity that reliably solves the problem** — a single augmented LLM call or a deterministic **Workflow** before an autonomous **Agent**, and **Standard RAG** before **Agentic RAG** — escalating to dynamic tool-calling loops or multi-agent orchestration only when multistep reasoning, dynamic source selection, or query decomposition provably earns the extra latency, token cost, and failure modes. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: **start at the lowest rung of complexity that meets your evaluation metrics**: one augmented call or a deterministic workflow before an agent, standard RAG before agentic RAG, one agent before several. Climb only when a failing evaluation shows the cheaper rung cannot do the job. Sources, retrieved statuses and unadopted claims: [references/sources.md](references/sources.md).
 
-## Vocabulary (Anthropic & Microsoft Azure AI Architecture)
+Boundaries (one owner per rule): the five Anthropic workflow patterns and the workflow-versus-agent distinction live in `model-effort-routing` (`references/workflow-vs-agent-patterns.md`); this skill uses them and does not restate them. Running a group of agents (board, roles, stall monitor) is `multi-agent-coordination`. Document-level security principles are `never-trust-the-client` and `security-audit`; stage-by-stage ingest design uses `pipes-and-filters-pattern`.
 
-| Term | Meaning | Test sentence |
+## 1. Vocabulary
+
+| Term | Meaning |
+|---|---|
+| Augmented LLM | The base unit: a model with retrieval, tools and memory (Anthropic). Every workflow and agent is built from it. |
+| Standard RAG | Fixed pipeline: query, search, build prompt, generate. The designer, not the runtime, decides whether to search, which index and how many steps (Microsoft). |
+| Agentic RAG | The agent treats retrieval as a tool it can call, decompose queries, pick sources, judge results and re-query, in a ReAct-style loop (Microsoft). |
+| ACI | Agent-computer interface: tool names, parameters, descriptions and error text as the model sees them. Worth as much design effort as a human UI (Anthropic). |
+| Hybrid search | Keyword plus vector search, optionally with semantic ranking; one of the index modes the Microsoft guides list. |
+
+## 2. The escalation ladder (this skill's synthesis)
+
+Microsoft's own ladder has three levels (direct call, single agent with tools, multi-agent). The five rungs below split the middle using Anthropic's vocabulary; the split is this skill's choice, not a vendor taxonomy.
+
+1. **Direct call** with a good prompt and examples. If prompting solves it, there is no agent.
+2. **Standard RAG** when one search against one index resolves the query.
+3. **Deterministic workflow** (chain, route, parallelize, orchestrator-workers, evaluator-optimizer: patterns in `model-effort-routing`) when the steps or categories are known in code.
+4. **Single agent with tools, including agentic RAG.** Microsoft calls this often the right default for enterprise use and easier to debug than multi-agent; set iteration limits.
+5. **Multi-agent orchestration** only when one agent fails from prompt complexity, tool overload or separate security boundaries. Pattern choice: [multi-agent orchestration selection](references/multi-agent-orchestration-selection.md).
+
+**Agentic RAG pays off** for five reasons the Microsoft guide lists: multistep reasoning, dynamic source selection, query decomposition, iterative refinement, and retrieval combined with actions. If none applies, stay on rung 2. Every reasoning step adds latency, tokens and complexity; the guide's illustrative figures are 2 to 3 seconds for one search plus one generation against 8 to 15 seconds for three to five tool calls.
+
+## 3. Rules
+
+1. **Retrieval is a scoped tool.** Name the data source, say when to use it, type the parameters (`query`, `top_k`, filters), describe the return shape. One tool for one uniform index; one tool per distinct source or strategy otherwise. Keep total tools below 20 (Microsoft's figure); this skill's own, stricter heuristic is 3 to 7 task-oriented tools. Details: [agentic RAG tools, loop and evaluation](references/agentic-rag-tools-loop-and-evaluation.md).
+2. **Design the ACI against model mistakes.** Pick formats cheap for the model, test tools with varied inputs, reshape arguments so errors are hard (poka-yoke). Details: [ACI tool design](references/agent-computer-interface-tool-design.md).
+3. **Build ingest as a staged pipeline:** extract and parse, chunk, enrich, embed, index. Keep document structure, attach source and access metadata per chunk, store title and URL fields so answers can cite. Details and phase questions: [RAG pipeline design](references/rag-pipeline-design-and-governance.md).
+4. **Enforce access in the index query.** Document-level security filters at retrieval time, never only in the prompt; treat retrieved text as untrusted input (prompt injection can ride in on documents).
+5. **Use hybrid search where exact identifiers matter** (SKUs, error codes, clause numbers). The reason is lexical matching, which vector-only similarity does not guarantee; this is the skill's inference, not a measured claim from the pages read.
+6. **Bound every loop:** cap tool calls per request (the guide calls 5 to 10 typical), budget tokens, set timeouts and a fallback, and gate consequential or destructive actions behind a human.
+7. **Do not adopt a framework blind.** Anthropic advises starting with direct API calls and reading the prompts and responses any framework sends.
+
+## 4. Evaluate in stages
+
+| Stage | Question | Method |
 |---|---|---|
-| Augmented LLM | the foundational building block: an LLM equipped with retrieval, tools, and memory | "every workflow and agent is composed of augmented LLM calls" |
-| Workflow vs. Agent (Anthropic) | **Workflow**: LLMs and tools are orchestrated through **predefined, deterministic code paths**; **Agent**: the LLM **dynamically directs its own process and tool usage** in a loop | "if you know the exact sequence of steps in advance, write a Workflow in code, not an autonomous Agent" |
-| Standard RAG | a fixed pipeline (`Query -> Retrieve top-N from index -> Augment prompt -> Generate grounded answer with citations`) | "fast, predictable, 1 retrieval pass + 1 LLM generation call" |
-| Agentic RAG | the agent treats **retrieval as one or more callable tools**, dynamically decomposing complex questions, selecting across heterogeneous sources, evaluating intermediate results, and re-querying if gaps remain | "handles multi-hop questions across multiple indexes/APIs at higher latency and cost" |
-| Agent-Computer Interface (ACI) | the ergonomics of tool names, descriptions, parameter schemas, and error messages presented to the model | "invest as much engineering effort in ACI tool design as in human UI/UX" |
-| Hybrid Search Index | combining **Vector search** (semantic similarity via embeddings), **Full-Text keyword search** (BM25 exact terms/SKUs/acronyms), and **Semantic Reranking** | "consistently outperforms vector-only or keyword-only retrieval in enterprise RAG" |
+| Retrieval | Did the index return the right chunks (recall, precision)? | Labeled query set, including queries the corpus does not cover |
+| Tool selection | Right tool, valid arguments? | Queries with expected tool calls |
+| Retrieval efficiency | Calls per request on easy queries | Trace counts |
+| Groundedness | Are answer claims supported by the retrieved text? | Rubric or evaluator against the chunks |
+| Latency and cost | Per-component latency; tokens and search calls per request, against a standard-RAG baseline | Tracing every reasoning step |
 
-## The Complexity Escalation Ladder (Check before building)
+Evaluate each phase on its own to tune it, but accept the system on the end-to-end result, which is what users see. Keep the agentic path only if the quality gain over the baseline justifies its latency and cost.
 
-Always climb one rung at a time and stop at the first rung that meets your evaluation metrics:
+## 5. Mistakes to catch
 
-1. **Level 0 — Direct Model Call + In-Context Prompting:** Single LLM call with clear instructions and few-shot examples. Zero tools, zero agent loop.
-2. **Level 1 — Standard RAG (Deterministic Retrieval Pipeline):** Fixed retrieve-augment-generate flow over a hybrid index when the query maps cleanly to a single search pass.
-3. **Level 2 — Deterministic LLM Workflows (Anthropic's 5 Patterns):**
-   - **Prompt Chaining:** Sequential steps ($A \to \text{code gate} \to B$) where code checks intermediate output programmatically.
-   - **Routing:** Classify input intent and route to a specialized prompt, tool, or smaller/faster model.
-   - **Parallelization:** **Sectioning** (independent subtasks run in parallel) or **Voting** (multiple passes aggregated for high-stakes accuracy).
-   - **Orchestrator-Workers:** Central LLM breaks an unpredictable task into dynamic subtasks (e.g., files to edit, sources to search) and synthesizes worker results.
-   - **Evaluator-Optimizer:** One LLM generates a draft while an evaluator LLM critiques against a rubric in a bounded loop.
-4. **Level 3 — Single Agent with Tools (including Agentic RAG):** One model reasoning in a bounded tool-call loop (`Reason -> Call Tool -> Observe -> Repeat or Answer`). This is the right default for open-ended single-domain enterprise assistants.
-5. **Level 4 — Multi-Agent Orchestration (Azure's 5 Topologies):** Only when a single agent suffers from tool overload (>15-20 tools), excessive prompt complexity, or strict per-agent security boundaries:
-   - **Sequential** (pipeline of specialist agents), **Concurrent** (fan-out/fan-in perspectives), **Group Chat / Maker-Checker** (collaborative validation with a thread manager), **Handoff** (triage transfers control to a specialist), or **Magentic** (dynamic task ledger built and refined on the fly for open-ended problems).
-
-## Core architectural rules and invariants
-
-1. **Design Retrieval as an explicit, well-scoped Tool in Agentic RAG:**
-   - Write crystal-clear tool descriptions specifying **what data source** the tool queries, **when to use it** (and when *not* to), and **what format** it returns.
-   - Use **one retrieval tool** when querying a single unified index; use **separate retrieval tools per distinct data domain** (e.g., `search_product_catalog`, `search_regulatory_recalls`, `query_live_order_status_api`) so the agent selects only relevant sources.
-2. **Engineer the Agent-Computer Interface (ACI) against model mistakes (Poka-Yoke):**
-   - Give the model enough tokens to think before acting.
-   - Use natural formats close to training data (Markdown, clean JSON without double-escaped strings; absolute paths instead of relative paths; full block replacements or anchored edits instead of raw line-number diffs).
-   - Return actionable, concise tool error messages (never raw 200-line stack traces) and cap tool output size with pagination/filtering so one tool result does not blow up the context window.
-3. **Build the RAG Data Ingestion Pipeline as a rigorous `pipes-and-filters-pattern`:**
-   - **Extract & Parse:** Preserve document structure (headings, tables, lists, metadata).
-   - **Chunk by semantic/structural boundaries:** Keep tables and code blocks intact; attach parent-section context and metadata (`source_uri`, `updated_at`, `tenant_id`, `acl_roles`) to every chunk.
-   - **Enrich & Embed:** Clean noise, generate summaries/keywords, and compute embeddings using the same embedding model at index and query time.
-   - **Index for Hybrid Search:** Configure keyword (BM25) + vector fields + metadata filter fields.
-4. **Enforce Document-Level Security and Tenant Isolation at the Search Index Query:** Never rely on the LLM prompt ("do not show data from other users") to enforce access control! Pass the authenticated caller's `tenant_id` and security principal claims as **hard pre-filters on the search index / database query** inside the retrieval tool (`never-trust-the-client`, `security-audit`).
-5. **Bound every Agentic Loop with hard guardrails:** Always enforce `maxIterations` / `maxToolCalls`, per-tool timeouts, token/cost budgets per request, and human-in-the-loop confirmation gates before any consequential, external, or destructive tool action.
-
-## Evaluation and verification strategy (Scientific RAG & Agent Evals)
-
-| Phase / Metric | What it verifies | How to measure |
-|---|---|---|
-| **1. Retrieval Evaluation** (before touching the LLM prompt) | Recall@K, Precision@K, NDCG — did the index return the right grounding chunks? | Curated golden query-to-chunk test set across representative and adversarial queries |
-| **2. Tool Selection Accuracy** (Agentic RAG) | Did the agent pick the right retrieval tool(s) and form valid query arguments without redundant calls? | Trace assertions on `expected_tools_called` and **Retrieval Efficiency** (calls per query) |
-| **3. Groundedness & Citation Faithfulness** | Is every claim in the answer supported by the retrieved context (zero hallucination), with accurate source citations? | Automated evaluator / rubric check comparing answer statements strictly against retrieved chunks |
-| **4. End-to-End Latency & Cost per Request** | P50/P95 latency and total input/output tokens across all reasoning turns | Production OpenTelemetry tracing per agent turn and tool invocation |
-
-## Mistakes to catch
-
-- **Using Multi-Agent Orchestration or Agentic RAG where Standard RAG or a Prompt Chain suffices:** Paying 3-5x latency and token cost for an agent to "decide" to run the exact same search query on every request.
-- **Framework Opacity Trap (Anthropic):** Adopting heavy multi-layered agent frameworks without reading the underlying prompts and tool schemas they send to the model. Start with direct SDK calls (20 lines of code); if you use a framework, inspect the raw model requests.
-- **Dumping 50 fine-grained REST endpoints as 50 raw Agent Tools:** Overwhelming the model's tool selector. Consolidate related low-level calls into 3-7 high-signal, task-oriented tools with clear ACI documentation.
-- **Vector-Only Search for exact identifiers:** Using pure embedding similarity when users search for exact SKU codes, error codes, legal clauses, or names — always use **Hybrid Search (BM25 + Vector + Reranker)**.
-- **Unbounded Agent Loops and Context Bloat:** Letting an agent retry a failing search 20 times or inject 100 KB of raw HTML/JSON into its conversation history until latency, cost, and accuracy collapse.
-
+- Agentic RAG or multi-agent where standard RAG or a chain suffices (the same search run on every request).
+- Dozens of fine-grained endpoints exposed as raw tools; consolidate into few task-oriented ones.
+- Vector-only search for exact identifiers.
+- Access control written as a prompt instruction.
+- Unbounded retries and raw payloads in history until cost and accuracy collapse.
+- Tuning chunking or prompts before any labeled query set exists.
 
 ## Quick Decision Checklist
 
-- [ ] Have I stopped at the lowest complexity rung that meets the evaluation metrics?
-- [ ] If the step sequence is known in advance, am I writing a Workflow in code instead of an Agent?
-- [ ] Does multi-agent or Agentic RAG earn its latency and cost over Standard RAG or a prompt chain?
-- [ ] Does retrieval use hybrid search (BM25 + vector + reranker), especially for exact identifiers?
-- [ ] Are tenant and access filters enforced as hard pre-filters on the index query, not in the prompt?
-- [ ] Is every agent loop bounded by max iterations, timeouts, cost budgets and confirmation gates?
-- [ ] Are tools few, task-oriented and clearly described, with concise errors and capped output?
-- [ ] Have I evaluated retrieval first, then tool selection, groundedness, and latency and cost?
+- [ ] Did I stop at the lowest rung that meets the evaluation metrics?
+- [ ] Do the steps need to be decided at runtime, or can code fix them?
+- [ ] Does one of the five agentic-RAG reasons apply, with a measured failure of the fixed pipeline?
+- [ ] Are retrieval tools scoped, typed, few, and do they return metadata for citation?
+- [ ] Are access filters in the index query, tested with a user who must not see a document?
+- [ ] Is every loop capped by calls, tokens, time and a fallback?
+- [ ] Do I have a labeled query set and a standard-RAG baseline before tuning?
 
 ## Deep references
 
-- [Workflow Patterns and Tool (ACI) Design](references/workflow-patterns-and-tool-interface-design.md) — read when choosing among chaining/routing/parallel/orchestrator/evaluator patterns or designing retrieval tool signatures.
-- [Multi-Agent Orchestration: Selection and Safeguards](references/multi-agent-orchestration-selection.md) — read when considering more than one agent: use/avoid rules, context, state, reliability.
-- [RAG Pipeline Design, Evaluation Phases and Governance](references/rag-pipeline-design-and-governance.md) — read when designing or tuning the ingest and retrieval pipeline, access control and cost.
-- [Agentic RAG: Retrieval Tools, Loop Control, Evaluation](references/agentic-rag-tools-loop-and-evaluation.md) — read when exposing retrieval as agent tools, capping loops, or evaluating tool selection and cost.
+- [references/agent-computer-interface-tool-design.md](references/agent-computer-interface-tool-design.md): tool format and poka-yoke rules; read when writing or fixing tool signatures.
+- [references/agentic-rag-tools-loop-and-evaluation.md](references/agentic-rag-tools-loop-and-evaluation.md): retrieval as a tool, loop control, evaluation dimensions; read when exposing retrieval to an agent.
+- [references/rag-pipeline-design-and-governance.md](references/rag-pipeline-design-and-governance.md): ingest and retrieval phases, security, cost; read when designing or tuning the pipeline.
+- [references/multi-agent-orchestration-selection.md](references/multi-agent-orchestration-selection.md): Microsoft's five orchestration patterns with use and avoid rules; read before adding a second agent.
+- [references/trigger-evals.md](references/trigger-evals.md): should-trigger and near-miss prompts for the description.
+- [references/sources.md](references/sources.md): every URL with retrieved status, reading limits, claims not adopted.

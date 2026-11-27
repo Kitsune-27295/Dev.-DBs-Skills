@@ -1,6 +1,6 @@
 # Force-Push Safety: --force-with-lease, --force-if-includes, --force
 
-Sources: https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-lease · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · Last verified 2026-11-23
+Sources: https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-lease · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · Last verified 2026-11-27
 
 ## Why a push is rejected
 
@@ -12,7 +12,7 @@ A branch update from A to B is a fast-forward only if B descends from A. If you 
 |---|---|---|
 | `--force` / `-f` | disables the non-fast-forward check and the lease checks; the remote may lose commits | applies to **all** refs pushed (with `push.default=matching` or several destinations it can overwrite other branches) |
 | `--force-with-lease` | forced update only if the remote ref still has the value you expect | protection depends on what "expected" means (below) |
-| `--force-if-includes` | extra check: the remote-tracking tip must be reachable from your local reflog, i.e. you integrated what you fetched | only meaningful together with bare or `=<ref>` lease |
+| `--force-if-includes` | extra check: the remote-tracking tip must be reachable from your local reflog, i.e. you integrated what you fetched | a no-op unless combined with the bare or `=<ref>` lease form (also a no-op with the explicit `<ref>:<expect>` form); `push.useForceIfIncludes=true` makes it the default |
 
 Lease forms:
 - `--force-with-lease`: expect each updated ref to equal its remote-tracking branch.
@@ -33,7 +33,7 @@ The lease compares against your remote-tracking refs. If an IDE or cron job runs
 
 ## Server-side limits
 
-Forcing cannot override server settings such as `receive.denyNonFastForwards`, tags reject all updates, and branches only accept commits. Protected branches on hosting platforms typically refuse force-push (inference: host-specific).
+Forcing cannot override server settings such as `receive.denyNonFastForwards` (the page says so). Protected branches on hosting platforms typically refuse force-push (inference: host-specific).
 
 ## Recommended command
 

@@ -1,6 +1,6 @@
 # Research Skills Compared
 
-Sources: https://www.aihero.dev/skills-research · https://github.com/Weizhena/Deep-Research-skills · https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://mcpmarket.com/tools/skills/deep-web-researcher · https://github.com/sanjay3290/ai-skills · https://skillselion.com/research-skills · Last verified 2026-11-24
+Sources: https://www.aihero.dev/skills-research · https://github.com/Weizhena/Deep-Research-skills · https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://mcpmarket.com/tools/skills/deep-web-researcher · https://github.com/sanjay3290/ai-skills · https://skillselion.com/research-skills · Last verified 2026-11-27
 
 Seven public research skills were read (the Medium comparison article returned HTTP 403 and could not be read; the skillselion directory page held no skill list). Licenses visible: Weizhena MIT, 199-biotechnologies MIT, robertnowell MIT, sanjay3290 Apache-2.0. The MCP Market page showed only a summary (author doodledood, repo claude-code-plugins); its internals were not readable, so its row is thin.
 

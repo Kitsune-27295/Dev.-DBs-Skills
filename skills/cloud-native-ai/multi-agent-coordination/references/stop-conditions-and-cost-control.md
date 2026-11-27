@@ -1,15 +1,15 @@
 # Stop Conditions and Cost Control
 
-Sources: https://www.anthropic.com/engineering/multi-agent-research-system · https://www.anthropic.com/research/building-effective-agents · https://code.claude.com/docs/en/agent-teams · https://code.claude.com/docs/en/sub-agents · Last verified 2026-11-24
+Sources: https://www.anthropic.com/engineering/multi-agent-research-system · https://www.anthropic.com/research/building-effective-agents · https://code.claude.com/docs/en/agent-teams · https://code.claude.com/docs/en/sub-agents · Last verified 2026-11-27
 
 Boundary: numeric budgets, quota-aware agent counts, effort and escalation rules are owned by `model-effort-routing`. This file only says which stop conditions and caps a coordinated run needs, and what the sources say about failure and resumption.
 
 ## Cost drivers specific to groups
 
 - Each member is a separate context; token use scales with the number of active members, and every post is read by every other reader who sees it. Idle members still cost nothing, but chatty ones do.
-- Reported figures (vendor, their own workloads): agents about 4x chat tokens, multi-agent about 15x; token usage explained most of the performance variance on one benchmark. Reading: spending more tokens helps, but only on tasks valuable enough; more members past the independent pieces does not help.
+- Vendor token multipliers and their caveats are tracked in `model-effort-routing` (`references/claims-vs-evidence-on-savings.md`). Reading for groups: spending more tokens helps only on tasks valuable enough; members beyond the independent pieces do not help.
 - Team docs: tokens scale linearly with teammates, coordination overhead grows, returns diminish. Their advice: three focused members often beat five scattered ones; routine tasks belong to one session.
-- In one product, background members' prompt cache lasts a short default time, which makes sporadic long-idle members expensive to wake; keep members either busy or finished (product detail, may change).
+- In Claude Code, an in-process teammate's prompt cache holds five minutes by default (one hour with a setting, billed at a higher write rate), which makes sporadic long-idle members expensive to wake; keep members either busy or finished (product detail, may change).
 
 ## Stop conditions (set before launch)
 

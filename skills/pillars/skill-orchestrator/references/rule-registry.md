@@ -1,6 +1,6 @@
 # Rule Registry (Single Source of Truth for Rule Ids)
 
-Sources: all files listed in the Owner column, plus the source list in [sources.md](sources.md) · Last verified 2026-11-24
+Sources: all files listed in the Owner column, plus the source list in [sources.md](sources.md) · Last verified 2026-11-27
 
 Registry method (id, canonical sentence, owner, agreement, confidence): `ssot-and-dry`. `SKILL.md` and the references cite the id; change the owner file and its row, nothing else.
 
@@ -32,7 +32,7 @@ Files: SKILL = [../SKILL.md](../SKILL.md) · CMO = [claude-md-official-guidance-
 | VER-01 | Write each rule so it can be checked: a command, a path, a number. | CMO section 2 | KPA | agree | high | advisory instruction |
 | EMP-01 | Do not rely on capital-letter emphasis on current models; shorten the file or move the rule to a hook. | CMO section 5 | CTX, KAU (claimed by a blog) | conflict: the 2025 article tuned adherence with emphasis; superseded by the 2026 docs | medium-high | hook (moving it) |
 | ENF-01 | A rule the model keeps missing, a rule with zero exceptions, or a rule a command can check belongs in a hook, deny rule or managed setting; judgment stays prose; keep the enforced set small. | CMO section 4 | KPA, KAU, CTX | agree; one blog repeats it without a primary link | high | hook, permission, test |
-| ENF-02 | Only command, http and tool hooks are deterministic; hooks that ask another model are not. | CMO section 4 | none | docs only | high | hook |
+| ENF-02 | Only command, http and mcp_tool hooks are deterministic; hooks that ask another model are not. | CMO section 4 | none | docs only | high | hook |
 | ENF-03 | `.claude/rules/` files are loaded text: they scope guidance, they do not enforce it. | CMO section 4 | MEM section 3 | partly differs from the claim "mandatory rules belong in rules files" | high | none |
 | CHK-01 | Verify what loaded and whether a rule fires: `/context all`, `/memory`, an `InstructionsLoaded` hook, `/doctor prompt-audit` (v2.1.283+), and a behavioral test; a rule never observed is unverified. | CMO section 6 | MEM, AGM | agree; version-sensitive | high | hook (logging), test |
 | VAL-01 | Instruction files sit below safety and ethics in the value ordering; a CLAUDE.md line cannot be assumed to override them. | CMO section 7 | none | inference from the constitution's ordering | medium | none |
@@ -119,3 +119,7 @@ Rules that were stated in more than one reference were cut from the less authori
 - Include and exclude list, size, placement, single source, audit steps (INC-01, VER-01, SIZE-01, PLC-01, SSOT-01, SSOT-02, KP-04): owners CMO, CTX, AGM and KAU; the body keeps one line each.
 - Primary-source status of the Karpathy file (KP-01): owner KPA; the body keeps a pointer.
 - Router rules and the spec table (RT-01 to RT-05, META-01, META-02, SPEC-01 to SPEC-05): owners DESC, META and SPEC; the body keeps four numbered lines and a one-line summary of the spec limits.
+
+## Re-verified on 2026-11-27
+
+Every version-gated rule (SIZE-01, LIM-01, IMP-01, AGM-02, CHK-01, EMP-01, ENF-02) was re-read against the memory and best-practices pages; no rule id, owner or limit changed. ENF-02 now names `mcp_tool` instead of "tool". Not re-checked: PDF guide text (binary fetch), blocked pages.

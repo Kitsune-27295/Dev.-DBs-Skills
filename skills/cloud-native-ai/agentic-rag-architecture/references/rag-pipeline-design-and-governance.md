@@ -1,6 +1,6 @@
 # RAG Pipeline Design, Evaluation Phases and Governance
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide · https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide · https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation · Last verified 2026-11-27
 
 The first page is the intro of a series; the per-phase sub-articles (chunking, embeddings, etc.) were not read, so only the intro's phase list is used here.
 

@@ -1,6 +1,6 @@
 # Measured vs Claimed: What the Evidence Actually Supports
 
-Sources: https://github.com/owid/skills/blob/main/FAQ.md · https://github.com/pedrohcgs/claude-code-my-workflow/blob/main/.claude/rules/model-routing.md · https://github.com/imbad0202/academic-research-skills (README, shared/model_tiering.md) · https://github.com/vishalsachdev/claude-skills (allocate-agent-models/SKILL.md) · https://github.com/masskrdjn/claudeskills · https://github.com/softspark/ai-toolkit/blob/main/app/skills/model-routing-patterns/SKILL.md · Last verified 2026-11-23
+Sources: https://github.com/owid/skills/blob/main/FAQ.md · https://github.com/pedrohcgs/claude-code-my-workflow/blob/main/.claude/rules/model-routing.md · https://github.com/imbad0202/academic-research-skills (README, shared/model_tiering.md) · https://github.com/vishalsachdev/claude-skills (allocate-agent-models/SKILL.md) · https://github.com/masskrdjn/claudeskills · https://github.com/softspark/ai-toolkit/blob/main/app/skills/model-routing-patterns/SKILL.md · Last verified 2026-11-27
 
 Purpose: separate the few observations that are measured from the many routing numbers that are opinion, so a routing skill does not hard-code folklore.
 
@@ -27,7 +27,7 @@ Implication for routing (my inference): an effort floor is a correctness setting
 | Advisor-checkpoint setup reached ~90% of frontier-solo quality at ~34% tokens | ARS citing an external write-up | Secondary claim on ML-tuning tasks; ARS itself warns it may not transfer to prose |
 | Stronger models' value concentrates at mid-task re-ranking and verification rather than upfront planning | ARS (same source) | Secondary claim; used to justify lifting only judgment gates |
 | Same-tier challenger and auditor share blind spots | pedrohcgs | Reasoning; no data |
-| Fable is 2x Opus price and runs longer turns; Fable starts at `high` | Getty; masskrdjn says 2.5x | Repos disagree on the multiple (2x vs 2.5x); check current price page |
+| Fable is 2x Opus price and runs longer turns; Fable starts at `high` | Getty; masskrdjn says 2.5x | List prices (vendor pricing page, 2026-11-27): Fable 5.2 $8/$40 vs Opus 5.5 $4/$20 is 2x; Fable 5.1 $10/$50 vs Opus 5 $5/$25 is 2x. The 2.5x figure matches Fable 5.1 against Opus 5.5 only. Default effort: `high` on the API, `medium` in Claude Code for Fable 5.2 |
 | Sonnet 5.5 effort levels are recalibrated vs Sonnet 5; re-sweep evals rather than carrying a setting over | masskrdjn citing vendor prompting guide | Vendor guidance via third party |
 | Fable is the right move when evals at higher Opus effort still fall short | pedrohcgs citing Anthropic guidance | Vendor guidance via third party |
 | Local policies (Sol/Terra/Luna allocation, failure counts) | Vishal | Explicitly unvalidated starting policy; OpenAI scope only |

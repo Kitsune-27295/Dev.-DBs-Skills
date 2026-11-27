@@ -1,6 +1,6 @@
 # Cross-Review, Merge and Conflicts
 
-Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/research/building-effective-agents · https://cognition.com/blog/dont-build-multi-agents · https://www.anthropic.com/engineering/multi-agent-research-system · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/research/building-effective-agents · https://cognition.com/blog/dont-build-multi-agents · https://www.anthropic.com/engineering/multi-agent-research-system · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-27
 
 ## Why review across members
 

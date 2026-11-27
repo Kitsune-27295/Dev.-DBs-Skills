@@ -1,12 +1,12 @@
 # Tool Selection and Fallback Ladder
 
-Sources: Firecrawl repository snapshot (AGPL-3.0), path skills/firecrawl-build/references/endpoint-selection.md (escalation order); path skills/firecrawl-build-scrape/SKILL.md and references/freshness-and-liveness.md (cache and liveness); path skills/firecrawl-build-search/SKILL.md; path apps/api/src/controllers/v2/scrape.ts and parse.ts (error classes, rate-limit status); path apps/api/src/controllers/v2/types.ts (map, crawl, search parameters). Ladder design is our own; clean-room, no code or prose copied (AGPL-3.0 vs MIT) · Last verified 2026-11-24
+Sources: Firecrawl public docs read 2026-11-27 (rate-limits, billing, scrape, search, map, crawl, mcp-server pages), summarized in `firecrawl-tool-surface-analysis.md`; ladder design is our own. Clean-room, no code or prose copied · Last verified 2026-11-27
 
 ## The ladder
 
 | Tier | Tool set | Use when | Strengths | Weaknesses |
 |---|---|---|---|---|
-| 1 | Firecrawl (MCP or CLI), only if present and credited | JS-heavy pages, many pages, structured output, PDFs, cached speed, interact | rendering, proxies, formats, map/crawl, paper and developer indexes | credits, rate limits, per-site blocks |
+| 1 | Firecrawl (MCP or CLI), only if present and credited; keyless access covers only search, scrape and parse | JS-heavy pages, many pages, structured output, PDFs, cached speed, interact | rendering, proxies, formats, map/crawl, paper and developer indexes | credits, rate limits, per-site blocks |
 | 2 | Native WebSearch + WebFetch | tier 1 missing, exhausted or overkill; ordinary static pages | no setup, cheap, good summaries | summary instead of raw text, short cache, no crawl, no interaction, sometimes blocked |
 | 3 | curl + pdftotext (plus public APIs, sitemaps, RSS) | tiers 1-2 failed on a page, PDFs, raw files, APIs | exact bytes, scriptable, no summarizer | no rendering, manual cleanup, you must be polite |
 
@@ -17,7 +17,7 @@ Rule: escalate per page, not per session. One blocked page does not demote the w
 | Situation | Choose | Why |
 |---|---|---|
 | You know the URL | read-page | search adds noise and cost |
-| You know the site, not the page | map-site with a keyword (tier 1) or site-restricted search | finds the page without reading the site |
+| You know the site, not the page | map-site with a keyword (tier 1, needs an account) or site-restricted search | finds the page without reading the site |
 | You need 1-5 specific facts | targeted search then read the best 2-4 pages | cheapest path |
 | You need everything in one docs section | crawl-section with path scope and a page cap (tier 1), or hand-picked reads from its index page | crawl is high cost; justify it |
 | Literature or code-behavior question | category/domain filtered search, paper or developer index, or primary repositories and issue trackers | primary evidence beats blogs |
@@ -53,7 +53,7 @@ max 3 attempts per URL; max 1 retry per tier
 
 ## Credit-exhausted and rate-limit behavior
 
-- A credit or quota message (often 402 or a plan-limit text) means stop calling that tier for the rest of the session unless the user tops up; note it once, drop to tier 2, and tell the user what coverage was lost (rendering, crawl, interact).
+- A credit or quota message (the docs read give no status code for it, so go by the message text) means stop calling that tier for the rest of the session unless the user tops up; note it once, drop to tier 2, and tell the user what coverage was lost (rendering, crawl, interact).
 - A 429 or "too many requests" means slow down: wait with doubling delay (for example 5 s, 15 s, 45 s), reduce parallelism to 1-2 on that host, honor any retry-after hint. After two backoffs switch tier or source for that host.
 - Keep a per-host failure counter; after 3 failures stop touching that host and say so.
 - Never rotate identities or hide the client to dodge limits.

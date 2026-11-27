@@ -1,6 +1,6 @@
 # Stamping, Supersede and the Sweep Report
 
-Sources: https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · https://github.com/joelparkerhenderson/architecture-decision-record · https://adr.github.io/adr-templates/ · https://code.claude.com/docs/en/memory · https://arxiv.org/html/2605.26112 · Last verified 2026-11-24
+Sources: https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · https://github.com/joelparkerhenderson/architecture-decision-record · https://adr.github.io/adr-templates/ · https://code.claude.com/docs/en/memory · https://arxiv.org/html/2605.26112 · Last verified 2026-11-27
 
 ## Stamp fields
 

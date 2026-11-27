@@ -1,6 +1,6 @@
 # Context Engineering Applied to Instruction Files
 
-Sources: https://www.anthropic.com/research/effective-context-engineering-for-ai-agents (Anthropic Engineering, published 2025-09-29) · https://code.claude.com/docs/en/best-practices · https://code.claude.com/docs/en/memory · https://github.com/TechSpokes/agency-specifications-files-agents-md (secondary, ordering idea only) · Last verified 2026-11-24
+Sources: https://www.anthropic.com/research/effective-context-engineering-for-ai-agents (Anthropic Engineering, published 2025-09-29) · https://code.claude.com/docs/en/best-practices · https://code.claude.com/docs/en/memory · https://github.com/TechSpokes/agency-specifications-files-agents-md (secondary, ordering idea only) · Last verified 2026-11-27
 
 Boundary: general context-engineering theory is owned by `agent-skills-context-engineering` (section 2) and model/effort and cost routing by `model-effort-routing`. This file only places instruction-file content; every mechanism it names is owned by the file linked in the table, and the rule ids are in [rule-registry.md](rule-registry.md).
 

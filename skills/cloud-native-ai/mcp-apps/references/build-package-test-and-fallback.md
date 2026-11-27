@@ -1,10 +1,10 @@
 # Build, Package, Test and Fallback
 
-Sources: https://modelcontextprotocol.io/extensions/apps/build · https://modelcontextprotocol.io/extensions/apps/overview · https://github.com/modelcontextprotocol/ext-apps · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://apps.extensions.modelcontextprotocol.io/api/documents/Patterns.html · Last verified 2026-11-24
+Sources: https://modelcontextprotocol.io/extensions/apps/build · https://modelcontextprotocol.io/extensions/apps/overview · https://github.com/modelcontextprotocol/ext-apps · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://apps.extensions.modelcontextprotocol.io/api/documents/Patterns.html · Last verified 2026-11-27
 
 ## Project shape (public build guide)
 
-A typical project separates server and UI: a server file that registers the tool and serves the resource, an HTML entry file, a UI script, a bundler config, and a build script that emits one HTML file. Prerequisites: Node.js 20 or newer, familiarity with MCP tools and resources, and the TypeScript MCP SDK. Install the SDK package plus the MCP SDK; the guide's dev tooling is TypeScript, Vite and a single-file plugin, plus an HTTP framework for the endpoint. Any bundler works if you declare external origins in CSP.
+A typical project separates server and UI: a server file that registers the tool and serves the resource, an HTML entry file, a UI script, a bundler config, and a build script that emits one HTML file. Prerequisites: Node.js 20 or newer, familiarity with MCP tools and resources, and the TypeScript MCP SDK. Install the SDK package plus the MCP SDK (the package metadata of `ext-apps` 2.x peers on the 2.x `@modelcontextprotocol/core`, `client` and `server` packages and `zod` 4.2+, while the guide's install line names `@modelcontextprotocol/sdk`; check which your version needs); the guide's dev tooling is TypeScript, Vite and a single-file plugin, plus an HTTP framework for the endpoint. Any bundler works if you declare external origins in CSP.
 
 ## Packaging decision
 

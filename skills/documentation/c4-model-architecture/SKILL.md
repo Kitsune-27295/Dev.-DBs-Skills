@@ -1,72 +1,75 @@
 ---
 name: c4-model-architecture
-description: Use when creating, reviewing, or maintaining software architecture diagrams using Simon Brown's C4 Model — zooming across Level 1 (System Context), Level 2 (Container), Level 3 (Component), and Level 4 (Code) plus System Landscape, Dynamic, and Deployment diagrams. Gives the 4 hierarchical abstractions, Simon Brown's diagram notation checklist, Mermaid/Structurizr/PlantUML rules, and common "boxes and lines" mistakes.
+description: Draw, review or fix software architecture diagrams with Simon Brown's C4 model: pick the zoom level (system context, container, component, code), decide what counts as a container, apply the notation rules (title, element type and technology, labeled one-way relationships, legend) and catch mixed-level "boxes and lines" diagrams. Not for Mermaid or PlantUML syntax (see `mermaid`), arc42 chapter structure (see `arc42-api-contracts-architecture`) or recording decisions (see `adr-architecture`). Use when asked for a C4, context, container or component diagram, to review or clean up an architecture diagram, or to decide which levels a system needs.
 ---
 
 # C4 Model (Hierarchical Architecture Diagramming)
 
-One idea: treat architecture diagrams like **Google Maps for your code** — define a strict hierarchy of four abstractions (**Person / Software System**, **Container**, **Component**, **Code**) and zoom in across four matching diagram levels so every audience (business, product, architects, developers) gets a clear, notation-consistent map without mixing abstraction levels on one canvas. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: draw architecture like a map with zoom levels. Four abstractions (person and software system, container, component, code) map to four diagram levels, and each diagram stays at one level and zooms into one element of the level above. Sources, statuses and claims not adopted: [references/sources.md](references/sources.md).
 
-## Vocabulary: The 4 Hierarchical Abstractions (Simon Brown)
+## 1. Abstractions
 
-| Abstraction | Meaning | Test sentence |
+| Abstraction | Meaning | Test |
 |---|---|---|
-| 1. Person | a human role, actor, or persona who uses the software system | "Customer, Admin User, Support Agent" |
-| 2. Software System | the highest level of abstraction that delivers value to users (your system in scope, plus external systems it talks to) | "Internet Banking System, Mainframe Core, SendGrid Email System" |
-| 3. Container | a separately runnable / deployable application or data store inside your Software System (**not** just Docker! A SPA running in a browser, a mobile app, a Node/Go API process, a PostgreSQL DB, an S3 bucket, or a Kafka broker is each a C4 Container) | "if it runs in its own process space or must be deployed/hosted separately, it is a Container" |
-| 4. Component | a logical grouping of related code building blocks running **inside one Container** (a controller + service module, a domain package, a driven adapter) | "lives in the same process; not separately deployable on its own" |
-| 5. Code | the lowest level: classes, interfaces, functions, database tables inside one Component | "usually generated from code/IDE on demand rather than hand-maintained" |
+| Person | a human user of the system (customer, administrator) | "who uses it?" |
+| Software system | the top-level unit that delivers value to users, often owned by one team; external systems are drawn as boxes too | "what would a stakeholder name?" |
+| Container | an application or data store that must be running for the system to work; a runtime boundary, unrelated to Docker | "does it run or hold data on its own?" |
+| Component | a building block inside one container (an authentication module, a card validator) | "does it organize code within one container?" |
+| Code | implementation detail, shown only as the fourth diagram level (usually UML classes, ideally generated) | "would the IDE draw it?" |
 
-## The 4 Core Diagram Levels + 3 Supporting Diagrams
+## 2. Diagram levels
 
-| Diagram | Scope & Zoom Level | What appears on canvas | Target Audience |
+| Diagram | Zooms into | Shows | Audience |
 |---|---|---|---|
-| **Level 1: System Context** | 1 Software System in scope + its environment | The system in scope (1 box in center) surrounded by **People** and **External Software Systems** | Everyone (technical & non-technical: business, product, engineering) |
-| **Level 2: Container** | Zooms inside the 1 Software System from L1 | All **Containers** (web apps, mobile apps, APIs, workers, DBs, queues) inside the system boundary + external People/Systems from L1 | Technical people inside and outside the team (developers, architects, ops) |
-| **Level 3: Component** | Zooms inside **one specific Container** from L2 | The internal **Components** of that single Container + the adjacent Containers/Systems it calls | Developers and architects working on that specific Container |
-| **Level 4: Code** (Optional) | Zooms inside **one Component** from L3 | UML class/interface/ER diagram of one complex Component | Developers implementing that component (only draw when genuinely tricky) |
-| **System Landscape** (Supporting) | Enterprise / portfolio view above L1 | All People and Software Systems across an organization or department | Enterprise architects, leadership, cross-team product |
-| **Dynamic Diagram** (Supporting) | One specific runtime use case / user story | Numbered interactions ($1, 2, 3\dots$) among existing C4 elements (usually at L2 Container or L3 Component level) | Developers & QA tracing a specific request or Saga flow |
-| **Deployment Diagram** (Supporting) | One runtime environment (e.g., Production AWS/K8s) | How **L2 Containers** map onto physical Deployment Nodes (Cloud Regions, VPCs, K8s pods, managed DB instances) | DevOps, SRE, security, and platform engineers |
+| 1 System context | the system in scope | persons and systems around it | technical and non-technical |
+| 2 Container | the one system | its containers, plus the persons and systems around | architects, developers, product |
+| 3 Component | one container | its components, plus neighbors | architects, developers |
+| 4 Code | one component | classes or similar | developers; rarely worth drawing |
 
-## Non-negotiable C4 Diagramming Rules (Brown's Checklist)
+Supporting diagrams: system landscape (several systems), dynamic (one runtime scenario), deployment (how containers map to environments). The source gives guidance only for the four static levels: draw only the levels that add value; context plus container are enough for most teams. Level 3 and 4 are for structure that is not obvious, and Level 4 is best generated, not hand-kept.
 
-1. **Never mix abstraction levels on the same diagram:** Do not draw an L2 Container (e.g., `PostgreSQL Database`) or an L3 Component (e.g., `AuthController`) inside an L1 System Context diagram. And do not draw internal L3 Components of *every* microservice on a single giant L2 Container diagram — zoom into one Container per L3 diagram.
-2. **Every box must carry 3 pieces of metadata (Name + Type/Technology + Short Description):**
-   - Never draw a box labeled just `Backend` or `Order Service`.
-   - Write: **`Order Service`** / `[Container: Go 1.24 / gRPC]` / *"Validates orders, orchestrates checkout sagas, and owns order state."*
-3. **Every arrow must be unidirectional and labeled with intent + technology/protocol:**
-   - Never draw unlabelled lines or vague double-headed `<-->` arrows.
-   - Label the **action** in active voice and the **protocol**: e.g., `Sends order confirmation email using [HTTPS / JSON REST]` or `Publishes OrderPaid events to [Kafka / Avro]`. Indicate the direction of the **call or dependency** (who initiates the request), not just "data flows both ways."
-4. **Every diagram must have a Title, Scope, and Legend/Key:** Anyone opening the diagram cold must immediately see what diagram type/level it is (`[Container] Internet Banking System`) and what every shape, border style (dashed = system boundary), and color means.
-5. **Most teams only need Level 1 and Level 2 (plus Deployment/Dynamic):** Create L1 (System Context) and L2 (Container) for every system. Only create L3 (Component) diagrams for complex containers where internal module structure isn't obvious from the folder tree (`screaming-architecture`), and rarely hand-draw L4 (Code) diagrams because they go stale on every PR.
-6. **Diagrams as Code in Git:** Maintain C4 diagrams as text in the repository (Mermaid `C4Context`/`C4Container` or `flowchart`, Structurizr DSL, or C4-PlantUML) integrated with `arc42-api-contracts-architecture` so diagrams are diffable and updated in PRs alongside structural changes.
+What counts as a container, with rulings: [references/c4-abstractions-and-levels.md](references/c4-abstractions-and-levels.md).
 
-## Building order
+## 3. Notation rules (from the notation page)
 
-1. **Draw Level 1 (System Context) first:** Place the system in the center; list every human Persona/Role and every External System it interacts with. Verify that zero internal databases or microservices leak onto L1.
-2. **Draw Level 2 (Container) second:** Expand the center box into a dashed System Boundary containing every separately runnable process (UI apps, APIs, background workers) and data store (DBs, caches, message brokers), keeping the exact same external People and Systems around the outside for visual continuity.
-3. **Add a Deployment Diagram and 1-2 Dynamic Diagrams:** Show how L2 Containers run in production infrastructure and trace the 1-2 highest-risk runtime flows.
-4. **Add Level 3 (Component) only for monoliths or complex containers:** Zoom into a single Container and map its internal architectural circles/slices (`hexagonal-architecture`, `clean-architecture`, `modular-monolith-architecture`).
+1. **Title with type and scope** on every diagram ("Container diagram for Orders System").
+2. **Every element** shows its type (Person, Software System, Container, Component), a short responsibility description, and for containers and components the technology.
+3. **Every relationship** is labeled with its purpose, not a bare "Uses", and shows one direction (who calls or depends on whom). Container-to-container lines also name the protocol or technology.
+4. **A key on every diagram** explaining shapes, colors, border styles, line types and arrowheads; spell out acronyms not all readers know.
+5. **Never mix levels:** no container on a context diagram, no components of every service on one container diagram. One component diagram per container.
+6. **Be consistent across the set:** same names and notation everywhere, with a clear reading order from one diagram to the next.
 
-## Mistakes to catch
+Example labels: container `Orders API` [Node.js, REST] -> `Orders DB` [PostgreSQL] with the line "Reads and writes orders" [SQL].
 
-- **Confusing "C4 Container" with "Docker Container":** In C4, a client-side React SPA running in the user's browser, an iOS app, a serverless Lambda function, and a managed RDS Postgres instance are all **Containers** (separately runnable execution or storage units).
-- **The "Homeless Box" / Generic "Business Logic" box:** Drawing a box called `Business Logic` or `Shared Utils` inside a Container diagram when it is actually a library compiled inside an API process (libraries are L3 Components, not L2 Containers).
-- **Drawing a Message Broker or Database as a pass-through line without a Container box:** If Service A writes to a database or publishes to Kafka and Service B reads from it, the Database or Kafka Broker is an **L2 Container** and must be drawn as its own node showing who writes/publishes and who reads/subscribes.
-- **Bidirectional unlabelled arrows (`A <---> B`):** Hides who initiates the connection, what protocol is used, and whether the coupling is synchronous RPC or asynchronous pub/sub.
-- **Unexplained color coding and acronyms:** Using 7 pastel colors with no Legend/Key and unexplained internal project code names.
+## 4. Building order
+
+1. Level 1: the system in the middle, every person and external system around it; no internal parts.
+2. Level 2: expand into containers (apps, APIs, workers, databases, queues), keeping the same outer persons and systems.
+3. Add a deployment or dynamic diagram only when a deployment or a runtime flow is the question.
+4. Add Level 3 for one complex container at a time; internal design rules live in `hexagonal-architecture`.
+5. Keep diagrams as text in the repository so changes review as diffs; pipeline in [references/c4-docs-as-code-pipeline.md](references/c4-docs-as-code-pipeline.md); Mermaid syntax and limits in `mermaid`; how diagrams sit inside chapters in `arc42-api-contracts-architecture`.
+
+## 5. Mistakes to catch
+
+- Reading "container" as Docker. A browser SPA, a mobile app, a serverless function and a managed database schema are containers.
+- Drawing a database or broker as a bare line. It is a container; show who writes and who reads.
+- A box called "business logic" or "shared utils". Code libraries live inside a container; they are not containers.
+- Two-way unlabeled arrows, which hide who initiates and the protocol.
+- Color or shape meaning with no key, unexplained acronyms, missing technology.
+- Treating several apps on one runtime as one container: each app is its own container.
 
 ## Quick Decision Checklist
 
-- [ ] Does each diagram stay at one level, with no Components on a Context diagram?
-- [ ] Does every box show name, type/technology and a short description?
-- [ ] Is every arrow unidirectional and labeled with intent and protocol?
-- [ ] Does the diagram have a title, scope and legend?
-- [ ] Is each database or message broker drawn as its own Container node?
-- [ ] Am I drawing Level 3 or 4 only where the structure is not obvious, and keeping diagrams as code?
+- [ ] Does each diagram stay at one level and zoom into one element?
+- [ ] Does each element show type, description and (containers, components) technology?
+- [ ] Is each relationship one-way and labeled with purpose, plus protocol between containers?
+- [ ] Does each diagram have a title with type and scope, and a key?
+- [ ] Are databases, queues and managed stores drawn as containers?
+- [ ] Did I draw Level 3 or 4 only where structure is not obvious?
 
 ## Deep references
 
-- [C4 abstractions and levels](references/c4-abstractions-and-levels.md) — when deciding what is a container and which levels to draw
-- [C4 docs-as-code pipeline](references/c4-docs-as-code-pipeline.md) — when generating C4 diagrams from a Structurizr/arc42 toolchain
+- [C4 abstractions and levels](references/c4-abstractions-and-levels.md): read when deciding what is a container and which levels to draw.
+- [C4 docs-as-code pipeline](references/c4-docs-as-code-pipeline.md): read when generating C4 diagrams from a Structurizr toolchain.
+- [Trigger evals](references/trigger-evals.md): read when tuning the description.
+- [Sources](references/sources.md): retrieval statuses, reading limits, claims not adopted.

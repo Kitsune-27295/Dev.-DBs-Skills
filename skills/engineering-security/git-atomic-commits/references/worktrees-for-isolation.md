@@ -1,6 +1,6 @@
 # Git Worktrees for Isolation
 
-Sources: https://git-scm.com/docs/git-worktree · https://git-scm.com/docs/git-rebase · Last verified 2026-11-24
+Sources: https://git-scm.com/docs/git-worktree · https://git-scm.com/docs/git-rebase · Last verified 2026-11-27
 
 ## What it gives you
 

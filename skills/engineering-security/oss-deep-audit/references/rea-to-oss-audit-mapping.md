@@ -1,8 +1,12 @@
 # REA concepts mapped to an open-source repository audit
 
-Sources: public REA repository (https://github.com/morluto/rea): `.agents/skills/reverse-engineer-anything/` (SKILL.md and references), `docs/reference/mcp-contracts.md`, `docs/reconstruction-coverage.md`, `docs/reference/reconstruction-obligation-ledgers.md`, `docs/release-exposure.md`, `docs/getting-started/mcp-prompts.md`, `docs/guides/javascript/javascript-application-workflows.md`, `docs/native-function-matching.md`; local REA skill install (private; summarized) · Last verified 2026-11-24
+Sources: public REA repository (https://github.com/morluto/rea): `.agents/skills/reverse-engineer-anything/` (SKILL.md and references), `docs/reference/mcp-contracts.md`, `docs/reconstruction-coverage.md`, `docs/reference/reconstruction-obligation-ledgers.md`, `docs/release-exposure.md`, `docs/getting-started/mcp-prompts.md`, `docs/guides/javascript/javascript-application-workflows.md`, `docs/native-function-matching.md` · Last verified 2026-11-27 (re-read: README, main skill, `docs/reference/mcp-contracts.md` partly, `docs/release-exposure.md`, `SECURITY.md`; tool-by-tool rows were not re-checked against the live tool list)
 
 The mapping is my own adaptation (inference); the REA concept column is paraphrased from the repository. REA tool names are given only so the origin is traceable.
+
+## What REA is (verified 2026-11-27)
+
+REA ("Reverse Engineer Anything", MIT for REA-authored code; npm package `rea-agents`) is one CLI plus one MCP server for reverse engineering across native binaries, JavaScript and Electron apps, websites, .NET assemblies, Android apps, firmware and recorded runtime or network activity, with native analysis through Hopper, Ghidra, IDA or Kuna. Its README names no source-repository use; the description of its main skill says to skip REA for ordinary source-repository architecture analysis. Its repository carries five skills under `.agents/skills/`: `reverse-engineer-anything`, `rea-tool-design`, `rea-ci-tests-audit`, `rea-analysis-optimization`, `rea-changelog-update`. Its version metadata and tool inventory move fast, so treat details here as dated. Nothing is run: only the evidence method transfers.
 
 ## Concept-by-concept table
 

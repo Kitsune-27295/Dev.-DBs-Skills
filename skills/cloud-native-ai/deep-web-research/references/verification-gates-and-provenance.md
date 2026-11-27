@@ -1,6 +1,6 @@
 # Verification Gates and Provenance
 
-Sources: https://ifcncodeofprinciples.poynter.org/the-commitments · https://www.gradeworkinggroup.org/ · https://training.cochrane.org/handbook/current/chapter-14 · three third-party MIT skills read for ideas, no text reused (fact-check, research-compendium, brain-ingest-gate) · a vault-template skill read for ideas · Last verified 2026-11-24
+Sources: https://ifcncodeofprinciples.poynter.org/the-commitments · https://www.gradeworkinggroup.org/ · https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-14 · three third-party MIT skills read for ideas, no text reused (fact-check, research-compendium, brain-ingest-gate) · a vault-template skill read for ideas · Last verified 2026-11-27
 
 ## What this adds
 The ledger in [claim-ledger-and-citation-validation](claim-ledger-and-citation-validation.md) says how to log a claim. This page adds five gates that decide whether a claim may leave the building.

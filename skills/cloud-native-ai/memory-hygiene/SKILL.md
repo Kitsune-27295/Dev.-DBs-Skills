@@ -1,6 +1,6 @@
 ---
 name: memory-hygiene
-description: "Periodic trust sweep of an agent's stored memory and notes: classify each claim (environment fact, preference, decision), verify environment facts against the live environment with the cheapest read-only check first, stamp last_verified and confidence, detect contradictions and staleness, and propose archive or supersede instead of ever silently deleting. Includes a time-boxed per-entry budget, the rule that unverifiable is not drifted, a single sweep report as audit trail, and a schedule with event triggers. Use when memory or notes may be stale, a recalled fact turned out wrong, the environment changed (rename, migration, upgrade), before acting on old notes, or when setting up a recurring memory audit."
+description: "Run a periodic trust sweep over an agent's stored memory and notes: split entries into claims (environment fact, preference, decision), verify environment facts against the live environment with the cheapest read-only check, stamp last_verified and confidence, flag contradictions and staleness, and propose archive or supersede instead of silently deleting. Includes a per-entry time box, the rule that unverifiable is not drifted, one sweep report as audit trail, and a schedule with event triggers. Use when notes or memory may be stale, a recalled fact turned out wrong, the environment changed (rename, migration, upgrade), before acting on old notes, or when setting up a recurring memory audit. For how memory is written during a session use agent-session-memory; for what belongs in always-loaded instruction files use skill-orchestrator."
 ---
 
 # Memory Hygiene
@@ -97,6 +97,7 @@ Detection rules, thresholds and an example: [references/staleness-contradiction-
 - Two entries about the same subject with different values: for an **environment fact** the live environment decides; for a **preference** the newer entry wins unless the user says otherwise; for a **decision** only an explicit superseding record resolves it.
 - Staleness is an age plus a class: environment facts older than about 30 days, or older than the last known environment change (rename, migration, upgrade), go first in the queue. The 30 days is this skill's default, not a published figure.
 - Prefer fixing a contradiction by deleting the duplicate fact's second home (`ssot-and-dry`) over reconciling two copies.
+- Claude Code documents that two contradictory instructions may be followed arbitrarily and ships `/doctor prompt-audit` for outdated or conflicting instruction files; it does not cover auto-memory entries, so a sweep still applies to those.
 
 ---
 
@@ -129,7 +130,8 @@ Detection rules, thresholds and an example: [references/staleness-contradiction-
 
 ## Deep references
 
-- [Sources and claims](references/sources.md) — every URL checked, including the verified paper behind the "trust at runtime" idea, with reading limits.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for this skill.
+- [Sources and claims](references/sources.md) — every URL re-checked on 2026-11-27, including the verified paper behind the "trust at runtime" idea, with reading limits.
 - [Claim classes and cheap verification](references/claim-classes-and-cheap-verification.md) — classification edge cases, the check ladder, safety rules, examples.
 - [Stamping, supersede and the sweep report](references/stamping-supersede-and-sweep-report.md) — field schema, confidence rules, supersede mechanics, report template and scorecard.
 - [Staleness, contradiction and schedule](references/staleness-contradiction-and-schedule.md) — what the research says about drift, prioritization, contradiction rules, cadence and triggers.

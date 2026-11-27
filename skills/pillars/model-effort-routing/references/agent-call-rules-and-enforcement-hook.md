@@ -1,6 +1,6 @@
 # Agent-Call Rules and the Enforcement Hook
 
-Sources: Local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-23
+Sources: https://code.claude.com/docs/en/sub-agents · https://code.claude.com/docs/en/model-config · https://code.claude.com/docs/en/changelog · local operating practice (private notes, summarized; not a public URL) · Last verified 2026-11-27
 
 Agents that have a definition file choose their own model there. Built-in agent types (general-purpose, a catch-all, an explore type) have **no file**: unless the launching call sets `model`, they silently run on the session model, which is usually the most expensive one. A routing policy therefore needs both per-call rules and enforcement.
 
@@ -23,9 +23,13 @@ Rules for agent *definition files*:
 
 Research skills fan out and are the easiest place to burn tokens. The caps (light model in the header, researcher count, search and source limits) are owned by `SKILL.md` section 7 and apply to every research skill and every copy of it; this file does not restate the numbers.
 
-## A related environment variable
+## Model and effort resolution for subagents (docs read 2026-11-27)
 
-A global "subagent model" environment variable has changed rank across versions: in older versions it overrode every subagent model (including per-call and `inherit`, which would also downgrade reviewers); in newer ones (stated as v2.1.251 in the notes) it is only the default for subagents that set nothing. Check the CLI version before relying on it.
+Model, first match wins: (1) the per-invocation `model` parameter on the Agent call (an alias such as `sonnet`, `opus`, `haiku`, `fable`, not a full ID or `inherit`); (2) the `model` field of the agent definition, `inherit` allowed; (3) `CLAUDE_CODE_SUBAGENT_MODEL`; (4) the main conversation's model (for a nested subagent, its spawner's). So the variable is only a default, **unless** `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` is also set (v2.1.257 or later): then it overrides the field and the per-call parameter, which would also downgrade reviewers. Forks keep the parent's model even under FORCE. Older versions let the variable override everything; check the CLI version.
+
+Effort for a subagent with no `effort` field or parameter: `CLAUDE_CODE_EFFORT_LEVEL`, then the spawner's or a skill's per-turn level, then `CLAUDE_CODE_SUBAGENT_EFFORT`, then the session level (only if the subagent runs on the main model). A per-invocation `effort` parameter (v2.1.292 or later) beats the definition's field; `CLAUDE_CODE_EFFORT_LEVEL` beats both.
+
+Built-ins: Explore runs on the parent's model, but with a subscription, Console account or gateway on the Opus that the `opus` alias resolves to, and stays on Fable on cloud providers; Plan and general-purpose inherit; `claude-code-guide` and `web-fetch` use Haiku; `statusline-setup` uses Sonnet. A user or project subagent named `Explore` with `model: haiku` replaces the built-in. Subagents can spawn subagents up to three layers deep (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, 1 turns nesting off). Changelog 2.1.330: agents with no model, and their forks, follow the fallback model when the primary is unavailable.
 
 ## Enforcement: a pre-tool hook
 

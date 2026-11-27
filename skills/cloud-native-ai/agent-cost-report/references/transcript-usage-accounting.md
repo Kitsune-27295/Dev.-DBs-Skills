@@ -1,6 +1,6 @@
 # Transcript Usage Accounting
 
-Sources: https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://code.claude.com/docs/en/claude-directory · https://code.claude.com/docs/en/costs · https://ccusage.com/guide/ · https://github.com/ryoppippi/ccusage · Last verified 2026-11-24
+Sources: https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://code.claude.com/docs/en/claude-directory · https://code.claude.com/docs/en/costs · https://ccusage.com/guide/ · https://github.com/ryoppippi/ccusage · Last verified 2026-11-27
 
 (`https://docs.claude.com/en/docs/build-with-claude/prompt-caching` redirects to the `platform.claude.com` address above.)
 
@@ -16,7 +16,7 @@ The API's `usage` object (prompt caching documentation) has:
 | `cache_creation.ephemeral_5m_input_tokens` / `ephemeral_1h_input_tokens` | the same writes split by cache lifetime; they sum to `cache_creation_input_tokens` |
 | `output_tokens` | generated tokens, including thinking tokens (billed as output per the costs page) |
 
-Total input of one request = `cache_read_input_tokens + cache_creation_input_tokens + input_tokens`. A request whose prompt is below the model's minimum cacheable length is processed without caching and reports zero in both cache fields, with no error.
+Total input of one request = `cache_read_input_tokens + cache_creation_input_tokens + input_tokens`. A request whose prompt is below the model's minimum cacheable length is processed without caching and reports zero in both cache fields, with no error. The minimum is 512, 1,024, 2,048 or 4,096 tokens depending on the model (caching page).
 
 Claude Code session logs are JSONL files. Observed on a local installation during authoring (a version-dependent observation, not documented): assistant entries carry `message.id`, `message.model`, `message.usage` (with the fields above plus extras such as `speed`, `inference_geo`, `server_tool_use`, `service_tier`), `requestId`, `timestamp`, `sessionId`, `cwd`, `gitBranch`, `isSidechain`; other entry types (user, system, attachment, file snapshots) have no usage and are skipped. The extras can change; the five token fields are the stable core because they mirror the API.
 
@@ -39,10 +39,10 @@ If `message.id` or `requestId` is missing, fall back to the entry's own `uuid` a
 
 - Main conversation versus subagents: subagent requests are separate API requests with their own context and cost; include them when the question is "what did the work cost", exclude them only if the question is about the main thread. Mark `isSidechain` entries (or the subagent files) so the split can be reported.
 - Per the Claude directory documentation, transcripts live at `projects/<project>/<session>.jsonl` under the configuration directory, subagent transcripts in a `subagents/` folder under the session's folder (same format, removed with the parent), and a superseded or orphaned earlier transcript of a session can sit beside the current one with a suffixed name. Read only the `.jsonl` transcripts you mean to count, and de-duplicate across them. These files are plaintext and can contain secrets from tool output: never paste transcript lines into a report or chat.
-- A session's totals reset in the in-product display on `/clear`, but the log files persist; do not mix the two when reconciling.
+- A session's totals reset in the in-product display on `/clear` (since Claude Code v2.1.211; earlier versions kept accumulating), but the log files persist; do not mix the two when reconciling.
 - Only logs on this machine are visible. Other devices and web sessions are absent (the costs page says the same of its local breakdowns).
-- Retention: session files are removed after `cleanupPeriodDays` (30 days by default in the costs documentation); a window older than that may be incomplete.
-- Environment: logs can live under a custom configuration directory (`CLAUDE_CONFIG_DIR`); ccusage documents support for custom data directories and, in its guide, comma-separated lists for combining profiles and archives. Combining directories raises the overlap risk, so de-duplicate across all of them at once.
+- Retention: session files are removed after `cleanupPeriodDays` (30 days by default in the `.claude` directory documentation); a window older than that may be incomplete.
+- Environment: logs can live under a custom configuration directory (`CLAUDE_CONFIG_DIR`); ccusage documents default locations (`~/.config/claude/projects/` and `~/.claude/`), support for custom data directories and, in its guide, comma-separated lists for combining profiles and archives. Combining directories raises the overlap risk, so de-duplicate across all of them at once.
 
 ## 5. Worked example (Python, standard library)
 
@@ -57,7 +57,7 @@ import json, sys, glob, collections
 PRICES = {  # model: (input, output, cache_write_5m, cache_write_1h, cache_read)
     "claude-sonnet-5-5": (2.00, 10.00, 2.50, 4.00, 0.10),
 }
-PRICE_DATE = "2026-11-24"
+PRICE_DATE = "2026-11-27"
 
 def replies(paths, since, until):
     seen = {}

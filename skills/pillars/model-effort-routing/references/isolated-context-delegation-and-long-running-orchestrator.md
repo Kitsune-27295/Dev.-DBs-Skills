@@ -1,6 +1,6 @@
 # Isolated-Context Delegation, Two-Stage Review and the Long-Running Orchestrator
 
-Sources: https://www.anthropic.com/engineering/multi-agent-research-system · https://code.claude.com/docs/en/sub-agents · https://www.anthropic.com/engineering/building-effective-agents · Last verified 2026-11-24
+Sources: https://www.anthropic.com/engineering/multi-agent-research-system · https://code.claude.com/docs/en/sub-agents · https://www.anthropic.com/engineering/building-effective-agents · Last verified 2026-11-27
 
 Three ideas about running delegated work, each tied to a tier choice. Idea origins: third-party skills read for ideas, no text reused (two MIT-licensed plugin skills on subagent development and parallel dispatch, and an MIT skill for a long-running coordinator); the public pages above were used to verify the underlying claims. Topology, depth and failure modes stay in [multi-agent-topology-and-failure-modes.md](multi-agent-topology-and-failure-modes.md); the pack's multi-agent coordination skill owns coordination protocols; brief templates stay in [delegation-brief-templates.md](delegation-brief-templates.md).
 

@@ -1,6 +1,6 @@
 # Memory Hierarchy, Imports and Rules in Claude Code
 
-Sources: https://code.claude.com/docs/en/memory (undated page, fetched 2026-11-24; versions cited inline) · https://code.claude.com/docs/en/best-practices · secondary: https://xerj.org/answers/claude-code-memory · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/memory (undated page, fetched 2026-11-27; versions cited inline) · https://code.claude.com/docs/en/best-practices · secondary: https://xerj.org/answers/claude-code-memory · Last verified 2026-11-27
 
 ## 1. Load order is concatenation, not override
 

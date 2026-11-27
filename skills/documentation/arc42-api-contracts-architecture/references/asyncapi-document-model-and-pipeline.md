@@ -1,8 +1,8 @@
 # AsyncAPI: Document Model, Parser Pipeline and Generator Stages
 
-Sources: https://asyncapi.com/docs/tools/generator/asyncapi-document · https://buildwithfern.com/post/asyncapi-documentation-generator · Last verified 2026-11-23
+Sources: https://www.asyncapi.com/docs/reference/specification/v3.0.0 · https://www.asyncapi.com/docs/reference/specification/latest · https://github.com/asyncapi/parser-js · https://asyncapi.com/docs/tools/generator/asyncapi-document · https://buildwithfern.com/post/asyncapi-documentation-generator · Last verified 2026-11-27
 
-The Fern article (dated July 2026) is a vendor blog that sells its own product; vendor-neutral claims below are those that describe the spec or the pipeline, and product claims are omitted.
+The Fern article (dated 31 July 2026; its text was read from the page HTML) is a vendor blog that sells its own product; vendor-neutral claims below are those that describe the spec or the pipeline, and product claims are omitted. Spec claims were re-checked against the specification page.
 
 ## Document model (Fern, AsyncAPI 3.x)
 
@@ -16,11 +16,11 @@ The Fern article (dated July 2026) is a vendor blog that sells its own product; 
 | `components` | reusable schemas, messages, security, traits, bindings | prevents duplicated inline shapes |
 | `bindings` | protocol-specific settings (WebSocket headers/query, Kafka group/client ID, MQTT QoS/retain) | transport detail renderers often drop |
 
-The 3.0 change: operations became top-level with an explicit `send` or `receive` action referencing a channel via `$ref`, replacing 2.x `publish`/`subscribe`, whose perspective confused people. Bi-directional flows (a WebSocket) are modeled as one `send` and one `receive` operation on the same channel. Channel `$ref` uses JSON Pointer with URL encoding (`#/channels/user~1notifications`).
+The 3.0 change: operations became top-level with an explicit `send` or `receive` action referencing a channel via `$ref`, replacing 2.x `publish`/`subscribe`, whose perspective confused people. The specification page confirms that `action` is `send` or `receive` and that the channel is a `$ref` reference. Its navigation lists 3.1.0 above 3.0.0 (Fern also calls 3.1.0 the current release); this skill did not diff 3.0.0 against 3.1.0, so check the release notes for your target. Bi-directional flows (a WebSocket) are modeled as one `send` and one `receive` operation on the same channel (Fern's modeling advice). Channel `$ref` uses JSON Pointer with URL encoding (`#/channels/user~1notifications`).
 
 ## Generator pipeline
 
-Official docs describe the AsyncAPI Generator flow: the document goes in as a string, the Parser validates it with schema plugins (OpenAPI schema, RAML data types, Avro), and a valid document is wrapped in an `AsyncAPIDocument` with helpers (`version()`, `info().title()`, `channels()`, `allMessages()`). Templates read either `originalAsyncAPI` (the raw string) or the structured `asyncapi` object. Format is JSON or YAML; the document is protocol-agnostic and machine-readable.
+Official docs describe the AsyncAPI Generator flow: the document goes in as a string, the Parser validates it with schema plugins (OpenAPI schema, RAML data types, Avro; the parser repository adds that validation is powered by Spectral and that parser-js 3.x reads both spec 2.x and 3.x), and a valid document is wrapped in an `AsyncAPIDocument` with helpers (`version()`, `info().title()`, `channels()`, `allMessages()`). Templates read either `originalAsyncAPI` (the raw string) or the structured `asyncapi` object. Format is JSON or YAML; the document is protocol-agnostic and machine-readable.
 
 Fern's five stages: parse and validate, resolve `$ref`s, build an intermediate model, render via template, publish. It argues stages 1 and 5 (validation and publishing) decide long-term accuracy: a hand-run generator is accurate once; one wired into CI per PR stays accurate.
 

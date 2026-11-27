@@ -1,6 +1,6 @@
 # Claims vs Evidence on Routing Savings
 
-Sources: https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://vercel.com/i/llm-routing-strategies · https://acceleraid.ai/en/blog/ai-models-2026-cost-vs-skills-comparison · https://www.microsoft.com/en-us/research/publication/best-route-adaptive-llm-routing-with-test-time-optimal-compute/ · Last verified 2026-11-23
+Sources: https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://vercel.com/i/llm-routing-strategies · https://acceleraid.ai/en/blog/ai-models-2026-cost-vs-skills-comparison · https://www.microsoft.com/en-us/research/publication/best-route-adaptive-llm-routing-with-test-time-optimal-compute/ · Last verified 2026-11-27
 
 Pages read through a WebFetch summarizer (Firecrawl out of credits), so every figure is second-hand. Confidence = my confidence that the number is a sound, generalizable fact: High / Medium / Low.
 
@@ -54,7 +54,7 @@ Rank every figure used in a routing decision by how it was obtained. This table 
 | Vendor-documented | effort levels and defaults, thinking counted in `max_tokens`, cache scoping, per-message effort, header scope |
 | Measured (tiny n) | low effort suppressing skill use (five questions, one skill); the 6% named-model baseline (one machine) |
 | Paper abstract | best-of-N routing "up to 60% cost, under 1% loss" (peak, unreplicated) |
-| Claims / opinion | 70/20/10 splits, 40-95% savings, multiplier tables, per-agent tier maps, the premium-tier price multiple (2x vs 2.5x across repos) |
+| Claims / opinion | 70/20/10 splits, 40-95% savings, multiplier tables, per-agent tier maps, the premium-tier price multiple claims in repos (vendor list prices: 2x Opus 5.5 for Fable 5.2) |
 
 Write "claimed by X" for the last row.
 

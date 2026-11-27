@@ -1,6 +1,6 @@
 # REA report and handoff patterns
 
-Sources: public REA repository (https://github.com/morluto/rea): main skill `.agents/skills/reverse-engineer-anything/SKILL.md` and `references/evidence-workflows.md`, `references/desktop-build.md`, `references/environments.md`; audit skills `.agents/skills/rea-tool-design/`, `rea-ci-tests-audit/`, `rea-analysis-optimization/`, `rea-changelog-update/`; `docs/development/tool-design.md`, `docs/development/testing.md`, `docs/development/reconstruction-readiness.md`, `docs/release-exposure.md`, `docs/ci-analysis.md`, `CONTRIBUTING.md`, `website/evidence/` notes; local REA skill install (private; summarized) · Last verified 2026-11-24
+Sources: public REA repository (https://github.com/morluto/rea): main skill `.agents/skills/reverse-engineer-anything/SKILL.md` and `references/evidence-workflows.md`, `references/desktop-build.md`, `references/environments.md`; audit skills `.agents/skills/rea-tool-design/`, `rea-ci-tests-audit/`, `rea-analysis-optimization/`, `rea-changelog-update/`; `docs/development/tool-design.md`, `docs/development/testing.md`, `docs/development/reconstruction-readiness.md`, `docs/release-exposure.md`, `docs/ci-analysis.md`, `CONTRIBUTING.md`, `website/evidence/` notes · Last verified 2026-11-27 (re-read: `docs/release-exposure.md` statuses, no grade, and the skills directory listing; not re-read: the other listed docs and skills, which rest on the 2026-11-24 reading)
 
 Paraphrased from REA text; "(inference)" marks my adaptation to source audits.
 

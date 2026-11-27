@@ -1,6 +1,6 @@
 ---
 name: multi-agent-coordination
-description: "Coordinate several agents on one parallelizable task without losing control: first decide whether multi-agent is worth its cost, then run a coordinator that delegates and judges but never does the work, a shared append-only board with sequence numbers, named roles, disjoint file ownership, a stall monitor that cites the last sequence number and nudges one member, independent cross-review, merge and conflict rulings, stop conditions and cost caps. Vendor-neutral. Use when splitting work across parallel subagents or teammates, designing a swarm or agent team, or when a multi-agent run stalls, collides on files or overspends."
+description: "Run several agents on one parallelizable task without losing control: first decide whether multi-agent is worth its cost, then use a coordinator that delegates and judges but never does the work, a shared append-only board with sequence numbers, named roles, disjoint file ownership, a stall monitor, independent cross-review, merge rulings, stop conditions and cost caps. Vendor-neutral. Not for choosing model tier, effort or one delegation brief (use `model-effort-routing`), for picking an orchestration topology inside an LLM application (use `agentic-rag-architecture`) or for durable memory between sessions (use `agent-session-memory`). Use when splitting work across parallel subagents or teammates, designing a swarm or agent team, or when a multi-agent run stalls, collides on files or overspends."
 ---
 
 # Multi-Agent Coordination
@@ -13,7 +13,7 @@ Boundaries (one owner per rule): `model-effort-routing` owns model tier, effort,
 
 ## 1. Decide first: one agent, delegated helpers, or a team
 
-Multi-agent runs cost several times the tokens of one agent (the Anthropic research write-up reports about 15x for its multi-agent system versus chat, a vendor figure for research workloads, not a law). Go multi only for a named benefit.
+Multi-agent runs cost several times the tokens of one agent: Anthropic reports about 15x chat tokens for its research system, a vendor figure for one workload, not a law (figures are tracked in `model-effort-routing`). Go multi only for a named benefit.
 
 | Situation | Choose |
 |---|---|
@@ -23,7 +23,9 @@ Multi-agent runs cost several times the tokens of one agent (the Anthropic resea
 | Several theories for one bug, review from different lenses | Team, read-only members, debate or sectioning |
 | Pieces share a design decision not yet made | Decide it first, in writing, then split |
 
-Gate before launching: (1) I can name the independent pieces; (2) value justifies the cost; (3) shared decisions are written down; (4) a stop rule and caps exist. Fail any gate: stay single-threaded. Evidence for both sides is in [when multi-agent pays off](references/when-multi-agent-pays-off.md).
+Gate before launching: (1) I can name the independent pieces; (2) value justifies the cost; (3) shared decisions are written down; (4) a stop rule and caps exist. Fail any gate: stay single-threaded. Evidence for both sides is in [when multi-agent pays off](references/when-multi-agent-pays-off.md). Pattern menus (chain, sectioning, voting, orchestrator-workers) belong to `model-effort-routing`.
+
+Product snapshot, checked 2026-11-27 and liable to change: Claude Code agent teams are experimental and off by default; its subagents nest up to three layers by default and run up to 20 at once.
 
 ## 2. The coordinator delegates and judges, never works
 
@@ -141,4 +143,5 @@ See [stop conditions and cost control](references/stop-conditions-and-cost-contr
 - [Stall detection and monitor](references/stall-detection-and-monitor.md) — read when a run is silent or when adding a monitor.
 - [Cross-review, merge and conflicts](references/cross-review-merge-and-conflicts.md) — read when integrating results or arbitrating a clash.
 - [Stop conditions and cost control](references/stop-conditions-and-cost-control.md) — read when setting caps, resuming after failure or shutting down.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for the description.
 - [Sources](references/sources.md) — URL statuses and claims not adopted.

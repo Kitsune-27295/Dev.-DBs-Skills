@@ -1,6 +1,6 @@
 # Spec Status and Versions
 
-Sources: https://github.com/modelcontextprotocol/ext-apps · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/draft/apps.mdx · https://modelcontextprotocol.io/extensions/apps/overview · https://registry.npmjs.org/@modelcontextprotocol/ext-apps/latest · Last verified 2026-11-24
+Sources: https://github.com/modelcontextprotocol/ext-apps · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/2026-01-26/apps.mdx · https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/main/specification/draft/apps.mdx · https://modelcontextprotocol.io/extensions/apps/overview · https://registry.npmjs.org/@modelcontextprotocol/ext-apps/latest · Last verified 2026-11-27
 
 ## What the documents are
 
@@ -10,7 +10,7 @@ Sources: https://github.com/modelcontextprotocol/ext-apps · https://raw.githubu
 - Both are inside the ext-apps repository; the repository's `specification/` directory is the normative source, the docs site is explanatory.
 - MCP Apps is an **extension**, optional, and negotiated between client and server; reserved names: the `ui://` prefix and the label `io.modelcontextprotocol/ui`.
 
-## Differences observed between stable 2026-01-26 and the draft (read on 2026-11-24)
+## Differences observed between stable 2026-01-26 and the draft (re-read on 2026-11-27)
 
 | Topic | Stable 2026-01-26 | Draft |
 |---|---|---|
@@ -19,16 +19,16 @@ Sources: https://github.com/modelcontextprotocol/ext-apps · https://raw.githubu
 | `ui/download-file` (host-mediated download) | Absent | Present, with a user-confirmation recommendation and filename sanitization |
 | `ui/notifications/request-teardown` (view asks the host to close it) | Absent | Present; host MAY defer or ignore |
 | App-provided tools (page registers tools, host calls them; `tools/list`, `tools/call` Host to App) | Absent | Present, with a security section (attribution, namespacing, confirmation for non-read-only, limits such as about 50 tools, 30 s, 10 MB as recommendations) and a WebMCP interoperability section |
-| Default CSP text | Lists no `object-src` line in the default block | Default block adds `object-src 'none'` |
+| Default CSP text (when `csp` is omitted) | The default block has no `object-src` line (it appears only in the host-construction rules and sample) | The default block adds `object-src 'none'` |
 
 Observation to treat with care: the draft's sample `protocolVersion` strings in its initialize examples read `2025-06-18` in places while the stable sample reads `2026-01-26`; examples are illustrative and may lag the normative text. Check the SDK's constant, not the sample.
 
-## SDK and ecosystem snapshot (2026-11-24)
+## SDK and ecosystem snapshot (2026-11-27)
 
-- npm package `@modelcontextprotocol/ext-apps`: latest 2.0.4 per the registry; repository `main` showed package version 2.1.0 (unreleased or ahead of npm at that moment). Requires Node 20+; peers on the 2.x MCP SDK packages (`core`, `client`, `server`) and `zod`; React optional. The repository states the wire protocol is unchanged between SDK 1.x and 2.x and provides a migration guide.
+- npm package `@modelcontextprotocol/ext-apps`: latest 2.0.4 per the registry; repository `main` showed package version 2.1.0 (unreleased or ahead of npm at that moment). Requires Node 20+; peers on the 2.x MCP SDK packages (`core`, `client`, `server`) and `zod` ^4.2.0; React optional. The public build guide still installs `@modelcontextprotocol/sdk` in its dependency step, so the guide lags the package metadata: trust the metadata and the SDK's README. The repository states the wire protocol is unchanged between SDK 1.x and 2.x and provides a migration guide.
 - SDK subpaths per the repository README: base (the `App` class, `PostMessageTransport`), `/react` (hooks), `/app-bridge` (embed views in a client), `/server` (register tools and resources).
-- Host support (docs overview): several clients support it, among them Claude and Claude Desktop, VS Code with a coding assistant, Microsoft 365 Copilot, Goose, Postman, MCPJam; the docs link a client matrix. Support is per client and per feature; the matrix is the source of truth, not this list.
-- Licensing: the repo LICENSE file says the MCP project is moving from MIT to Apache-2.0 (new contributions Apache-2.0, some older contributions MIT); `package.json` says MIT; the repository summary text said Apache 2.0. Check before redistributing.
+- Host support: the docs overview names Claude (web and Desktop), a VS Code coding assistant, Microsoft 365 Copilot, Goose, Postman, MCPJam and one more client; the repository README names a partly different list (it adds ChatGPT among others). The docs client matrix is community-maintained, and its per-cell marks did not survive the text extraction used here, so no per-client claim is adopted. Check the matrix directly.
+- Licensing: the repo LICENSE file says the MCP project is moving from MIT to Apache-2.0 (new contributions Apache-2.0, some older contributions MIT); `package.json` says MIT; the README shows an Apache 2.0 badge; the npm metadata says MIT. Check before redistributing.
 - The repository ships its own agent skills for scaffolding and migrating apps (`create-mcp-app` and others); they are an upstream convenience, not the specification.
 
 ## Version-handling rules
@@ -37,6 +37,7 @@ Observation to treat with care: the draft's sample `protocolVersion` strings in 
 2. Prefer stable-only features; for a draft-only feature (download, request-teardown, app-provided tools, listing-level `_meta.ui`) feature-detect host support and keep a fallback.
 3. Re-read the draft's changed sections when the SDK minor version changes.
 4. Do not assume a host implements the whole spec: check `hostCapabilities` at runtime.
+5. The core MCP draft is changing how extension support is declared (the client matrix page describes capabilities carried in request `_meta` and a `server/discover` response). The apps specification, stable and draft, still specifies negotiation in `initialize`; confirm which core MCP revision your SDK speaks before assuming either.
 
 ## How an agent should apply this
 

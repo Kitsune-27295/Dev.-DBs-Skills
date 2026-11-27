@@ -1,50 +1,34 @@
 # C4 Abstractions, Levels and Diagram Hygiene
 
-Sources: https://c4model.com/, https://c4model.com/introduction, https://c4model.info/, https://c4model.com/abstractions/container (one extra page) · Last verified 2026-11-23
+Sources: https://c4model.com/, https://c4model.com/introduction, https://c4model.info/, https://c4model.com/abstractions/container, https://c4model.com/diagrams, https://c4model.com/diagrams/notation · Last verified 2026-11-27
 
 ## Five stated pillars
 
-Hierarchical abstractions (software system, container, component, code), hierarchical diagrams (system context, container, component, code), supporting diagrams (system landscape, dynamic, deployment), notation independence, tooling independence. The site also has pages on microservices, queues and topics, notation and a review checklist (index only; those pages were not read).
+Hierarchical abstractions, hierarchical diagrams (system context, container, component, code), supporting diagrams (system landscape, dynamic, deployment), notation independence, tooling independence.
 
-## Element types
+## What is and is not a container
 
-- **Person**: human or otherwise-actor user.
-- **Software system**: highest level, delivers value to users, often owned by one team; external systems appear as boxes too.
-- **Container**: an application or data store that must be running for the system to work; a runtime boundary, explicitly "not Docker".
-- **Component**: a building block inside a container (auth module, card validator).
-- **Code**: implementation detail, usually UML class diagrams.
+Containers: server-side web app, client-side web app in a browser, desktop, mobile or console app (including batch processes), serverless function, database, blob or content store, file system, a shell script. Not containers: JARs, assemblies, DLLs and modules; they organize code inside an application.
 
-## What is and is not a container (from the container page)
+Rulings from the container page:
 
-Containers: server-side web app, client-side web app in a browser, desktop app, mobile app, console/batch/scheduled job, serverless function, database schema, blob store or CDN, file system, a single shell script. Not containers: JARs, assemblies, DLLs, modules (they organize code inside an app; usually components).
-
-Rulings: a server app that mostly renders HTML is one container; a substantial SPA makes client and server two containers talking JSON/HTTPS. Managed services such as S3, RDS or a CDN are normally containers because you own the buckets or schemas. Several containers may share one runtime (three web apps in one Tomcat), and deployment is a separate concern.
+- A server app that mostly generates HTML is one container.
+- A server-delivered single-page app is two containers: client and server run in separate process spaces and talk over a remote mechanism.
+- One Tomcat hosting several web apps still holds several containers; how they are deployed is a separate question.
+- Managed services (S3, RDS, Azure SQL, a CDN) are shown as containers, not software systems, because you own the buckets or schemas.
+- A Docker container may map to a C4 container, but they are different things.
 
 ## Levels
 
-| Level | Shows | Audience | Typical use |
-|---|---|---|---|
-| 1 System context | persons, systems | technical and non-technical | always |
-| 2 Container | adds containers | architects, developers, product | almost always |
-| 3 Component | adds components of one container | architects, developers | only if the container is complex |
-| 4 Code | class-level | developers | rarely; generate from code |
+Each level zooms into one element of the level above. System context is the starting point. Code diagrams are usually UML classes, ideally generated, and too detailed for most teams. The diagrams page says you need not use all four levels, only those that add value, and that context plus container suffice for most teams.
 
-Scope is cumulative and each diagram zooms into one element of the level above.
+## Problems the introduction lists
 
-## Ad hoc diagram problems the introduction lists
-
-Unexplained colors/shapes/line styles, ambiguous element meaning, missing or unlabelled relationships, generic labels ("business logic"), unexplained acronyms, missing technology, mixed abstraction levels, inconsistent notation across a set, no reading order or clear transitions. Stated goal: raise diagram maturity; use cases: onboarding, reviews, risk-storming, threat modeling.
-
-## Example element and relationship labels
-
-```
-Container: "Orders API" [Node.js, REST]  -- "Reads/writes orders" [SQL/TCP] --> Container: "Orders DB" [PostgreSQL]
-```
+Within one diagram: unexplained or inconsistent notation, unclear element meaning, missing or unlabeled relationships, vague terms like "business logic", unexplained acronyms, missing technology, mixed abstraction levels. Across a set: inconsistent notation and names, no stated reading order, no clear transition between diagrams. Stated uses: team communication, onboarding, architecture reviews, risk-storming, threat modeling (the method itself: `threat-modeling`).
 
 ## How an agent should apply this
 
 - Produce Level 1 and Level 2 by default; add Level 3 only for a named complex container.
-- Label every element with name, type and technology, and every arrow with purpose and protocol.
-- Draw databases, queues and managed stores as containers, not as lines.
-- Add a legend whenever shapes or colors carry meaning.
 - Decide the zoom target explicitly: one diagram per element, never mixed levels.
+- Treat databases, queues and managed stores as containers, not lines.
+- For dynamic and deployment diagrams, the pages read give only examples (see sources.md): keep to the conventions in `SKILL.md` and say so.

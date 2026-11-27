@@ -1,6 +1,6 @@
 # Agentic RAG: Retrieval Tools, Loop Control, Evaluation
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-agentic · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-agentic · Last verified 2026-11-27
 
 ## Contents
 - When agentic RAG pays off

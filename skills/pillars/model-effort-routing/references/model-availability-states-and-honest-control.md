@@ -1,6 +1,6 @@
 # Model Availability States and the Honest Control Boundary
 
-Sources: https://antigravity.google/docs/models.md · https://code.claude.com/docs/en/sub-agents · Last verified 2026-11-24
+Sources: https://antigravity.google/docs/models.md · https://code.claude.com/docs/en/sub-agents · Last verified 2026-11-27
 
 A router that picks a tier is only as good as its belief about what can actually be run. This file adds three things the core skill does not spell out: a state vocabulary for availability, an evidence order for finding out, and a rule for separating what the agent can enforce from what it can only advise. Idea origin: a third-party built-in skill read for ideas, no text reused; the public pages above were used to verify the mechanics.
 
@@ -16,6 +16,8 @@ Label each candidate model or tier before routing to it.
 | TEMPORARILY UNAVAILABLE | Transient outage or throttling was observed | Retry later or use the fallback ladder; disclose the substitution |
 | UNAVAILABLE | Not selectable under the plan or removed | Never chosen; drop from tables |
 | UNKNOWN | Cannot be verified | Treated as not available |
+
+Dated example (Antigravity models page, 2026-11-27): Claude 5.5 models need a non-trial paid plan; Claude Sonnet 4.6 and Opus 4.6, Gemini 3.8 Flash, Gemini 4 Argon and GPT-OSS-120b are marked for removal on 2026-11-30; Ultra and Enterprise exclude Claude 4.6. Such a model is AVAILABLE WITH LIMITS until that date, UNAVAILABLE after it.
 
 Rule: UNKNOWN is never AVAILABLE. An untested name from memory, a model listed in an old table, or a name seen only in a blog is UNKNOWN until evidence arrives. Anything with a removal date gets AVAILABLE WITH LIMITS, and the date goes in the note (the public models page lists scheduled removals, which is why static catalogs rot).
 
@@ -45,7 +47,7 @@ Split every routing decision by who can actually carry it out.
 | Main conversation model and effort | Usually the user, via a selector or command | "I recommend switching to X"; never "I switched" |
 | Account quota and plan | The vendor and user | State only what was shown |
 
-Public docs show the same split: the Claude Code subagent page documents a per-invocation parameter, a definition field, an environment variable and the parent's model as an ordered resolution, while the Antigravity models page says the conversation model is chosen in a selector and a mid-run change does not alter the current turn. So a recommendation about the primary model is advice, and a switch claimed without evidence is a false report.
+Public docs show the same split: the Claude Code subagent page documents a per-invocation parameter, a definition field, an environment variable and the parent's model as an ordered resolution (detail in `agent-call-rules-and-enforcement-hook.md`), while the Antigravity models page says the conversation model is chosen in a selector and a mid-run change does not alter the current turn. So a recommendation about the primary model is advice, and a switch claimed without evidence is a false report.
 
 ## How an agent should apply this
 

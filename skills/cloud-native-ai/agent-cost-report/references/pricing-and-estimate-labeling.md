@@ -1,17 +1,17 @@
 # Pricing and Estimate Labeling
 
-Sources: https://platform.claude.com/docs/en/about-claude/pricing · https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://code.claude.com/docs/en/costs · Last verified 2026-11-24
+Sources: https://platform.claude.com/docs/en/about-claude/pricing · https://platform.claude.com/docs/en/build-with-claude/prompt-caching · https://code.claude.com/docs/en/costs · Last verified 2026-11-27
 
 (`https://docs.claude.com/en/docs/about-claude/pricing` redirects to the `platform.claude.com` address above.)
 
 ## 1. What the price page defines
 
 - Prices are USD per million tokens (MTok), per model, in columns: base input, 5-minute cache writes, 1-hour cache writes, cache hits and refreshes, output.
-- Cache multipliers relative to base input: 5-minute write 1.25x, 1-hour write 2x, cache read 0.1x "on most models". The page states per-model exceptions for newer models: 0.05x on two of them and 0.025x on others. Example from the page: a model with a $4 base input price has a cache-hit price of $0.20 (0.05x) and a 1-hour write price of $8.
+- Cache multipliers relative to base input: 5-minute write 1.25x, 1-hour write 2x, cache read 0.1x "on most models". The page states per-model exceptions for the newest models (2026-11-27): 0.05x on Opus 5.5 and Sonnet 5.5, 0.025x on Fable and Mythos 5.1 and 5.2. Example from the page: Opus 5.5 has a $4 base input price, a cache-hit price of $0.20 (0.05x) and a 1-hour write price of $8.
 - Caching pays back after one read for 5-minute writes and after two reads for 1-hour writes.
-- Modifiers that stack with cache multipliers: batch discount (50% on input and output; not applicable to interactive sessions), US-only inference (`inference_geo`, 1.1x on supported models), fast mode (separate higher input and output prices on some models), and a prompt-length tier on at least one model (higher prices when a request's prompt, including cache reads and writes, exceeds 100,000 tokens, priced per request).
+- Modifiers that stack with cache multipliers: batch discount (50% on input and output; not applicable to interactive sessions), US-only inference (`inference_geo`, 1.1x on supported models), fast mode (separate higher input and output prices; listed for Fable 5.2, Opus 5.5, Opus 5 and Opus 4.8, and not combinable with batch), and the Haiku 5.5 prompt-length tier (higher prices when a request's prompt, including cache reads and writes, exceeds 100,000 tokens, priced per request). Other 4.6-and-later models include the full 1M context at standard price. The 1.1x US-only multiplier applies to Claude 4.6 and later on the first-party API; Bedrock and Google-managed Vertex price independently.
 - Newer models use a tokenizer that produces roughly 30% more tokens for the same text than earlier ones (page statement). Because your counts come from the logs, the tokenizer is already in the numbers; it only matters when you compare "same text" across models.
-- Server tools have extra charges (web search is billed per 1,000 searches on the Claude API); web fetch adds no charge beyond tokens. These do not appear in token fields.
+- Server tools have extra charges (web search is $10 per 1,000 searches on the Claude API; code execution is billed by container time only when used without web search or fetch); web fetch adds no charge beyond tokens. These do not appear in token fields.
 - Prices change. This skill deliberately keeps no price table; the example numbers in these files are dated illustrations.
 
 ## 2. Formula and an example
@@ -40,7 +40,7 @@ Without caching the same 50,000 input tokens would have cost $0.20 instead of $0
 | Placeholder or synthetic model entries | list and exclude; they are not real requests |
 | `cache_creation` split missing | price all writes at the 5-minute rate and state it |
 | Field present but zero for all rows | do not infer "no caching"; check the model's minimum cacheable length and whether the tool reports cache fields at all |
-| Contracted or discounted rates | apply a stated multiplier; Claude Code itself can be configured with a rate table so its figures match a contract, and the figures remain estimates, not invoices |
+| Contracted or discounted rates | apply a stated multiplier; an administrator can set the `modelPricing` managed setting (rates or a multiplier, Claude Code v2.1.242 or later) so `/usage` figures match a contract; they remain estimates, not invoices |
 | Mixed providers (cloud marketplaces, gateways) | their invoices follow their own price lists; say your estimate uses the first-party list |
 
 ## 4. Labels in the report

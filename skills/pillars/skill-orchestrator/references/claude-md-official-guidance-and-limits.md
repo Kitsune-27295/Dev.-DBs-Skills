@@ -1,6 +1,6 @@
 # CLAUDE.md: Official Guidance and Limits
 
-Sources: https://code.claude.com/docs/en/memory · https://code.claude.com/docs/en/best-practices · https://www.anthropic.com/research/claude-code-best-practices (published 2025-04-18, marked "no longer maintained" since 2026-01-26) · https://www.anthropic.com/constitution (priority ordering only) · secondary, cross-checked only: https://xerj.org/answers/claude-code-memory · https://github.com/luongnv89/claude-howto/blob/main/02-memory/README.md · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/memory · https://code.claude.com/docs/en/best-practices · https://www.anthropic.com/research/claude-code-best-practices (published 2025-04-18, marked "no longer maintained" since 2026-01-26) · https://www.anthropic.com/constitution (priority ordering only) · secondary, cross-checked only: https://xerj.org/answers/claude-code-memory · https://github.com/luongnv89/claude-howto/blob/main/02-memory/README.md · Last verified 2026-11-27
 
 ## 1. The core fact: it is context, not configuration
 

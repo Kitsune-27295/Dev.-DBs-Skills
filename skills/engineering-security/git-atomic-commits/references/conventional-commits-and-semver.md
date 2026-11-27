@@ -1,6 +1,6 @@
 # Conventional Commits 1.0.0 and the SemVer Link
 
-Sources: https://www.conventionalcommits.org/en/v1.0.0/ · https://semver.org/ · Last verified 2026-11-23
+Sources: https://www.conventionalcommits.org/en/v1.0.0/ · https://semver.org/ · Last verified 2026-11-27
 
 ## Grammar
 
@@ -14,7 +14,7 @@ Sources: https://www.conventionalcommits.org/en/v1.0.0/ · https://semver.org/ �
 
 Key rules from the spec (paraphrased):
 - Type is a noun; colon plus one space is mandatory after the type/scope/`!`.
-- `feat` = adds a capability; `fix` = corrects a defect. Other types are allowed; the spec does not define them. The Angular-derived set (build, chore, ci, docs, style, refactor, perf, test) is the common convention.
+- `feat` = adds a capability; `fix` = corrects a defect. Other types are allowed; the spec does not define them. The set build, chore, ci, docs, style, refactor, perf, test is a common convention (its Angular origin was not re-read on 2026-11-27).
 - Scope is an optional noun in parentheses naming a codebase area.
 - Body is free text after one blank line; footers come after another blank line, each as `Token: value` or `Token #value`. Footer tokens use hyphens instead of spaces, except `BREAKING CHANGE`, which may keep the space (`BREAKING-CHANGE` is equivalent).
 - A breaking change is signaled by a `!` right before the colon, by a `BREAKING CHANGE: <description>` footer, or both. With `!`, the footer may be omitted if the description states the break.

@@ -1,12 +1,12 @@
 # arc42's 12 Sections and "Just Enough" Architecture Documentation
 
-Sources: https://arc42.org/overview/ · https://vickybytes.com/blog/software-architecture-documentation-guide · Last verified 2026-11-23
+Sources: https://arc42.org/overview/ · https://docs.arc42.org/home/ · https://docs.arc42.org/section-1/ · https://docs.arc42.org/section-3/ · https://docs.arc42.org/section-10/ · https://vickybytes.com/blog/software-architecture-documentation-guide · Last verified 2026-11-27
 
-The vickybytes page is a Next.js site; its body was recovered from the page's embedded JSON data, not a rendered view.
+The vickybytes page is a Next.js site; the fetch tool returned no body, so its text was read from the page's HTML source with a script.
 
 ## arc42 as the page describes it
 
-arc42 (Hruschka and Starke, in use since 2005) answers what to document and how. It is free and open source, including commercially (CC BY-SA 4.0), and every section is tailorable. Companion resources: docs.arc42.org (one page per section, `/section-1/` to `/section-12/`), examples, FAQ, a quality model, and a one-page **Canvas** as the lighter alternative.
+arc42 (Hruschka and Starke, "proven in practice since 2005") answers what to document and how. The overview page states CC BY-SA 4.0 and offers a one-page **Canvas** as the lighter option; docs.arc42.org (open source, same licence) holds one page per section plus tips and examples and does not mention the Canvas.
 
 | Group | Sections |
 |---|---|
@@ -14,17 +14,20 @@ arc42 (Hruschka and Starke, in use since 2005) answers what to document and how.
 | Structures and views | 5 Building Block View (code structure, hierarchical refinement, usually the largest); 6 Runtime View (important scenarios); 7 Deployment View |
 | Concepts and decisions | 8 Crosscutting Concepts (grows as concepts are decided); 9 Architectural Decisions; 10 Quality Requirements (quality tree, scenarios); 11 Risks and Technical Debt; 12 Glossary (the ubiquitous language) |
 
+## What the section pages add (read 2026-11-27)
+
+- **Section 1:** the top three, at most five, quality goals; ISO/IEC 25010:2023 is named as one example overview of quality topics, not a requirement. Subsections: requirements overview, quality goals, stakeholders.
+- **Section 3:** delimits the system from its communication partners; a business context (partners and the data exchanged) and a technical context (channels and media); the interfaces are called among the most critical aspects. The page does not mention C4.
+- **Section 10:** a quality tree plus scenarios that make requirements measurable. A short form (context, source and stimulus, metric) and a long form (stimulus and response, with source, environment, artifact and response measure) are described; if the requirements are already precise the scenario part can be skipped.
+
 ## Combining arc42, C4 and ADRs (vickybytes)
 
-- **Roles:** arc42 supplies the document skeleton; C4 (Simon Brown: context, containers, components, code; most teams draw the first three) supplies diagram levels; ADRs (Nygard format: title, status, context, decision, consequences) supply the decision log. Mapping C4 levels to sections 3, 5, 6, 7 and ADRs to section 9 is the arc42 skill's own synthesis, consistent with the guide.
-- **Just enough:** document what readers need and skip what the code already shows; start with a context diagram and a few ADRs.
-- **ADR hygiene:** keep them in the repo; never delete, mark superseded and link the successor.
-- **Audience table:** context diagram for everyone; container for dev/ops; component for developers; decision record for architects; deployment for ops/security; quality requirements for product owners; runbook for on-call.
-- **Freshness rules:** update docs in the same change (definition of done), assign owners, generate diagrams where possible, review quarterly, show last-verified dates.
-- **Common mistakes:** too much detail, no clear audience, missing rationale, diagrams without titles/legends, writing once and never again, hiding the docs.
-- **Diagram habits:** title and legend, labeled arrows (purpose or protocol), one level of detail per diagram, alt text.
+- **Roles:** arc42 is the document skeleton, C4 the diagram levels, ADRs the decision log. Which C4 level sits in which section is this pack's convention (see the map in SKILL.md), not something arc42 states. Diagram notation lives in `c4-model-architecture`; decision records live in `adr-architecture`.
+- **Just enough:** document what matters and skip what the code already shows.
+- **Freshness rules:** keep docs in version control and review them in pull requests; update them in the same change (definition of done); name owners; generate diagrams where possible; review key records each quarter; show last-verified dates.
+- **Common mistakes:** too much detail, no clear audience, missing rationale, diagrams without explanation, writing once and never updating.
 
-Caveat: the vickybytes guide is a general overview, not normative; the arc42 section list comes from arc42.org.
+Caveat: the vickybytes guide is a general overview, not normative; the arc42 section list comes from arc42.org and docs.arc42.org.
 
 ## Forces and trade-offs
 

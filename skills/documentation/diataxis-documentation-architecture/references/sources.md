@@ -1,16 +1,26 @@
-# Sources for the diataxis-documentation-architecture skill
+# Sources — Diátaxis Documentation Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was checked during skill rebuild (2026-11-27) with WebFetch.
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Daniele Procida, "Diátaxis — A systematic approach to technical documentation authoring", https://diataxis.fr/ | Core framework definition: technical documentation must be organized around four distinct user needs and corresponding forms (**Tutorials**, **How-to Guides**, **Technical Reference**, **Explanation**) addressing content (what to write), style (how to write it), and information architecture (how to organize it). |
-| 2 | Daniele Procida, "Start here — Diátaxis in five minutes", https://diataxis.fr/start-here/ | Detailed characterization of the four quadrants: **Tutorials** (practical lesson, study/acquisition of skill, instructor responsible for learner safety & success, driving-lesson analogy), **How-to Guides** (practical steps to solve a real-world goal/problem at work, recipe analogy), **Reference** (theoretical/factual description of the machinery for use at work — austere, accurate, complete, free of distraction), and **Explanation** (theoretical illumination of a topic for study/understanding — answers "why", discusses trade-offs and connections); the **Diátaxis Map** (Action vs. Cognition $\times$ Acquisition/Study vs. Application/Work); the **Diátaxis Compass**; and the organic inside-out **Workflow** (improve one piece at a time using the compass rather than building empty scaffolding upfront). |
+| https://diataxis.fr/ | 200 OK, 2026-11-27 | Framework definition, four needs, self-reported adoption claims |
+| https://diataxis.fr/start-here/ | 200 OK, 2026-11-27 | Four forms, map, compass questions, four-step workflow |
+| https://diataxis.fr/tutorials/ | 200 OK, 2026-11-27 | Teacher responsibility, no side paths, no explanation, visible result per step |
+| https://diataxis.fr/how-to-guides/ | 200 OK, 2026-11-27 | Goal-based titles, conditional branches, scope, what to omit |
+| https://diataxis.fr/reference/ | 200 OK, 2026-11-27 | Neutrality, consistent patterns, structure mirrors the machinery, examples |
+| https://diataxis.fr/explanation/ | 200 OK, 2026-11-27 | Bounded topic, why, alternatives, opinions |
+| https://diataxis.fr/application/ | 200 OK, 2026-11-27 | Iterate between work and reflection |
 
-## Notes on disagreements and nuances across sources
+Join-versus-split rule (thesis test, default is no new page, split on deep links, folder at the third page of a kind): adapted from a generic part of an MIT-licensed note-granularity skill of a personal note vault, rewritten for documentation pages; no text reused.
 
-- **Top-down folder scaffolding vs. Inside-out incremental refactoring:** Procida (Source 2) explicitly warns against starting a Diátaxis adoption by creating four empty top-level directories (`tutorials/`, `how-to/`, `reference/`, `explanation/`) before auditing actual content, recommending instead that authors use the Diátaxis Compass on existing pages to separate mixed concerns organically until the four top-level groupings emerge naturally.
+## Reading limits
 
-## Added 2026-11-24
+Pages were read through a summarizing fetch, not verbatim. Pages on complex hierarchies, landing pages and the theory chapter were not read. The join-versus-split rule is a pack convention, not a Diátaxis rule.
 
-- Join-versus-split rule (would this have a thesis of its own; default is not to create a page; joining is cheap, splitting is expensive; a split is earned by deep links to a section; folders at the third page of a kind) adapted from the `note-granularity` skill of a personal note vault (MIT, retrieved locally 2026-11-24), generic part only and rewritten for documentation pages (added 2026-11-24).
+## Claims not adopted as fact
+
+- That the author explicitly warns against creating four empty top-level folders: the pages read only imply it through the iterate-from-what-exists workflow; the skill states it as a convention.
+- That a tutorial must succeed on the first try with no branching "guaranteed": the source says each step should produce a comprehensible result and side paths should be left out.
+- That ADRs belong in explanation: a pack convention, not a source statement.
+- Earlier analogy table (driving lesson, recipe, encyclopedia): not re-confirmed on the pages read; removed.

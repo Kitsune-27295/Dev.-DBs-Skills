@@ -1,6 +1,6 @@
 # Karpathy-Style Rules: Before/After Examples
 
-Sources: https://github.com/multica-ai/andrej-karpathy-skills (EXAMPLES.md, raw), https://github.com/multica-ai/andrej-karpathy-skills/pull/104 (read through the GitHub API diff) · Last verified 2026-11-24
+Sources: https://github.com/multica-ai/andrej-karpathy-skills (EXAMPLES.md, raw), https://github.com/multica-ai/andrej-karpathy-skills/pull/104 (read through the GitHub API diff) · Last verified 2026-11-27
 
 ## What the repo's EXAMPLES.md contains (summary)
 

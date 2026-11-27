@@ -1,6 +1,6 @@
 # Agent Skills Specification and Progressive Disclosure
 
-Sources: https://agentskills.io/specification · https://github.com/agentskills/agentskills · https://raw.githubusercontent.com/agentskills/agentskills/main/skills-ref/README.md · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf · https://github.com/anthropics/skills · https://strapi.io/blog/what-are-agent-skills-and-how-to-use-them · https://github.com/coleam00/cole-medin-knowledge-base/blob/main/concepts/progressive-disclosure.md · Last verified 2026-11-24
+Sources: https://agentskills.io/specification · https://github.com/agentskills/agentskills · https://raw.githubusercontent.com/agentskills/agentskills/main/skills-ref/README.md · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf · https://github.com/anthropics/skills · https://strapi.io/blog/what-are-agent-skills-and-how-to-use-them · https://github.com/coleam00/cole-medin-knowledge-base/blob/main/concepts/progressive-disclosure.md · Last verified 2026-11-27
 
 An orchestrator that routes among skills must know exactly what a skill is, what the host loads for free, and what each stage costs. This page separates the open specification (portable) from vendor extensions (not portable).
 

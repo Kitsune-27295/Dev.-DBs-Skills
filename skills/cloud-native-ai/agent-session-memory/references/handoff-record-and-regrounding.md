@@ -1,6 +1,6 @@
 # Handoff Record and Re-grounding
 
-Sources: https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/memory · https://www.anthropic.com/research/effective-context-engineering-for-ai-agents · https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions · Last verified 2026-11-27
 
 ## Two artifacts, two jobs
 
@@ -69,7 +69,7 @@ open_questions: Whether the dead-letter queue needs its own alert; undecided.
 
 ## Re-grounding after compaction or cold start
 
-Compaction summarizes the conversation and continues with the summary and a few recent files; Anthropic notes that overly aggressive compaction can drop context that matters later. The Claude Code memory docs state that the project instruction file is re-read from disk after compaction, and that anything given only in conversation can disappear. Consequence: **disk is the source of truth, the summary is a hint.**
+Compaction mechanics and tuning are owned by `agent-skills-context-engineering`. Two facts matter here: the Claude Code memory docs say the project-root instruction file is re-read from disk after compaction, and an instruction given only in conversation can disappear. Consequence: **disk is the source of truth, the summary is a hint.**
 
 Checklist:
 

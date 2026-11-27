@@ -1,16 +1,16 @@
 # Multi-Agent Orchestration: Selection and Safeguards
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns · Last verified 2026-11-27
 
 ## Contents
-- Complexity ladder
+- When to leave one agent
 - The five patterns: use / avoid
 - Comparison table
 - Cross-cutting concerns
 - How an agent should apply this
 
-## Complexity ladder
-Use the lowest level that reliably works: (1) direct model call (classification, summarization, translation: if prompting solves it, no agent); (2) single agent with tools, often the right enterprise default, easier to debug, set iteration limits against infinite tool loops; (3) multiagent orchestration, justified only when one agent fails due to prompt complexity, tool overload, or separate security boundaries. Multi-agent buys specialization, scalability, maintainability and per-agent model choice, but adds coordination overhead, latency and failure modes.
+## When to leave one agent
+The ladder itself (direct call, single agent, multi-agent) is in `SKILL.md` section 2. Microsoft names three reasons that justify multi-agent: a single agent cannot reliably handle the task because of prompt complexity, tool overload or security requirements. The benefits it lists are specialization, maintainability, per-agent model choice and parallel work; the costs are coordination overhead, latency and failure modes. Page dated 2026-02-12, updated 2026-09-21.
 
 ## The five patterns
 **Sequential** (pipeline, prompt chaining): fixed linear order, next agent chosen by the workflow, not the agent.
@@ -30,7 +30,7 @@ Use the lowest level that reliably works: (1) direct model call (classification,
 - Avoid: the right agent is obvious from the input (use a plain dispatcher), rule-based routing, bad routing is costly to the user, bounce loops are hard to prevent.
 
 **Magentic** (task-ledger, adaptive planning): a manager builds and revises a ledger of goals and subgoals while specialized agents use tools to change external systems; yields a reviewable plan and audit trail.
-- Use: open-ended problems with no known path, plan wanted for human approval (example: low-risk SRE incident remediation).
+- Use: open-ended problems with no known path, plan wanted for human approval (the page's example is automated incident remediation by an SRE manager agent).
 - Avoid: deterministic paths, no ledger needed, time-sensitive work, likely stalls.
 
 ## Comparison
@@ -46,10 +46,12 @@ Use the lowest level that reliably works: (1) direct model call (classification,
 - **Context:** each hop adds reasoning and tool output. Decide per hop between raw context, compacted summary, or a fresh instruction only. Compact between agents.
 - **State:** for long or multi-interaction work persist progress, intermediate results and history in a durable store, scoped to the minimum (token cost, privacy).
 - **Reliability:** timeouts and retries, graceful degradation, surface errors rather than hide them, validate output before passing it on, circuit breakers, isolate compute and watch shared endpoint rate limits.
+- **Security:** least privilege per agent; security trimming must run in every agent, because agents need broad store access but must not return data the user cannot see; apply content guardrails at input, tool calls, tool responses and output.
 - Code-defined agents (SDK) give deterministic routing control; no-code platforms may not.
+- Pitfalls the page lists: a complex pattern where sequential or concurrent would do, agents without real specialization, hidden multi-hop latency, mutable state shared by concurrent agents, and context windows that grow with every hop.
 
 ## How an agent should apply this
-- Walk the ladder from the bottom and record why each step up is needed (prompt size, tool count, security boundary).
+- Walk the ladder from the bottom and record why each step up is needed (prompt complexity, tool overload, security boundary).
 - Choose by control flow: fixed order = sequential, same input many views = concurrent, quality gate = maker-checker, unknown specialist = handoff, no known plan = magentic.
 - Always set iteration caps, a stop criterion and an escalation path.
 - Validate each agent's output before it becomes the next one's input.

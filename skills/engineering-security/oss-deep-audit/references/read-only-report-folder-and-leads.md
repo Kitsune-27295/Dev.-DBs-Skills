@@ -1,6 +1,6 @@
 # Read-Only Report Folder, Unapplied Patches and Unverified Leads
 
-Sources: https://www.gradeworkinggroup.org/ (certainty graded separately from conclusions) · an own-style vault-audit skill read for ideas, no text reused · Last verified 2026-11-24
+Sources: https://www.gradeworkinggroup.org/ (certainty graded separately from conclusions) · an own-style vault-audit skill read for ideas, no text reused · Last verified 2026-11-27 (own design; the GRADE page was not re-fetched)
 
 ## The idea
 An audit changes nothing in the thing audited. Everything it produces lands in one dated report folder outside the audited tree, and anything that would change code is delivered as a patch that is never applied.

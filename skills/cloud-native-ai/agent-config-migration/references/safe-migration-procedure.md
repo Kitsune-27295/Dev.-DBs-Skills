@@ -1,6 +1,6 @@
 # Safe Migration Procedure
 
-Sources: https://agents.md · https://agentskills.io/specification · https://code.claude.com/docs/en/settings · https://code.claude.com/docs/en/claude-directory · Last verified 2026-11-24
+Sources: https://agents.md · https://agentskills.io/specification · https://code.claude.com/docs/en/settings · https://code.claude.com/docs/en/claude-directory · Last verified 2026-11-27
 
 The structure (discover, confirm, write a single new bundle, hand back; never modify sources) is the part worth reusing from a third-party built-in migration skill read for ideas; the wording, templates and verification steps below are original.
 

@@ -1,6 +1,6 @@
 ---
 name: text-quality-gate
-description: "Design a deterministic quality gate for generated text (docs, commit messages, code comments, PR and issue text, chat replies): a script that scans outgoing text, exits non-zero with a hit list, and runs from a git hook, CI or a Claude Code hook whether or not anyone remembers it. Covers rule versus gate, hard tells versus counted style signals, stripping quotes and code before scanning, exit status, wiring, false-positive handling and a small Python example. Use when generated text keeps carrying the same unwanted patterns despite style rules, or when a hook should check prose. Not for Husky or lint-staged formatting hooks (use setup-pre-commit) or blocking destructive git commands (use git-guardrails-claude-code)."
+description: "Design a deterministic quality gate for generated text (docs, commit messages, code comments, PR and issue text, chat replies): a script that scans outgoing text, exits non-zero with a hit list, and runs from a git hook, CI or a Claude Code hook whether or not anyone remembers it. Covers rule versus gate, hard tells versus counted style signals, masking quotes and code before scanning, exit codes, wiring, false positives and a small Python example. Not for Husky or lint-staged formatting hooks (setup-pre-commit), blocking destructive git commands (git-guardrails-claude-code) or how to write the prose itself (clean-code-for-agents). Use when generated text keeps carrying the same unwanted patterns despite style rules, or when a hook should check prose."
 ---
 
 # Text Quality Gate
@@ -68,14 +68,14 @@ Blank, do not delete: replace the span with spaces but **keep the newlines** so 
 | `git` `commit-msg` | Path of the message file as argument 1 | Non-zero exit aborts the commit | Right place for commit subjects and bodies; `--no-verify` bypasses it |
 | `git` `pre-commit` | Staged files (you list them) | Non-zero exit aborts the commit | Scan staged `.md` and comment-heavy files; bypass with `--no-verify` |
 | CI job | Files in the pull request | Failed job | The only place a bypass cannot be local; run the same script |
-| Claude Code `PreToolUse` on `Write` or `Edit` | JSON on stdin with the tool input | **Exit code 2** blocks and returns stderr to the model; exit 1 does not block | Scans text before it lands on disk |
-| Claude Code `Stop` | JSON on stdin including the last assistant message | JSON `{"decision":"block","reason":...}` | Scans the agent's own reply; expect it to fire often at first |
+| Claude Code `PreToolUse` on `Write` or `Edit` | JSON on stdin with `tool_input` (`file_path` and `content` for Write; `file_path`, `old_string`, `new_string` for Edit) | **Exit code 2** blocks and returns stderr to the model; exit 1 does not block | Scans text before it lands on disk |
+| Claude Code `Stop` | JSON on stdin including `last_assistant_message` and `stop_hook_active` | Exit 2 (stderr becomes the reason) or JSON `{"decision":"block","reason":...}`; either makes the agent continue | Scans the agent's own reply; expect it to fire often at first. Check `stop_hook_active` so a reply that cannot be fixed does not loop; Claude Code also stops after 8 consecutive continuations |
 
 Wiring rules:
 
 - One script, several callers. Put the patterns in a single file and let the git hook, CI and the tool hook all call it (`ssot-and-dry`).
 - For the Claude Code hook, exit 2 and the JSON decision are alternatives for one decision; do not mix them. A hook that exits 1 only shows a notice and the action proceeds.
-- Hook errors proceed by default; if the gate must fail closed, say so in the hook configuration rather than assuming.
+- A hook that fails to run or times out lets the action proceed by default. To fail closed on `PreToolUse`, set `"onFailure": "block"` on the command hook (documented from Claude Code 2.1.295; it has no effect on `Stop`). Test the failure path.
 - Log the payload once while wiring; tool input field names are the part most likely to drift.
 - Repo hooks need the executable bit and a hooks path that is versioned (`core.hooksPath`), otherwise they silently do nothing on other machines.
 
@@ -125,4 +125,5 @@ A worked Python example of about 40 lines and the hook adapters are in [referenc
 - [rule-vs-gate-and-wiring.md](references/rule-vs-gate-and-wiring.md) - read when deciding what to enforce and when wiring git hooks, CI or Claude Code hooks (exit codes, payloads, decisions).
 - [hard-tells-and-counted-signals.md](references/hard-tells-and-counted-signals.md) - read when choosing patterns, thresholds, masking rules and exemption handling, with prose-linter parallels.
 - [writing-a-gate-script.md](references/writing-a-gate-script.md) - read when implementing the gate; includes a runnable Python example, fixtures and hook adapters.
+- [trigger-evals.md](references/trigger-evals.md) - read when tuning or checking the description.
 - [sources.md](references/sources.md) - sources, retrieval status and claims not adopted.

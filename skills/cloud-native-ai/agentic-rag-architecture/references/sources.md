@@ -1,15 +1,28 @@
-# Sources for the agentic-rag-architecture skill
+# Sources: Agentic and RAG Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-fetched during the 2026-11-27 rebuild (WebFetch; Firecrawl was unavailable).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Erik Schluntz and Barry Zhang (Anthropic), "Building effective agents" (2024-12-19), https://www.anthropic.com/research/building-effective-agents | Fundamental architectural distinction between **Workflows** (LLMs and tools orchestrated through predefined code paths) and **Agents** (LLMs dynamically directing their own processes and tool usage); core rule to start with the simplest solution (single LLM call + retrieval) and add agentic complexity only when needed; the **Augmented LLM** building block; the **5 Workflow patterns** (**Prompt Chaining**, **Routing**, **Parallelization** [Sectioning & Voting], **Orchestrator-Workers**, **Evaluator-Optimizer**); warning on framework opacity; **Appendix 2: Prompt engineering your tools (Agent-Computer Interface / ACI)** and poka-yoke tool design. |
-| 2 | Microsoft Azure Architecture Center, "AI agent orchestration patterns", https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns | The three-tier complexity ladder (**Direct model call** -> **Single agent with tools** -> **Multiagent orchestration**); detailed rules, when to use, and when to avoid for the **5 Multi-Agent Orchestration patterns**: **Sequential**, **Concurrent**, **Group chat** (including Maker-Checker validation loops), **Handoff**, and **Magentic** (dynamic task ledger for open-ended problems). |
-| 3 | Microsoft Azure Architecture Center, "Design and develop a RAG solution", https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide | High-level RAG architecture separating the **RAG Application Flow** (query -> orchestrator -> search index -> context augmentation -> LLM grounded response) from the **RAG Data Pipeline Flow** (extract/parse -> chunk -> enrich -> embed -> index); hybrid search (vector + full-text + semantic reranking) and step-by-step scientific evaluation methodology. |
-| 4 | Microsoft Azure Architecture Center, "Develop an agentic RAG solution", https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-agentic | Standard RAG vs. **Agentic RAG** (treating retrieval as a tool invoked on demand); the 4 criteria that justify Agentic RAG (**Multistep reasoning**, **Dynamic source selection**, **Query decomposition**, **Iterative refinement**); designing retrieval tools (clear tool descriptions, single tool vs. multiple domain-specific tools); controlling the reasoning loop (max iterations, timeouts); and the 4 Agentic RAG evaluation dimensions (**Tool selection accuracy**, **Retrieval efficiency**, **End-to-end latency**, **Cost per request**). |
-| 5 | Microsoft Foundry Documentation, "Retrieval augmented generation (RAG) and indexes", https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation | Core RAG concepts (grounding data, indexes, embeddings, system prompts), Retrieve-Augment-Generate flow, agentic query planning, and security/privacy invariants (document-level access control pre-filtering at the index level, PII governance, and prompt-injection defense). |
+| [Anthropic, Building effective agents](https://www.anthropic.com/research/building-effective-agents) | 200 OK, dated 2024-12-19; page now notes that much tooling has changed since | Workflows versus agents, augmented LLM, the five workflow patterns (owned elsewhere), start-simple and framework advice, stopping conditions, ACI format guidance, absolute-path poka-yoke example |
+| [Microsoft, AI agent orchestration patterns](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns) | 200 OK, page dated 2026-02-12, updated 2026-09-21 | Three-level complexity table, the five orchestration patterns with use and avoid rules, group chat limited to three or fewer agents, context, state, reliability, security, cost and pitfalls |
+| [Microsoft, Develop an agentic RAG solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-agentic) | 200 OK, dated 2026-06-23 | Five reasons for agentic RAG, retrieval-tool design, tool count below 20, 5 to 10 iteration cap, four evaluation dimensions, illustrative 2 to 3 s versus 8 to 15 s latency |
+| [Microsoft, Design and develop a RAG solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide) | 200 OK, dated 2025-12-17 | The two flows, phase-by-phase design questions, evaluation metric names, structured-evaluation rule |
+| [Microsoft Foundry, RAG and indexes](https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation) | 200 OK, dated 2026-08-21 | Index modes, agentic retrieval (parallel subqueries), access control at retrieval time, Entra ID over API keys, untrusted retrieved content, cost and limitation notes |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Single Agent with Tools vs. Multi-Agent Orchestration:** Both Anthropic (Source 1) and Microsoft (Sources 2 & 4) strongly converge on preferring a **Single Agent with well-designed tools** (or a deterministic Workflow) over Multi-Agent systems whenever possible, noting that multi-agent coordination adds latency, token cost, and debugging complexity and should only be introduced when a single agent hits tool-selection degradation, context limits, or hard security boundary requirements.
+- Microsoft's per-phase sub-articles (chunking, enrichment, embeddings, information retrieval, evaluation) were not read; only the intro's phase list is used.
+- The Anthropic page was read through a summarizing fetch tool; quotations are from its extract.
+- The Azure orchestration page is long; its use and avoid lists and cross-cutting sections were read, the code and image captions were not.
+- Reference files contain no scripts or data files.
+
+## Claims not adopted as fact
+
+- "Hybrid search consistently outperforms vector-only or keyword-only retrieval": not stated on any page read. Kept only as the skill's inference for exact identifiers.
+- "More than 15 to 20 tools" as a threshold for multi-agent: not in the sources. The page says keep retrieval tools below 20; the 3 to 7 range is this skill's heuristic.
+- "3 to 5 times the latency and token cost" of an agent: not in the sources; replaced by Microsoft's illustrative 2 to 3 s versus 8 to 15 s.
+- "A 20-line SDK call" as Anthropic's advice: the page says many patterns take a few lines and gives no count.
+- "Full block replacements or anchored edits" as Anthropic's tool-format advice: not on the page; only the diff and JSON-escaping examples are.
+- "Same embedding model at index and query time": plausible general practice, not on the pages read.
+- The five-rung ladder is this skill's synthesis, not a vendor taxonomy.

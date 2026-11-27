@@ -1,6 +1,6 @@
 ---
 name: agent-config-migration
-description: "Migrate settings, instructions, skills, commands and MCP servers from one coding agent's configuration format to another's safely: discover what exists, classify what converts cleanly, lossy or not at all, show the plan, get the user's confirmation, write a new self-contained bundle that can be removed in one step, never modify or delete the sources, never print secrets, and verify the result. Covers the portable pieces (AGENTS.md, the Agent Skills format, MCP server definitions), the non-portable ones (permissions, hooks, per-tool settings), environment-variable syntax differences, name clashes, scope surprises and a manifest for undo. Use when moving from one coding agent to another, importing a teammate's or an old setup, syncing config across tools, or writing an import or migration command for an agent."
+description: "Migrate settings, instructions, skills, commands and MCP servers from one coding agent's configuration format to another's safely: read-only discovery, classify each item as clean, lossy or not convertible, show the plan and get confirmation, write one new self-contained bundle that can be removed in one step, never modify the sources, never print secrets, verify the result. Covers the portable pieces (AGENTS.md, the Agent Skills format, MCP server definitions), the non-portable ones (permissions, hooks, per-tool settings), environment-variable syntax differences, name clashes, scope surprises and a manifest for undo. Use when moving from one coding agent to another, importing a teammate's or an old setup, syncing config across tools, or writing an import command. For deciding what belongs in instruction files use skill-orchestrator; for skill structure use agent-skills-context-engineering."
 ---
 
 # Agent Config Migration
@@ -79,7 +79,7 @@ Full procedure with a plan template, a manifest format and verification pseudoco
 ## 4. Traps
 
 - **Scope inflation**: a project rule set imported into a user-level bundle now applies to every project.
-- **Environment-variable syntax differs** between tools; a placeholder copied verbatim may be passed literally. Rewrite it for the target and list the variables the user must provide.
+- **Environment-variable syntax differs** between tools; a placeholder copied verbatim may be passed literally (Claude Code loads a server with the literal `${VAR}` text and only warns when the variable is unset). Rewrite it for the target and list the variables the user must provide.
 - **Legacy transports**: an older remote transport may have no equivalent in the target; offer a bridge or skip with a reason.
 - **Relative paths** resolve against a different base in the target; make them absolute at conversion time.
 - **Trigger models**: always-on, glob-scoped, description-selected and manual rules do not map one to one; decide per rule and report the loss.
@@ -104,4 +104,5 @@ Full procedure with a plan template, a manifest format and verification pseudoco
 - [config-surfaces-by-agent.md](references/config-surfaces-by-agent.md) - read when you need locations, file formats and precedence for Claude Code, Cursor, Codex, AGENTS.md and Agent Skills.
 - [mapping-and-lossy-conversions.md](references/mapping-and-lossy-conversions.md) - read when converting MCP servers, rules, commands and subagents, or deciding what is lost.
 - [safe-migration-procedure.md](references/safe-migration-procedure.md) - read when running or writing a migration: plan template, manifest, undo, verification.
+- [trigger-evals.md](references/trigger-evals.md) - should-trigger and near-miss prompts for this skill.
 - [sources.md](references/sources.md) - sources, retrieval status and claims not adopted.

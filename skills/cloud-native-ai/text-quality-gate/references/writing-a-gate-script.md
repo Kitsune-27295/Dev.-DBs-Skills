@@ -1,8 +1,8 @@
 # Writing the Gate Script in Any Language
 
-Sources: https://git-scm.com/docs/githooks · https://code.claude.com/docs/en/hooks · https://docs.vale.sh/topics/cli · Last verified 2026-11-24
+Sources: https://git-scm.com/docs/githooks · https://code.claude.com/docs/en/hooks · https://docs.vale.sh/topics/cli · Last verified 2026-11-27
 
-Design is language-neutral; the example below is Python (standard library only) and was run during authoring against fixtures: a file with an emoji heading, a filler phrase, a recap opener and a quoted tell exited 1 with three hits (the quoted tell and the fenced code were ignored); a text with three counted words exited 1; a text where the same words sit in backticks and quotes exited 0.
+Design is language-neutral; the example below is Python (standard library only) and was run during authoring (2026-11-24; not re-run on 2026-11-27) against fixtures: a file with an emoji heading, a filler phrase, a recap opener and a quoted tell exited 1 with three hits (the quoted tell and the fenced code were ignored); a text with three counted words exited 1; a text where the same words sit in backticks and quotes exited 0.
 
 ## 1. Anatomy
 
@@ -96,9 +96,9 @@ if hits:
 sys.exit(0)
 ```
 
-The field names `content` and `new_string` are the usual tool input keys for file writes and edits, but they were not confirmed from the hooks page during authoring (see sources). Log one payload while wiring and adjust.
+The hooks reference documents `content` for `Write` and `new_string` for `Edit` (plus `file_path` on both). Log one payload while wiring anyway; field names are the part most likely to drift.
 
-For a `Stop` hook the same scan runs on the last assistant message from the payload; answer with a JSON block decision on stdout and exit 0, or exit 2 with a reason, but not both.
+For a `Stop` hook the same scan runs on `last_assistant_message` from the payload; answer with a JSON block decision on stdout and exit 0, or exit 2 with a reason, but not both. Return early (exit 0) when `stop_hook_active` is true, or a reply that cannot be fixed loops until the 8-continuation cap.
 
 ## 4. Porting the design
 

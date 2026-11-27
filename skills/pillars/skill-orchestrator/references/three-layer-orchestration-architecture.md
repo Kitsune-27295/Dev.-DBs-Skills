@@ -1,6 +1,6 @@
 # Three-Layer Orchestration Architecture
 
-Sources: https://agentskills.io/specification · https://raw.githubusercontent.com/obra/superpowers/main/skills/using-superpowers/SKILL.md · https://github.com/coleam00/cole-medin-knowledge-base/blob/main/concepts/progressive-disclosure.md · https://blakecrosley.com/pt-BR/guides/agent-architecture · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://strapi.io/blog/what-are-agent-skills-and-how-to-use-them · Last verified 2026-11-24
+Sources: https://agentskills.io/specification · https://raw.githubusercontent.com/obra/superpowers/main/skills/using-superpowers/SKILL.md · https://github.com/coleam00/cole-medin-knowledge-base/blob/main/concepts/progressive-disclosure.md · https://blakecrosley.com/pt-BR/guides/agent-architecture · https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices · https://strapi.io/blog/what-are-agent-skills-and-how-to-use-them · Last verified 2026-11-27
 
 How the pieces fit: skills are only found if something points at them, and only chosen well if rules order them. Three layers do this at different costs. Design below is my synthesis; the sources supply the ingredients and are cited where used.
 

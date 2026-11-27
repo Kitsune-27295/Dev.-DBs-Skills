@@ -1,6 +1,6 @@
 # Research Tool Contract (tool-agnostic)
 
-Sources: Firecrawl repository snapshot (AGPL-3.0), path apps/api/src/controllers/v2/types.ts; path apps/api/src/controllers/v2/scrape.ts; path skills/firecrawl-build-scrape/references/freshness-and-liveness.md; path skills/firecrawl-build/references/endpoint-selection.md; path apps/api/src/services/monitoring/judgeChange.ts; path apps/api/src/lib/scrape-interact/browser-agent.ts. Design is our own, derived from behaviors only (clean-room; no code or prose copied, AGPL-3.0 vs MIT) · Last verified 2026-11-24
+Sources: Firecrawl public docs read 2026-11-27 (scrape, map, crawl, extract, interact, parse and monitoring pages; see `firecrawl-tool-surface-analysis.md`). The contract design is our own, derived from behaviors only (clean-room, no code or prose copied) · Last verified 2026-11-27
 
 ## Purpose
 
@@ -43,10 +43,10 @@ Refinements over what Firecrawl leaves implicit: capture a citation and a date o
 - read-page: the scrape tool with markdown and main-content-only; raise the wait only for client-rendered pages; set the cache age explicitly for time-sensitive claims (0 forces live).
 - map-site: the map tool with a search keyword; follow with targeted reads.
 - crawl-section: the crawl tool with path include patterns, a small page cap and a delay; poll its status tool.
-- extract-structured: the scrape tool with a JSON format and schema (single page) or the extract tool (several pages). Verify every returned value against the page text.
+- extract-structured: the scrape tool with a JSON format and schema (single page) or the agent tool with a schema (several pages); the separate extract tool is deprecated. Verify every returned value against the page text.
 - interact: the interact tool after a scrape; give one small goal; stop the session afterwards.
 - parse-document: the parse tool for local files; scrape handles PDF URLs by default.
-- monitor: the monitor create/run/check tools; write the goal precisely so mechanical diffs are ignored.
+- monitor: the monitor create/run/check tools (minimum interval 5 minutes); write the goal precisely so mechanical diffs are ignored.
 
 ### (b) Native WebSearch + WebFetch
 - search: WebSearch with the date and domain hints placed in the query text; pass allowed/blocked domain lists if the tool offers them.

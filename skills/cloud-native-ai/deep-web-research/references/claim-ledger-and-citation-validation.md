@@ -1,6 +1,6 @@
 # Claim Ledger and Citation Validation
 
-Sources: https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://www.aihero.dev/skills-research · https://github.com/Weizhena/Deep-Research-skills · Last verified 2026-11-24
+Sources: https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://www.aihero.dev/skills-research · https://github.com/Weizhena/Deep-Research-skills · Last verified 2026-11-27
 
 ## The ledger idea
 199-biotechnologies keeps three linked records on disk: sources (stable ID per canonical URL), evidence (exact or near-exact quote plus locator, type, query that found it), and claims (one atomic sentence each, with type and support status). A claim points to evidence, evidence points to a source. Evidence must be saved before drafting, so it survives context compaction.

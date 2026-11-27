@@ -1,6 +1,6 @@
 # Workflow vs Agent Patterns
 
-Sources: https://www.anthropic.com/research/building-effective-agents · https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf · Last verified 2026-11-23
+Sources: https://www.anthropic.com/research/building-effective-agents · https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf · Last verified 2026-11-27
 
 ## Definitions
 - **Workflow**: LLMs and tools orchestrated through code paths fixed in advance. Control flow lives in your code.
@@ -34,7 +34,7 @@ Frameworks: start with raw API calls; hidden abstraction obscures prompts and in
 
 ## Enterprise guide additions (Anthropic PDF)
 - Single agents suit open-ended problems with unknown step count; they are weaker when you need first-try perfection every time, but try adding Skills to one agent before going multi-agent.
-- Multi-agent: Anthropic's internal research is quoted as 90.2% better than single-agent on tasks with several independent directions; the same guide says multi-agent uses roughly 10-15x the tokens (vendor figures, not independently verified). Reserve it for high-value work.
+- Multi-agent: Anthropic's internal research is quoted as 90.2% better than single-agent on tasks with several independent directions; the same guide says multi-agent uses roughly 10-15x the tokens; the research-system post (re-read 2026-11-27) says agents use about 4x and multi-agent about 15x chat tokens and cites 90.2% for an Opus 4 lead with Sonnet 4 subagents on its internal eval (vendor figures, not independently verified). Reserve it for high-value work.
 - Centralized (supervisor/orchestrator/router) vs decentralized (swarm, group chat, blackboard, event-driven). Subagents are treated as tools by a supervisor. Decentralized gives emergent, less predictable behavior.
 - Sequential workflows: audit trail, deterministic; avoid when iteration or backtracking is required. Parallel: avoid when agents write shared state.
 - Hybrids: supervisor + parallel specialists; sequential with dynamic routing; single agent that escalates to multi-agent on edge cases (cost-optimal).

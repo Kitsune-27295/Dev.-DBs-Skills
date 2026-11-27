@@ -1,6 +1,6 @@
 # Stall Detection and Monitor
 
-Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/engineering/multi-agent-research-system · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-24
+Sources: https://code.claude.com/docs/en/agent-teams · https://www.anthropic.com/engineering/multi-agent-research-system · Third-party skills read for ideas, no text reused (see sources.md) · Last verified 2026-11-27
 
 A group can stall without any error: every member (the coordinator included) is parked waiting for someone else, nobody posts, nobody wakes, and the job is unfinished. A timer-driven monitor wakes regardless and breaks the silence. The design below is this skill's own; the failure modes it targets are documented in the sources (agents stopping early, task status lagging, a lead that declares the team finished too soon, endless searching, agents that keep going after having enough).
 

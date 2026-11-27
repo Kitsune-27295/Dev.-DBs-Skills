@@ -22,7 +22,7 @@ Specification fields and their limits: see `agent-skills-context-engineering` (`
 
 | Host | Where skills go (as documented) | Notes |
 |---|---|---|
-| Claude Code | `~/.claude/skills/<name>/SKILL.md` (personal), `.claude/skills/<name>/SKILL.md` (project), `<plugin>/skills/<name>/` (plugin) | Live reload in session; `/reload-skills` if missing |
+| Claude Code | `~/.claude/skills/<name>/SKILL.md` (personal), `.claude/skills/<name>/SKILL.md` (project), `<plugin>/skills/<name>/` (plugin) | Live reload in session; `/reload-skills` if missing. Also lists enterprise (managed settings), nested `<subdir>/.claude/skills/`, `--add-dir` and claude.ai-account locations; account skills show as synced under `~/.claude/skills/synced/`, while the overview page says Claude Code skills are separate from claude.ai and the API: state both, do not claim they never sync |
 | Claude.ai | Upload a zip in settings (paid plans with code execution on) | Not synced to API or Claude Code |
 | Claude API | Upload via `/v1/skills`; reference by `skill_id` in `container.skills` | Needs code execution tool; workspace-wide sharing |
 | Antigravity | Workspace `<root>/.agents/skills/<folder>/`; global `~/.gemini/config/skills/<folder>/` | CLI also reads `~/.gemini/antigravity-cli/skills/`; `/skills reload` |

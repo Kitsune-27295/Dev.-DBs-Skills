@@ -1,13 +1,13 @@
 ---
 name: git-atomic-commits
-description: "Craft atomic, reviewable git commits: when to split a change, Conventional Commits 1.0.0 types/scopes/breaking-change footers and their SemVer effect, commit message craft (imperative subject <=50 chars, body explains why), interactive staging with git add -p, safe local history rewriting (amend, rebase -i, fixup/autosquash), --force-with-lease vs --force, patch-series/contributing workflow, and keeping secrets out of history. Use when about to commit, split or squash a diff, word a commit message, clean up a branch before review, decide whether history may be rewritten, or recover from a committed secret."
+description: "Turn a working-tree diff into atomic, reviewable commits and keep shared history safe: when to split, Conventional Commits 1.0.0 types, scopes and breaking-change footers with their SemVer effect, message craft (imperative subject, body explains why), git add -p staging, rewriting only unpushed history (amend, rebase -i, fixup/autosquash), --force-with-lease vs --force, stacked-PR landing, pre-push checks, worktrees, and secrets that reached a commit. Not for PR descriptions (pr-description), judging a diff (code-review) or answering review comments (receiving-code-review). Use when about to commit, split or squash a diff, word a commit message, clean up a branch before review, decide whether history may be rewritten, or recover from a committed secret."
 ---
 
 # Git Atomic Commits, Messages & Safe History
 
 One idea: a commit is the unit of **review, revert, bisect and blame**, so each one should be a single logical change that builds and passes tests, with a message that tells the future reader **why**. History may be polished only while it is private; once shared, it is append-only. Sources and claims: [references/sources.md](references/sources.md).
 
-Boundaries: reviewing someone's diff is `code-review`; the red/green/refactor cadence that produces commits is `tdd`; running a ticket end to end is `implement`; multi-step breaking migrations are `parallel-change-expand-contract` (this skill only says each step is its own commit); recording architecture decisions is `adr-architecture`; deep secret/exposure audits are `security-audit` and `database-exposure`; schema rollout across environments is `migrations-and-environments`; trust boundaries in code are `never-trust-the-client`.
+Boundaries: reviewing someone's diff is `code-review`; PR title and body are `pr-description`; acting on reviewer comments is `receiving-code-review`; the consent card for destructive operations is `ops-safety`; the red/green/refactor cadence that produces commits is `tdd`; running a ticket end to end is `implement`; multi-step breaking migrations are `parallel-change-expand-contract` (this skill only says each step is its own commit); recording architecture decisions is `adr-architecture`; deep secret/exposure audits are `security-audit` and `database-exposure`; schema rollout across environments is `migrations-and-environments`; trust boundaries in code are `never-trust-the-client`.
 
 ---
 
@@ -59,7 +59,7 @@ Details and examples: [message-craft.md](references/message-craft.md).
 | `feat` | new capability | MINOR |
 | `fix` | bug correction | PATCH |
 | `feat!` / `fix!` / any type with `BREAKING CHANGE:` footer | incompatible public change | MAJOR |
-| `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert` | common non-spec types (Angular-derived); no bump unless breaking | none |
+| `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert` | allowed by the spec but not defined by it (a common convention); no bump unless breaking | none |
 
 Scope = one noun for the area, in parentheses: `feat(parser): ...`. Keep the scope list short and agreed per repo. `BREAKING CHANGE` must be uppercase; `!` may replace the footer but then the description must state the break. While the project is `0.y.z`, SemVer allows anything to change, yet Conventional Commits advises treating it as released. If the repo does not use Conventional Commits, follow its existing style; do not impose it. Details: [conventional-commits-and-semver.md](references/conventional-commits-and-semver.md).
 
@@ -129,5 +129,6 @@ One topic branch, a clean ordered series, each commit explained; rebase on the c
 - [Force-push safety](references/force-push-safety.md) — read before any push of rewritten history.
 - [Secrets hygiene](references/secrets-hygiene.md) — read when preventing, detecting or responding to committed secrets.
 - [Stacked PRs: landing A <- B <- C](references/stacked-prs-landing.md) — read when landing dependent PRs; verify native stack support first, hard stop, rebase fallback.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking whether this skill or a neighbor owns a request.
 - [Proportional pre-push checks](references/proportional-pre-push-checks.md) — read before pushing, to pick the minimal check set covering the diff.
 - [Git worktrees for isolation](references/worktrees-for-isolation.md) — read when a second checkout is needed; submodule caveat.

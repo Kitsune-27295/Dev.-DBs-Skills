@@ -1,6 +1,6 @@
 # Budget and Stopping Rules
 
-Sources: https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://github.com/Weizhena/Deep-Research-skills · https://www.aihero.dev/skills-research · https://github.com/sanjay3290/ai-skills · https://mcpmarket.com/tools/skills/deep-web-researcher · Last verified 2026-11-24
+Sources: https://github.com/199-biotechnologies/claude-deep-research-skill · https://github.com/robertnowell/deep-research · https://github.com/Weizhena/Deep-Research-skills · https://www.aihero.dev/skills-research · https://github.com/sanjay3290/ai-skills · https://mcpmarket.com/tools/skills/deep-web-researcher · Last verified 2026-11-27
 
 Every number below is a claim made by the named repository, not a measured fact. Use them as starting values and calibrate on your own runs.
 

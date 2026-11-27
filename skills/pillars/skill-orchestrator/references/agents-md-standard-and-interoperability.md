@@ -1,6 +1,6 @@
 # AGENTS.md Standard and Interoperability
 
-Sources: https://agents.md/ · https://github.com/agentsmd/agents.md · https://code.claude.com/docs/en/memory · https://github.com/TechSpokes/agency-specifications-files-agents-md (secondary, low adoption) · https://devops.com/claude-code-adds-agents-md-fallback-cutting-instruction-file-sprawl (not readable: HTTP 403) · Last verified 2026-11-24
+Sources: https://agents.md/ · https://github.com/agentsmd/agents.md · https://code.claude.com/docs/en/memory · https://github.com/TechSpokes/agency-specifications-files-agents-md (secondary, low adoption) · https://devops.com/claude-code-adds-agents-md-fallback-cutting-instruction-file-sprawl (not readable: HTTP 403) · Last verified 2026-11-27
 
 ## 1. The standard
 

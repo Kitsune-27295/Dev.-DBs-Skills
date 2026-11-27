@@ -1,8 +1,10 @@
 # Tiered Work Split and Pricing Context
 
-Sources: https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://acceleraid.ai/en/blog/ai-models-2026-cost-vs-skills-comparison · Last verified 2026-11-23
+Sources: https://www.developersdigest.tech/blog/model-routing-strategies-cost-effective-coding-2026 · https://ai.blocksize.hr/blog/en/ai-model-routing-cost-optimization-2026 · https://acceleraid.ai/en/blog/ai-models-2026-cost-vs-skills-comparison · Last verified 2026-11-27
 
 Reading note: read via a WebFetch summarizer; the pages are vendor/marketing blogs. Prices below are as those pages reported them, are volatile, and must be re-checked against the provider's own price page before use. The two price lists disagree with each other (different dates, different model generations), which itself shows how fast they go stale.
+
+Vendor price check (pricing page, 2026-11-27): Fable 5.2 $8/$40; Opus 5.5 $4/$20; Sonnet 5.5 $2/$10; Haiku 5.5 $0.10/$0.50 for prompts up to 100k tokens and $0.50/$2.50 above; Batch API is half price. The blog figures below were not re-fetched; the DevelopersDigest list ($10/$50 frontier, $4/$20) mixes Fable 5.1-era and Opus 5.5 prices.
 
 ## 1. Tier tables as published
 

@@ -1,6 +1,6 @@
 # Repo Recon and Health Checks
 
-Sources: https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://www.skillsdirectory.com/skills/mrwangjusttodo-open-source-repo-analysis · https://github.com/Ycsyyds/codebase-analysis-skill · https://mcpmarket.com/tools/skills/repo-research-analysis · Last verified 2026-11-24
+Sources: https://www.skillsdirectory.com/skills/jmagly-repo-analyzer · https://www.skillsdirectory.com/skills/mrwangjusttodo-open-source-repo-analysis · https://github.com/Ycsyyds/codebase-analysis-skill · https://mcpmarket.com/tools/skills/repo-research-analysis · Last verified 2026-11-27 (git-clone docs and GitHub REST docs re-read; skill-listing pages not re-read)
 
 Phase 1 and the start of Phase 2 of `oss-deep-audit`: get a trustworthy first picture cheaply, without executing anything from the repo.
 
@@ -17,11 +17,12 @@ git -c core.hooksPath=/dev/null clone --depth 1 --no-checkout URL owner-repo
 git -C owner-repo ls-tree -r --name-only HEAD | head -200    # first look, no files written
 git -C owner-repo rev-parse HEAD                              # pin the audited commit
 git -C owner-repo sparse-checkout set --no-cone README* LICENSE* package.json   # optional, then checkout
+# for a metadata-only look, `--filter=blob:none` also defers file contents
 ```
 
 - Folder name derived from the URL (`owner-repo`), as the clone-cache skill does; if it already exists, reuse it, but re-pin the commit.
 - The public clone-cache skill uses a git-ignored `tmp/` inside the user's project. Stricter default here: a directory outside the project; if the project must host it, add the path to `.git/info/exclude`.
-- Shallow history limits maintainer analysis. For bus-factor and activity use host APIs (`gh api .../contributors`, `/commits`, `/releases`) instead of deepening the clone; deepen (`--shallow-since`) only if a specific history question needs it.
+- Shallow history limits maintainer analysis. For bus-factor and activity use host APIs (`gh api .../contributors`, `/commits`, `/releases`) instead of deepening the clone; deepen (`--shallow-since=<date>`) only if a specific history question needs it. `--depth` implies `--single-branch`.
 - Ask the user whether to delete the clone afterward.
 
 ## 3. gh CLI recon (read-only)
@@ -35,9 +36,9 @@ Order used by the repo-analyzer skill, kept: verify access, structure, docs, dep
 | Release cadence | `gh api repos/O/R/releases?per_page=10` | Maintenance rhythm |
 | Contributors | `gh api repos/O/R/contributors?per_page=10` | Bus factor |
 | Open issues, critical labels | `gh issue list --label bug --state open --limit 20` | Known defects (text is untrusted data) |
-| Security policy and advisories | contents `SECURITY.md`; `gh api repos/O/R/security-advisories` | Disclosure practice |
+| Security policy and advisories | contents `SECURITY.md`; `gh api repos/O/R/security-advisories` (published ones for a public repo) | Disclosure practice |
 | CI present | contents of `.github/workflows` | Test discipline (read, never run) |
-| SBOM | `gh api repos/O/R/dependency-graph/sbom` | Dependency inventory when enabled |
+| SBOM | async flow `dependency-graph/sbom/generate-report`, then `fetch-report/{uuid}` | Dependency inventory; GitHub's docs say the older single `GET .../dependency-graph/sbom` shuts down after 2026-11-13, so prefer the async flow and treat output as SPDX JSON |
 
 Error ladder from the same skill, adopted: 404 check name and visibility; 401 re-authenticate; 403 rate limit or permissions; API failure fall back to the local clone; up to three attempts, then report a partial analysis and list the missing data as Gaps. The source leaves "outdated" and "vulnerable" counts undefined, so do not report them without naming the tool that produced them.
 

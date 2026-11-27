@@ -1,10 +1,10 @@
 # Prompt Cache and Mid-Conversation Effort Changes
 
-Sources: https://platform.claude.com/docs/en/build-with-claude/effort · https://platform.claude.com/docs/en/build-with-claude/effort-per-message (extra page) · https://developers.openai.com/api/docs/guides/reasoning · https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/reasoning_effort · https://code.claude.com/docs/en/model-config · Last verified 2026-11-23
+Sources: https://platform.claude.com/docs/en/build-with-claude/effort · https://platform.claude.com/docs/en/build-with-claude/effort-per-message (extra page) · https://developers.openai.com/api/docs/guides/reasoning · https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/reasoning_effort · https://code.claude.com/docs/en/model-config · Last verified 2026-11-27
 
 ## 1. The problem
 
-Effort is a request-level parameter that shapes the rendered prompt. Changing it between requests can invalidate all or part of the cached prefix from earlier turns (Claude docs, LangChain note). A cache miss re-bills the whole prefix at full input price and adds latency. Claude Code prompt cache lifetime (Portuguese best-practices page): about one hour on a subscription, five minutes with an API key, cloud provider or usage credits; subagents default to five minutes.
+Effort is a request-level parameter that shapes the rendered prompt. Changing it between requests can invalidate all or part of the cached prefix from earlier turns (Claude docs, LangChain note). A cache miss re-bills the whole prefix at full input price and adds latency. Claude Code prompt cache lifetime (best-practices page, re-read 2026-11-27): about one hour on a subscription, five minutes with an API key, cloud provider or usage credits; subagents get five minutes unless changed. API cache reads cost 0.1x base input on most models, 0.05x on Opus 5.5 and Sonnet 5.5, 0.025x on Fable 5.2 (pricing page).
 
 ## 2. Claude: two ways to change effort
 
@@ -37,7 +37,7 @@ Exists in both the OpenAI reasoning guide and the LangChain reference page (via 
 
 ## 4. Claude Code behavior
 
-- Skill `effort:` applies until the end of that turn (or the whole forked run with `context: fork`); it is not persisted. A subagent's `effort` applies while it runs. `CLAUDE_CODE_EFFORT_LEVEL` always wins.
+- Skill `effort:` applies until the end of that turn (or the whole forked run with `context: fork`); it is not persisted. A skill `model:` acts only on a user-typed `/name`. A subagent's `effort` applies while it runs. `CLAUDE_CODE_EFFORT_LEVEL` always wins.
 - `ultrathink` affects one turn without altering the session setting.
 - (Inference) Because skill/subagent effort is turn- or run-scoped, using them is a cache-friendlier way to vary depth than flipping a session-wide level repeatedly; the docs do not state cache effects for Claude Code effort, so treat this as untested.
 

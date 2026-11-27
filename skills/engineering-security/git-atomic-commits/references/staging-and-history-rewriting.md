@@ -1,6 +1,6 @@
 # Interactive Staging, History Rewriting and Patch-Series Workflow
 
-Sources: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging · https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/SubmittingPatches · Last verified 2026-11-23
+Sources: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging · https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/SubmittingPatches · Last verified 2026-11-27
 
 ## Interactive staging
 
@@ -17,7 +17,7 @@ Sources: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging · https:/
 
 A partly staged file shows as both staged and unstaged; `git commit` records only the staged part. Review with `git diff --cached` (staged) and `git diff` (rest).
 
-Same hunk UI elsewhere: `git reset -p` unstage parts; `git stash push -p` stash parts (the book's `stash save --patch` is deprecated); `git restore -p` / `git checkout -p` **discard** working-tree changes and cannot be undone. Untracked files are not offered by `add -p` (use `git add -N <file>` first, not read from source).
+Same hunk UI elsewhere: `git reset -p` unstage parts; `git stash push -p` stash parts (the book uses `stash save --patch`; that `save` is deprecated in favor of `push` is Git manual knowledge, not on the book page); `git restore -p` / `git checkout -p` **discard** working-tree changes and cannot be undone. Untracked files are not offered by `add -p` (use `git add -N <file>` first, not read from source).
 
 ## Rewriting: the cardinal rule
 
@@ -48,7 +48,7 @@ Deleting every line aborts. Reorder by moving lines. Dropping or reordering earl
 
 Split a commit: mark `edit`; at the stop run `git reset HEAD^`, then `git add`/`git commit` per piece, then `git rebase --continue`.
 
-Fixup workflow (autosquash flags: not read from the fetched pages, standard Git): `git commit --fixup <sha>` creates a `fixup!` commit; `git rebase -i --autosquash <base>` auto-places and marks it. `git config rebase.autoSquash true` makes it default.
+Fixup workflow (read on the git-rebase manual page, 2026-11-27): `git commit --fixup=<sha>` creates a `fixup!` commit (`--squash=` and `--fixup=amend:`/`reword:` variants exist); `git rebase -i --autosquash <base>` moves it right after its target. `git config rebase.autoSquash true` makes it the default for interactive rebases.
 
 Recovery: `git rebase --abort` during; `git reflog` and reset to the old tip afterwards.
 
@@ -59,7 +59,7 @@ The book calls `git filter-branch` the nuclear option and says it is no longer r
 ## Patch-series workflow
 
 From Pro Git and SubmittingPatches:
-1. Branch from the right base (Git project: `maint` for fixes, `master` for features). In general, current mainline.
+1. Branch from the right base: current mainline, or the base the project's contributing guide names.
 2. Commit logically separate changes with tests; run the suite and `git diff --check`.
 3. Describe each commit (problem, why this fix, alternatives).
 4. Fork workflow: work on a topic branch, `git push -u myfork featureA`, open a PR or `git request-pull`. If upstream moves: `git fetch`, `git rebase origin/main`, then force-push the topic branch with a lease (see `force-push-safety.md`), or push `featureAv2` instead.

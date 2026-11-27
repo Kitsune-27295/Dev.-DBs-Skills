@@ -1,6 +1,6 @@
 ---
 name: agent-session-memory
-description: "Keep durable memory for coding agents across sessions, independent of any product: read the memory brief first, write short entries into four capped channels (hot context, lessons with the incident that taught them, journal, decisions), close each session with a 3-line wrap-up, and pass work on with a single-use handoff plus an append-only handoff record whose fields are all required. Covers re-grounding after context compaction, never storing transcripts or secrets, and stopping when a memory tool is missing. Use when starting or ending a working session, before a long pause, after context compaction, or when a lesson or decision should outlive the session. Not for a one-off summary of the current conversation for another agent (use handoff) or for auditing stored notes (use memory-hygiene)."
+description: "Keep durable memory for coding agents across sessions, independent of any product: read the memory brief first, write short entries into four capped channels (hot context, lessons with the incident that taught them, journal, decisions), close each session with a 3-line wrap-up, and pass work on with a single-use handoff note plus an append-only handoff record whose fields are all required. Covers re-grounding after context compaction and stopping when a memory tool is missing. Not for a one-off summary of the current conversation (use `handoff`) or for auditing whether stored notes are still true (use `memory-hygiene`). Use when starting or ending a working session, before a long pause, after context compaction, or when a lesson or decision should outlive the session."
 ---
 
 # Agent Session Memory
@@ -98,7 +98,7 @@ Compaction keeps a summary and drops detail; only what is on disk is guaranteed.
 
 ## 7. Mapping to a harness
 
-The channels are product-neutral. In Claude Code, auto memory (an index plus topic files) fits lessons and hot, the project instruction file carries rules that must hold every session, and `/memory` lets a person inspect and edit all of it; limits and load order are owned by `skill-orchestrator`. Other harnesses with a memory tool or a notes file map the same way. Pick one home per channel: a fact living in two places will drift apart (`ssot-and-dry`).
+The channels are product-neutral. In Claude Code, auto memory (an index plus topic files; on by default in local sessions and machine-local, so not shared across machines) fits lessons and hot, the project instruction file carries rules that must hold every session, and `/memory` lets a person inspect and edit all of it; limits and load order are owned by `skill-orchestrator`. Other harnesses with a memory tool or a notes file map the same way. Pick one home per channel: a fact living in two places will drift apart (`ssot-and-dry`).
 
 ---
 
@@ -144,6 +144,7 @@ The channels are product-neutral. In Claude Code, auto memory (an index plus top
 ## Deep references
 
 - [Sources and claims](references/sources.md) — every URL checked, status, what each contributed, claims not adopted.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for the description.
 - [Memory channels and size caps](references/memory-channels-and-size-caps.md) — channel shapes, cap reasoning, examples, what to write when.
 - [Handoff record and re-grounding](references/handoff-record-and-regrounding.md) — single-use note, append-only record, required-field validator, post-compaction checklist.
 - [Agent memory research compared](references/agent-memory-research-compared.md) — what MemGPT, Generative Agents, Reflexion, Anthropic's notes pattern and Letta contribute, and which parts this skill deliberately does not adopt.

@@ -1,6 +1,6 @@
 # Subagent Waves and External Memory
 
-Sources: https://github.com/robertnowell/deep-research · https://github.com/Weizhena/Deep-Research-skills · https://github.com/199-biotechnologies/claude-deep-research-skill · https://mcpmarket.com/tools/skills/deep-web-researcher · https://www.aihero.dev/skills-research · Last verified 2026-11-24
+Sources: https://github.com/robertnowell/deep-research · https://github.com/Weizhena/Deep-Research-skills · https://github.com/199-biotechnologies/claude-deep-research-skill · https://mcpmarket.com/tools/skills/deep-web-researcher · https://www.aihero.dev/skills-research · Last verified 2026-11-27
 
 ## Decompose first
 Split the question into 3-5 angles, each a distinct facet (robertnowell): current state, history, competing approaches, practical use, known pitfalls. 199 suggests 5-10 search angles, adding date-filtered, academic, statistical and critical ones. Weizhena builds an outline of items and fields, and the user can confirm it before spending effort. Show the plan (angles, agent count) before launching.

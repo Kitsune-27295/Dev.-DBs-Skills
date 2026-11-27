@@ -1,8 +1,8 @@
 # Effort Levels by Provider (OpenAI, LangChain, Claude, Claude Code)
 
-Sources: https://developers.openai.com/api/docs/guides/reasoning · https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/reasoning_effort · https://platform.claude.com/docs/en/build-with-claude/effort · https://code.claude.com/docs/en/model-config · Last verified 2026-11-23
+Sources: https://developers.openai.com/api/docs/guides/reasoning · https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/reasoning_effort · https://platform.claude.com/docs/en/build-with-claude/effort · https://code.claude.com/docs/en/model-config · Last verified 2026-11-27
 
-Reading note: pages were fetched through a summarizing reader (Firecrawl had no credits), so exact wording below is paraphrased from those summaries, not raw page text.
+Reading note: re-read 2026-11-27 through a summarizing reader; the Claude effort page was read in full and model-config for its first 100k of 134k chars. The LangChain page was not re-fetched.
 
 ## 1. Level vocabularies differ per vendor
 
@@ -24,10 +24,11 @@ Agent rule: never hard-code one vendor's level list into another's request; map 
 ## 3. Claude effort: exact facts (effort doc)
 
 - Set on Messages API as `output_config.effort`; omitted means the model default. Setting the default explicitly behaves identically to omitting it.
-- Default is `high` everywhere except Claude Opus 5.5 and Claude Haiku 5.5, which default to `medium` (so a request omitting `effort` runs one level lower on Opus 5.5 than on Opus 5).
+- **API default:** `high` on every model except Claude Opus 5.5 and Claude Haiku 5.5, which default to `medium` (a request omitting `effort` runs one level lower on Opus 5.5 than on Opus 5). Fable 5.2 and Sonnet 5.5 default to `high` on the API.
 - `max` is available on Fable/Mythos 5-5.2, Mythos Preview, Opus 5.5/5/4.8/4.7/4.6, Sonnet 5.5/5/4.6, Haiku 5.5. `xhigh` is available on Fable/Mythos 5-5.2, Opus 5.5/5/4.8/4.7, Sonnet 5.5/5, Haiku 5.5. Not every `max` model has `xhigh`.
 - Effort is a behavioral signal, not a token budget; at low levels the model still thinks on hard problems, just less.
 - It affects all output tokens: text, tool-call arguments and thinking. Lower effort means fewer, terser tool calls; higher means more calls, plans, summaries.
+- Opus 4.5 is deprecated on Anthropic-operated platforms; it is the only extended-thinking model that supports effort alongside `budget_tokens`.
 - Opus 5.5: adaptive thinking always on; `thinking: disabled` returns 400 at every level. Sonnet 5.5: `thinking: between_tools` works at low/medium/high, 400 at xhigh/max. Haiku 5.5: `disabled` works at high or below, 400 at xhigh/max.
 - Per-model starting points: Fable/Opus 5: start `high`, `xhigh` for hardest agentic coding. Opus 4.7/4.8: start `xhigh` for coding. Sonnet 5.5: `medium` for well-specified agentic work, `high` for harder. Haiku 5.5: start `medium`, `low` for high-volume simple work (more likely to skip a search or check at `low`). Sonnet 4.6: `medium` recommended.
 - `max` caution: small gain over `xhigh`, higher cost, can overthink structured-output tasks (Opus 4.7 note).
@@ -35,15 +36,17 @@ Agent rule: never hard-code one vendor's level list into another's request; map 
 
 ## 4. Claude Code controls (model-config doc)
 
+- **Claude Code defaults differ from the API:** `medium` for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; `high` for Opus 5, Sonnet 5, Opus 4.8, Opus 4.6 and Sonnet 4.6; `xhigh` for Opus 4.7. Opus 4.6 and Sonnet 4.6 lack `xhigh`. The `opus`, `sonnet`, `haiku` aliases resolve to 5.5 models on the Anthropic API but to older versions on some providers (for example Microsoft Foundry).
+
 - Resolution order: `CLAUDE_CODE_EFFORT_LEVEL` env, then in-session pick (`/effort`, `/model`), then `--effort`, then settings (`modelSettings` / `effortLevel`), then model default.
-- `max` is session-only unless set by env var. `effortLevel` key accepts low/medium/high/xhigh, not `max`. `/effort auto` clears the saved level.
+- `max` is session-only unless set by env var. The `effortLevel` key does not accept `max` or `ultracode` (and, as a legacy behavior, does not apply to Opus 5.5 in user settings). `/effort auto` clears the saved level. A skill's or subagent's `effort:` overrides the session level but not the env var.
 - Unsupported level falls back to the highest supported at or below it.
-- `ultrathink` in a prompt raises depth for that one turn only; "think hard" is plain text, not a keyword.
+- `ultrathink` in a prompt raises depth for that one turn only (typed in the terminal prompt it also lifts that turn to `xhigh`, v2.1.311 or later); "think hard" is plain text, not a keyword.
 
 ## How an agent should apply this
 
 - Express routing as tiers, then translate to the target provider's accepted level names; verify against the model page, because acceptance is model-dependent (e.g. `none` is rejected on some GPT-6 variants).
-- Do not assume the default is `high`: Opus 5.5 and Haiku 5.5 default to `medium`, and OpenAI defaults to `medium` on listed models.
+- Do not assume the default is `high`: it depends on model and surface (see above); OpenAI defaults to `medium` on listed models.
 - Set effort explicitly in production code and run an effort sweep on your own evals before carrying a setting to a new model.
 - Reserve `max`/`xhigh` for measured gains; start agentic coding at `medium`/`high` on the 5.5 models.
 - LangChain's four-value list is not exhaustive; pass newer values through model kwargs only after checking the model page.

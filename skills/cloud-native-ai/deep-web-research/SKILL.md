@@ -1,11 +1,11 @@
 ---
 name: deep-web-research
-description: "Evidence-first deep web research protocol: decompose a question, collect in capped waves (cheap gather subagents, anti-SEO source tiers), verify every decisive claim against a claim ledger with per-claim citations, confidence labels, contradiction handling and dead-link checks, then write a cited report that discloses failed angles. Tool-agnostic contract (search, read-page, map-site, crawl-section, extract-structured, interact, parse-document, monitor) with a Firecrawl, then WebSearch/WebFetch, then curl fallback ladder. Use when the user asks for deep search, in-depth web research, state of the art, an exhaustive comparison, fact-checking with citations, or research on docs, APIs or vendor claims across several sources."
+description: "Run a cited, audit-trailed web research pass: decompose the question, collect in capped waves with cheap gather subagents, tier sources against anti-SEO traps, verify decisive claims in a claim ledger with confidence labels and dead-link checks, and write a report that discloses failed angles. Tool-agnostic operations (search, read-page, map-site, crawl-section, extract-structured, interact, parse-document, monitor) with a Firecrawl, then WebSearch/WebFetch, then curl fallback ladder. Use when the user asks for deep or in-depth web research, a state-of-the-art survey, a sourced comparison, fact-checking, or vendor/API claims checked across several sources; not for auditing one repository (oss-deep-audit) or designing retrieval systems (agentic-rag-architecture)."
 ---
 
 # Deep Web Research
 
-One idea: **a research answer is only as good as its audit trail**: every claim traces to a page you actually read, with a tier, a date and a confidence label, and what you could not establish is said out loud. A search result is a lead, never evidence. The pack author's own protocol, refined from public research skills and a clean-room reading of Firecrawl's research tools; provenance and unadopted claims: [references/sources.md](references/sources.md).
+One idea: **a research answer is only as good as its audit trail**: every claim traces to a page you actually read, with a tier, a date and a confidence label, and what you could not establish is said out loud. A search result is a lead, never evidence. The pack author's protocol, refined from public research skills and Firecrawl's public docs; provenance and unadopted claims: [references/sources.md](references/sources.md).
 
 Each rule has one home: this file states it, the linked reference holds the mechanics.
 
@@ -60,7 +60,7 @@ mode + budget: <block from section 2>
 
 **Phase 2 — collect in waves.** Launch the wave-1 gather subagents together, one per sub-question or group; they read full pages, never answer from snippets. Wave 2 (deep modes) targets named gaps only. Memory layout, merge by theme, dedupe by origin: [references/subagent-waves-and-memory.md](references/subagent-waves-and-memory.md).
 
-Sub-agent brief (the one home of the template, now in the waves reference; fill the fields, send nothing else): [references/subagent-waves-and-memory.md](references/subagent-waves-and-memory.md).
+Sub-agent brief template (fill the fields, send nothing else): [references/subagent-waves-and-memory.md](references/subagent-waves-and-memory.md).
 
 **Phase 3 — verify and triage.** Re-open the page behind each decisive or single-source claim. Separate Verified facts (direct URL, read by you) from community consensus and from your own inference, and label each. Record conflicts, never pick silently. Check publication dates. Mechanics: section 6.
 
@@ -168,4 +168,7 @@ Evidence quality
 Tools
 - [Research tool contract](references/research-tool-contract.md) — read when implementing an operation on any backend.
 - [Tool selection and fallback ladder](references/tool-selection-and-fallback-ladder.md) — read when a page is blocked, credits run out, or you pick a tool.
-- [Firecrawl tool surface analysis](references/firecrawl-tool-surface-analysis.md) — read for what each Firecrawl tool does and its limits.
+- [Firecrawl tool surface analysis](references/firecrawl-tool-surface-analysis.md) — read for what each Firecrawl tool does, its limits, credits and plan tiers (dated snapshot).
+
+Checks
+- [Trigger evals](references/trigger-evals.md) — read when changing the description.

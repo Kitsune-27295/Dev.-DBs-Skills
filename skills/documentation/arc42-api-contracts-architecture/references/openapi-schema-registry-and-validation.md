@@ -1,10 +1,10 @@
 # OpenAPI Schema Registry: schema vs schema-base and What Validation Proves
 
-Sources: https://spec.openapis.org/oas/ · Last verified 2026-11-23
+Sources: https://spec.openapis.org/oas/ · Last verified 2026-11-27
 
 ## What the index page lists
 
-- Specification versions: v3.2.1 and v3.2.0; v3.1.2, 3.1.1, 3.1.0; v3.0.4 down to 3.0.0; v2.0. Other OAI publications (Arazzo, Overlay, registries for formats, media types, extensions and so on) sit alongside.
+- Specification versions: v3.2.1 and v3.2.0; v3.1.2, 3.1.1, 3.1.0; v3.0.4 down to 3.0.0; v2.0 (3.2.1, 3.1.2 and 3.0.4 are the latest patch of each line). Other OAI publications (Arazzo, Overlay, registries for formats, media types, extensions and so on) sit alongside.
 - Each minor release has up to four published JSON Schema artifacts, each identified by a revision date:
 
 | Artifact | Purpose (from the page) |
@@ -14,13 +14,13 @@ Sources: https://spec.openapis.org/oas/ · Last verified 2026-11-23
 | `meta/YYYY-MM-DD` | Meta-schema for the OAS dialect |
 | `dialect/YYYY-MM-DD` | The "base dialect": JSON Schema plus OAS extensions |
 
-At retrieval, 3.2 listed `schema` and `schema-base` at 2026-11-12, `meta` and `dialect` at 2026-02-26; 3.1 listed `schema`/`schema-base` at 2026-11-05. 3.0 and 2.0 publish `schema` only (3.0: 2024-10-18 and 2021-09-28; 2.0: 2017-08-27). Dates will move; read the page, do not hard-code.
+At retrieval (2026-11-27), the newest 3.2 `schema` and `schema-base` were dated 2026-11-12 and `meta` and `dialect` 2026-02-26; the newest 3.1 `schema` and `schema-base` were dated 2026-11-05. 3.0 and 2.0 publish `schema` only (3.0: 2024-10-18 and 2021-09-28; 2.0: 2017-08-27). Dates will move; read the page, do not hard-code.
 
 ## Rules the page states
 
 - All schemas of a minor release apply to its patch releases; dates identify revisions, not patch releases.
 - The latest date within a minor release is the most correct schema; earlier revisions are obsolete.
-- Schemas are not guaranteed to catch every violation; where the schema and the specification text disagree, the text wins.
+- Where the schema and the specification text disagree, the text is presumed correct (the page's wording; that schemas miss some violations is this skill's inference).
 - Open issues the page links: alternative JSON Schema dialects, programmatic access to latest schemas, and possible linting schemas.
 
 ## Consequences
@@ -29,6 +29,10 @@ At retrieval, 3.2 listed `schema` and `schema-base` at 2026-11-12, `meta` and `d
 - `schema-base/` is the stricter check for 3.1 and 3.2 and is the one to automate in CI.
 - Schema validation is necessary but not sufficient: it says nothing about whether the running service matches the document, nor about style (naming, missing `operationId`), which a linter covers.
 - Pin the spec minor version in the doc (`openapi: 3.1.x`) and the validator to the matching latest schema revision.
+
+## Tools (read 2026-11-27)
+
+`oasdiff` compares two OpenAPI documents and reports breaking changes (a `breaking` command and a `changelog` command; its page links 3.1 and 3.2 support notes). Spectral lints OpenAPI 3.x (its README lists v3.2 and AsyncAPI; the repository About line lists AsyncAPI 2.x only, so confirm 3.x AsyncAPI support before relying on it). Neither page says what a rule set catches in your spec; run them on a sample first.
 
 ## Example CI step (generic, my own sketch)
 

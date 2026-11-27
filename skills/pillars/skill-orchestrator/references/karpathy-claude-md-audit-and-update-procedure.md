@@ -1,6 +1,6 @@
 # Auditing and Updating a CLAUDE.md Against the Four Principles
 
-Sources: https://github.com/multica-ai/andrej-karpathy-skills (README sections "Customization" and "How to Know It's Working"), https://www.orcarouter.ai/blog/karpathy-claude-md-file-explained, https://www.mindstudio.ai/blog/anthropic-claude-code-best-practices-2025 · Last verified 2026-11-24
+Sources: https://github.com/multica-ai/andrej-karpathy-skills (README sections "Customization" and "How to Know It's Working"), https://www.orcarouter.ai/blog/karpathy-claude-md-file-explained, https://www.mindstudio.ai/blog/anthropic-claude-code-best-practices-2025 · Last verified 2026-11-27
 
 ## Procedure
 

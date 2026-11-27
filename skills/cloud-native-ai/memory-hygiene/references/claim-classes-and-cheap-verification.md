@@ -1,6 +1,6 @@
 # Claim Classes and Cheap Verification
 
-Sources: https://arxiv.org/abs/2605.26112 · https://arxiv.org/html/2605.26112 · https://code.claude.com/docs/en/memory · https://adr.github.io · Last verified 2026-11-24
+Sources: https://arxiv.org/abs/2605.26112 · https://arxiv.org/html/2605.26112 · https://code.claude.com/docs/en/memory · https://adr.github.io · Last verified 2026-11-27
 
 ## Why classify
 

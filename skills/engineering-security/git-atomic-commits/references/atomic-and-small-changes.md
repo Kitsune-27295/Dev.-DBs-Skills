@@ -1,6 +1,6 @@
 # Atomic Commits and Small, Reviewable Changes
 
-Sources: https://google.github.io/eng-practices/review/developer/small-cls.html · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/SubmittingPatches · Last verified 2026-11-23
+Sources: https://google.github.io/eng-practices/review/developer/small-cls.html · https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project · https://git-scm.com/docs/SubmittingPatches · Last verified 2026-11-27
 
 ## Definition
 
@@ -8,7 +8,7 @@ An atomic commit is one self-contained logical change that addresses a single co
 
 ## Why small wins
 
-Per Google's guidance: reviewed faster and more thoroughly, fewer bugs, less wasted work if rejected, easier merges, simpler rollbacks, and the author can keep working while waiting. Reviewers may reject a change purely for size.
+Per Google's guidance: reviewed faster and more thoroughly, fewer bugs, less wasted work if rejected, easier merges, simpler rollbacks, and the author can keep working while waiting. Reviewers may reject a change outright for size alone.
 
 ## What counts as small
 

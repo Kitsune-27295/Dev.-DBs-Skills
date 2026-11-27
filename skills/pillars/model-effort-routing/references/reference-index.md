@@ -1,6 +1,6 @@
 # Reference Index (model-effort-routing)
 
-Sources: this skill's own reference files; each file lists its own sources · Last verified 2026-11-24
+Sources: this skill's own reference files; each file lists its own sources · Last verified 2026-11-27
 
 One owner per topic. `SKILL.md` keeps the core rules and links here for the full catalog; open only the file whose "read when" matches the question. Source statuses: [sources.md](sources.md).
 
@@ -51,5 +51,6 @@ One owner per topic. `SKILL.md` keeps the core rules and links here for the full
 
 ## Governance and audit
 
+- [trigger-evals.md](trigger-evals.md): three should-trigger and three near-miss prompts for the description.
 - [instruction-size-budget-and-safe-shortening.md](instruction-size-budget-and-safe-shortening.md): the 4 KB budget and the safe-shortening procedure.
 - [measuring-and-auditing-model-usage.md](measuring-and-auditing-model-usage.md): launch report and periodic audit.
