@@ -1,6 +1,6 @@
 # SOA vs Microservices: Comparison Dimensions (IBM and AWS)
 
-Sources: https://www.ibm.com/think/topics/soa-vs-microservices ; https://aws.amazon.com/compare/the-difference-between-soa-microservices/ · Last verified 2026-11-23
+Sources: https://www.ibm.com/think/topics/soa-vs-microservices ; https://aws.amazon.com/compare/the-difference-between-soa-microservices/ · Last verified 2026-11-27
 
 ## Definitions
 
@@ -14,12 +14,12 @@ Core difference per IBM: **scope**, enterprise versus application. The two can c
 | Dimension | SOA | Microservices |
 |---|---|---|
 | Reuse | share components for efficiency | prefer copying; shared runtime parts add dependencies |
-| Communication | mostly synchronous, via ESB (single point of failure) | async patterns such as pub/sub; direct APIs |
+| Communication | via a central ESB, a possible single point of failure | direct APIs; async patterns such as pub/sub |
 | Protocols | broad: SOAP, AMQP, MSMQ | lightweight HTTP/REST, JMS |
 | Data | read/change at primary source, shared layer | per-service store, accept duplication |
 | Granularity | small to enterprise-wide | highly specialized |
-| Deployment | coupled; small change may force rebuild | independent, containerizable |
-| Speed | latency grows as services added; simpler troubleshooting (IBM) | steady as traffic grows |
+| Deployment | AWS: a change often means rebuilding the whole application (IBM does not address SOA deployment) | independent, containerizable |
+| Speed | slows as services compete for shared resources (AWS); IBM adds that troubleshooting is simpler | each service scales on demand (AWS) |
 | Governance | common standards | team-chosen, harder to keep consistent |
 
 AWS example: an ecommerce inventory service in SOA splits in microservices into availability checking, fulfillment and accounting.

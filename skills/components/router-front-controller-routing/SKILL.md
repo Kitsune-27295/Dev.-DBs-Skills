@@ -1,6 +1,6 @@
 ---
 name: router-front-controller-routing
-description: "Design routing as its own concern: Front Controller (single entry point dispatching to commands/handlers), content-based and message routing (EIP Content-Based Router, Message Filter, Dynamic Router, Recipient List, Routing Slip), gateway routing as a Layer-7 pattern (path/header/version/region), and client-side routing with the History API (pushState, replaceState, popstate). Use when deciding how a request or message finds its destination, building a router table, adding versioned or canary routes, writing an SPA router, or choosing between one router and many filters. Not for edge concerns (TLS, auth, rate limits) or cross-cutting pipelines."
+description: "Decide where a request or message goes and keep that decision in one place: Front Controller (one entry point dispatching to command objects), gateway Layer-7 routing (path, header, version, instance, region), Enterprise Integration Patterns routers (Content-Based Router, Message Filter, Recipient List, Dynamic Router, Routing Slip) and client-side routing with the History API (pushState, replaceState, popstate). Not for edge concerns such as TLS, auth or throttling (api-gateway-reverse-proxy), ordered cross-cutting steps (middleware-interceptor-chain) or per-client API shaping (bff-pattern). Use when building a router table, adding versioned or canary routes, handling unmatched messages, writing an SPA router, or choosing between one router and many filters."
 ---
 
 # Router: HTTP, Message & UI Routing
@@ -30,11 +30,11 @@ Rules:
 1. All requests enter through one handler. No second entry point that skips the shared logic.
 2. Shared concerns that must apply to every request (security, i18n, view selection) live in the controller, or in decorators around it so they can change at run time.
 3. Request-specific behavior lives in command objects. The controller maps request to command and calls it.
-4. The controller stays thin. If it grows business rules it has become a god object.
+4. The controller stays thin; if it grows business rules it has become a god object (own inference).
 
-Reject: copy-pasted security checks in every page controller; a "front controller" that also contains domain logic; hidden bypass routes (static handlers that skip the shared stage without being declared).
+Reject (own design guidance): copy-pasted security checks in every page controller; a "front controller" that also contains domain logic; hidden bypass routes (handlers that skip the shared stage without being declared). Fowler's catalog page lists no drawbacks and does not compare Page Controller.
 
-Frameworks already implement this (ASP.NET Core endpoint routing, Spring `DispatcherServlet`, Express app, Rails router). Do not write your own unless you are building such a framework; configure the existing one.
+Most web frameworks already ship a front controller or router; prefer configuring yours over writing one (own advice, no framework page was read for this skill).
 
 ## 3. Message Routing (EIP)
 
@@ -52,7 +52,7 @@ A Message Router decouples the message source from its final destination. The ch
 
 Core trade-off: a **Content-Based Router** is predictive, centralized and must know every destination; an array of **Message Filters** on a publish-subscribe channel is reactive, so no component knows all destinations. Prefer the router when you want control and one place to audit; prefer filters when new consumers should join without touching a central component.
 
-Keep the router's rules as data (a table or rules engine) so adding a destination is a config change. Always give unmatched messages a defined outcome (a default channel or an invalid-message/dead-letter channel); never drop silently.
+Keep the router's rules as data: the EIP page says the router changes often and may grow into a configurable rules engine. Give unmatched messages a defined outcome; the page's Camel example sends them to an `other` channel and sets a dead letter channel for errors. Never drop silently (own rule).
 
 ## 4. Gateway Routing
 
@@ -62,7 +62,7 @@ Place one Layer-7 gateway in front of services and route on IP, port, header or 
 - **Many instances:** instance count changes are hidden; route to healthy nodes, possibly across regions.
 - **Many versions:** run v1 and v1.1 side by side, shift traffic by config, roll back by config.
 
-Cautions: the gateway is a single point of failure and a possible bottleneck (scale it, load-test it); lock backends so they are reachable only through the gateway; skip the pattern for one or two services. Routing rules must not encode service business logic, or every backend change forces a gateway deploy. Edge behaviors beyond the routing decision: `api-gateway-reverse-proxy`.
+Cautions (Microsoft): the gateway is a single point of failure and a possible bottleneck (scale it, load-test it); limit public access to backends so they are reachable only through the gateway or a private network; a simple app with one or two services may not need it. Global (Front Door) versus regional (Application Gateway) is chosen by whether services span regions. Routing rules that need service-specific logic couple backend changes to gateway deploys (Microsoft's offloading page). Edge behaviors beyond the routing decision: `api-gateway-reverse-proxy`.
 
 ## 5. Client-Side Routing (History API)
 
@@ -72,7 +72,7 @@ An SPA changes the DOM without a page load, so the browser's Back button would s
 2. On in-app navigation: render, then `history.pushState(state, "", newUrl)`.
 3. On `popstate` (Back/Forward), render from `event.state`.
 
-Constraints: `state` must be serializable; pass `""` as the unused title argument; the URL must be same-origin. `pushState` does not fire `popstate` itself. Also configure the server to return the app shell for deep links (inferred; the MDN guide does not cover it), otherwise a refresh on `/orders/7` 404s.
+Constraints (MDN): `state` must be a serializable object; pass `""` as the unused title argument; the URL must be same-origin and is sent as `Referer`. `popstate` fires when the user navigates to an existing entry; MDN's examples render directly after `pushState` rather than expecting an event. The first entry has no state until `replaceState` seeds it. Also configure the server to return the app shell for deep links (own inference; MDN does not cover it), otherwise a refresh on `/orders/7` may 404.
 
 ## 6. Failure Modes
 
@@ -99,3 +99,5 @@ Constraints: `state` must be serializable; pass `""` as the unused title argumen
 - [Front Controller and gateway routing](references/front-controller-and-gateway-routing.md) — when designing a single entry point or L7 version/instance routing.
 - [EIP message routing patterns](references/eip-message-routing-patterns.md) — when choosing between Content-Based Router, filters, Recipient List, Routing Slip.
 - [Client-side routing with the History API](references/client-side-history-routing.md) — when building or debugging an SPA router.
+- [Trigger evals](references/trigger-evals.md) — when tuning this skill's description.
+- [Sources](references/sources.md) — every URL with retrieved status, reading limits and claims not adopted.

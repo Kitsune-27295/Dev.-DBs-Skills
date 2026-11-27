@@ -1,8 +1,8 @@
 # Example: A BFF Route That Narrows a Backend Response
 
-Sources: https://nextjs.org/docs/app/api-reference/file-conventions/route · https://zod.dev/basics · https://samnewman.io/patterns/architectural/bff/ · Last verified 2026-11-24
+Sources: https://nextjs.org/docs/app/api-reference/file-conventions/route · https://zod.dev/basics · https://samnewman.io/patterns/architectural/bff/ · Last verified 2026-11-27
 
-A generic example, abstracted from an internal route-handler procedure; no internal names reused. It uses Next.js App Router and zod only as one concrete stack; the shape carries to any BFF.
+A generic example. It uses Next.js App Router and zod only as one concrete stack; the shape carries to any BFF. `requireAccess` and `backend` are placeholders you supply; the snippet was not executed.
 
 ## The shape of a screen-focused route
 A BFF route does five things in order: authorize, validate input, call the backend, narrow the payload to what one screen needs, and map failures to a status the UI can branch on. It holds no business rules (see the parent skill).
@@ -16,7 +16,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const principal = await requireAccess(request, "GET", "/api/orders/[id]") // 401/403/404 handled inside
   if (principal instanceof Response) return principal
 
-  const { id } = await params                       // params is a Promise in current App Router
+  const { id } = await params                       // params is a Promise since Next.js 15
   const q = Query.safeParse(Object.fromEntries(new URL(request.url).searchParams))
   if (!q.success) return Response.json({ errors: q.error.issues }, { status: 400 })
 
@@ -31,7 +31,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 ```
 
 ## Points the example demonstrates
-1. **Validate with the safe variant.** Zod's `safeParse` returns a result object instead of throwing, so bad input is a 400, not a 500.
+Point 1 is from the zod docs; the rest are own design guidance, not claims from a cited source.
+1. **Validate with the safe variant.** Zod's `safeParse` returns a plain result object (success with data, or an error) instead of throwing, so bad input is a 400, not a 500. `z.coerce.number()` converts the query string with `Number(input)` (zod.dev/api).
 2. **Treat the path as input.** The identifier in the URL is user data; the tenant comes from the verified session (`principal`), never from the request, and the backend still checks ownership.
 3. **Narrow the response.** Forwarding the backend payload couples the UI to the backend schema and leaks fields; map to the screen's shape. A pure proxy is fine only when both shapes are the same.
 4. **Never turn an upstream failure into an empty success.** A 200 with an empty list renders as "no data" and hides a broken dependency. Propagate a status or a typed code; return a gateway error when the backend is unreachable.

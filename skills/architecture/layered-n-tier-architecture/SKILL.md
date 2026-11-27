@@ -1,6 +1,6 @@
 ---
 name: layered-n-tier-architecture
-description: Use when designing, reviewing, or refactoring a Layered (N-Layer) or N-Tier application (Presentation/Web, Business/Middle, Data Access/Persistence), deciding between strict (closed) and relaxed (open) layer communication, or separating logical layers from physical deployment tiers. Gives the downward dependency rules, layer vs tier distinction, test strategy per layer, and common mistakes (sinkhole anti-pattern, upward imports, fat controllers/views calling the database directly).
+description: "Layered (N-Layer) and N-Tier design: downward-only dependencies between presentation, business and data-access layers, strict (closed) vs relaxed (open) communication, and separating logical layers from physical deployment tiers (WAF, subnet per tier, scale sets). Covers pass-through middle layers, fat controllers, upward imports, chatty cross-tier calls and tests per layer. Not for dependency-inverted cores (hexagonal-architecture, clean-architecture), MVC lineage (mvc-architecture) or splitting one tangled file (layered-refactor). Use when designing or reviewing a layered or n-tier app, or when someone proposes turning layers into separate services or tiers."
 ---
 
 # Layered & N-Tier Architecture
@@ -18,13 +18,13 @@ One idea: separate responsibilities into horizontal **logical layers** where dep
 | Data Access / Persistence layer | translates domain/data requests into SQL, ORM calls, or external storage operations | "knows the database schema, never the UI screen" |
 | Strict (closed) layer | a request must pass through the immediately adjacent layer below it and cannot skip layers | "Presentation -> Business -> Data Access only" |
 | Relaxed (open) layer | a higher layer may bypass an intermediate layer for read-only or utility shortcuts | "lower latency, higher coupling across layers" |
-| Layer sinkhole | a middle layer that only passes arguments down and returns results unchanged | "pass-through boilerplate with zero business rules" |
+| Layer sinkhole (pack label) | a middle layer that only passes arguments down and returns results unchanged; the guide describes it as a middle tier doing only CRUD, adding latency and complexity | "pass-through boilerplate with zero business rules" |
 
 ## Dependency and boundary rules
 
 1. **Downward-only dependencies:** Layer $N$ may only import or call Layer $N-1$ (in strict mode) or Layers $< N$ (in relaxed mode). A lower layer must never import types, callbacks, or configuration from a higher layer.
 2. **Layer != Tier:** Do not put a network hop between Presentation, Business, and Data Access unless physical tier separation is explicitly required (e.g., WAF -> Web Subnet -> Middle Tier Subnet -> Database Subnet). Three logical layers can and usually should deploy as a single process.
-3. **Explicit strict vs. relaxed choice:** Default to **strict (closed)** layers so business invariants and authorization checks in the Business layer cannot be bypassed by the UI calling Data Access directly. Only open a layer consciously (for example, a shared cross-cutting logging/caching layer or an explicitly read-only reporting query).
+3. **Explicit strict vs. relaxed choice:** Default to **strict (closed)** layers (a pack default; the Azure guide presents strict and relaxed as equally valid and says each costs something: latency and overhead vs coupling) so business invariants and authorization checks in the Business layer cannot be bypassed by the UI calling Data Access directly. Only open a layer consciously (for example, a shared cross-cutting logging/caching layer or an explicitly read-only reporting query), and record which paths are open.
 4. **No database leakage into Presentation:** Entities or raw cursor/row objects coupled to database transactions must not leak into view templates or HTTP serialization where lazy-loading (`N+1` queries) or schema leakage can fire during rendering.
 5. **Security perimeters on physical tiers:** When deploying across physical N-tiers, place a Web Application Firewall (WAF) or reverse proxy in front of the Web tier, isolate each tier in its own subnet/security group, and restrict the Data tier to accept connections only from the Middle tier.
 
@@ -45,17 +45,17 @@ One idea: separate responsibilities into horizontal **logical layers** where dep
 | Presentation layer | route / controller test | mocked or fake Business layer (verify status codes, auth, payload validation) |
 | Physical tiers (end-to-end) | smoke / system test | one happy path and one failure path across the real deployment boundary |
 
-Enforce rule 1 automatically with an import-graph check (`dependency-cruiser`, `ArchUnit`, `eslint-plugin-boundaries`) so upward imports fail CI.
+Enforce rule 1 automatically with an import-graph check (for example `dependency-cruiser`, `ArchUnit`) so upward imports fail CI; tool setup is owned by `clean-architecture` and `modular-monolith-architecture`.
 
 ## When it earns its keep
 
 - **Worth it:** Traditional enterprise CRUD and line-of-business applications, migrating on-premises multi-tier workloads to cloud VMs/containers, teams organized around UI / backend / DBA skills, or when a clear default structure is needed without the indirection of full Hexagonal or Clean Architecture.
-- **Not worth it:** Ultra-simple scripts (1-file or 1-module apps where 3 layers become 80% pass-through sinkholes), or complex domain-heavy systems with volatile infrastructure where the Business layer should own the ports instead of depending downward on the Data Access layer (use `hexagonal-architecture` or `clean-architecture` instead).
+- **Not worth it:** Ultra-simple scripts (1-file or 1-module apps where 3 layers become mostly pass-through), or complex domain-heavy systems with volatile infrastructure where the Business layer should own the ports instead of depending downward on the Data Access layer (use `hexagonal-architecture` or `clean-architecture` instead; for MVC see `mvc-architecture`).
 
 ## Mistakes to catch
 
 - **Confusing N-Layer with N-Tier:** Deploying Presentation, Business, and Data Access as separate network services when they scale together and live in the same trust boundary — adding serialization cost, network latency, and distributed failure modes for zero gain.
-- **Architecture Sinkhole anti-pattern:** 80%+ of Business layer methods doing nothing but `return dataLayer.getX(id)`. Either allow a controlled relaxed read path or collapse unnecessary pass-through abstractions.
+- **Sinkhole (pass-through) middle layer:** most Business layer methods doing nothing but `return dataLayer.getX(id)`. Either allow a controlled relaxed read path or collapse unnecessary pass-through abstractions.
 - **Fat Controller / Anemic Middle Layer:** Putting validation, pricing, or permission checks inside HTTP controllers or SQL stored procedures while the Business layer stays empty.
 - **Upward or circular imports:** Data Access importing a DTO, request context, or error formatter defined in the Presentation layer.
 - **Chatty cross-tier calls:** Making fine-grained synchronous calls in a loop across physical tiers instead of batching or using coarse-grained contracts / asynchronous queues.
@@ -73,4 +73,5 @@ Enforce rule 1 automatically with an import-graph check (`dependency-cruiser`, `
 ## Deep references
 - [Layers, tiers, and communication models](references/layers-tiers-and-communication-models.md) — strict vs relaxed tiers, Azure best practices, VM reference deployment, challenges checklist.
 - [Choosing a style, topologies, and erosion](references/style-fit-topologies-and-erosion.md) — when N-tier fits vs other styles, MVC vs three-tier, monolith scaling, big ball of mud.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for this skill's description.
 - [Traditional N-Layer vs Clean Architecture](references/layered-vs-clean-dependency-direction.md) — why BLL->DAL dependency hurts tests and how dependency inversion restructures projects.

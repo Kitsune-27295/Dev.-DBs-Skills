@@ -1,10 +1,10 @@
 # YAGNI: Four Costs, Presumptive Features and Boundaries
 
-Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-27
 
 ## Definition and origin
 
-"You Aren't Gonna Need It" is an XP mantra: do not build capability now for a need you merely expect. It came from Kent Beck rejecting features Chet Hendrickson proposed on the C3 project. Fowler treats it as part of XP Simple Design (incremental design in the second edition of the White Book). A **presumptive feature** is any code supporting a feature that users cannot yet use.
+"You Aren't Gonna Need It" is an XP mantra: do not build capability now for a need you merely expect. It came from Kent Beck answering each capability Chet Hendrickson proposed on the C3 project with "you aren't going to need it". Fowler treats it as part of XP Simple Design (incremental design in the second edition of the White Book). A **presumptive feature** is any code supporting a feature that users cannot yet use.
 
 ## The four costs of ignoring it
 
@@ -13,15 +13,15 @@ Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-23
 | Build | effort on a feature that turns out useless |
 | Delay | value lost because effort went to the presumptive feature (the example: two months of storm-insurance revenue) |
 | Carry | extra complexity slowing every later change until removed |
-| Repair | debt when the feature was built in a way later seen as wrong |
+| Repair | effort to fix, or work around, a feature built the wrong way |
 
 Example: a shipping-insurance startup has separate pricing and sales components. It is adding storm-risk pricing and expects piracy pricing in six months. Building piracy pricing now delays sales work and may never be used.
 
-"Cheaper to build now" arguments must include delay cost and the chance the feature is never needed. Fowler cites Kohavi et al. (Microsoft): about a third of features improved their target metrics, and uses roughly two thirds as the odds a presumptive feature goes unused (practitioner claim).
+"Cheaper to build now" arguments must include delay cost and the chance the feature is never needed. Fowler cites Kohavi et al. (Microsoft): about a third of features improved their target metrics, and puts the odds a presumptive feature goes unused at two thirds or higher (practitioner claim).
 
 ## Technique: imagine the refactoring
 
-Ask what refactoring would be required to add the capability later. Often the future cost is not much higher. Cheap, complexity-free steps are fine (error messages in a lookup table rather than inline literals).
+Ask what refactoring would be required to add the capability later. Often the future cost is not much higher. Cheap, complexity-free steps are fine (error messages in a lookup table rather than inline literals, which also eases translation).
 
 ## Scope
 

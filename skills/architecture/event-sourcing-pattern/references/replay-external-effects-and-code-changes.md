@@ -1,14 +1,14 @@
 # Replay Semantics: External Effects, Reversal and Code Changes
 
-Sources: https://martinfowler.com/eaaDev/EventSourcing.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaDev/EventSourcing.html · Last verified 2026-11-27
 
-Fowler's 2005 write-up is the deepest treatment of what happens when you replay or change history. Core rule: every domain change is initiated by an event object, the log is ordered, and state is derivable from it.
+Fowler's 2005 write-up (dated 2005-12-12, self-described draft material that will not be updated) is the deepest treatment of what happens when you replay or change history. Core rule: every domain change is initiated by an event object, the log is ordered, and state is derivable from it.
 
 ## What the log buys
 - Complete rebuild: drop state, replay from empty.
 - Temporal query: replay up to a time or event for past state (timelines can branch like version control).
 - Event replay: fix a wrong past event by reversing later events, applying the corrected one, replaying the rest; also handles out-of-order asynchronous messages.
-- Snapshots shorten recovery: load a snapshot, replay newer events. Either the log or the state DB can be the system of record because each can rebuild the other.
+- Snapshots shorten recovery: load a snapshot, replay newer events. Fowler says the system of record can be either the event log or the state database, since state is always derivable from the log.
 
 ## Reversal
 Difference events ("add 10") reverse trivially; absolute events ("set to 110") need prior values stored in the event. Reversal is an optimization, since rebuilding from a snapshot always works.

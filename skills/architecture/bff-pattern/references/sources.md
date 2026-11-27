@@ -1,16 +1,28 @@
-# Sources for the bff-pattern skill
+# Sources — BFF (Backend for Frontend) Pattern
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was checked during skill authoring (2026-11-27, rebuilt from the primary pages; earlier drafts dated 2026-11-22 to 2026-11-24).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Sam Newman, "Pattern: Backends For Frontends — Single-purpose Edge Services for UIs and external parties" (2015-11-18), https://samnewman.io/patterns/architectural/bff/ | Origin and canonical definition of the BFF pattern (citing SoundCloud's Phil Calçado); why a single general-purpose API backend becomes a bottleneck across desktop web and mobile; **Conway's Law ownership rule** (a BFF must be owned by the team building the frontend it serves); how many BFFs to have (one per user experience / team boundary, e.g., unified mobile BFF vs. separate iOS/Android BFFs depending on team structure); handling multiple downstream microservice calls (parallel aggregation and partial failure resilience); why code duplication across BFFs is preferable to bad coupling; separating general perimeter concerns (auth, TLS, rate limiting) into an upstream routing tier or shared library; clear rule: if you only have one UI, you don't need a BFF. |
-| 2 | Microsoft Azure Architecture Center, "Backends for Frontends pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends | Context and problem of competing frontend demands on a single backend; solution diagram showing separate client-specific BFFs sitting between each client interface and downstream shared microservices; workload design considerations (caching per client flow, avoiding logic duplication in downstream services, fault isolation, and team autonomy). |
-| 3 | Chris Richardson, "Pattern: API Gateway / Backends for Frontends", https://microservices.io/patterns/apigateway.html | Granularity mismatch between fine-grained microservice APIs and what a product-details screen needs across desktop web, native mobile, and third-party REST clients; API composition, protocol translation, circuit breaking, and the BFF variation to prevent a single API Gateway team from becoming a development bottleneck. |
-| 4 | https://nextjs.org/docs/app/api-reference/file-conventions/route (added 2026-11-24; 200 OK via curl) | Route handler `params` is a Promise; conventions for the generic example |
-| 5 | https://zod.dev/basics (added 2026-11-24; 200 OK via curl) | `safeParse` returns a result object without throwing |
-| 6 | Internal route-handler procedure read for method only (added 2026-11-24) | Narrowing and status propagation rules; no names reused |
+| https://samnewman.io/patterns/architectural/bff/ | 200 OK (WebFetch, 2026-11-27); page dated 2015-11-18 | Definition, UI-team maintenance, one BFF per client type with a shared-BFF example, Gleadow and Hodgson attributions, desktop web and third-party cases, undecided perimeter stance, "third time" abstraction rule, wishlist partial-failure question |
+| https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends | 200 OK (WebFetch, 2026-11-27); ms.date 2025-03-19, updated 2026-11-21 | Problem, considerations, GraphQL and gateway alternatives, when not to use, workload pillars, API Management plus Azure Functions example |
+| https://microservices.io/patterns/apigateway.html | 200 OK (WebFetch, 2026-11-27) | Forces, gateway solution, BFF variation, benefits, drawbacks, reactive implementation note, related patterns |
+| https://nextjs.org/docs/app/api-reference/file-conventions/route | 200 OK (WebFetch, 2026-11-27); lastUpdated 2026-11-18 | `context.params` is a Promise since v15.0.0-RC; handler signature |
+| https://zod.dev/basics | 200 OK (WebFetch, 2026-11-27) | `safeParse` returns a result object (success flag, data or error) instead of throwing |
+| https://zod.dev/api | 200 OK (WebFetch, 2026-11-27) (added 2026-11-27) | `z.coerce.number()` documented as `Number(input)` |
 
-## Notes on disagreements and nuances across sources
+Third-party skill or internal procedure read for ideas, no text reused (earlier draft of the route-handler example).
 
-- **One Mobile BFF vs. Separate iOS and Android BFFs:** Both Newman (Source 1) and Richardson (Source 3) emphasize that the decision is driven by **team structure and UX divergence**: if one cross-functional mobile team builds an identical experience on iOS and Android, use one Mobile BFF; if separate iOS and Android teams operate autonomously with distinct UX constraints, give each team its own BFF.
+## Reading limits
+
+- Pages were read through a summarizing fetch tool; wording in the references is paraphrase. The Microsoft page was returned in full; the Newman page was checked item by item, not read verbatim end to end.
+- The route-handler snippet was not executed; `requireAccess` and `backend` are placeholders. Whether `.default(1)` after `z.coerce.number()` applies to a missing key was not checked against Zod docs.
+
+## Claims not adopted as fact
+
+- "Conway's Law" by name on Newman's page: not confirmed; only Hodgson's team-boundary observation was seen.
+- Earlier draft said REA runs one BFF per client type with iOS and Android separate: the page only says Newman saw the pattern at REA; the split was not confirmed.
+- Earlier draft said Newman is "warier" of shared BFFs: the page states a preference for one per client type and shows SoundCloud sharing; "warier" was not confirmed.
+- Consumer-driven contract tests (Pact) authored by the BFF team and run in the downstream CI: not in any source read; removed.
+- Voice, IoT, smart TV and wearable clients: not in the sources read (set-top box appears on Newman's page); removed.
+- That perimeter concerns must never live in a BFF: Newman is undecided, so the skill records it as a decision.

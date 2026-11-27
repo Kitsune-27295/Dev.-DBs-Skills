@@ -1,6 +1,6 @@
 # Azure EDA Style: Topologies, Payloads and Challenge Catalog
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven (the PT-PT page is the same article, not re-read) · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven (page dated 2026-03-06, live copy updated 2026-11-17; the PT-PT copy was not re-read) · Last verified 2026-11-27
 
 ## Building blocks
 
@@ -13,7 +13,7 @@ Producers emit events, channels (brokers or ingestion services) carry them, cons
 
 ## Consumer variations
 
-Simple event processing (event triggers an action), basic correlation (correlate by id, persist earlier events, i.e. sagas), complex event processing (patterns over time windows), event stream processing (pipeline into stream processors, typical for IoT).
+Simple event processing (event triggers an action), basic correlation (correlate by id, persist earlier events; the page points to saga libraries), complex event processing (patterns over time windows), event stream processing (pipeline into stream processors, typical for IoT). Several consumer instances avoid a single point of failure but make ordering and once-only processing harder.
 
 ## Payload strategy
 
@@ -33,23 +33,23 @@ Per-consumer mixing is allowed when you control the consumers.
 
 | Challenge | Mitigation from the page |
 |---|---|
-| Guaranteed delivery | Persist in-transit events; acknowledge only after handoff (client acknowledge mode) |
+| Guaranteed delivery / data loss | Persist in-transit events; dequeue only after the next component acknowledges (client acknowledge mode, last participant support) |
 | Eventual consistency | Design consumers and reads to tolerate stale data |
-| Ordering / exactly-once with multiple instances | Idempotent consumers; minimize coordination |
+| Ordering / once-only with multiple instances | Idempotent consumer logic; minimize coordination |
 | Cross-service coordination | Choreography or saga orchestration; compensating transactions |
-| Error handling | Error-handler processor, resubmit to the channel (out of order), then dead-letter queue |
-| Observability | Correlation ID in every event, planned from the start |
+| Error handling | Error-handler processor: try to fix, resubmit to the ingestion channel (processed out of sequence), else dead-letter queue for an administrator; compensating transactions for multiservice processes |
+| Observability | Correlation ID in every event, planned from the start (retrofitting is much harder); end-to-end tests need deliberate design too |
 | Request-response need | Request queue plus reply queue with session id / reply-to |
 | Too many or too few events | Publish by consequence, e.g. only `compliant` / `noncompliant` |
 | Schema evolution | Versioning strategy early; consumers tolerate unknown versions |
 
-Security note from the page: events are visible to many components, so avoid leaking sensitive data into them ("assume breach").
+Other points from the page: events are visible to many components, so avoid leaking sensitive data ("assume breach"); EDA combines with microservices, pipes and filters and event sourcing, and can give back pressure under high request volume.
 
 ## When to use / avoid
 
-Use: several subsystems need the same events, near-real-time reaction, time-window pattern matching, high volume (IoT), independent scaling of producers and consumers. Avoid: simple request-response is enough; strong cross-service consistency is required; the team has not operated async distributed systems.
+Use: several subsystems need the same events, minimal lag, time-window pattern matching, high volume (IoT), independent scaling of producers and consumers. Avoid: simple request-response meets the latency need; strong cross-service consistency is required; the team lacks experience operating asynchronous distributed systems.
 
-## Example: DLQ flow (pseudo-code)
+## Example: error-handler flow (illustrative pseudo-code, our own)
 
 ```
 on_event(e):
@@ -63,7 +63,7 @@ error_handler(e):
 ## How an agent should apply this
 
 - Pick broker topology for simple fan-out and mediator/orchestrator for multistep transactions needing restart.
-- Require a correlation ID, an event version field, and an idempotency key in every event contract you design.
+- Require a correlation ID and an event version field in every event contract you design; consumers must be idempotent (`saga-transactional-outbox-pattern`). Field names and the idempotency key are our convention, not the page's.
 - Specify the failure path (retry, DLQ, compensation) alongside the happy path.
 - Choose streaming over pub/sub only when replay or late consumers are real requirements.
 - Reject EDA for plain synchronous interactions; say why (operational overhead, eventual consistency).

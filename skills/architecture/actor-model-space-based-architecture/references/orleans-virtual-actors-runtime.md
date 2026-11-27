@@ -1,6 +1,6 @@
 # Orleans Virtual Actors: Grains, Silos and Runtime Services
 
-Sources: https://learn.microsoft.com/en-us/dotnet/orleans/overview · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/dotnet/orleans/overview · Last verified 2026-11-27
 
 ## Core definitions
 
@@ -26,7 +26,7 @@ The runtime activates grains on demand, evicts idle ones from memory, and can re
 | Distributed ACID transactions | decentralized, no central coordinator, serializable isolation | several grains must change atomically |
 | Streams | managed pub/sub, checkpoints/cursors, batch delivery, backed by Event Hubs/Kinesis etc. | near-real-time item processing |
 
-Version notes from the page (9.x/10): strong-consistency grain directory, memory-based activation shedding, in-process test cluster, faster failure detection (90 s versus 10 min earlier), default placement changed to ResourceOptimized in 9.2, built-in dashboard in 10.0.
+Version notes from the page (switchable by version): 9.x added a strong-consistency grain directory, memory-based activation shedding, an in-process test cluster, faster failure detection (90 s versus 10 min earlier), activation rebalancing, and a default-placement change from Random to ResourceOptimized in 9.2. 10.0 added a built-in dashboard, stable Redis providers and cancellation-token support for system targets. Check the page for the version you run.
 
 ## Typical fits named by the page
 

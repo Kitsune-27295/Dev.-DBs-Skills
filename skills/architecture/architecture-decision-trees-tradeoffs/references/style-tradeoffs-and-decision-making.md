@@ -1,8 +1,8 @@
 # Style-by-Style Trade-offs, Style Selection, ADRs and Risk Storming
 
-Sources: https://github.com/pkardas/notes/blob/master/books/fundamentals-of-architecture.md (study notes, Chapters 10-20) · Last verified 2026-11-23
+Sources: https://github.com/pkardas/notes/blob/master/books/fundamentals-of-architecture.md (study notes, Chapters 10-20) · Last verified 2026-11-27
 
-Secondary source: the notes contain no rating tables and omit trade-offs for pipeline and microkernel. Where the notes are silent, this file says so.
+Secondary source: the notes contain no rating tables and omit trade-offs for pipeline and microkernel. Where the notes are silent, this file says so. Re-check on 2026-11-27 confirmed the sinkhole, 4-12 service-based services, mediator versus broker, SOA verdict, ADR sections, wiki advice, "synchronous by default" and risk storming; other table cells come from the earlier read.
 
 ## Style catalog
 
@@ -13,7 +13,7 @@ Secondary source: the notes contain no rating tables and omit trade-offs for pip
 | Microkernel | minimal core plus independent plug-ins and a registry; Eclipse, Jenkins, browsers | not discussed; fits per-client customization; one quantum |
 | Service-based | UI plus 4-12 coarse domain services, usually one shared DB | pragmatic, cheaper than microservices/EDA, natural DDD fit, better ACID, good modularity; shared schema changes are costly |
 | Event-driven | mediator or broker topology | see below |
-| Space-based | processing units with replicated in-memory data grids, data pumps to the DB | extreme scalability/elasticity (spiky load, 10k+ users); data collisions in replicated caches; distributed cache = better consistency, replicated = better performance and fault tolerance |
+| Space-based | processing units with in-memory data grids, data pumps to the DB | extreme scalability/elasticity for spiky load; data collisions when replicated caches are updated in two instances (detail on the style: `actor-model-space-based-architecture`) |
 | Orchestration-driven SOA | enterprise services plus central orchestrator | judged largely a failure: reuse produced coupling and coordinated deployments |
 | Microservices | one bounded context per service, each self-contained | scalable, elastic, evolvable; network performance cost; heavy cross-service transactions signal wrong granularity; sagas are complex |
 
@@ -26,7 +26,6 @@ Secondary source: the notes contain no rating tables and omit trade-offs for pip
 | Strength | workflow control, error handling | high decoupling, responsiveness |
 | Weakness | lower scalability, less decoupled | hard error handling, cannot restart transactions |
 
-Data-loss mitigations: persistent queues, client-acknowledge mode, ACID persistence. Request-reply via correlation ID beats temporary queues at high volume.
 
 ## Choosing a style (Chapter 18 synthesis)
 
@@ -51,12 +50,12 @@ Compliance: fitness test blocks cross-service table access
 
 ## Risk analysis
 
-Risk matrix: impact times likelihood, each low/medium/high, impact first. Risk storming: identify (individually, per dimension such as availability or unproven technology), reach consensus, mitigate by changing the architecture.
+Risk storming is a collaborative exercise that examines one risk dimension at a time in three activities: identification, consensus, mitigation. The risk-matrix scoring details were not re-read.
 
 ## How an agent should apply this
 
 - Offer 2-3 candidate styles with the stated trade-off, never a single winner.
 - Resolve monolith/distributed, data ownership and sync/async explicitly and in that order.
 - Write an ADR with context, decision, consequences and a compliance check for every significant choice.
-- Run a lightweight risk matrix on the winner and attach mitigations.
+- Run a lightweight risk-storming pass on the winner and attach mitigations.
 - Warn when a choice resembles SOA-style heavy reuse via a central orchestrator.

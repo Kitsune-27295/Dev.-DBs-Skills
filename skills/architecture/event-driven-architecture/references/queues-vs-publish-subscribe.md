@@ -1,6 +1,6 @@
 # Message Queues vs Publish/Subscribe (Valente)
 
-Sources: https://engsoftmoderna.info/cap7.html (sections 7.5 and 7.6, read in translation) · Last verified 2026-11-23
+Sources: https://engsoftmoderna.info/cap7.html (sections 7.5 and 7.6, read in translation; both sections confirmed present) · Last verified 2026-11-27
 
 ## Message queue architecture (7.5)
 
@@ -12,7 +12,7 @@ Two kinds of decoupling:
 
 Benefits named: independent evolution while the message format stays stable, robustness to failures, easy scaling (add consumers on the same queue), and brokers being treated as infrastructure-team responsibility.
 
-Book example: a telecom sales system enqueues "package bought"; the engineering system consumes it and activates the service, replacing a nightly batch file that could leave customers waiting almost a day. Still not real-time if the consumer is busy.
+Book example: a telecom sales system enqueues "package bought"; the engineering system consumes it and activates the service, replacing a nightly batch file that could leave customers waiting almost a day.
 
 ## Publish/subscribe (7.6)
 
@@ -24,14 +24,14 @@ Differences from queues:
 |---|---|---|
 | Delivery | One consumer gets each message (1:1) | All subscribers get each event (1:N, group communication) |
 | Receiving | Consumers pull | Subscribers are notified asynchronously |
-| Space/time decoupling | Yes | Yes (broker redelivers to subscribers that were offline) |
+| Space/time decoupling | Yes | Yes |
 
 Book example: an airline "sale" event (flight, date, passenger) is consumed by the miles system, marketing (upgrade or rental offers) and accounting, with no change to the sales system when a fourth subscriber is added.
 
 ## Trade-offs (the page has no explicit section; these are read from its text)
 
-- Both models depend on a persistent, high-capacity broker.
-- Results are not instantaneous.
+- Both models depend on a persistent, high-capacity broker (7.5 states this for queues; extending it to pub/sub is our inference).
+- Results are not instantaneous (our reading; a busy consumer delays work).
 - Teams are independent only as long as message formats stay stable; changing a format affects every consumer, which links to schema versioning in the Azure reference.
 
 ## Decision rules (own synthesis)

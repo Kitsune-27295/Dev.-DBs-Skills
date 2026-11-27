@@ -1,6 +1,6 @@
 # Background Job Design, Triggers and Hosting
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-27
 
 ## When something is a background job
 
@@ -21,9 +21,9 @@ Schedule hazards (from the article): scaling the scheduler host creates several 
 
 Ideal job is fire-and-forget. If the caller needs outcome: status endpoint + polling (async request-reply), reply queue (correlation id), event on completion, webhook callback, or status written to shared storage. Pick polling endpoints for HTTP APIs, events/webhooks for external or decoupled callers.
 
-## Idempotency (non-negotiable)
+## Idempotency sketch
 
-Queues deliver at least once, schedulers overlap, restarts replay partial work. Same input must yield the same outcome when run twice: use a natural or generated idempotency key stored with the effect, upsert instead of insert, conditional updates, or a processed-message table. Deep dive: `idempotency-fix`.
+Rules (key, same-transaction marker, upserts) are in section 3 of `SKILL.md`; deep dive in `idempotency-fix`.
 
 ```python
 def handle(msg):
@@ -62,11 +62,7 @@ Four building blocks: discrete steps joined by queues (pipes and filters; see `p
 
 ## Reliability, security, observability, scaling
 
-- Checkpoint long jobs (state in storage or message) so they resume, not restart. Shut down gracefully on SIGTERM: stop taking work, finish or checkpoint, exit; set the platform grace period (e.g. `terminationGracePeriodSeconds`) above a typical item duration.
-- Separate transient from permanent failures: retry transient (timeouts, throttling), dead-letter permanent (malformed payload) immediately.
-- Least privilege per job identity; put references, not secrets/PII, in messages.
-- Log start, completion and failure with a correlation id and duration; alert on missed schedules (nothing ran, so no error exists), on dead-letter depth/age, and on enqueue-to-completion latency, not just processing time.
-- Scale on queue depth, not CPU alone; scale to zero for intermittent work; scale the whole pipeline (broker throughput, database, downstream rate limits) rather than workers only.
+Rules live in `SKILL.md` sections 4, 4b and 8. Additions from the 2026-03 page: on Functions Flex Consumption and Premium plans the platform allows up to 60 minutes for in-progress work to finish during scale-in; in Kubernetes set `terminationGracePeriodSeconds`. Measure enqueue-to-completion latency, not only processing time, and correlate every step with one id. Scale the whole pipeline (broker throughput, database units, downstream API limits), not only workers.
 
 ## Anti-patterns
 

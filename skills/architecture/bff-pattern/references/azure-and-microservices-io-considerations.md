@@ -1,28 +1,28 @@
 # BFF Trade-offs: Azure Architecture Center and microservices.io
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends · https://microservices.io/patterns/apigateway.html · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends (ms.date 2025-03-19) · https://microservices.io/patterns/apigateway.html · Last verified 2026-11-27
 
 ## Forces (Richardson)
 
-Fine-grained service APIs do not match client needs; desktop and mobile need different data; mobile networks tolerate few round trips while server-side code on a LAN can make many; instance locations change; service partitioning should be hidden; some services speak non-web protocols. Solution: a single entry point (API gateway) that proxies or fans out; the BFF variation is one gateway per client kind (web, mobile, third party). Benefits: insulation from partitioning, tailored API, fewer round trips, simpler clients, protocol translation. Drawbacks: another component to build/operate, an extra hop. Implementation: reactive/event-driven (Netty, Spring Reactor, Node.js). Netflix is a cited known use; the page also lists related patterns (API Composition, Circuit Breaker, discovery, Access Token).
+Fine-grained service APIs do not match client needs; a desktop product page is richer than a mobile one; mobile networks allow only a few requests while a server-side web app can make many; instance locations and service partitioning change and clients should not depend on them; some services use protocols that are not web-friendly.
+
+Solution: an API gateway as the single entry point that proxies or fans out. The BFF variation gives each client kind its own gateway: web, mobile, third party. Benefits: shielded from partitioning, tailored API, fewer round trips, simpler clients, protocol translation. Drawbacks: one more component to build and run, and an extra hop (the author calls the latency usually insignificant). For high load he suggests an event-driven, reactive implementation (Netty, Spring Reactor, Node.js). Netflix is the cited known use. Related patterns he lists: API Composition, Circuit Breaker, discovery, Access Token.
 
 ## Considerations (Microsoft)
 
-- More BFFs means more lifecycles, deployments, security needs; weigh cost.
-- Re-check SLOs: an extra network hop adds latency.
-- If interfaces make the same requests, consider consolidating; sharing one BFF across divergent clients complicates growth. Code duplication is a probable outcome; trade it against tailored experience.
-- A BFF should hold only client-specific logic. Keep cross-cutting items (monitoring, authorization) elsewhere; the page points to Gatekeeping, Rate Limiting and Routing patterns.
-- Frontend teams get autonomy over language, release cadence, prioritization.
-- GraphQL with frontend-specific resolvers may make a BFF unnecessary; an API gateway plus microservices may also suffice.
-- Not suitable when interfaces make same/similar requests, or only one interface exists.
+- More BFFs mean more lifecycles, deployments and security needs.
+- Re-check service-level objectives: the extra hop adds latency.
+- If interfaces make the same requests, consider one BFF; sharing one across divergent clients complicates growth. Duplication is probable; weigh it against a tailored experience.
+- The BFF handles only client-specific logic for one experience. Cross-cutting items such as monitoring and authorization are abstracted; the page points to the Gatekeeping, Rate Limiting and Routing patterns.
+- Frontend teams control language, release cadence, prioritization and feature integration.
+- GraphQL with frontend-specific resolvers can remove the need for a BFF; an API gateway plus microservices may suffice.
+- Not suitable when interfaces make the same or similar requests, or only one interface uses the backend.
 
-## Workload view (pillars)
-
-Reliability: faults isolated per client. Security: per-client authorization, smaller API surface, limited lateral movement. Performance: tune per client constraints.
+Workload pillars: reliability (one client's outage does not affect another), security (per-client authorization, smaller API surface, less lateral movement), performance (tune per client).
 
 ## Reference topology (Microsoft example)
 
-Clients -> API gateway (JWT validation, monitoring, request caching, routing) -> per-client BFF (serverless functions) -> microservices. Mobile BFF returns lightweight single pages and benefits from gateway cache; desktop BFF aggregates several pages per request. Entra ID issues tailored audience claims per client.
+Clients, then Azure API Management as the perimeter (JWT validation, activity logs to Azure Monitor, request caching, routing), then one BFF per client as an Azure Function, then microservices. The mobile BFF returns a single lightweight page per call and benefits from the gateway cache; the desktop BFF aggregates several pages per request. Microsoft Entra ID issues audience claims per client.
 
 ```text
 mobile --\                      /-> mobile-bff  --\
@@ -30,20 +30,9 @@ mobile --\                      /-> mobile-bff  --\
 desktop --/    cache, route)    \-> desktop-bff --/
 ```
 
-## Gateway versus BFF decision
-
-| Situation | Choice |
-|---|---|
-| One generic edge, similar clients | Single API gateway |
-| Divergent clients, separate teams | Gateway for perimeter + BFF per experience |
-| Client-driven data shape, GraphQL in place | Frontend-specific resolvers may replace BFF |
-
-Boundary: routing, gateway offloading and reverse-proxy mechanics belong to the edge-routing skills; this file covers only how they interact with a BFF.
-
 ## How an agent should apply this
 
-- Put cross-cutting concerns in a perimeter gateway/library; keep BFFs client-specific.
+- Keep cross-cutting concerns in a perimeter gateway or library when you follow the Microsoft topology; record the choice in an ADR (Newman leaves it open).
 - Estimate the extra hop and operating cost before adding a BFF.
-- Consider GraphQL or a plain gateway first when clients make near-identical requests.
+- Try GraphQL resolvers or a plain gateway first when clients make near-identical requests.
 - Isolate failure: one client's BFF outage must not affect another.
-- Document the per-client differences that justify each BFF in an ADR.

@@ -1,12 +1,10 @@
 # The drawers metaphor and incremental layering
 
-Sources: video chapter "Organizando seu código em gavetas" (20:32-24:07, https://www.youtube.com/watch?v=G8SeOH0qerk); handout section "4. Separação de responsabilidades" (https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software) · Last verified 2026-11-24
+Sources: handout section "4. Separacao de responsabilidades" (https://manodeyvin.com.br/p/fundamentos-de-engenharia-de-software) · Last verified 2026-11-27
 
 ## The metaphor
 
-The video starts from one `checkout` file that contains the screen, a payment-gateway integration, a database call, a price lookup, email input handling and validation, all together. The fix is to give each concern a drawer, and to stop at three: screen (only what the user clicks and sees), business rules (calculation, validation, decision), data (database, external APIs, gateway, anything outside the process). The speaker explicitly declines Clean Architecture because it costs time for a simple problem and says no pile of layers is needed.
-
-Why he says it matters: when code is tangled, the AI loses its way just as a person would, so keeping drawers tidy helps the agent as well as the human (his argument; the mid-project productivity dip is described anecdotally).
+The handout's phrase is "each thing in its own drawer". A file that holds the screen, a payment-gateway call, a database call, price rules and input validation together is the case. The fix names three drawers: UI (what appears and captures events), business rules (calculations, validations, decisions) and data and services (database, third-party APIs). The handout names no heavier architecture; stopping at three keeps the change cheap.
 
 ## Handout steps, mapped
 
@@ -16,14 +14,14 @@ Why he says it matters: when code is tangled, the AI loses its way just as a per
 | 2. Flag cross dependencies, duplication, global state | These block clean cuts |
 | 3. Propose folder structure following the project's existing pattern, no new library | Avoid architecture drift |
 | 4. Plan small steps; each moves one piece, keeps public names, app still works | Always shippable |
-| 5. Check existing tests; if absent write characterization tests of current behavior, even when it looks wrong | A safety net first |
+| 5. Before step 1, check existing tests; if absent write characterization tests of current behavior, even when it looks wrong | A safety net first |
 | 6. One step at a time, run tests after each | Catch regressions at the step that caused them |
 
-Rules: no bug fixes or business changes during the refactor (note bugs in a separate list); do not rename routes, public props or database columns; show the plan and wait for approval.
+Rules in the handout: no bug fixes or business changes during the refactor (note bugs in a separate list); do not rename routes, public props or database columns; show the plan and wait for approval.
 
-## Why the order puts this last
+## Where it sits in the order
 
-The author's overall order places separation after integration tests because the tests already running make the restructuring low-risk; he adds that doing it by hand was painful before AI. Work on a separate branch and avoid two parallel efforts on the same area: his example of a bug-fix branch and a refactor branch touching the same code is the failure to avoid.
+The handout's suggested order puts integration tests first and separation of responsibilities last, "with the tests already protecting you"; it also says to work on a separate branch rather than main. The order of the whole audit chain is owned by `fundamentals-audit`.
 
 ## Own example of one small step
 
@@ -39,6 +37,6 @@ If a test goes red after a step, undo that step rather than editing the test.
 
 - Classify every block into the three drawers and list obstacles with `file:line` before proposing structure.
 - Follow the existing folder conventions; introduce no framework.
-- Get characterization tests green on the untouched file before step 1.
+- Get characterization tests green on the untouched file before the first move.
 - Keep each step to one piece and run the suite at its end.
 - Record bugs found in a separate list; do not fix them in the same change.

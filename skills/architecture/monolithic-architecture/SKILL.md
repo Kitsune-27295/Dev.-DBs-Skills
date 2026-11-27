@@ -1,6 +1,6 @@
 ---
 name: monolithic-architecture
-description: Use when evaluating, designing, or maintaining a traditional Monolithic Architecture, deciding between Monolith-First and Microservices, or organizing a single-deployable application cleanly so it avoids becoming a Big Ball of Mud. Gives the Monolith-First decision rules, single-unit deployment invariants, internal layering, scaling and evolution strategies, and common mistakes.
+description: "Monolithic (single-deployable) architecture and the Monolith-First decision: one process and one deployment unit with in-process calls, ACID transactions, stateless replicas behind a load balancer, internal layering to avoid a big ball of mud, and when extracting only one edge is justified. Not for the internal module and schema isolation rules (modular-monolith-architecture), the service-split forces and prerequisites (microservices-architecture) or sacrificial-architecture theory (yagni-evolutionary-architecture). Use when starting a greenfield system, deciding monolith vs microservices, or reviewing whether a single deployable is being run well."
 ---
 
 # Traditional Monolithic Architecture
@@ -13,11 +13,11 @@ One idea: build, package, and deploy the application's behavior as a **single au
 |---|---|---|
 | Monolith | a self-contained application whose core behavior executes in a single process and deploys as one unit | "one build artifact, one deployment pipeline, in-process function calls" |
 | Monolith First | strategy of starting a new system as a monolith even if you expect it may grow into microservices later | "discover Bounded Context boundaries in code before hardening them over the network" |
-| Microservice Premium | the operational, latency, consistency, and tooling tax paid by distributed service architectures | "slows a team down unless the system is too complex for a monolith" |
+| Microservice Premium | the operational, latency, consistency, and tooling tax paid by distributed service architectures; forces and readiness checks owned by `microservices-architecture` | "slows a team down unless the system is too complex for a monolith" |
 | All-in-One Monolith | the simplest form: one project/package containing UI, business rules, and data access | "fastest startup for small apps or MVPs, highest risk of tangling as it grows" |
 | Layered Monolith | a single deployment unit divided internally into logical layers or projects (UI, Business, Data) | "one deployable binary, separated internal namespaces/modules" |
 | Horizontal Clone Scaling | scaling a stateless monolith by running multiple identical instances behind a load balancer | "scale the whole process replica, not individual sub-modules" |
-| Sacrificial Architecture | an intentionally simple monolith built to validate product viability quickly and be replaced later | "optimize for learning speed and cycle time first" |
+| Sacrificial monolith | a monolith built to be discarded once it has got the product to market; theory owned by `yagni-evolutionary-architecture` | "optimize for learning speed and cycle time first" |
 
 ## Architectural rules and invariants
 
@@ -25,7 +25,7 @@ One idea: build, package, and deploy the application's behavior as a **single au
 2. **ACID transactions by default:** Because data lives in a unified database, cross-feature state changes can use native database transactions (`BEGIN ... COMMIT`) instead of complex distributed Sagas or eventual consistency.
 3. **Keep the monolith process stateless for horizontal scaling:** Store user session state, file uploads, and shared caches outside local process memory (in the database, Redis, or object storage) so the monolith can be duplicated across $N$ servers or containers behind a load balancer.
 4. **Enforce internal logical separation early:** Even inside a single deployment unit, separate presentation, business logic, and data access (or feature slices) so refactoring boundaries remains cheap. Cross-module refactoring inside a monolith is an IDE operation; across microservices it is a distributed migration.
-5. **Pay the Microservice Premium only when earned:** Do not split a monolith into microservices on day one (*Monolith First*). Wait until domain boundaries (Bounded Contexts) have stabilized and team size or independent scaling bottlenecks exceed what a single deployment unit can support.
+5. **Pay the Microservice Premium only when earned:** Do not split a monolith into microservices on day one (*Monolith First*). Wait until domain boundaries have stabilized and team size or scaling bottlenecks exceed what one deployment unit supports. Fowler rates his own evidence as sparse and the advice as tentative.
 
 ## Building and evolution order
 
@@ -45,7 +45,7 @@ One idea: build, package, and deploy the application's behavior as a **single au
 
 ## When it earns its keep
 
-- **Worth it:** Almost all greenfield products (*Monolith First*), startups and MVPs validating product-market fit, small-to-medium engineering teams, domains where Bounded Contexts are still being discovered, and systems requiring strong transactional consistency with low operational overhead.
+- **Worth it:** Most greenfield products (*Monolith First*, Fowler's tentative default), startups and MVPs validating product-market fit, small-to-medium engineering teams, domains where Bounded Contexts are still being discovered, and systems requiring strong transactional consistency with low operational overhead.
 - **Not worth it:** Very large organizations where dozens of independent teams step on each other's release trains daily, or workloads where specific sub-components require heterogeneous runtimes, strict fault isolation, or 100x asymmetric compute scaling that cannot be handled by horizontal monolith replicas.
 
 ## Mistakes to catch
@@ -69,4 +69,5 @@ One idea: build, package, and deploy the application's behavior as a **single au
 ## Deep references
 
 - [Monolith First evolution paths](references/monolith-first-evolution-paths.md) — arguments, evolution options and counter-argument for greenfield decisions
+- [Trigger evals](references/trigger-evals.md) - should-trigger and near-miss prompts for this skill's description.
 - [Monolith structure, deployment and comparison](references/monolith-structure-deployment-and-comparison.md) — internal layering, containers, monolith vs microservices dimensions

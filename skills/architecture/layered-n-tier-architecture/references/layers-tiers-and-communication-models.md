@@ -1,6 +1,6 @@
 # Layers, Tiers, and Communication Models (Azure N-tier guide)
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier · Last verified 2026-11-27 (page dated 2025-08-15, platform metadata updated 2026-10-11)
 
 ## Definitions as the guide states them
 - **Layers** separate responsibilities and manage dependencies: a higher layer may use services of a lower one, never the reverse.
@@ -12,7 +12,7 @@ Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture
 ## Closed vs open, strict vs relaxed
 | Model | Rule | Upside | Downside |
 |---|---|---|---|
-| Closed layer / strict tier model | call only the next layer down; no skipping | fewest dependencies between layers | extra latency and overhead; pass-through traffic if a layer adds nothing |
+| Closed layer / strict tier model (the guide uses closed/open for layers and strict/relaxed for tiers; this pack treats them as one axis) | call only the next layer down; no skipping | fewest dependencies between layers | extra latency and overhead; pass-through traffic if a layer adds nothing |
 | Open layer / relaxed tier model | may call any layer below | fewer hops | more couplings, so changes get harder |
 | Mixed | both in one system | tune per path | needs explicit documentation of which paths are open |
 
@@ -37,10 +37,10 @@ Benefits listed: portable across clouds and on-prem, low learning curve, cheap b
 - WAF between front end and internet; each tier in its own subnet used as a security boundary; data tier accepts requests from the middle tier only.
 
 ## IaaS reference deployment (VM example)
-Internet -> load balancer -> perimeter network (2+ network virtual appliances) -> load balancer -> web tier VMs -> load balancer -> business tier VMs -> load balancer -> data tier (primary and secondary SQL Server); admin access through Azure Bastion, not direct RDP/SSH. Each tier is a scale set of 2+ VMs in its own subnet, so NSG rules and route tables apply per tier. Web and business tiers are stateless (any VM serves any request); the data tier is replicated. The guide notes VMs suit lift-and-shift; otherwise prefer managed services (App Service, Container Apps). Naming tip from the guide: use clear tier names in resources, e.g. `vmss-appname-business-tier`.
-Also: with many tiers consider layer-7 routing; use separate tiers for services with different scale/reliability/security needs; extend the VNet to on-prem via VPN or ExpressRoute.
+Internet -> load balancer -> perimeter network (2+ network virtual appliances) -> load balancer -> web tier VMs -> load balancer -> business tier VMs -> load balancer -> data tier (primary and secondary SQL Server); admin access through Azure Bastion, not direct RDP/SSH. Each tier is a scale set of 2+ VMs in its own subnet, so NSG rules and route tables apply per tier. Web and business tiers are stateless (any VM serves any request); the data tier is replicated (SQL Server Always On on Windows; a replicating database such as Apache Cassandra on Linux; managed database preferred). The guide notes VMs suit lift-and-shift; otherwise prefer managed services (App Service, Container Apps). Naming tip from the guide: use clear tier names in resources, e.g. `vmss-appname-business-tier`.
+Also: perimeter network (DMZ) with 2+ network virtual appliances in a scale set behind an external load balancer; with many tiers consider layer-7 routing; use separate tiers for services with different scale/reliability/security needs; extend the VNet to on-prem via VPN or ExpressRoute.
 
-## Small example (own sketch, not from source)
+## Small example (own sketch, not from the guide)
 ```
 client -> WAF -> web tier (presentation)
                    |-- sync --> middle tier A (orders) --> cache --> data tier

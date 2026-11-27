@@ -1,13 +1,20 @@
-# Sources for the soa-vs-microservices-architecture skill
+# Sources — SOA vs Microservices Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was fetched and read during the 2026-11-27 rebuild (WebFetch).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | IBM Think, "SOA versus microservices: What's the difference?" (EN & PT-BR), https://www.ibm.com/think/topics/soa-vs-microservices and https://www.ibm.com/br-pt/think/topics/soa-vs-microservices | The four SOA service roles (**Enterprise Services**, **Business Services**, **Application Services**, **Infrastructure Services**); the core difference of **Scope** (SOA = enterprise-wide integration vs. Microservices = single-application decomposition); fundamental trade-off between **Reuse** (SOA optimizes for reuse across the enterprise via shared services and ESB, creating coupling and single-point-of-failure risks) vs. **Decoupling & Agility** (Microservices accept **data duplication** and prefer asynchronous communication over synchronous call chains); Enterprise Service Bus (ESB) bottleneck and migration guidance. |
-| 2 | AWS Compare, "What's the Difference Between SOA and Microservices?", https://aws.amazon.com/compare/the-difference-between-soa-microservices/ | Side-by-side comparison across **Implementation** (coarse-grained enterprise reuse vs. fine-grained single-purpose services), **Communication** (centralized ESB with multi-protocol transformation vs. lightweight REST/gRPC/event streams), **Data Storage** (shared database across SOA services vs. dedicated private database per microservice), **Deployment** (slower, coordinated enterprise deployments vs. container-native independent CI/CD), and **Governance** (centralized enterprise data governance vs. decentralized team governance). |
-| 3 | James Lewis and Martin Fowler, "Microservices — Sidebar: Microservices and SOA" (2014), https://martinfowler.com/articles/microservices.html#MicroservicesAndSoa | Framing Microservices as one specific, opinionated way to do SOA properly — rejecting heavyweight ESB complexity, central governance committees, and decade-long canonical schema exercises in favor of *Smart Endpoints and Dumb Pipes* and independent deployability. |
+| IBM Think, "SOA vs microservices", https://www.ibm.com/think/topics/soa-vs-microservices | 200, read 2026-11-27 | Scope as the core difference, four SOA service roles, reuse versus duplication, ESB single point of failure, shared data, governance, when to pick each. Does not address SOA deployment |
+| AWS, "Difference between SOA and microservices", https://aws.amazon.com/compare/the-difference-between-soa-microservices/ | 200, read 2026-11-27 | Dimension comparison (reuse, communication, protocols, data, granularity, deployment, speed, governance), inventory example, SOA limits. No migration section |
+| Lewis and Fowler, "Microservices" SOA sidebar, https://martinfowler.com/articles/microservices.html | 200, read 2026-11-27 | SOA means many things; ESB-centric efforts failed; some see microservices as service orientation done right; smart endpoints over ESB |
+| Richardson, pattern language index, https://microservices.io/patterns/ | 200, read 2026-11-27 | Names of Strangler Application and Anti-corruption layer |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Are Microservices a subset of SOA or a replacement?** Lewis & Fowler (Source 3) view Microservices as a specific subset/evolution of SOA that strips away vendor-driven ESB bloat, whereas IBM (Source 1) and AWS (Source 2) contrast them by scope (SOA for enterprise-wide heterogeneous system integration; Microservices for application-level cloud-native development). Both perspectives converge on the same actionable boundary: never put business logic in a central ESB and never share one database across independently deployed services.
+Tool summaries of pages were read, not raw HTML. No scripts or data files exist here. The IBM speed claim is a vendor statement and is not adopted as universal.
+
+## Claims not adopted as fact
+
+- Migration steps (untangle shared database first, ESB orchestration into sagas, big-bang avoidance): agent inference; neither IBM nor AWS describes a migration path.
+- Specific enterprise examples (mainframe, SAP, Salesforce): illustrations, not source claims.
+- "Entity Services" as an SOA role: not in IBM's list; removed.

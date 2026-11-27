@@ -1,56 +1,39 @@
 # Go Project Layout: Start Flat, Grow on Evidence
 
-Sources: https://levelupgo.dev/blog/go-project-structure · Last verified 2026-11-23
+Sources: https://go.dev/doc/modules/layout · https://pkg.go.dev/cmd/go (Internal packages) · https://github.com/golang-standards/project-layout · https://levelupgo.dev/blog/go-project-structure · Last verified 2026-11-27
 
-## Thesis
-
-Go has no mandated layout. Official guidance ("Organizing a Go module") shows layouts that grow with project size, and the article argues you should start flat and add directories only when the code needs them.
-
-## Rules from the article
-
+## Official guidance (go.dev, read)
 | Situation | Layout |
 |---|---|
-| Small tool | `main.go` plus logic files in the module root; no `utils/` |
-| Several binaries, or binary plus library | `cmd/<name>/main.go`, each thin, logic imported from `internal/` |
-| Private code | `internal/` (compiler-enforced: importable only inside the parent module); keep packages there as much as possible |
-| Library | public package at module root |
-| REST API | `internal/` split by domain |
-| Multi-service repo | `cmd/` plus `internal/` |
+| Basic package | `go.mod` plus source and tests in the root |
+| Basic command | `package main` in the root, `main.go` by convention |
+| Supporting packages | `internal/<name>/` imported by the root package |
+| Several commands | one directory per program, shared code in a top-level `internal/`; `cmd/` is a common convention, useful in mixed repositories |
+| Packages and commands | public packages at the root or in directories, commands under `cmd/`, private code in `internal/` |
+| Server | logic in `internal/`, entrypoints in `cmd/` (for example `cmd/api-server/main.go`); split parts into separate modules if other projects need them |
 
-`golang-standards/project-layout` is not an official standard (the article cites Russ Cox saying so); copying it into a small program yields many nearly empty folders.
+The page does not mention `pkg/` or `golang-standards`.
 
-## Best practices listed
+## The internal rule (cmd/go docs, read)
+Code in or below a directory named `internal` is importable only by code that shares the import path above the `internal` directory. Example from the docs: `example.com/m/foo/internal/baz` can be imported by `example.com/m/foo` and its subpackages, not by `example.com/m/crash/bang`.
 
-- Keep `main` thin.
-- Group packages by domain, not by role (`models`, `services`).
-- Tests beside code; fixtures in `testdata/`.
-- Prefer `internal/` over exported packages.
-- One module per repository until separate versioning is needed.
-- Avoid empty `pkg/`, `src/`, `utils/` directories; name packages for what they provide (`store`, `auth`), not `common`.
+## golang-standards/project-layout (README, read)
+It says it is NOT an official standard defined by the core Go dev team, describes `/pkg` as library code ok for external use (a pattern some in the community do not recommend), and `/internal` as private code enforced by the compiler. The Level Up Go article (read) additionally reports that a Go tech lead said in issue #117 it is not a standard layout; that issue itself was not opened, so treat the attribution as second-hand.
 
-## Generalizing beyond Go (own inference)
-
-The same principle applies to any monorepo package layout: a directory should mark a real boundary (ownership, dependency rule, release unit), not a hoped-for one. Directory count is a cost paid in imports and navigation.
+## Rules for any language (own inference)
+- A directory should mark a real boundary: ownership, dependency rule or release unit.
+- Name packages for what they provide (`store`, `auth`), not `common` or `utils`.
+- One module per repository until separate versioning is needed (from the article; not confirmed on go.dev).
 
 ## Example growth path
-
 ```
 v0   main.go  store.go
 v1   main.go  internal/store/  internal/auth/
 v2   cmd/api/main.go  cmd/worker/main.go  internal/orders/  internal/billing/
 ```
-Move from v0 to v1 only when a file group needs a privacy boundary or two reasons to change.
-
-## Anti-patterns
-
-- 10+ scaffold directories before the first feature.
-- `pkg/` as a dumping ground, signaling "public" without any consumer.
-- Layer-based packages that force every feature change to touch four directories.
+Move v0 to v1 only when a file group needs a privacy boundary or has two reasons to change.
 
 ## How an agent should apply this
-
-- Begin with the smallest layout that compiles; justify each new directory by a concrete boundary.
-- Use `cmd/` only when more than one entrypoint exists.
-- Put private code in `internal/` by default.
-- Organize by domain, and rename `utils`/`common` packages by function.
+- Begin with the smallest layout that compiles; justify each new directory by a boundary.
+- Use `cmd/` only with more than one entrypoint; put private code in `internal/` by default.
 - Do not cite `golang-standards/project-layout` as authoritative.

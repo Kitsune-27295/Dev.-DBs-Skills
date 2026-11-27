@@ -1,13 +1,24 @@
 # Sources for the event-driven-architecture skill
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Last verified 2026-11-27. All pages re-fetched with WebFetch on that date; summaries are in our own words.
 
-| # | Source | What the skill takes from it |
-|---|---|---|
-| 1 | Martin Fowler, "What do you mean by 'Event-Driven'?" (2017-02-07), https://martinfowler.com/articles/201701-event-driven.html | Disambiguation of four distinct patterns frequently confused under the umbrella term "Event-Driven": (1) **Event Notification** (low coupling, thin payload, danger of hidden logical flow across notifications and the **passive-aggressive command** trap), (2) **Event-Carried State Transfer** (consumers maintain a local copy of state from event data so they never query the source system at runtime — higher availability and lower latency at the cost of data duplication and eventual consistency), (3) **Event Sourcing** (persisting every state change as a log of events that can rebuild application state), and (4) **CQRS** (separate data structures for reading and writing). Rule: never say "event-driven" without specifying which of these four patterns you mean. |
-| 2 | Microsoft Azure Architecture Center, "Event-driven architecture style" (EN & PT-PT), https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven and https://learn.microsoft.com/pt-pt/azure/architecture/guide/architecture-styles/event-driven | Topology of Event Producers, Event Ingestion / Channels (brokers), and Event Consumers; distinction between **Publish-Subscribe** (tracks subscriptions, pushes to every subscriber, ephemeral after delivery) and **Event Streaming** (durable append-only log, clients read from any point in the stream and track offsets, supports temporal windowing and late-joining consumers); contrast with the **Competing Consumers** queue pattern; challenges (guaranteed delivery, exactly-once / idempotent processing, event ordering, and choreography vs. orchestration). |
-| 3 | Marco Tulio Valente, *Engenharia de Software Moderna*, Cap. 7 "7.5 Arquiteturas Orientadas a Mensagens & 7.6 Publish/Subscribe", https://engsoftmoderna.info/cap7.html | Queue-based asynchronous messaging vs. topic-based Publish/Subscribe decoupling in space, time, and synchronization. |
+| # | Source | Status | What the skill takes from it |
+|---|---|---|---|
+| 1 | Martin Fowler, "What do you mean by 'Event-Driven'?" (2017-02-07), https://martinfowler.com/articles/201701-event-driven.html | Read, 200 OK | Four distinct patterns (Event Notification, Event-Carried State Transfer, Event Sourcing, CQRS); passive-aggressive command; ECST trade-offs (resilience and latency against receiver-managed state); event sourcing misconceptions (not necessarily async, snapshots and change lists are two views, git as analogy); CQRS not strictly about events and often misused. |
+| 2 | Microsoft Azure Architecture Center, "Event-driven architecture style", https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven | Read, 200 OK; page date 2026-03-06, live copy updated 2026-11-17 | Producer, channel, consumer; pub/sub vs event streaming vs competing consumers; consumer variations; payload styles; broker vs mediator topology; challenge catalog; when to use or avoid. |
+| 3 | Marco Tulio Valente, *Engenharia de Software Moderna*, ch. 7, sections 7.5 and 7.6, https://engsoftmoderna.info/cap7.html | Read, 200 OK (Portuguese) | Queue (1:1, pull) vs pub/sub (1:N, notified); space and time decoupling; telecom and airline examples. |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Thin Events (Event Notification) vs. Fat Events (Event-Carried State Transfer):** Fowler (Source 1) highlights the architectural tension between thin events (which keep schemas minimal but force consumers to query the source system back) and fat events (which eliminate runtime dependency on the source system via local state replication but require careful schema governance and eventual-consistency handling). Neither is universally right; pick per integration boundary.
+- The PT-PT copy of source 2 was not re-read. Pseudo-code blocks in references are ours, not from the sources.
+
+## Claims not adopted
+
+- Product names for pub/sub (SNS/SQS, RabbitMQ) and the Kafka-as-streaming mapping: not in sources 1 to 3 (the Azure page only names Event Grid, Event Hubs and the Kafka endpoint of Event Hubs). Removed from the skill body.
+- "Snapshots are a replay-cost optimization": not stated by Fowler; replaced by his wording.
+- Envelope field list (aggregate version, causation id, schema version): our convention, marked as such in the skill; only correlation ID and a versioning strategy are in the Azure page.
+- "Choreography becomes an un-debuggable pinball machine" and "callback storm of 20 subscribers": our illustrations, no source; kept only as qualitative warnings.
+
+## Nuances
+
+- Thin vs fat events (Fowler) and keys-only vs full payload (Azure) are the same tension: neither is universally right; choose per consumer and boundary.

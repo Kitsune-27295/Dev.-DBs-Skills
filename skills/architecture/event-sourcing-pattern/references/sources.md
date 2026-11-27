@@ -1,14 +1,21 @@
-# Sources for the event-sourcing-pattern skill
+# Sources — Event Sourcing Pattern
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-fetched on 2026-11-27 (rebuild pass; first authoring pass was 2026-11-22).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Martin Fowler, "Event Sourcing" (2005-12-12), https://martinfowler.com/eaaDev/EventSourcing.html | Core definition: capture every change to application state in an event object stored in sequence for the lifetime of the application state; Complete Rebuild, Temporal Query, and Event Replay (reversing/retroactive events); crucial rules for **External Updates** (gateways must be silent during replay), **External Queries** (external responses must be remembered inside the event so replays are deterministic), and **Code Changes** (distinguishing new features, bug fixes via retroactive replay, and domain logic shifts that must check time/policy); Snapshots as overnight/cached application state checkpoints. |
-| 2 | Microsoft Azure Architecture Center, "Event Sourcing pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing | Append-only event store as system of record; write-contention reduction vs. CRUD row locks; explicit warning that Event Sourcing is a high-complexity pattern with costly migration in or out and should only be adopted in the specific parts of a system where auditability and historical reconstruction justify the trade-offs; challenges (eventual consistency of materialized views, event schema versioning, event ordering, multi-threaded optimistic concurrency, and querying requiring CQRS projections). |
-| 3 | Chris Richardson, "Pattern: Event sourcing", https://microservices.io/patterns/data/event-sourcing.html | Event Sourcing as a solution to the microservice problem of atomically updating an aggregate in the database and publishing domain events to a message broker without 2PC; aggregate lifecycle methods split into command processing (validate and return events) and event application (mutate state deterministically); snapshotting, idempotent event consumers, and deleting/pseudonymizing personal data for GDPR compliance. |
-| 4 | Oskar Dudycz, `EventSourcing.NetCore` (Tutorials, Architecture Guides & Anti-patterns), https://github.com/oskardudycz/EventSourcing.NetCore | Practical engineering rules: Event vs. Stream definition; **"Keep your streams short!"** (modeling streams around short business lifecycles rather than infinite entity histories); pure functional state folding (`evolve`/`apply` vs. `decide`/`handle`); optimistic concurrency with stream version checks; GDPR/privacy handling in event-sourced systems; event schema versioning and upcasting. |
+| Martin Fowler, "Event Sourcing", https://martinfowler.com/eaaDev/EventSourcing.html | 200, dated 2005-12-12, draft material | Definition, complete rebuild, temporal query, event replay and reversal, external updates and queries, code changes, snapshots |
+| Microsoft Azure Architecture Center, "Event Sourcing pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing | 200, page date 2026-03-27 | Complexity warning, rehydration, optimistic concurrency, intent-focused events, versioning strategies, idempotency, snapshots, GDPR options, use/avoid lists, a broker is not an event store |
+| Chris Richardson, "Pattern: Event sourcing", https://microservices.io/patterns/data/event-sourcing.html | 200 | Event sourcing as atomic state-plus-event persistence, event store as broker, benefits and drawbacks, snapshot as load optimization. The current page does NOT cover idempotent consumers, GDPR or schema evolution (confirmed with curl) |
+| Oskar Dudycz, EventSourcing.NetCore, https://github.com/oskardudycz/EventSourcing.NetCore | 200, CC-BY-SA-4.0, about 100k of 111k characters read | Index of practitioner material: short streams, `Evolve`, versioning topics, GDPR videos, anti-patterns. Ideas restated in own words; no text copied |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
+- The Dudycz README is an index of links; linked articles and videos were not opened.
+- No scripts or data files in this skill.
 
-- **Internal Domain Events vs. Public Integration Events:** Richardson (Source 3) emphasizes how Event Sourcing naturally emits domain events that can drive Sagas across microservices, whereas Dudycz (Source 4) and DDD practitioners warn against leaking every internal persistence event directly as a public contract, recommending an explicit translation step from internal stream events to public integration events when crossing Bounded Context boundaries.
+## Claims not adopted as fact
+- A numeric snapshot threshold ("hundreds or thousands of events"): no source gives one; Azure says "every N events".
+- "Version every event from day one": own advice; Azure lists strategies only.
+- A `UNIQUE (stream_id, version)` constraint as the only way to enforce append concurrency: an implementation choice; Azure requires only that the store rejects a stale append.
+- `decide`/`evolve` as official terms: Dudycz uses `Evolve`; "decide" is a common convention, not in the sources.
+- Richardson as the source for idempotent consumers or GDPR: Azure is the source.

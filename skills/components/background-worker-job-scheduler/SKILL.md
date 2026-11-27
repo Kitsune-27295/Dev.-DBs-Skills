@@ -1,6 +1,6 @@
 ---
 name: background-worker-job-scheduler
-description: "Design and review background workers and job schedulers: moving work off the request path, event-driven vs schedule-driven triggers, queue-based competing consumers, idempotent jobs, poison messages and dead-letter queues, graceful shutdown and checkpointing, single-instance scheduling, leader election with leases and fencing, result reporting, and scaling on queue depth. Use when adding async/batch/cron work, building a worker or consumer, preventing duplicate scheduled runs, choosing a job host, or deciding whether you need leader election."
+description: "Design and review background workers and job schedulers: moving work off the request path, event vs schedule triggers, queue-based competing consumers, idempotent jobs, poison messages and dead-letter queues, graceful shutdown and checkpointing, single-instance scheduling, leader election with leases and fencing, result reporting, scaling on queue depth. Not for throttling quotas (`rate-limiter-throttler`), cache reuse (`caching-strategies`) or retry/backoff policy (`circuit-breaker-retry-telemetry`). Use when adding async, batch or cron work, building a worker or consumer, preventing duplicate scheduled runs, choosing a job host, or deciding whether you need leader election."
 ---
 
 # Background Worker & Job Scheduler
@@ -78,7 +78,7 @@ When something must not run concurrently, take the first rung that works:
 3. **Lock around the critical section** (database advisory lock, optimistic/pessimistic lock) with expiry.
 4. **Leader election** only when one *active coordinator* must direct others and a standby must be able to take over.
 
-Leader election rules: use an established mechanism (ZooKeeper/etcd election, Kubernetes Lease, lease on a store) with **expiring, renewable leases**; **stop leader work when ownership is lost or cannot be confirmed**; add **fencing/ownership checks at the resource** because lease expiry does not kill the old process; test a failover time that includes detection, expiry and startup; persist coordinator state; monitor leader *progress*, not just renewal; keep the leader from being the throughput bottleneck; consider one leader per partition. Details: [references/leader-election-and-singleton-scheduling.md](references/leader-election-and-singleton-scheduling.md).
+Leader election: use an established mechanism (ZooKeeper/etcd election, Kubernetes Lease, a lease on a store) with expiring, renewable leases; stop leader work when ownership is lost or unconfirmed; add resource-side fencing because lease expiry does not kill the old process. The full rule set (failover target, progress monitoring, per-partition leaders, telemetry) is in [references/leader-election-and-singleton-scheduling.md](references/leader-election-and-singleton-scheduling.md).
 
 ## 7. Scheduling Rules
 

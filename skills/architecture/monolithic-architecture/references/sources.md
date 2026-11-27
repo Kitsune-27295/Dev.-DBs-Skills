@@ -1,13 +1,21 @@
-# Sources for the monolithic-architecture skill
+# Sources - Monolithic Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was checked during skill authoring (2026-11-27, re-fetched with a web fetch tool; earlier text was a draft).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Martin Fowler, "Monolith First" (2015-06-03), https://martinfowler.com/bliki/MonolithFirst.html | Empirical observation (*claim*: almost all successful microservice stories started with a monolith that got too big and was broken up, while systems built as microservices from scratch ended up in serious trouble); the **Microservice Premium**; YAGNI and cycle-time priority in early stages; difficulty of drawing stable Bounded Context boundaries upfront; much easier cross-boundary refactoring inside a monolith; three evolution paths (modular monolith decomposition, peeling off microservices at the edges while leaving a quiescent core monolith, or Sacrificial Architecture replacement). |
-| 2 | Microsoft .NET Architecture Guide, "Common web application architectures — What is a monolithic application?", https://learn.microsoft.com/pt-pt/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures | Definition of a monolithic application as behaviorally self-contained in its own process and deployed as a single unit; horizontal scaling by duplicating the entire application across multiple servers/VMs/containers; distinction between "All-in-one" single-project monoliths and internally layered monoliths; containerizing monoliths with Docker. |
-| 3 | AWS Compare, "What's the Difference Between Monolithic and Microservices Architecture?", https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/ | Side-by-side comparison across development process (simpler startup, unified codebase), deployment (single executable/directory vs. independent services), debugging (end-to-end tracing within one environment vs. distributed tracing), modifications (tight coupling risk if poorly structured), and scaling (whole-application replication vs. granular component scaling); decision criteria based on application size, team competency, and infrastructure maturity. |
+| https://martinfowler.com/bliki/MonolithFirst.html | 200 OK, read in full; article dated 2015-06-03, no revisions shown | Monolith-First thesis, arguments, four evolution paths, counter-argument, experience rule, tentative evidence |
+| https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures | 200 OK, read in full (English edition; the earlier draft cited the Portuguese one); metadata updated 2026-07-08 | Monolith definition, all-in-one vs layered, containers, when a monolith is the better choice |
+| https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/ | 200 OK, read in full | Comparison dimensions, choice criteria, four-step migration outline |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Monolith First vs. Starting with Microservices:** Fowler (Source 1) notes a minority counter-argument (e.g., Stefan Tilkov) that starting with microservices habituates teams to small-team service boundaries early, particularly when replacing a legacy system whose domain boundaries are already well known. However, both Fowler and AWS (Source 3) converge on recommending a monolith when team distributed-systems experience is limited or domain boundaries are still evolving.
+- Pages were read through a summarizing fetch tool; table rows and short quotes were checked, long passages were not compared word for word.
+- AWS is a vendor page that frames microservices as the destination.
+
+## Claims not adopted as fact
+
+- Stefan Tilkov's view that a team unable to build a good monolith will not build good services: Fowler's page only thanks Tilkov in its acknowledgements; his own article was not read, so the claim was dropped.
+- "Scaling a successful but crude system is the better problem to have" and "even experienced architects misplace boundaries in familiar domains": not found on the fetched page.
+- The observation that almost all successful microservice stories began as monoliths is Fowler's anecdotal impression, not data.
+- Reading the evolution paths as a ranking: Fowler lists them as options, not preferences.

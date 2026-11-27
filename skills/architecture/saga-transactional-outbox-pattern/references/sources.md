@@ -1,14 +1,22 @@
-# Sources for the saga-transactional-outbox-pattern skill
+# Sources — Saga and Transactional Outbox Patterns
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-fetched on 2026-11-27 (rebuild pass; first authoring pass was 2026-11-22).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Chris Richardson, "Pattern: Saga", https://microservices.io/patterns/data/saga.html | Coordinating transactions spanning multiple services with Database per Service when 2PC is not an option; **Choreography** vs. **Orchestration** sagas; **Compensating Transactions** that undo completed local transactions in reverse order; lack of Isolation (ACD instead of ACID) causing data anomalies (**Lost Updates**, **Dirty Reads**, **Fuzzy/Non-repeatable Reads**) and the countermeasure taxonomy (**Semantic Lock**, **Commutative Updates**, **Pessimistic View**, **Reread Value**, **Version File**, **By Value**); Saga transaction classification (**Compensatable**, **Pivot**, **Retriable**). |
-| 2 | Microsoft Azure Architecture Center, "Saga distributed transactions pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/saga | Local transactions, events vs. commands, Choreography (decentralized, good for few participants, hard to track as workflow grows) vs. Orchestration (centralized state machine, avoids cyclic dependencies between participants, handles timeouts and compensations); isolation anomaly countermeasures and idempotency requirements for both forward and compensating steps. |
-| 3 | Chris Richardson, "Pattern: Transactional outbox", https://microservices.io/patterns/data/transactional-outbox.html | Solving the dual-write problem between database updates and message broker publishing without 2PC; inserting messages into an `OUTBOX` table (relational) or attribute on the record (NoSQL) within the local ACID transaction; asynchronous **Message Relay** publishing to the broker in commit order via **Polling Publisher** or **Transaction Log Tailing**; at-least-once delivery requiring idempotent consumers. |
-| 4 | Microsoft Azure Architecture Center, "Implement the Transactional Outbox pattern by using Azure Cosmos DB", https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos | Document-database implementation of Transactional Outbox: persisting the domain entity (`Order`) and the `OutboxEvent` document in the **same logical partition** using a single atomic `TransactionalBatch` / `UnitOfWork`, followed by asynchronous **Change Feed** processing to publish to Azure Service Bus, error handling (dead-letter / poison events), and TTL / cleanup maintenance of processed outbox documents. |
+| Chris Richardson, "Pattern: Saga", https://microservices.io/patterns/data/saga.html | 200 | Problem (2PC not an option), choreography versus orchestration, compensating transactions, lack of isolation, outbox or event sourcing for atomic update plus messaging, client outcome. It does NOT name anomalies, countermeasures or compensable/pivot/retriable (confirmed with curl) |
+| Microsoft Azure Architecture Center, "Saga distributed transactions pattern", https://learn.microsoft.com/en-us/azure/architecture/patterns/saga | 200, page date 2025-02-25 | Compensable, pivot and retryable steps, choreography and orchestration trade-offs, anomalies (lost update, dirty read, fuzzy read), six countermeasures, idempotence, compensations may fail, use/avoid lists |
+| Chris Richardson, "Pattern: Transactional outbox", https://microservices.io/patterns/data/transactional-outbox.html | 200 | Dual-write problem, outbox table or NoSQL attribute, message relay, ordered sending, polling publisher and log tailing named, at-least-once and idempotent consumers |
+| Microsoft Azure Architecture Center, "Implement the Transactional Outbox pattern by using Azure Cosmos DB", https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos | 200, page date 2026-02-23 | Transactional batch in one logical partition, change feed relay, Service Bus dedup and sessions, restart on error, TTL cleanup (about 10 days), sample not production-ready, NServiceBus and MassTransit outbox |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
+- The relay pros/cons table, the orchestrator skeleton and the SQL sketch are this skill's own illustration, not source text.
+- The Richardson pages were read through a summarizer plus a keyword check with curl; step counts of his Create Order example were not verified.
+- No scripts or data files in this skill.
 
-- **Polling Publisher vs. Transaction Log Tailing / Change Feed:** Richardson (Source 3) and Microsoft (Source 4) compare two Message Relay mechanisms: (1) **Polling Publisher** (a background worker querying `SELECT * FROM outbox WHERE published = false ORDER BY id`), which works on any SQL database and is simple to run at low-to-moderate scale, and (2) **Transaction Log Tailing / Change Data Capture (CDC) / Change Feed** (e.g., Debezium on Postgres/MySQL WAL or Cosmos DB Change Feed), which eliminates polling queries and scales to high throughput at the cost of extra infrastructure or engine-specific hooks.
+## Claims not adopted as fact
+- Richardson as the source of the anomaly list, countermeasures and compensable/pivot/retriable classes: they are Azure (and his book, not read).
+- "ACD" as a term: not on either page; replaced by "ACID minus Isolation".
+- "Choreography for 2-3 steps, orchestration for 4+": number cut-offs are a rule of thumb; sources say few versus complex.
+- Debezium and WAL tailing as examples of log tailing: not on the pages read.
+- The out-of-order compensate tombstone: own design, not in the sources.

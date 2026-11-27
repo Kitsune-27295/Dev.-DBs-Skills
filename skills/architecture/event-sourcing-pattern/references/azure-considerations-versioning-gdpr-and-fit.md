@@ -1,11 +1,11 @@
 # Operational Considerations: Versioning, Concurrency, GDPR and Fit
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing · https://microservices.io/patterns/data/event-sourcing.html · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing · https://microservices.io/patterns/data/event-sourcing.html · Last verified 2026-11-27 (Azure page dated 2026-03-27)
 
 ## Framing
 Microsoft's page opens with a warning: event sourcing is complex, costly to adopt or leave, and constrains later design in the parts that use it; for most systems and most parts of a system, traditional data management is enough. Adopt it selectively (a payment ledger or order pipeline), keep CRUD for profile or configuration data.
 
-Richardson frames it as a fix for atomically updating state and publishing events: saving one event is a single atomic operation, and the event store doubles as a broker. Drawbacks he lists: unfamiliar model, and hard queries that usually force CQRS with eventually consistent read data. His page does not cover idempotency, GDPR or schema evolution; Microsoft does.
+Richardson frames it as a fix for atomically updating state and publishing events: saving one event is a single atomic operation, and the event store doubles as a broker. Drawbacks he lists: unfamiliar model, and hard queries that usually force CQRS with eventually consistent read data. His page does not cover idempotent consumers, GDPR or schema evolution (re-checked 2026-11-27; it mentions snapshots only as a loading optimization); Microsoft does.
 
 ## Considerations (Microsoft)
 | Topic | Guidance |
@@ -18,14 +18,14 @@ Richardson frames it as a fix for atomically updating state and publishing event
 | Event store vs broker | Kafka-style brokers lack per-entity stream reads and optimistic concurrency; use them to distribute events, not as the store |
 | Rehydration cost | Snapshot every N events; snapshots are an optimization, the stream remains the truth |
 | Cross-entity conflicts | OCC covers one stream; reconcile others by business means (back order, notify customer) |
-| Idempotency | At-least-once delivery means duplicates; track last processed sequence per consumer or make mutations repeat-safe |
+| Idempotency | At-least-once delivery means duplicates; track last processed sequence per consumer or make mutations repeat-safe (inbox mechanics are owned by `saga-transactional-outbox-pattern`) |
 | Circular logic | Event handlers that raise events that trigger the same handlers can loop |
 | Testing | Given past events, when command, then new events; plus integration tests for projections, idempotency and schema evolution |
-| Personal data | Store personal data outside the stream and reference by id, or crypto-shred: encrypt per-subject and delete the key |
-| Internal vs public events | Translate to integration events before crossing a boundary (see `streams-aggregation-and-practitioner-guide.md`) |
+| Personal data | Store personal data outside the stream and reference by id; if inseparable, crypto-shred: encrypt per subject and delete the key (costs encryption on every read and write plus key management) |
+| Internal vs public events | Microsoft: storage events are low level, so specific integration events may be needed; the boundary rule is in `streams-aggregation-and-practitioner-guide.md` |
 
 ## Use when / avoid when
-Use when intent and history matter, replay or rollback is valuable, you need decoupled consumers, or you already use CQRS and accept eventual consistency. Avoid for plain CRUD, prototypes and MVPs, mostly-static reference data, strict real-time consistency of views, or teams new to event-driven systems.
+Use when intent and history matter, replay or rollback is valuable, you need decoupled consumers, or you already use CQRS and accept eventual consistency. Avoid for plain CRUD, prototypes and MVPs or short-lived systems, mostly-static reference data, strict real-time consistency of views, or teams new to event-driven systems (Microsoft).
 
 ## Example: optimistic append
 ```ts

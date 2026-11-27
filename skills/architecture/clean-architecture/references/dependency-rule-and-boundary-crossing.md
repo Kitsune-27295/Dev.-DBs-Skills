@@ -1,9 +1,9 @@
 # The Dependency Rule and Boundary Crossing (Martin, 2012)
 
-Sources: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html · Last verified 2026-11-27
 
 ## What the post claims
-- Hexagonal, Onion, Screaming, DCI and BCE share one goal: separation of concerns through layers, each with at least one layer for business rules and one for interfaces. Systems built this way are independent of frameworks, testable without UI or database, independent of UI and database, and unaware of the outside world.
+- The post names five properties the style yields: independent of frameworks, testable, independent of UI, independent of database, independent of any external agency. Hexagonal, Onion, Screaming, DCI and BCE share one goal: separation of concerns through layers, each with at least one layer for business rules and one for interfaces. Systems built this way are independent of frameworks, testable without UI or database, independent of UI and database, and unaware of the outside world.
 - **The Dependency Rule**: source code dependencies point only inward. Outer circles are mechanisms, inner circles are policies. Inner code must not name anything declared outside; data formats from outer layers, especially framework-generated ones, must not be used inside.
 - Abstraction increases toward the center. The four circles are a schematic; more layers are fine as long as the rule holds.
 
@@ -28,7 +28,7 @@ class JsonPresenter implements OrderOutputPort { present(o: OrderResponse) { /* 
 ```
 
 ## Data across boundaries
-Pass simple isolated structures (basic structs, DTOs, function arguments, hashmaps, simple objects), shaped for the **inner** circle. Entities and database rows must not cross, because a framework's row structure would drag a dependency on the outer circle inward.
+Pass simple isolated structures (basic structs, DTOs, function arguments, hashmaps, constructed objects), shaped for the **inner** circle. Entities and database rows must not cross, because a framework's row structure would drag a dependency on the outer circle inward.
 
 ## Trade-offs and cautions
 - The post does not discuss when the structure is not worth its cost; that judgment (SKILL.md "When it earns its keep") is the skill's own, not from this page.

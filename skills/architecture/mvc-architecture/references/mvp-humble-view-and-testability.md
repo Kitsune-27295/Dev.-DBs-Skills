@@ -1,6 +1,6 @@
 # MVP, Humble View and Testability of the Presentation Layer
 
-Sources: https://martinfowler.com/eaaDev/uiArchs.html · https://engsoftmoderna.info/cap7.html · https://developer.mozilla.org/en-US/docs/Glossary/MVC · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaDev/uiArchs.html · https://engsoftmoderna.info/cap7.html · https://developer.mozilla.org/en-US/docs/Glossary/MVC · Last verified 2026-11-27
 
 ## Why variants exist
 
@@ -13,7 +13,7 @@ Classic observer-based MVC makes flow hard to trace and leaves view logic (color
 | Presentation Model (MVVM family) | Widgets bind to an intermediate model that holds view state and behavior | Logic testable without UI; a small binding/mapping risk remains in the widgets |
 | MVP, Supervising Controller | View handles simple declarative mapping; presenter handles complex cases | Between the two extremes |
 | MVP, Passive View | Presenter sets every widget; view has no logic | Removes mapping risk, but needs a test double for the view |
-| Application Model (VisualWorks) | Intermediate model with value holders and change events | Letting it update widgets directly is the workaround that motivated MVP |
+| Application Model (VisualWorks) | Intermediate model | Inference: letting it update widgets directly motivated MVP |
 
 **Humble View principle**: make the code that is hard to test (widgets, rendering) so thin that it cannot hide bugs, and move decisions to testable objects.
 
@@ -24,7 +24,7 @@ Classic observer-based MVC makes flow hard to trace and leaves view logic (color
 - Moderate: Supervising Controller.
 - Server-rendered pages: the template is already the humble view; keep logic in controller and model (MDN and Valente describe the web flow this way).
 
-MDN lists MVP, MVVM and MVW as MVC descendants; treat the choice as which side owns view state.
+MDN lists MVP, MVVM and MVW as patterns based on MVC; treat the choice as which side owns view state.
 
 ## Failure modes
 

@@ -1,6 +1,6 @@
 ---
 name: soa-vs-microservices-architecture
-description: Use when comparing, evaluating, or migrating between Service-Oriented Architecture (SOA) and Microservices Architecture — distinguishing Enterprise-Scope SOA (ESB, shared databases, multi-protocol integration, reuse-first) from Application-Scope Microservices (smart endpoints and dumb pipes, private database per service, bounded-context autonomy, duplication-over-coupling). Gives the 6 structural differences, migration rules, and ESB anti-patterns.
+description: "Choose between, or move from, enterprise-scope SOA (ESB, shared data, reuse-first, many protocols) and application-scope microservices (smart endpoints, dumb pipes, private data per service): the structural differences from IBM and AWS, why business logic and canonical models do not belong in a bus, and incremental migration. Not for designing microservices themselves (`microservices-architecture`), event patterns (`event-driven-architecture`) or a single-deployable design (`monolithic-architecture`). Use when comparing SOA and microservices, auditing an ESB estate, or planning a move off one."
 ---
 
 # Service-Oriented Architecture (SOA vs. Microservices)
@@ -13,10 +13,10 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 |---|---|---|
 | **1. Scope** | **Enterprise-wide**: integrates multiple disparate enterprise applications (ERP, CRM, Mainframe, Billing) across an organization | **Single Application**: decomposes one business application into fine-grained, independently deployable domain services |
 | **2. Primary Goal** | **Maximize Reuse & Interoperability** across heterogeneous enterprise systems | **Maximize Agility, Independent Deployment & Decoupling** (prefers controlled data duplication over cross-team coupling) |
-| **3. Communication Fabric** | **Enterprise Service Bus (ESB)**: "smart pipe" that handles protocol translation (SOAP, JMS, FTP, RPC, REST), routing, transformation, and business choreography | **Smart Endpoints & Dumb Pipes**: lightweight HTTP/REST, gRPC, or simple pub/sub brokers that only route messages without business logic |
+| **3. Communication Fabric** | **Enterprise Service Bus (ESB)**: "smart pipe" that handles protocol translation (AWS lists SOAP, AMQP, MSMQ), routing and transformation; per this skill's rules it must not hold business choreography | **Smart Endpoints & Dumb Pipes**: lightweight HTTP/REST, gRPC, or simple pub/sub brokers that only route messages without business logic |
 | **4. Data Ownership** | **Shared Data Storage**: multiple services frequently read/write a shared enterprise database or canonical enterprise data model | **Private Database per Service**: each microservice strictly encapsulates its own database schema and storage engine |
-| **5. Service Granularity** | Coarse-grained **Enterprise Services**, **Business Services**, **Entity Services**, and **Application Services** | Fine-grained services aligned 1:1 with a **DDD Bounded Context / Business Subdomain** |
-| **6. Governance & Deployment** | Centralized governance, canonical enterprise schemas (WSDL/XML/XSD), and often coordinated multi-service release cycles | Decentralized governance, team-owned contracts (Consumer-Driven Contracts), and fully independent CI/CD deployments |
+| **5. Service Granularity** | Services in four roles per IBM: functional/business, enterprise, application and infrastructure (security, authentication); scope ranges from small to enterprise-wide | Much smaller services that each specialize in one task (AWS); aligning them with a DDD Bounded Context is the `microservices-architecture` rule |
+| **6. Governance & Deployment** | Consistent, common governance over shared resources (AWS, IBM); changes often force a rebuild of the whole application (AWS). Canonical schemas and lockstep releases are typical symptoms (agent inference) | Decentralized governance, team-owned contracts (Consumer-Driven Contracts), and fully independent CI/CD deployments |
 
 ## Core architectural rules and invariants
 
@@ -28,7 +28,7 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 4. **Trade Reuse for Decoupling consciously:** In SOA, sharing a single `CustomerEntityService` across 15 applications saves code duplication but means every change requires a 15-team committee and synchronous cross-system calls. In Microservices, replicate the subset of data each Bounded Context needs via **Event-Carried State Transfer** (`event-driven-architecture`) so services stay autonomous.
 5. **Migrate from SOA to Microservices incrementally (Strangler Fig + Anti-Corruption Layer):**
    - Do not rewrite an entire ESB/SOA estate in one big bang.
-   - Wrap legacy SOA/ESB endpoints behind an **Anti-Corruption Layer (ACL)** so new Bounded Contexts are not polluted by legacy canonical XML/SOAP schemas.
+   - Wrap legacy SOA/ESB endpoints behind an **Anti-Corruption Layer (ACL)** (`dto-mapper-anti-corruption-layer`) so new Bounded Contexts are not polluted by legacy canonical schemas. Strangler Application and ACL are Richardson's refactoring patterns; applying them to an ESB estate is agent inference, since IBM and AWS give no migration path.
    - Untangle the **Shared SOA Database** first (split schemas by Bounded Context) before splitting runtime services.
 
 ## Evaluation and migration workflow
@@ -40,10 +40,7 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 
 ## Testing strategy
 
-| Architecture | Critical Tests | Focus |
-|---|---|---|
-| SOA Integration Estate | protocol mediation, schema validation (WSDL/OpenAPI), ACL translation tests, and ESB fault/timeout isolation tests | ensures heterogeneous systems communicate without cascading stalls when one legacy backend is slow |
-| Microservices Estate | see the testing pyramid in `microservices-architecture` | unit, service-component and Consumer-Driven Contract tests |
+For an SOA integration estate, test protocol mediation, schema validation, ACL translation and ESB fault isolation, so one slow legacy backend does not stall the rest (agent inference). For a microservices estate, see `microservices-architecture` and `testing-pyramid-and-shapes`.
 
 ## When each earns its keep
 
@@ -70,3 +67,4 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 
 - [SOA vs microservices comparison dimensions](references/soa-vs-microservices-comparison-dimensions.md) — when comparing scope, data, communication and governance
 - The nine Lewis and Fowler characteristics (audit "is it really microservices?"; a shared database or a central rule engine is evidence of SOA-style coupling) live in `microservices-architecture`, file `references/fowler-lewis-nine-characteristics.md`.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking which skill owns a request.

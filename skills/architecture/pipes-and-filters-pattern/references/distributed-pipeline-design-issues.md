@@ -1,6 +1,6 @@
 # Pipes and Filters: Design Issues When Filters Are Hosted Separately
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/pipes-and-filters · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/pipes-and-filters (page ms.date 2026-11-16) · Last verified 2026-11-27
 
 ## Core mechanics
 - A **filter** does one task; a **pipe** moves data between filters; a chain of both is a **pipeline**. Filters are normally stateless and joined by defined input/output contracts (composition).
@@ -18,10 +18,10 @@ Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/pipes-and
 | Ordering | Parallel instances and retries reorder messages. Prefer order-insensitive filters; else group by a business key and preserve order at every stage. |
 | Payload size | Pipes have size limits; use Claim Check (store payload, pass a reference), accepting storage, retrieval and cleanup duties. |
 | Access control | Least privilege per filter; filters in one process or function app share one security boundary, so use separate hosts and managed identities when permissions must differ. |
-| Idempotency | A filter may emit its result and crash before acknowledging, so retries duplicate output. Reprocessing must equal processing once (watermarking twice is the page's example). Broker duplicate detection helps but does not replace this. |
+| Idempotency | A filter may emit its result and crash before acknowledging, so retries duplicate output. Reprocessing must equal processing once (watermarking twice is the page's example). Broker duplicate detection (Service Bus is the page's example) helps, but filters still need idempotent processing. Mechanics: `idempotency-fix`. |
 | Context/state | Each filter runs in isolation; give it the context it needs. Reloading external state in every filter is costly. |
 | Message tolerance | Act on relevant fields, pass unknown fields through unchanged. |
-| Error handling | Retry transient faults with delay and a cap; park invalid or exhausted messages visibly; attach a tracking id to every item and log it in every filter. |
+| Error handling | Retry transient faults with delay and a cap; set aside invalid or exhausted messages so other work continues, visible to operators; attach a tracking id to every item and log it in every filter. |
 
 ## When to use / avoid
 - Use: steps with separate responsibilities and clear contracts; stages that scale or need different hardware; need to add/replace/reorder steps; need to contain one step's failure. Co-locate filters that scale together (Compute Resource Consolidation).

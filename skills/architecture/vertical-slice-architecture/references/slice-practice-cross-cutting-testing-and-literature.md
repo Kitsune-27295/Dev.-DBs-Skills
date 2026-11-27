@@ -1,8 +1,8 @@
 # Slices in Practice: Cross-Cutting Concerns, Testing and the Literature Map
 
-Sources: https://milanjovanovic.tech/blog/vertical-slice-architecture-dotnet ; https://github.com/drveillard/software-architecture/blob/main/docs/vertical-slice-architecture.md · Last verified 2026-11-23
+Sources: https://milanjovanovic.tech/blog/vertical-slice-architecture-dotnet ; https://github.com/drveillard/software-architecture/blob/main/docs/vertical-slice-architecture.md · Last verified 2026-11-27
 
-Caveat: the Jovanovic URL returned a hub page with summaries and links to sub-articles, not the full article, so code patterns (REPR specifics, Carter) were not read; only the hub's statements are used. The Veillard page is a link list with no prose of its own; its entries are titles, not verified claims.
+Caveat: the Jovanovic URL is a hub page (published 2026-07-10, updated 2026-07-14) with summaries and links to sub-articles, not the full article, so code patterns (REPR specifics, Carter) were not read; only the hub's statements are used. The Veillard page is a link list with no prose of its own; its entries are titles, not verified claims.
 
 ## Hub statements (Jovanovic)
 
@@ -16,14 +16,14 @@ Caveat: the Jovanovic URL returned a hub page with summaries and links to sub-ar
 
 ## Veillard reading list: what categories exist
 
-Comparisons with Clean/Onion (Headspring articles, "Slices vs. Layers"); foundations (Bogard, Simon Brown on package by component and architecturally aligned testing, Feature Folders); ASP.NET implementations (MediatR endpoints, thin controllers on a diet, Razor Pages); strategy and tests ("how to slice effectively", modular monolith primer, vertical slice testing, avoiding premature abstractions); samples (ContosoUniversity, eShopOnWeb, event-sourcing examples, minimal API examples); a Packt design patterns book chapter. Mostly .NET, some Java; many entries date 2013-2021 and some links may be stale. It includes both advocacy and critiques.
+The file holds about 50 articles, 10 videos, 18 samples and 1 book as link lists. Article themes: comparisons with Clean/Onion (Headspring articles, "Slices vs. Layers"); foundations (Bogard, Simon Brown on package by component and architecturally aligned testing, Feature Folders); ASP.NET implementations (MediatR endpoints, thin controllers on a diet, Razor Pages); strategy and tests ("how to slice effectively", modular monolith primer, vertical slice testing, avoiding premature abstractions); samples (ContosoUniversity, eShopOnWeb, event-sourcing examples, minimal API examples); a Packt design patterns book chapter. Mostly .NET, some Java; many entries date 2013-2021 and some links may be stale. It includes both advocacy and critiques.
 
 ## Decision table
 
 | Situation | Choice |
 |---|---|
 | CRUD-ish feature, one request one screen | single handler file, direct data access |
-| rule used identically in 3+ slices | extract domain method/value object, not a service layer |
+| same domain rule repeated across slices (our threshold: about three) | extract domain method/value object, not a service layer |
 | auth, logging, validation plumbing | pipeline behavior or middleware |
 | rich invariants | slice at application layer plus shared Domain core |
 
@@ -31,6 +31,6 @@ Comparisons with Clean/Onion (Headspring articles, "Slices vs. Layers"); foundat
 
 - Put plumbing in pipeline/middleware, never in a shared "BaseService".
 - Test slices over real HTTP plus real database; reserve unit tests for domain logic.
-- Add an architecture test (folder/namespace rule) so slices cannot reference each other.
+- Consider an architecture test (folder/namespace rule) so slices cannot reference each other; the hub mentions architecture tests, the exact rule is ours.
 - Treat duplication across slices as acceptable until the same domain concept appears repeatedly.
 - Read the linked sub-articles before quoting REPR/Carter details; this file does not cover them.

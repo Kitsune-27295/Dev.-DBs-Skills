@@ -1,6 +1,6 @@
 # Space-Based Architecture: Components, Origins and Fit
 
-Sources: https://en.wikipedia.org/wiki/Space-based_architecture ; https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes (the kbtale/awesome-architecture-patterns repo was not re-read this pass) · Last verified 2026-11-23
+Sources: https://en.wikipedia.org/wiki/Space-based_architecture ; https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes ; https://github.com/kbtale/awesome-architecture-patterns (first 100,000 of about 261,000 characters read) · Last verified 2026-11-27
 
 ## Definition
 
@@ -16,7 +16,7 @@ SBA is a distributed style in which components exchange tuples/entries through o
 | Processing grid | master/worker (blackboard) parallel processing | distributed request processing |
 | Deployment | SLA-driven container: instance counts for scaling and fail-over policy | deployment manager starts/stops units dynamically |
 
-The Hammad page lists no data pumps, ratings, pros/cons or actor model content in the text I could read. Write-behind data pumps and trade-off lists in the parent skill come from the earlier source summary and general knowledge, not from this pass.
+Neither Hammad nor Wikipedia uses the terms data pump or write-behind. Hammad says only that a central store can still load data and persist updates asynchronously. The kbtale page describes units that co-locate logic and partitioned in-memory data, names in-memory data grid products as the usual building block, and lists no trade-offs. The terms write-behind and data pump, and any trade-off list, are practitioner vocabulary or inference.
 
 ## Why it exists
 
@@ -38,4 +38,4 @@ Both avoid shared mutable state across units, but a processing unit is a coarse 
 - Size the in-memory working set first; if it does not fit, reject SBA.
 - Define the write-behind flush and failure policy before coding units.
 - Use per-unit failover tests (kill a unit mid-load, verify no data loss).
-- Do not cite this page for advantages/criticisms; it has none.
+- Do not cite these pages for criticisms; none of them lists any.

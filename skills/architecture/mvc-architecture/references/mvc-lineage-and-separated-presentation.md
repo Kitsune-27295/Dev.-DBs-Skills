@@ -1,6 +1,6 @@
 # MVC Lineage and Separated Presentation
 
-Sources: https://martinfowler.com/eaaDev/uiArchs.html · https://martinfowler.com/eaaCatalog/modelViewController.html · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaDev/uiArchs.html · https://martinfowler.com/eaaCatalog/modelViewController.html · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-27
 
 ## What MVC actually is
 
@@ -9,7 +9,7 @@ Fowler frames MVC as two principles more than a class diagram:
 1. **Separated Presentation**: domain objects know nothing about the UI; presentation code reads and drives the domain.
 2. **Observer Synchronization**: presentation state stays in sync with the model through change notifications.
 
-The PoEAA catalog entry gives the one-line definition (splitting UI interaction into three roles) and dates the origin to Reenskaug's Smalltalk work in the late 1970s. Fowler calls MVC one of the most quoted and most misquoted patterns. Valente adds that many Smalltalk versions never separated View from Controller, so "view plus controllers" was often one interface component: MVC = (View + Controllers) + Model.
+The PoEAA catalog entry gives the one-line definition (splitting UI interaction into three roles) and dates the origin to Reenskaug's Smalltalk work in the late 1970s. Valente adds that many Smalltalk versions never separated View from Controller, so "view plus controllers" was often one interface component: MVC = (View + Controllers) + Model.
 
 ## Roles (Valente's concrete examples)
 
@@ -22,23 +22,25 @@ The PoEAA catalog entry gives the one-line definition (splitting UI interaction 
 1. User acts. 2. Controller captures the event. 3. Controller calls the Model (or the View for presentation-only changes). 4. Model changes state. 5. The observing View refreshes.
 The dependency arrow points one way: interface depends on Model, Model never on interface.
 
-## Why it earned its place (Valente, Fowler and Beck's view)
+## Why it earned its place (as Valente presents it)
 
 - Specialization: UI developers and domain developers work apart.
 - Multiple views of one model (hours and minutes stored once, drawn as analog and digital clock).
 - Testability: non-visual objects test without a screen.
 
-## Fowler's comparison of GUI styles (running ice-cream form example)
+## GUI styles (my synthesis of the sections of Fowler's essay)
+
+Fowler's page has sections for Forms and Controls, Model View Controller, VisualWorks Application Model, Model-View-Presenter and Humble View; he calls it a draft that relies on common accounts, so do not treat his descriptions as authoritative. The table below is my own summary, not a table from the page.
 
 | Style | Where logic lives | Weakness |
 |---|---|---|
-| Forms and Controls (VB, Delphi style) | Event handlers in the form; three copies of data: record, session, screen state | Logic tangled with widgets |
-| Smalltalk MVC | Domain in model, widget pairs of view and controller | Observer flow is hard to trace from code; view logic such as color has no obvious home |
-| VisualWorks Application Model | Intermediate application model with value holders and change notification | Letting it poke widgets directly fed the move to MVP |
+| Forms and Controls | Event handlers in the form | Logic tangled with widgets |
+| Smalltalk MVC | Domain in model, view and controller pairs | Observer flow can be hard to trace; view-only logic has no obvious home (inference) |
+| VisualWorks Application Model | Intermediate application model | Inference: letting it touch widgets directly motivated MVP |
 | MVP | Presenter coordinates model and widgets | Variants differ in how much the view does |
-| Presentation Model (also MVVM) | Intermediate model holds view state and behavior | Small mapping to widgets stays untested |
+| Presentation Model | Intermediate model holds view state and behavior (MVVM is a close relative, inference) | Small mapping to widgets stays untested |
 
-Where to put view-only logic: a custom control, or an intermediate Presentation Model (Fowler's suggestion).
+Where to put view-only logic: a custom control or an intermediate presentation model (my reading of the essay).
 
 ## Failure modes
 

@@ -1,19 +1,19 @@
 ---
 name: event-sourcing-pattern
-description: Use when evaluating, designing, or reviewing an Event Sourcing implementation — persisting state changes as an immutable, append-only sequence of domain events (streams), reconstituting aggregates by replaying events, handling optimistic concurrency, snapshots, schema evolution (upcasting), external side effects during replay, and GDPR/privacy. Gives stream invariants, replay rules, CQRS pairing, and common mistakes.
+description: "Decide whether and how to store state as an append-only stream of domain events instead of current-state rows: aggregates rebuilt by replay, optimistic concurrency on append, snapshots, event versioning and upcasting, silent external effects during replay, GDPR and crypto-shredding, and projections for queries. Gives stream and replay invariants, a given-when-then test shape and the mistakes to catch. Not for the read/write model split (`cqrs-pattern`) or outbox and sagas (`saga-transactional-outbox-pattern`). Use when asked to evaluate, design or review Event Sourcing, an event store, replay or event schema evolution."
 ---
 
 # Event Sourcing Pattern
 
-One idea: instead of overwriting the current state of an entity in place (CRUD), store **every state change as an immutable, append-only sequence of domain events** in an Event Store — making the event log itself the primary system of record from which current, historical, or projected state can be deterministically reconstructed at any time. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: instead of overwriting the current state of an entity in place (CRUD), store **every state change as an immutable, append-only sequence of domain events** in an Event Store — making the event log itself the primary system of record from which current, historical, or projected state can be deterministically reconstructed at any time. Microsoft stresses that it is complex, costly to adopt or leave, and unnecessary for most systems; confine it to the parts that need audit or replay. Sources and their claims: [references/sources.md](references/sources.md).
 
 ## Vocabulary (Fowler, Richardson & Dudycz)
 
 | Term | Meaning | Test sentence |
 |---|---|---|
 | Domain Event | an immutable fact named in past tense (`ShipArrived`, `InvoiceIssued`) capturing a state transition and its parameters | "stored forever in the exact sequence it occurred" |
-| Event Stream | the ordered sequence of events belonging to a single Aggregate instance (identified by `streamId` / `aggregateId`) | "keep streams short and aligned to one aggregate lifecycle" |
-| Aggregate Reconstitution (Folding) | rebuilding an entity's current in-memory state by starting from an empty state and applying its stream's events in order (`state = fold(events, apply)`) | "`apply(event)` is a pure deterministic function with zero I/O or validation" |
+| Event Stream | the ordered sequence of events belonging to a single Aggregate instance (identified by `streamId` / `aggregateId`) | "each entity has its own stream; Dudycz: keep streams short and tied to one lifecycle" |
+| Aggregate Reconstitution (folding, Azure: rehydration) | rebuilding an entity's current in-memory state by starting from an empty state and applying its stream's events in order (`state = fold(events, apply)`) | "`apply(event)` is a pure deterministic function with zero I/O or validation" |
 | Optimistic Concurrency Check | appending a new event to a stream only if the stream's current `version` in the database matches the `expectedVersion` read when the aggregate was loaded | "prevents lost updates without heavy pessimistic row locks" |
 | Snapshot | a cached checkpoint of an aggregate's folded state at `version = N` so reconstitution only replays events `> N` | "an optimization for long streams, never the source of truth" |
 | Projection / Materialized View | an external read model (`cqrs-pattern`) updated by subscribing to the event store so queries do not have to replay streams on the fly | "how an event-sourced system answers list, search, and report queries" |
@@ -26,9 +26,9 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
    - **Command handling (`decide`)** validates business rules against current state and emits new uncommitted events (or throws a domain error).
    - **Event application (`apply`)** mutates the in-memory state from an already-accepted event. `apply` **must never throw validation errors, check current wall-clock time, generate random IDs, or call external services**, because it runs every time historical events are replayed!
 3. **Enforce Optimistic Concurrency on every stream append:** Every `append(streamId, expectedVersion, newEvents)` must atomically verify a unique `(stream_id, version)` constraint in the Event Store. If a concurrent command incremented the version first, reject and retry or fail cleanly.
-4. **Silence external gateways during Event Replay:** When replaying historical events to rebuild state or projections, external side effects (sending emails, charging credit cards, calling third-party APIs) **must be suppressed or isolated to live command/subscription handlers**. Never call an external gateway inside an event `apply` method.
+4. **Silence external gateways during Event Replay (Fowler):** When replaying historical events to rebuild state or projections, external side effects (sending emails, charging credit cards, calling third-party APIs) **must be suppressed or isolated to live command/subscription handlers**. Never call an external gateway inside an event `apply` method.
 5. **Pair Event Sourcing with CQRS for queries:** An Event Store is keyed by `streamId`. You cannot efficiently run `SELECT * FROM orders WHERE status = 'PENDING'` by replaying 100,000 streams on every HTTP GET. Subscribe projectors to the event stream to maintain queryable read models (`cqrs-pattern`).
-6. **Keep streams short and plan for Schema Evolution & Privacy (GDPR):** Model streams around bounded lifecycles (e.g., `ShoppingCart-123` or `AccountLedger-2026-11`, not one infinite stream for an entire tenant). Version every event payload from day one, use non-breaking additive changes + Upcasters, and handle PII deletion requirements via **Crypto-Shredding** (encrypting PII with a per-subject key that can be deleted) or storing sensitive PII in a separate lookup table outside immutable events.
+6. **Keep streams short and plan for Schema Evolution & Privacy (GDPR):** Model streams around bounded lifecycles (e.g., `ShoppingCart-123` or `AccountLedger-2026-11`, not one infinite stream for an entire tenant). Choose a versioning strategy before the first event ships (Azure: tolerant deserialization for additive changes, a version id, chained upcasters; rewriting stored events is a last resort). For PII, first keep it outside the stream and reference it by id; where that is impossible use **Crypto-Shredding** (a per-subject key you can delete).
 
 ## Building order
 
@@ -36,7 +36,7 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 2. **Write the pure Aggregate (`decide` + `apply`) test-first:** Test every command in `Given(pastEvents) -> When(command) -> Then(expectedNewEvents or error)` format with zero database or framework dependencies.
 3. **Configure the Event Store with optimistic concurrency:** Ensure `(stream_id, version)` has a strict `UNIQUE` constraint and atomic batch append.
 4. **Build idempotent CQRS Read Projections:** Project committed events into read tables (`last_processed_version` / checkpoint tracking) for UI queries.
-5. **Add Upcasters and Snapshots only when needed:** Add upcasters when an event schema changes; add snapshots only if profiling shows a specific stream exceeds hundreds/thousands of events and slows down aggregate loading.
+5. **Add Upcasters and Snapshots only when needed:** Add upcasters when an event schema changes; add snapshots only when profiling shows rehydration of a long stream is too slow (Azure: snapshot every N events, balancing storage against load time).
 
 ## Testing strategy (`Given / When / Then`)
 
@@ -49,7 +49,7 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 
 ## When it earns its keep
 
-- **Worth it:** Domains where an immutable audit trail, regulatory compliance, temporal queries ("what was the account state on Tuesday at 14:03?"),retroactive error correction, or atomic domain-state-plus-event persistence without 2PC (`microservices.io`) are core business requirements (e.g., accounting ledgers, financial trading, medical records, logistics tracking, complex workflow engines).
+- **Worth it:** Domains where an immutable audit trail, regulatory compliance, temporal queries ("what was the account state on Tuesday at 14:03?"),retroactive error correction, or atomic domain-state-plus-event persistence without 2PC (Richardson) are core business requirements (e.g., accounting ledgers, financial trading, medical records, logistics tracking, complex workflow engines).
 - **Not worth it:** Ordinary CRUD domains where only the latest state matters, where schema changes are frequent and casual, or where teams are unprepared for eventual consistency, projection rebuilding, and event versioning. Adopt inside the specific Bounded Context that needs it, never globally.
 
 ## Mistakes to catch
@@ -58,7 +58,8 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 - **Treating internal Event-Sourcing events as public cross-service integration events:** Exposing fine-grained internal storage events directly to external microservices couples every other team to your internal persistence schema. Publish separate, coarse-grained public Integration Events at the module/service boundary.
 - **Infinite streams ("God Stream"):** Appending millions of events across years to a single stream without lifecycle boundaries (e.g., closing the book per billing period), causing `O(N)` replay latency spikes.
 - **Storing raw unencrypted GDPR PII inside immutable events:** Putting raw names/emails in an immutable event store with no crypto-shredding or external reference strategy when "right to erasure" applies.
-- **Recording external query results only by calling the external system live:** As Fowler notes, if domain logic depends on an external tax or exchange-rate lookup, record the returned rate *inside the event payload* when the command executes so future replays remain 100% deterministic without calling the external service again.
+- **Using a message broker as the event store:** Kafka-style brokers lack per-entity stream reads and optimistic concurrency (Azure); use them only to distribute events.
+- **Recording external query results only by calling the external system live:** As Fowler notes (options include gateway-logged responses), if domain logic depends on an external tax or exchange-rate lookup, record the returned rate *inside the event payload* when the command executes so future replays remain 100% deterministic without calling the external service again.
 
 ## Quick Decision Checklist
 
@@ -76,3 +77,5 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 - [Replay semantics: external effects, reversal and code changes](references/replay-external-effects-and-code-changes.md) — read when designing replays, gateways, retroactive fixes or temporal rules.
 - [Operational considerations: versioning, concurrency, GDPR and fit](references/azure-considerations-versioning-gdpr-and-fit.md) — read when deciding whether to adopt ES or planning schema evolution, idempotency and privacy.
 - [Streams, state aggregation and practitioner guide](references/streams-aggregation-and-practitioner-guide.md) — read when modeling streams, evolve/decide functions, snapshots and event naming.
+- [Trigger evals](references/trigger-evals.md) — sample prompts that should and should not load this skill.
+- [Sources](references/sources.md) — retrieved statuses, reading limits, claims not adopted.

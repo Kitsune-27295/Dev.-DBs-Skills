@@ -1,72 +1,78 @@
 ---
 name: pipes-and-filters-pattern
-description: Use when designing, reviewing, or refactoring a sequential data, media, document, or event processing workflow into the Pipes and Filters (Pipeline) pattern — decomposing monolithic processing into stateless, reusable Filter stages connected by buffered or synchronous Pipes. Gives filter invariants, backpressure, idempotency, poison-message routing, and common mistakes.
+description: Split a multi-step processing job into single-purpose filters joined by pipes, and decide whether the pipes stay in-process or become queues: filter contracts, safe reordering, throughput limits, backpressure, ordering, payload size (claim check), per-filter permissions, and what to do with a failing item. Use when designing, reviewing or refactoring an ETL, document or RAG indexing, media, message-transformation or request-middleware flow into a pipeline, or when asked whether stages deserve their own queue. Not for the queue worker itself (use `background-worker-job-scheduler`), duplicate-safe handlers (`idempotency-fix`), or cross-service transactions (`saga-transactional-outbox-pattern`).
 ---
 
 # Pipes and Filters (Pipeline) Pattern
 
-One idea: decompose a complex, multi-step data-processing task into a sequence of **independent, stateless, single-purpose processing stages (Filters)** connected by **conduits (Pipes)** that pass standardized data payloads from one stage's output to the next stage's input — enabling easy reordering, composition, reuse, and independent scaling of bottleneck stages. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: break a processing task into filters that each do one thing, connect them with pipes, and keep each filter ignorant of its neighbors so steps can be reused, replaced, scaled and (when the rules allow) reordered. Sources and what was not adopted: [references/sources.md](references/sources.md).
 
-## Vocabulary (Azure Architecture Center & Architecture Guild)
+## 1. Vocabulary
 
-| Term | Meaning | Test sentence |
-|---|---|---|
-| Filter | a modular, self-contained processing step that reads from an input pipe, transforms/enriches/validates/filters the payload, and writes to an output pipe | "knows its input and output contract, never which filter ran before it or comes after it" |
-| Pipe | the connector carrying data between adjacent filters (in-memory stream/channel, Unix pipe, or distributed message queue/event stream) | "buffers and transports payloads without mutating business content" |
-| Data Source (Pump) | the origin that injects raw payloads into the first pipe (file reader, webhook ingress, IoT stream, database change feed) | "starts the pipeline flow" |
-| Data Sink | the final consumer at the end of the pipeline (database writer, search index, object storage, downstream API) | "terminates the pipeline and persists or delivers the final result" |
-| Stateless Filter | a filter whose output depends exclusively on the current input payload, holding zero in-memory state from prior messages | "can be parallelized across $N$ worker instances safely" |
-| Dead-Letter / Poison Pipe | a side channel where malformed or repeatedly failing payloads are routed so they do not stall the pipeline | "isolates bad payloads without dropping valid traffic" |
+| Term | Meaning |
+|---|---|
+| Filter | one processing step: reads from an input pipe, transforms, validates or drops, writes to an output pipe; normally stateless |
+| Pipe | the connector between filters: a stream or channel in one process, a Unix pipe, or a message queue between hosts |
+| Pipeline / composition | filters joined through defined input and output interfaces |
+| Contract | the data a filter accepts and produces plus its effects on other systems; matching schemas alone do not make two steps interchangeable |
+| Claim check | store the payload elsewhere and pass a reference through the pipe |
+| Pump / sink | our names for the source and the final consumer; Azure's page does not use them |
 
-## Core architectural rules and invariants
+## 2. Core rules
 
-1. **Filters must be ignorant of their neighbors:** Filter $B$ must never call Filter $A$ or Filter $C$ directly, nor assume a specific upstream/downstream implementation. It binds strictly to its Input Envelope and Output Envelope so filters can be reordered, inserted, bypassed, or reused in a different pipeline.
-2. **Keep Filters stateless and idempotent:** Never rely on in-memory state left behind by a previous message in the same filter process. When pipes are backed by asynchronous queues or streams (at-least-once delivery), a filter may receive the same message twice after a crash — make every filter with external side effects idempotent (`idempotency-fix`).
-3. **Standardize the Pipe Envelope (or use the Claim-Check pattern for large payloads):** Agree on an explicit, versioned message contract across pipes. If payloads are large (e.g., PDFs, images, multi-megabyte JSON), store the blob in object storage and pass only a lightweight reference URI + metadata through the pipe (**Claim-Check pattern**) so pipes/queues do not choke on serialization overhead.
-4. **Choose In-Process vs. Distributed Pipes deliberately:**
-   - **In-process pipes (iterators, streams, channels, middleware chains):** Use when all steps run fast on the same CPU/memory footprint and need low latency with zero network serialization.
-   - **Distributed pipes (queues / event streams between worker services/FaaS):** Use only when one filter is a heavy bottleneck (e.g., OCR, LLM inference, video transcoding) that requires independent horizontal scaling, specialized hardware (GPUs), or fault isolation via durable queue buffering.
-5. **Enforce Backpressure and Poison-Message isolation:** Bound the capacity of in-memory pipes (bounded channels) or scale queue consumers based on queue depth so a fast producer cannot OOM a slow filter. Route any message that fails validation or exceeds max retries (`maxDeliveryCount`) to a **Dead-Letter Queue (DLQ)** with full diagnostic context (which filter failed, error message, correlation ID).
+1. **One responsibility per filter, no knowledge of neighbors.** A filter binds to its input and output contract only, never calls another filter, and passes through fields it does not use unchanged.
+2. **Reorder only when data dependencies and business rules allow it.** Example from the Azure page: publishing before validating exposes invalid data.
+3. **Stateless by default.** Give each filter the context it needs; if it loads external state, every filter pays that cost, so measure it.
+4. **Start in-process; separate hosts need a named reason:** independent scaling, specialized hardware, failure or permission isolation. Separate hosts add connections and deployments, and a dead filter still starves later steps. Filters that scale together can share a process.
+5. **Throughput is capped by the slowest filter, pipe or shared resource.** More instances help only if the work is shareable and downstream systems can take the load. A queue absorbs bursts only; if arrival stays above capacity it grows without bound, so limit per-filter concurrency and call rate and make producers slow down (backpressure).
+6. **Ordering is not free.** Parallel instances and retries reorder messages. Prefer order-insensitive filters; otherwise group by a business key and preserve order at every stage.
+7. **Large payloads: claim check.** Check pipe size limits; storing data separately adds storage, retrieval and cleanup duties.
+8. **Least privilege per filter.** Filters in one process or function app share a security boundary; use separate hosting and identities when permissions differ.
+9. **Failure handling is part of the design.** Retry transient faults with delay and a cap (`circuit-breaker-retry-telemetry`); park invalid or exhausted items visibly (`background-worker-job-scheduler`); a failed late step that must undo earlier business effects needs compensating transactions that record completed steps, not a pipeline rollback; give every item a tracking id logged by every filter. A filter may emit its result and crash before acknowledging, so each must be idempotent (`idempotency-fix`).
 
-## Building order
+## 3. Building order
 
-1. **Define the canonical Pipe Envelope and Stage Interfaces:** Specify the typed input/output contracts (`Filter<TIn, TOut>`) and correlation/trace metadata.
-2. **Implement each Filter as a pure, isolated unit test-first:** Build and unit-test each filter (`Validate`, `Decrypt`, `Transform`, `Enrich`, `Deduplicate`) in complete isolation with sample input payloads.
-3. **Wire the Pipeline Composer (in-process first):** Connect the filters in a declarative pipeline runner with error handling, metrics per stage (latency, drop rate), and dead-letter routing.
-4. **Promote bottleneck Pipes to durable queues only where needed:** Measure stage throughput; if Stage 3 takes 100x longer than Stages 1-2, insert a queue pipe before Stage 3 and scale Stage 3 workers horizontally (**Competing Consumers**).
+1. Write each filter's contract: input, output, side effects, idempotency approach, what happens to a bad item.
+2. Build and unit-test each filter alone with valid, boundary and malformed input.
+3. Compose in-process with per-stage metrics (latency, drop rate) and a tracking id.
+4. Promote a pipe to a queue only after measuring a bottleneck or isolation need; then add backpressure, a failure destination and ordering rules.
 
-## Testing strategy
+## 4. Testing strategy
 
-| Scope | Test | Uses |
-|---|---|---|
-| Individual Filter | unit test (fast, exhaustive edge cases) | feeds valid, boundary, and malformed input envelopes directly to the single filter function/class |
-| Contract Compatibility | type / schema test | verifies `Filter[i].OutputSchema` satisfies `Filter[i+1].InputSchema` |
-| Composed Pipeline | integration test | feeds representative payloads into the Pump and asserts the final state at the Sink + verifies poison payloads land in the Dead-Letter Sink |
-| Backpressure & Retry | fault-injection test | slows or fails one downstream filter and verifies upstream buffering, idempotency on retry, and zero data loss |
+| Target | Test |
+|---|---|
+| Single filter | unit test, including malformed input |
+| Contract between neighbors | schema or type check that output fits the next input |
+| Composed pipeline | integration test from source to sink; bad items end in the failure destination |
+| Retry and overload | fault injection: slow or fail one filter, check buffering, no duplicates, no loss |
 
-## When it earns its keep
+## 5. When it earns its keep
 
-- **Worth it:** ETL/ELT data ingestion, compiler/AST passes, document/RAG indexing pipelines (parse -> chunk -> enrich -> embed -> index), media processing, EDI/financial message validation and transformation, and HTTP/RPC request middleware chains.
-- **Not worth it:** Interactive request-response workflows requiring bidirectional conversation between steps, or tightly coupled transactional updates where steps cannot be expressed as a progressive data transformation flow.
+- Worth it: steps with separate responsibilities and clear contracts, stages that scale or need different hardware, a need to add, replace or reorder steps, containing one step's failure. Typical fits: ETL, document or RAG indexing (parse, chunk, embed, index), media processing, message transformation, request middleware (our examples; the Azure page uses image processing).
+- Not worth it: synchronous request-response, one atomic transaction across filters, or per-step hand-off or state reload costing more than the benefit.
 
-## Mistakes to catch
+## 6. Mistakes to catch
 
-- **Hidden coupling via shared mutable database state between filters:** Having Filter 1 write half a row to a shared DB table and passing only an ID to Filter 2, which mutates the same table and expects Filter 1's undocumented side effects. Pass the state in the pipe envelope (or an immutable Claim-Check blob).
-- **Distributed queues between trivial 1ms filters:** Putting 6 Kafka topics or SQS queues between 6 tiny JSON-mapping steps that take 0.2ms each — turning a 1ms in-process pipeline into a 150ms distributed operational nightmare.
-- **Unbounded in-memory pipes (No Backpressure):** Reading 10 GB of source records into an unbounded in-memory array/channel before a slow downstream filter can drain it, crashing the process with an Out-Of-Memory error.
-- **Blocking the entire pipe on one malformed record:** Throwing an unhandled exception on a bad record without a Dead-Letter Pipe, causing the queue consumer to retry the same poison message infinitely and halt all subsequent data.
+- **Hidden coupling through shared mutable state:** filter 2 relies on a half-written row from filter 1. Pass state in the message or a claim check.
+- **A queue between trivial steps:** distributed pipes add latency and operations for no scaling gain.
+- **No backpressure:** unbounded buffers or an ever-growing queue.
+- **Schema-compatible but unsafe reordering.**
+- **No failure destination:** one bad item blocks everything behind it.
+- **Retry without idempotency:** the Azure demo itself is not retry-safe (a retry can re-watermark or hit a deleted source).
 
 ## Quick Decision Checklist
 
-- [ ] Are filters ignorant of their neighbors, bound only to their input and output envelopes?
-- [ ] Is each filter stateless and idempotent, safe if a message arrives twice?
-- [ ] Is the envelope an explicit, versioned contract, with Claim-Check for large payloads?
-- [ ] Are in-process pipes used by default, with queues only for a measured bottleneck needing independent scaling?
-- [ ] Is every pipe bounded for backpressure, with poison messages routed to a dead-letter sink?
-- [ ] Do filters pass state in the message, not through shared mutable database state?
-- [ ] Does the work fit a progressive data transformation, rather than a conversation between steps?
+- [ ] Does each filter have one responsibility and a written contract (data, side effects)?
+- [ ] Is any reordering checked against data dependencies and business rules?
+- [ ] In-process by default, with a named reason for each queue or separate host?
+- [ ] Backpressure and concurrency limits set; ordering rule stated?
+- [ ] Claim check for large payloads; least privilege per filter?
+- [ ] Idempotent filters, capped retries, a visible failure destination, a tracking id?
+- [ ] Does the work really fit a progressive transformation?
 
 ## Deep references
 
-- [Distributed pipeline design issues](references/distributed-pipeline-design-issues.md) — when splitting filters across hosts/queues: idempotency, ordering, backpressure, claim check
+- [Distributed pipeline design issues](references/distributed-pipeline-design-issues.md) — when splitting filters across hosts or queues
 - [Pipeline style and reliability companions](references/pipeline-style-and-reliability-companions.md) — which reliability patterns to pair with a pipeline
+- [Trigger evals](references/trigger-evals.md) — when tuning the description
+- [Sources](references/sources.md) — verification status and claims not adopted

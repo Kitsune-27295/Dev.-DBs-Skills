@@ -1,6 +1,6 @@
 # Stripe's Four Limiters, Priorities and Rollout
 
-Sources: https://stripe.com/blog/rate-limiters (Paul Tarjan, Stripe Engineering, 2017-03-30) · https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · Last verified 2026-11-23
+Sources: https://stripe.com/blog/rate-limiters (Paul Tarjan, Stripe Engineering, 2017-03-30) · https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · Last verified 2026-11-27
 
 Note: figures below are as stated in the 2017 article for one month of Stripe traffic; they illustrate relative frequency, not targets. The linked implementation gist was not read.
 
@@ -14,12 +14,12 @@ Distinction: a **rate limiter** decides per user; a **load shedder** decides fro
 
 | # | Limiter | Rule | Observed | Notes |
 |---|---|---|---|---|
-| 1 | Request rate limiter | N requests/second per user (token bucket) | Rejected millions of requests in a month, often runaway test-mode scripts | Most important; start here. Same limits in test and live so scripts do not get surprised. Allow short bursts above the cap (flash sales) |
+| 1 | Request rate limiter | N requests/second per user (token bucket) | Rejected requests in the month described | Most important; start here. Same limits in test and live so scripts do not get surprised. Allow short bursts above the cap (flash sales) |
 | 2 | Concurrent requests limiter | Cap in-flight requests per user (example 20) | About 12,000 triggers in the month | Helps CPU-heavy endpoints where users retry slow calls, piling on. May be tuned to reject more readily than the rate limiter; suits clients that fork N parallel jobs, whereas the rate limiter suits clients that back off on 429 |
-| 3 | Fleet usage load shedder | Classify traffic critical (create charge) vs non-critical (list charges); count in-flight per class in a Redis cluster; reserve a fraction for critical (example 20% reserved, so non-critical beyond 80% gets 503) | Very small share of requests; prevented outages in other months | Sheds by importance, not by user |
+| 3 | Fleet usage load shedder | Classify traffic critical (create charge) vs non-critical (list charges); count in-flight per class in a Redis cluster; reserve a fraction for critical (the article's hypothetical reservation is 20%, so non-critical beyond 80% would get 503) | Small share of requests per the article | Sheds by importance, not by user |
 | 4 | Worker utilization load shedder | Track workers with spare capacity; four classes: critical methods, POSTs, GETs, test-mode traffic; when a machine is overloaded shed lowest priority first (test-mode first), restore gradually when healthy, escalate if not | Only 100 rejections in the month but sped recovery in past incidents | Final line of defense. Shed and restore slowly to avoid flapping; tuned to shed a lot within minutes |
 
-Priority order for shedding in this article: test-mode, then GETs, then POSTs, with critical methods last. (Own inference: derive your own tiers from business impact, e.g. payment path above listing.)
+The article lists the four classes without ranking them; it says only that test-mode traffic is shed first. Derive the rest from business impact (own inference, e.g. payment path above listing).
 
 ## Implementation facts
 

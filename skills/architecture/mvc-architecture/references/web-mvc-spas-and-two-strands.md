@@ -1,6 +1,6 @@
 # Web MVC, SPAs and the Two Strands of MVC
 
-Sources: https://developer.mozilla.org/en-US/docs/Glossary/MVC · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-23
+Sources: https://developer.mozilla.org/en-US/docs/Glossary/MVC · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-27
 
 ## Two strands (Valente)
 
@@ -15,7 +15,7 @@ Shared invariant: the Model never depends on View or Controller.
 - **View**: layout and display.
 - **Controller**: routes commands to model and view; holds logic that updates either in response to input.
 - Two flows: (1) input -> controller -> model -> updated data -> view; (2) a display-only change (re-sort by price) where the controller updates the view directly without touching the model.
-- On the web, model is often a database (server MySQL or client IndexedDB), controller is HTML/JS code, view is HTML/CSS. MDN says MVC imposes more rigid structure than web code usually has.
+- On the web, model is often a database (server MySQL or client IndexedDB), controller is HTML/JS code, view is HTML/CSS.
 - Evolution: early web did server-side MVC with full-page returns; now client-side stores and the Fetch API allow partial updates. AngularJS and Ember are MVC-style, each differently. Related: MVVM, MVP, MVW ("whatever").
 
 ## SPAs (Valente's Vue example)

@@ -1,8 +1,8 @@
 # Azure Compute Decision Tree and Technology-Choice Guides
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree · https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/technology-choices-overview · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree · https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/technology-choices-overview · Last verified 2026-11-27
 
-Figures below are as published on the pages at read time; re-check quotas before sizing.
+Figures below are as published on the pages at read time (compute page dated 2026-11); re-check quotas before sizing.
 
 ## How the compute guide works
 
@@ -24,7 +24,7 @@ IaaS (most control, portability, most ops), PaaS (App Service, Container Apps), 
 | Networking | VNet integration and hybrid connectivity per service; App Service needs Basic tier or above |
 | DevOps | local/remote debugging, update model: slots (App Service, Functions), rolling (AKS), revisions (Container Apps) |
 | **Team skills / ops overhead** | VMs high; AKS high (cluster management); App Service low; Functions very low; Container Apps low ("modern patterns without Kubernetes complexity") |
-| Scale limits | e.g. AKS 5,000 nodes (Standard/Premium); Container Apps 1,000 replicas per revision; App Service Premium plans 30 instances |
+| Scale limits | e.g. AKS 5,000 nodes (Standard/Premium tier); Container Apps 1,000 replicas per revision; App Service 30 instances per Premium v2/v3/v4 plan; Functions vary by plan |
 | Multiregion | all listed platforms are single-region; an external router plus multiple deployments is required for active-active or active-passive |
 | Other | TLS handling, GPU support, cost, suitable styles (Functions/AKS/Container Apps map to microservices and event-driven; App Service to web-queue-worker; VMs to n-tier and big compute) |
 | Specialty | HPC scheduling (CycleCloud), SAP, Oracle, Service Fabric, mainframe, bare metal, etc. |

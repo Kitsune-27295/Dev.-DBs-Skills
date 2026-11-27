@@ -1,10 +1,10 @@
 # Choreography vs Orchestration: Decision Guide
 
-Sources: https://microservices.io/patterns/data/saga.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/saga · Last verified 2026-11-23
+Sources: https://microservices.io/patterns/data/saga.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/saga · Last verified 2026-11-27 (Azure page dated 2025-02-25)
 
 ## The two styles
-- Choreography: no controller. Each local transaction publishes a domain event that triggers the next participant. Richardson's Create Order example has five steps: Order created as `PENDING`, `Order Created` event, Customer Service reserves credit, outcome event, Order Service approves or rejects.
-- Orchestration: an orchestrator object holds saga state and sends commands (`Reserve Credit`) to participants, receiving replies. Six steps in the same example; the orchestrator creates the order, sends the command, reads the reply, then approves or rejects.
+- Choreography: no controller. Each local transaction publishes a domain event that triggers the next participant. Richardson's Create Order example (order may not exceed credit limit) runs on domain events: the order starts as `PENDING`, the customer side reserves credit, and the order is approved or rejected from the outcome event.
+- Orchestration: an orchestrator object holds saga state and sends commands (`Reserve Credit`) to participants, receiving replies. In the same example the orchestrator creates the order, sends the reserve-credit command, reads the reply, then approves or rejects. (Step counts in the original page were not verified.)
 
 Terminology (Microsoft): an event is a state change that already happened; a command encapsulates what is needed to perform an action. Choreography runs on events, orchestration on commands plus replies.
 
@@ -20,7 +20,7 @@ Terminology (Microsoft): an event is a state change that already happened; a com
 | Timeouts and compensation | Each participant must handle them | Centralized |
 
 ## Decision rules
-- Use choreography when: 2-3 participants, linear flow, rarely changing, no desire for a shared coordinator.
+- Use choreography when: few participants (Azure; "2-3" is this skill's rule of thumb), linear flow, rarely changing, no desire for a shared coordinator.
 - Use orchestration when: 4+ participants (a rule of thumb, not from the sources), branching or parallel steps, timeouts, or a need to answer "where is order 123 stuck?".
 - Avoid the saga pattern when: all data sits in one database (use a local transaction). Microsoft lists tight coupling, compensations in earlier participants, and cyclic dependencies as poor fits.
 - Hybrid (inference): orchestrate the core business saga, let peripheral consumers (analytics, email) subscribe by choreography.

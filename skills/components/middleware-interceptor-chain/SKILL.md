@@ -1,6 +1,6 @@
 ---
 name: middleware-interceptor-chain
-description: "Build and order cross-cutting request pipelines: Chain of Responsibility (handlers that process, pass on, or stop), Message Filter (drop unwanted messages), and the ASP.NET Core middleware pipeline (Use/Run/Map/UseWhen, next delegate, short-circuiting, the response-started rule, recommended ordering of exception handling, HTTPS, static files, routing, CORS, authentication, authorization, rate limiting, compression, caching). Use when adding logging/auth/validation steps to a request path, deciding middleware order, writing custom middleware or interceptors, or choosing chain vs decorator vs filter. Not for choosing destinations or edge gateways."
+description: "Order and write cross-cutting request pipelines: Chain of Responsibility (handlers that process, pass on or stop), Message Filter (drop unwanted messages) and the ASP.NET Core middleware pipeline (Use/Run/Map/UseWhen, next delegate, short-circuiting, the response-started rule, recommended order of exception handling, HTTPS, static files, routing, CORS, authentication, authorization, rate limiting, caching). Not for choosing a destination (`router-front-controller-routing`) or edge proxies (`api-gateway-reverse-proxy`). Use when adding logging, auth or validation steps to a request path, deciding middleware order, writing custom middleware or interceptors, or choosing chain vs decorator vs filter."
 ---
 
 # Middleware & Interceptor Chain
@@ -32,9 +32,7 @@ CoR vs Decorator: both compose recursively, but CoR handlers may do unrelated wo
 
 ## 2. Message Filter
 
-A Message Filter is a Message Router with one output channel: matching messages pass, others are discarded. It lets a consumer avoid messages it does not need (a customer wants gadget promotions, not widget ones). Implementations: a filter component, or broker bindings (RabbitMQ direct exchange binding keys give each subscriber its own filter on a pub-sub channel).
-
-Rule: a filter that discards must have an auditable fate for discards (count, sample, or dead letter); the source page does not specify discard handling. Use `router-front-controller-routing` when you must pick among destinations instead of dropping.
+A Message Filter is a router with a single output channel: matching messages pass, the rest are discarded (Enterprise Integration Patterns). The page says nothing more about discards, so this rule is ours: a filter that discards needs an auditable fate (count, sample or dead letter). Router comparison, broker bindings and destination choice are owned by `router-front-controller-routing`.
 
 ## 3. ASP.NET Core Pipeline Mechanics
 
@@ -81,8 +79,7 @@ Details and the full table: [references/aspnetcore-middleware-pipeline-order.md]
 4. **Short-circuit with a response, not silence.** Rejected requests get a status and body.
 5. **No shared mutable state between handlers** except a request context object.
 6. **Cheap rejections first** (but after the error handler): static files, health, rate limit global, then expensive work.
-7. **Scoped dependencies:** inject per-request services via the invoke method, not the constructor of a singleton handler (inferred; verify against the framework docs).
-8. **Branch with `UseWhen`/`Map`** instead of `if (path...)` inside a handler.
+7. **Branch with `UseWhen`/`Map`** instead of `if (path...)` inside a handler.
 
 ## 6. Failure Modes
 
@@ -105,6 +102,7 @@ Details and the full table: [references/aspnetcore-middleware-pipeline-order.md]
 - [ ] Order of caching, compression, rate limiting reasoned, not copied?
 - [ ] No writes to the response after `next` once it may have started?
 - [ ] Branching done with `Map`/`UseWhen`, not conditionals in handlers?
+- [ ] Order checked against the docs for the project's target framework version?
 
 ## Deep references
 

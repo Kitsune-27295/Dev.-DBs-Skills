@@ -1,13 +1,22 @@
-# Sources for the serverless-architecture skill
+# Sources — Serverless Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was fetched and read during the 2026-11-27 rebuild (WebFetch).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Mike Roberts, "Serverless Architectures" (2018-05-22 / Martin Fowler site), https://martinfowler.com/articles/serverless.html | Dual definition of Serverless as **BaaS** (Backend as a Service — third-party managed data, auth, messaging) and **FaaS** (Function as a Service — event-triggered, stateless, short-lived compute containers); unpacking FaaS constraints (statelessness, execution duration limits, startup latency and cold starts, API Gateways, tooling); contrast with PaaS and containers; explicit debunking of "#NoOps"; benefits (scaling costs for occasional/inconsistent traffic, reduced operational & development cost) vs. drawbacks (vendor lock-in, multitenancy, integration testing difficulty, loss of server optimizations). |
-| 2 | Badri Janakiraman, "bliki: Serverless" (2016-06-20), https://martinfowler.com/bliki/Serverless.html | Shift from long-lived server controllers to client-side coordination + third-party BaaS + short-lifecycle FaaS matching a single request/event timeline; demand-based pricing savings on bursty traffic vs. conceptual overhead of weaving many services and reliance on Broad Stack Tests and semantic monitoring. |
-| 3 | AWS Well-Architected Framework, "Serverless Applications Lens", https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html | Cloud-native well-architected pillars applied to serverless workloads (Compute layer: Lambda/FaaS, Data layer, Messaging/Streaming layer, User Management & Identity, Edge/API Gateway layer, System Monitoring & Deployment); operational excellence, security (least privilege per function), reliability (throttling, retries, DLQs, idempotency), performance efficiency, and cost optimization. |
+| Roberts, "Serverless Architectures", https://martinfowler.com/articles/serverless.html | 200, read 2026-11-27 except the last 2,865 characters (dated 2018-05-22) | BaaS and FaaS definitions, cold starts, five-minute 2018 duration cap, account-wide concurrency, no-ops rebuttal, drawbacks, testing in the cloud |
+| Janakiraman, "Serverless", https://martinfowler.com/bliki/Serverless.html | 200, read 2026-11-27 (dated 2016-06-20) | Client-side control flow, per-request pricing, conceptual overhead, broad stack tests, semantic monitoring |
+| AWS Lambda timeout page, https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html | 200, read 2026-11-27 | Current timeout: default 3 s, maximum 1,800 s |
+| AWS Serverless Applications Lens, welcome page, https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html | 200, read 2026-11-27 | Lens dated 2022-07-14, scope |
+| Same lens, failure management, https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/failure-management.html | 200, read 2026-11-27 | DLQ, stream retry controls, partial failures, Step Functions, Express versus Standard |
+| Same lens, security pillar, https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/security-pillar.html | 200, read 2026-11-27 | Five security areas, OS patching removed, OWASP still applies |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Unit testing vs. Broad Stack / Cloud Integration tests:** Both Janakiraman (Source 2) and Roberts (Source 1) emphasize that while unit testing pure business logic extracted from FaaS handlers is essential, a much larger share of a serverless app's behavior lives in cloud configuration (IAM roles, event triggers, BaaS rules). Therefore, automated cloud integration tests and production semantic monitoring must complement local unit tests.
+Tool summaries of pages were read, not raw HTML. No scripts or data files exist here. The lens pillars on cost, performance and operations were not read.
+
+## Claims not adopted as fact
+
+- Least-privilege IAM per function, idempotent handlers and module-scope client reuse: standard practice stated in the skill as guidance, not confirmed on the pages read.
+- Connection exhaustion of relational databases by concurrent functions and RDS Proxy as the fix: reasoning from limits, not read on a page here.
+- Steady 24/7 workloads being cheaper on reserved compute: inference, no price data read.

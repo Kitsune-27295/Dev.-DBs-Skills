@@ -1,6 +1,6 @@
 # Leader Election and Single-Instance Scheduling
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/leader-election · https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/leader-election · https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-27
 
 ## Problem
 

@@ -1,6 +1,6 @@
 # Reference Implementation: Modular Monolith with DDD (Grzybek)
 
-Sources: https://github.com/kgrzybek/modular-monolith-with-ddd (README read up to section 3.17; last ~4 KB unread) · Last verified 2026-11-23
+Sources: https://github.com/kgrzybek/modular-monolith-with-ddd (README re-read 2026-11-27, through section 3.19; the tail was truncated) · Last verified 2026-11-27
 
 ## Shape
 A .NET app for a Meetup-like domain. A thin API (authenticates, authorizes, forwards commands/queries, no logic) fronts the modules: User Access, Registrations, Meetings, Administration, Payments. Each module has its own composition root and IoC container, initialized by a static method from the host. Layout per module: Application, Domain, Infrastructure and IntegrationEvents assemblies; only IntegrationEvents is visible to others; everything else internal.
@@ -12,10 +12,10 @@ A .NET app for a Meetup-like domain. A thin API (authenticates, authorizes, forw
 - Reliability: Outbox/Inbox tables per module plus a Quartz.NET worker give at-least-once delivery and processing. Internal commands reuse the mechanism so state changes happen only via commands, in a separate transaction.
 
 ## Inside a module
-CQRS: commands go through a write model (aggregates, repositories); queries are raw SQL over views. Handlers are wrapped by decorators: logging, validation, unit of work (commit once, dispatch domain events). Authorization is permission-based RBAC checked at the controller. Payments uses event sourcing. The README notes that the mediator hides which handler runs.
+CQRS: commands go through a write model (aggregates, repositories); queries are raw SQL over views. Handlers are wrapped by decorators: logging, validation, unit of work (commit once, dispatch domain events). Authorization is permission-based RBAC checked at the controller. Payments uses event sourcing (the README says snapshots are not implemented). The README notes that the mediator hides which handler runs.
 
 ## Testing
-Unit tests through the public domain API only (no InternalsVisibleTo, no test-only constructors); architecture tests (NetArchTest) for layering, dependencies and encapsulation; integration tests per use case on a real SQL Server, mocking only external services; system tests poll asynchronous flows with probes and timeouts. Docs: C4 levels 1-4, event storming, an architecture decision log.
+Unit tests through the public domain API only (no InternalsVisibleTo, no test-only constructors); architecture tests (NetArchTest, modeled on ArchUnit) for layering, dependencies and encapsulation; integration tests per use case on a real SQL Server, mocking only external services; system tests poll asynchronous flows with probes and timeouts.
 
 ## Cost
 This is a maximal-autonomy design: rich modules plus outbox, event sourcing and CQRS. Treat it as a ceiling, not a default; simple modules need none of it (inference).
@@ -23,6 +23,7 @@ This is a maximal-autonomy design: rich modules plus outbox, event sourcing and 
 ## How an agent should apply this
 - Copy the boundary rules first (one public contract assembly, own schema, no cross-module calls), the machinery later.
 - Add outbox/inbox only when an event must not be lost across a transaction boundary.
-- Give each module its own composition root so it can be extracted.
+- Give each module its own composition root so it can be extracted (rule owner: `dependency-inversion-composition-root`).
+- Outbox mechanics beyond this file: `saga-transactional-outbox-pattern`.
 - Add architecture tests in the first module, not after violations appear.
 - Choose CQRS or event sourcing per module on need.

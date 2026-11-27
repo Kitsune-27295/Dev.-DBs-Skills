@@ -1,9 +1,9 @@
 # Plugin Isolation, Failure Modes and Verification
 
-Sources: https://quality.arc42.org/approaches/plugin-architecture · Last verified 2026-11-23
+Sources: https://quality.arc42.org/approaches/plugin-architecture · Last verified 2026-11-27
 
 ## Intent and mechanism (arc42 Quality Guide)
-Let independent teams or third parties extend behavior without changing or redeploying the core. The core declares extension points (interfaces, abstract classes, event topics) and owns their semantics. Plugins register via directory scanning, a service registry (Java ServiceLoader, Python entry points) or runtime hot-plug; the host calls them without knowing concrete types, and one or all registered plugins respond. Supported qualities: extensibility, modifiability, configurability (different plugin sets per customer), reusability.
+Let independent teams or third parties extend behavior without changing or redeploying the core. The core defines a stable extension point (API, interface or event bus). Plugins register at startup or at runtime and the host invokes them through the shared contract. Discovery details such as ServiceLoader or entry points are common practice, not stated by arc42. The page also calls the style Add-in Architecture or Microkernel.
 
 ## Isolation as a dial
 | Level | Gives | Costs |
@@ -32,12 +32,9 @@ Also: a slow synchronous plugin can stall the whole pipeline.
 - Skip when the extension set is small and fixed: the permanent public API costs more than a few known variants. Once third parties build against it, the core team maintains a public product (versioning, deprecation windows, compatibility suites).
 
 ## Neighboring approaches
-- Extension hooks (named attachment points): simpler, weaker than full contracts.
-- Marketplace: curated registry with automated quality and security gates.
 - Externalized business rules: declarative where plugins are imperative code.
-- Hexagonal architecture: ports swap infrastructure behind core-owned interfaces; plugins open the feature set.
-- Sidecar: extends out of process at deployment time, needs no extension points.
-- Microkernel (Richards, POSA vol. 1) is the limiting case where even built-in features are plugins.
+- Hexagonal architecture: ports swap infrastructure behind core-owned interfaces (`hexagonal-architecture`); plugins open the feature set.
+- Sidecar: extends out of process at deployment time, needs no design-time extension points.
 
 ## Sketch: guarded invocation
 ```ts

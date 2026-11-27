@@ -1,6 +1,6 @@
 # Throttling Strategies, Algorithms and Server-Side Considerations
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · https://stripe.com/blog/rate-limiters · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · https://stripe.com/blog/rate-limiters · Last verified 2026-11-27
 
 ## Throttling is a control loop
 
@@ -24,12 +24,7 @@ Combine with autoscaling: throttle during scale-out, relax after capacity arrive
 
 Limit the dimension that saturates first: request rate, concurrent in-flight requests, queue depth, CPU/memory, or a downstream's limit. A requests-per-second cap does not protect a system bottlenecked on concurrency at a fan-out point (use bulkheads/concurrency limits there). Normalize per-operation cost (reads cheap, writes expensive); ignoring cost is an attack vector.
 
-| Algorithm | Behavior | Best fit | Weakness |
-|---|---|---|---|
-| Token bucket | Tokens refill at a steady rate; burst up to bucket size; empty bucket rejects | Gateways absorbing short spikes (Stripe uses it) | Burst may pass straight to a fragile backend |
-| Leaky bucket | Constant outflow rate | Backends needing steady ingress | Delays or drops bursts; queue sizing |
-| Fixed window | Counter per time window | Simplest | Back-to-back bursts at window boundaries (up to 2x limit around the edge: own inference) |
-| Sliding window | Smooths boundary problem | Accurate per-caller limits | More state per key |
+Algorithm table: section 3 of `SKILL.md` (the page lists the same four, with the fixed-window boundary burst; the "up to 2x" figure is our inference).
 
 Token bucket in a few lines (single node):
 
@@ -53,10 +48,7 @@ A throttle that only rejects after saturation lets latency spike before callers 
 
 ## Rejection contract
 
-- `429 Too Many Requests`: caller exceeded its rate over a window.
-- `503 Service Unavailable`: service cannot handle it now (load spike, shedding).
-- Always include `Retry-After`, and enough context to act: which limit, which scope, a rate that would succeed.
-- Propagate overload from dependencies; do not hide a downstream 429/503 behind silent retries or a generic 500, otherwise callers cannot slow down and retries amplify (retry storm). See `circuit-breaker-retry-telemetry` and `error-handling-problem-details` for body shape.
+Codes, `Retry-After` and propagation rules are in section 7 of `SKILL.md`. The page adds: propagating a downstream 429/503 (not hiding it behind silent retries or a generic 500) is what stops a retry storm. Body shape: `error-handling-problem-details`.
 
 ## Operational rules
 

@@ -1,13 +1,17 @@
-# Sources for the micro-frontends-architecture skill
+# Sources: Micro Frontends Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Re-verified 2026-11-27 with WebFetch (Firecrawl unavailable). Summaries are in our own words.
 
-| # | Source | What the skill takes from it |
-|---|---|---|
-| 1 | Cam Jackson, "Micro Frontends" (2019-06-19 / Martin Fowler site), https://martinfowler.com/articles/micro-frontends.html | Core benefits (incremental upgrades, simple decoupled codebases, independent deployment, autonomous vertical teams owning features from DB to UI); comprehensive evaluation of the five integration approaches: (1) **Server-side template composition**, (2) **Build-time integration** (explicitly criticized for breaking independent deployability), (3) **Run-time integration via iframes**, (4) **Run-time integration via JavaScript** (recommended default for SPAs), and (5) **Run-time integration via Web Components**; styling isolation, shared component libraries (dumb visual primitives only, no business logic, early duplication over premature abstraction), cross-application communication (routing/URLs first, CustomEvents second, never shared global state), backend BFF communication, and testing pyramid. |
-| 2 | Michael Geers, "Micro Frontends — extending the microservice idea to frontend development", https://micro-frontends.org/ | The five core ideas: Be Technology Agnostic, Isolate Team Code (no shared runtime/global variables), Establish Team Prefixes (CSS, LocalStorage, Events), Favor Native Browser Features over Custom APIs (**"The DOM is the API"** — Custom Elements + DOM CustomEvents), and Build a Resilient Site (progressive enhancement + Server-Side Includes + Custom Elements); explicit warning to **"Avoid Framework Anarchy"** and consider the Documents-to-Applications Continuum before choosing server-side vs. client-side composition. |
-| 3 | Microsoft .NET Microservices Architecture Guide, "Creating composite UI based on microservices", https://learn.microsoft.com/pt-br/dotnet/architecture/microservices/architect-microservice-container-applications/microservice-based-composite-ui-shape-layout | Contrast between a monolithic client UI consuming backend microservices (Figure 4-20) vs. a composite UI where vertical microservices own and shape their visual ViewModels and client UI components end-to-end. |
+| # | Source | Status | Contribution |
+|---|---|---|---|
+| 1 | Cam Jackson, "Micro Frontends", https://martinfowler.com/articles/micro-frontends.html | read 2026-11-27, OK; dated 19 June 2019 (series began 10 June) | five integration approaches and verdicts, shared state, CSS, shared libraries, BFF, auth, testing, AWS/Terraform example |
+| 2 | Michael Geers, https://micro-frontends.org/ | read 2026-11-27, OK | five core ideas, Custom Elements as contract, team prefixes, SSI with nginx, framework anarchy, skeleton screens, ThoughtWorks radar end of 2016 |
+| 3 | Microsoft Learn, composite UI based on microservices (pt-br), https://learn.microsoft.com/pt-br/dotnet/architecture/microservices/architect-microservice-container-applications/microservice-based-composite-ui-shape-layout | read 2026-11-27, OK; machine-translated, ms.date 2021, updated 2026-10-04 | monolithic vs composite UI, startup registration, API-gateway analogy, eShopOnContainers choice |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
+Only these three pages were read; page 3 is a machine translation. The skill has no scripts or data files.
 
-- **Run-time JavaScript vs. Web Components vs. Server-Side Includes:** Jackson (Source 1) defaults to run-time JavaScript mounting functions for SPA experiences, whereas Geers (Source 2) champions native Web Components (Custom Elements) combined with Server-Side Includes (SSI) for universal rendering. Both converge on the same non-negotiable invariants: runtime independent deployment, zero shared application state, DOM/URL-based contracts, and avoiding build-time coupling or uncontrolled multi-framework bloat.
+## Claims not adopted
+- Corrected: "react and react-dom externalized, about half the bundle size". The article says they were about 50% of the bundle, not that externalizing saved that much.
+- Removed (in no source read): Podium, Tailor, Module Federation, import maps, "4 megabytes", "90% of the structure at 10% of the cost", a "3+ teams" threshold, Core Web Vitals, Strangler Fig naming, "skeleton screens can flicker".
+- The small-team advice is the skill's own inference and is labeled so.

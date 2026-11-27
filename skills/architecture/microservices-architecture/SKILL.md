@@ -1,6 +1,6 @@
 ---
 name: microservices-architecture
-description: Use when designing, reviewing, or operating a Microservices Architecture (independently deployable services organized around business capabilities/DDD subdomains, each owning its private database), or solving distributed data consistency (Sagas, Transactional Outbox, API Composition). Gives the 9 Fowler/Lewis characteristics, Chris Richardson's pattern language rules, contract testing, and common distributed monolith mistakes.
+description: "Decide whether and how to build a system as independently deployable services organized around business capabilities, each owning its private database: Fowler and Lewis nine characteristics, Richardson pattern language, the microservice premium, adoption prerequisites, cross-service writes and reads, and the distributed-monolith failure. Not for SOA/ESB comparison (`soa-vs-microservices-architecture`), a single-deployable design (`modular-monolith-architecture`) or function-level compute (`serverless-architecture`). Use when designing, reviewing or splitting toward microservices, or judging whether a design is really microservices."
 ---
 
 # Microservices Architecture
@@ -24,9 +24,9 @@ One idea: structure an application as a suite of **independently deployable, loo
 1. **Independent deployability is the litmus test:** If two services must be deployed together in lockstep, or share a mutable code library of domain entities that forces simultaneous releases, you have a **Distributed Monolith**, not microservices.
 2. **Private database per service (Decentralized Data Management):** Never share a database table across services. Other services may only read or mutate a service's state through its versioned API or by subscribing to its published domain/integration events.
 3. **Eliminate long synchronous call chains:** Deep chains of synchronous RPC/HTTP calls (`A -> B -> C -> D`) multiply latency and destroy availability (the product of each service's uptime). Prefer asynchronous collaboration (events, Saga choreography/orchestration) or local read replicas (CQRS / API Composition) for cross-service flows.
-4. **Design for failure at every network boundary:** Every remote call can time out, throttle, or fail. Wrap outbound synchronous calls with explicit timeouts, bounded retries with exponential backoff + jitter, circuit breakers, and bulkheads.
+4. **Design for failure at every network boundary:** every remote call can time out or fail, so clients must degrade gracefully. The mechanics (timeouts, retries, circuit breakers) are owned by `circuit-breaker-retry-telemetry`.
 5. **No distributed 2PC transactions:** Use **Sagas** (with explicit compensating actions for rollbacks) for cross-service writes, and **API Composition** or **CQRS views** for cross-service queries.
-6. **Prerequisites before splitting:** Do not adopt microservices without automated CI/CD deployment pipelines, rapid infrastructure provisioning, centralized structured logging, distributed tracing (correlation/trace IDs), and basic health/metrics monitoring.
+6. **Prerequisites before splitting:** Fowler's three are rapid provisioning, basic monitoring (technical and business signals) and rapid application deployment; without them do not adopt the style. Distributed tracing and log aggregation are Richardson's observability patterns, a sensible addition (agent inference).
 
 ## Building and decomposition order
 
@@ -36,14 +36,9 @@ One idea: structure an application as a suite of **independently deployable, loo
 4. **Implement each service internally with clean boundaries:** Inside a service, use `hexagonal-architecture` or `clean-architecture` plus the Transactional Outbox and idempotent consumers (`saga-transactional-outbox-pattern`, `idempotency-fix`).
 5. **Verify contracts in CI:** Gate every service pipeline on unit tests, component tests (in-process with testcontainers/fakes), and Consumer-Driven Contract tests.
 
-## Tests per level (the Microservice Testing Pyramid)
+## Tests per level
 
-| Level | Test | Uses |
-|---|---|---|
-| Domain & Use Cases (inside one service) | unit test (fast, largest share) | pure domain objects and in-memory port fakes |
-| Service Component Test | in-process / container boundary test | boots the single service against its real test DB and stubs external services |
-| Contract Integration Test | Consumer-Driven Contract (e.g., Pact) | verifies producer and consumer agree on request/response/event schema without running both live |
-| End-to-End System Test | minimal smoke suite | 1-2 critical business journeys across deployed services (keep small; brittle E2E suites stall releases) |
+Test shapes for services are owned by `testing-pyramid-and-shapes`. What is specific here: gate each service pipeline on unit tests, a service component test (the service booted against its real test database, other services stubbed) and Consumer-Driven Contract tests, which let a provider learn it broke a client without running both live. Keep end-to-end tests to one or two critical journeys.
 
 ## When it earns its keep
 
@@ -71,3 +66,4 @@ One idea: structure an application as a suite of **independently deployable, loo
 
 - [Fowler and Lewis: the nine characteristics in depth](references/fowler-lewis-nine-characteristics.md) — read when judging whether a design is really microservices or a distributed monolith.
 - [Microservice premium, monolith first and adoption readiness](references/microservice-premium-and-adoption-readiness.md) — read when deciding whether, when and how to split a system.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking which skill owns a request.

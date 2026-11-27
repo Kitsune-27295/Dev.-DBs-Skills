@@ -1,6 +1,6 @@
 # Competing Consumers, Message Handling and Poison Messages
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/competing-consumers · https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/competing-consumers · https://learn.microsoft.com/en-us/azure/architecture/best-practices/background-jobs · Last verified 2026-11-27
 
 ## The pattern
 

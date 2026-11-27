@@ -1,6 +1,6 @@
 # Chain of Responsibility and Message Filter
 
-Sources: https://refactoring.guru/design-patterns/chain-of-responsibility, https://www.enterpriseintegrationpatterns.com/patterns/messaging/Filter.html (the `MessageFilter.html` slug returned 404) · Last verified 2026-11-23
+Sources: https://refactoring.guru/design-patterns/chain-of-responsibility, https://www.enterpriseintegrationpatterns.com/patterns/messaging/Filter.html (the `MessageFilter.html` slug returned 404) · Last verified 2026-11-27
 
 ## Chain of Responsibility
 
@@ -52,9 +52,9 @@ Problem: a company sends price changes and promotions to large customers, but ea
 
 Solution: a Message Filter, a router with a single output channel; matching messages pass, others are discarded. As a pipeline stage it sits in the messaging system, unlike a Selective Consumer inside an endpoint. Router comparison and broker bindings (RabbitMQ) are owned by `router-front-controller-routing` (`eip-message-routing-patterns.md`).
 
-Related: Content-Based Router, Selective Consumer, Pub-Sub Channel, Recipient List, Dead Letter Channel.
+Related patterns listed on the page: Content-Based Router, Event-Driven Consumer, Message Router, Selective Consumer, Publish-Subscribe Channel, Recipient List.
 
-Not on the page (so not asserted): discard handling, stateful filters. Reasoning of my own: a stateful filter (de-duplication) needs a bounded memory and a clear key.
+The page says only that non-matching messages are discarded; it does not describe discard handling or stateful filters, so those are our own reasoning. A stateful filter (de-duplication) needs a bounded memory and a clear key.
 
 ## Chain vs filter vs router
 

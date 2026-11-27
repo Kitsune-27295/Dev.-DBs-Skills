@@ -1,6 +1,6 @@
 # BaaS, FaaS and the Serverless Trade-off Ledger
 
-Sources: https://martinfowler.com/articles/serverless.html (Roberts, 2018; closing 3 KB was only boilerplate and acknowledgments), https://martinfowler.com/bliki/Serverless.html (Janakiraman, 2016) · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/serverless.html (Roberts, 2018-05-22; the last 2.9 KB of the page was not read), https://martinfowler.com/bliki/Serverless.html (Janakiraman, 2016) · Last verified 2026-11-27
 
 ## Definition
 
@@ -9,8 +9,8 @@ Serverless = third-party **BaaS** (managed auth, databases, messaging that clien
 ## FaaS constraints that shape design
 
 - **State**: nothing in local memory or disk may be relied on between invocations; externalize state.
-- **Duration cap**: at the time of writing Lambda allowed five minutes (check current limits; they change).
-- **Cold start**: latency depends on language, code size and invocation frequency.
+- **Duration cap**: the 2018 article says Lambda allowed at most five minutes. AWS's Lambda timeout page (https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html, read 2026-11-27) now shows a 3-second default and a maximum of 1,800 seconds (30 minutes). Limits change; check the page before quoting.
+- **Cold start**: latency ranges from milliseconds to seconds, depending on language, dependencies, VPC use and invocation frequency; at one event per hour nearly every call is cold, at ten per second cold starts are rare. The article mentions keep-alive pings as a mitigation.
 - **Architecture**: coordination moves toward choreography via events.
 - **Operations remain**: monitoring, security, networking; Roberts debunks "no ops".
 
@@ -27,11 +27,11 @@ Lower operational cost, pay-per-use that suits bursty traffic (and rewards optim
 | Security surface | Each vendor adds attack surface; IAM policies easy to misconfigure |
 | Client-side logic | Full BaaS can duplicate logic across clients and lose server-side optimization |
 | Testing/debugging | Integration testing hard, emulators imperfect, limited remote debugging |
-| Concurrency limits | Account-wide limits let one workload throttle another, production included; use reserved concurrency |
+| Concurrency limits | The account-wide limit lets a load test or batch job starve production functions; reserved concurrency caps and guarantees one function, but is off by default |
 | Gateway configuration | Logic pushed into gateway definitions is hard to test and version |
 | Complexity (2016) | Conceptual overhead grows with each service; broad stack tests and semantic monitoring help |
 
-Future directions the article names: better deployment, traffic shifting and monitoring tooling, hybrid server plus FaaS designs, edge functions, portability via CloudEvents and open-source platforms (OpenWhisk, Fission, OpenFaaS).
+The article's outlook covers better tooling and platform improvements, edge functions such as Lambda@Edge, testing in production, and portability (CloudEvents through the CNCF working group; OpenWhisk, Fission and OpenFaaS in its open-source section).
 
 ## Decision rules
 

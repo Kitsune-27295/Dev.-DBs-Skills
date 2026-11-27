@@ -1,6 +1,6 @@
 # Traditional N-Layer vs Clean Architecture (.NET guide)
 
-Sources: https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures · Last verified 2026-11-27 (English edition; page metadata updated 2026-07-08)
 
 ## Project-level progression
 1. **All-in-one:** one project, separation only by folders (Models/Views/Controllers/Data/Services). As it grows, UI concerns scatter across folders, business logic splits between Models and Services, and nothing says who may depend on whom: spaghetti code.

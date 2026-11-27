@@ -1,17 +1,10 @@
 # ASP.NET Core Middleware Pipeline and Ordering
 
-Sources: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/ · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/ · Last verified 2026-11-27
 
-Read from the current-version page (default .NET 11 moniker; older monikers appear in the same file). Standalone Blazor WebAssembly apps have no server middleware pipeline.
+Read from the current-version page (default .NET 11 moniker, page dated 2026-08; older monikers appear in the same file). Standalone Blazor WebAssembly apps have no server middleware pipeline.
 
-## Mechanics
-
-- Middleware is a request delegate in a pipeline; each chooses whether to call the next and can work before and after it.
-- `Run` creates a terminal delegate (no `next`); the first `Run` ends the pipeline and later `Use`/`Run` calls never execute.
-- `Use` chains with `next`. Exception-handling delegates should be early so they catch later errors.
-- Short-circuiting avoids unnecessary work (static files). Middleware before the terminal one still runs its post-`next` code.
-- Do not call `next` during or after the response is sent; changing headers or status after the response starts throws; writing the body after `next` can violate `Content-Length` or corrupt the body. Check `HttpResponse.HasStarted`.
-- Order in `Program.cs` defines request order; the response passes in reverse.
+Pipeline mechanics (Use, Run, short-circuit, response-started rule) are owned by section 3 of `SKILL.md`; the table below adds only what it omits.
 
 ## Branching
 

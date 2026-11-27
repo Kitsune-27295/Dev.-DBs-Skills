@@ -1,11 +1,11 @@
 # Microkernel Principles, Partitioning and Extensions
 
-Sources: https://csse6400.uqcloud.net/handouts/microkernel.pdf · https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes · https://software-architecture-guild.com/guide/architecture/fundamentals/architecture-styles/ · Last verified 2026-11-23
+Sources: https://csse6400.uqcloud.net/handouts/microkernel.pdf · https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes · https://software-architecture-guild.com/guide/architecture/fundamentals/architecture-styles/ · Last verified 2026-11-27
 
-## Four elements (UQ CSSE6400, R. Thomas)
+## Four elements (UQ CSSE6400, R. Thomas; PDF dated 9 March 2026, last updated 2023-03-04)
 Core system (base functionality or a general processing path), plug-ins (independent specialized behavior), plug-in interface (how core and plug-ins interact), registry (which plug-ins exist and how to reach them). Examples cited: browsers, Eclipse, Jenkins. Worked example: a payroll core (identify employee, calculate pay, pay) with one plug-in per pay adjustment (bonuses, penalty rates, deductions), all behind one `adjustPay(employee, periodDetails, conditions, basePay)` interface returning a signed monetary amount. In the monolith case the registry can be a plain name-to-object map.
 
-## Four principles
+## Four principles (UQ definitions 2 to 4, plus the plug-in data rule from section 5.3)
 1. Independent Plug-in: plug-ins depend only on the core through the interface, never on each other, nor on core internals or the core datastore. Plug-in-to-plug-in dependencies create coupling and a "big ball of mud".
 2. Standard Interface: one interface for the core's use of plug-ins, so two plug-ins or two thousand add no extra core complexity.
 3. Domain Standard Interface: when the core is domain-partitioned, give each domain its own plug-in interface so each business process is customized independently (domains may share one when they truly coincide).
@@ -26,8 +26,8 @@ The microkernel core may follow either. Inference: choose domain partitioning wh
 - Non-standard interfaces: for third-party services with their own API, write an adapter plug-in so the core still sees one standard interface.
 
 ## Positioning from the secondary sources
-- The Software Architecture Guild groups microkernel under monolithic styles (single unit, with layered, modular, pipeline), calls it ideal for highly customizable product platforms, and warns that managing plug-in dependencies and integration can get hard.
-- The Hammad notes (summarizing Richards) say the core must hold a plug-in registry, plug-ins should communicate minimally, and some plug-ins may depend on others (a concern). Contact options: OSGi, message passing, web services, point-to-point binding, always with a well-defined contract. That page gave no ratings in text form (the comparison was an image), so scalability ratings are not read from source.
+- The Software Architecture Guild groups microkernel under monolithic styles (with layered, modular, pipeline), names highly customizable product platforms as an ideal use, and warns that managing plug-in dependencies and integration can get hard.
+- The Hammad notes (a personal notes repository, secondary) say the core must hold a plug-in registry, plug-ins should communicate minimally, and some plug-ins may depend on others (a concern). Contact options: OSGi, message passing, web services, point-to-point binding, always with a well-defined contract. Its ratings were an image, so no ratings are adopted.
 
 ## Sketch: registry plus standard interface
 ```ts

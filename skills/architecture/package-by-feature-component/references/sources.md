@@ -1,13 +1,20 @@
-# Sources for the package-by-feature-component skill
+# Sources - Package by Feature & Package by Component
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-checked on 2026-11-27 (WebFetch; Firecrawl unavailable).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Milan Jovanović, "Clean Architecture: The Missing Chapter (Package by Feature vs. Package by Component vs. Package by Layer)", https://milanjovanovic.tech/blog/clean-architecture-the-missing-chapter | Why traditional **Package by Layer** (`Web`, `Business`, `Data`) fails: (1) violates the **Common Closure Principle** (classes that change together are scattered across multiple projects), (2) creates **hidden dependencies** because `public` interfaces allow any class to bypass layers, (3) hides business intent, and (4) slows maintenance; distinction between **Package by Feature** (grouping everything for a feature — controller, service, repository, entity — in one vertical package) and Simon Brown's **Package by Component** (bundling business logic + data access into an encapsulated coarse-grained component separate from the UI); using `internal` / package-private access modifiers to enforce real compile-time encapsulation; clarification that Clean Architecture's circles govern dependency direction, not mandatory horizontal folder splitting. |
-| 2 | Akın Topbaş, "Spring Boot Code Structure: Package by Layer vs Package by Feature" (2024-05-10), https://medium.com/@akintopbas96/spring-boot-code-structure-package-by-layer-vs-package-by-feature-5331a0c911fe | Concrete comparison of `controller / model / repository / service` (Package by Layer) vs. `user / product / order` (Package by Feature) against OOP and modularity criteria: high cohesion within feature packages, reduced cross-package coupling, easier microservice extraction, and explicit use of package-private visibility to prevent accidental cross-domain calls. |
-| 3 | Damien Veillard, `software-architecture` — Simon Brown's "Package by component and architecturally-aligned testing", https://github.com/drveillard/software-architecture/blob/main/docs/vertical-slice-architecture.md | Reference to Simon Brown's architectural packaging taxonomy comparing Package by Layer, Package by Feature, and Package by Component (with Ports & Adapters / Hexagonal inside each component). |
+| https://milanjovanovic.tech/blog/clean-architecture-the-missing-chapter | OK, read in full | Problems of Package by Layer, feature vs component definitions, `internal` and assembly limits, architecture tests, recommendation to start with components, "pragmatism beats purism" |
+| https://medium.com/@akintopbas96/spring-boot-code-structure-package-by-layer-vs-package-by-feature-5331a0c911fe | 403 Forbidden, not read | Nothing adopted |
+| https://github.com/drveillard/software-architecture/blob/main/docs/vertical-slice-architecture.md | OK, but a link list (titles only) | Only confirms that "Package by component and architecturally-aligned testing" exists as a title |
+| https://www.codingthearchitecture.com/2015/03/08/package_by_component_and_architecturally_aligned_testing.html | 302 to simonbrown.je, no article text reachable | Nothing adopted |
+| https://simonbrown.je/ | OK, home page lists a "Modular monolith and package by component" title only | Nothing adopted |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
+Simon Brown's original text was not read; his position is reported only as Jovanovic describes it. No scripts or data files in this skill were run or re-verified.
 
-- **Language limits on package visibility:** Jovanović (Source 1) notes that in Java, package-private visibility enforces encapsulation per folder inside a single project, whereas in C#/.NET `internal` is scoped to an entire Assembly (`.csproj`), meaning strict compile-time isolation in .NET requires either an assembly per module/component (`modular-monolith-architecture`) or an automated architecture test (`NetArchTest` / Roslyn analyzer) inside a single assembly. In TypeScript/JavaScript, enforce folder encapsulation via barrel files + `eslint-plugin-boundaries` or `dependency-cruiser`.
+## Claims not adopted as fact
+- The quoted wording of the Common Closure Principle: removed; the principle belongs to `single-responsibility-cohesion` (itself labeled background knowledge).
+- Medium-post claims (microservice extraction, package-private examples for Spring): unread.
+- TypeScript barrel plus lint-boundary enforcement, and the "worth it above 3-4 domain concepts or 10 endpoints" threshold: unsupported by any source read; dropped.
+- Test-benefit table and the "fake package by feature" label: own judgment, not sourced.

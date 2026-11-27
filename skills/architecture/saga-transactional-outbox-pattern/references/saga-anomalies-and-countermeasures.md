@@ -1,6 +1,6 @@
 # Saga Transaction Classes, Isolation Anomalies and Countermeasures
 
-Sources: https://microservices.io/patterns/data/saga.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/saga · Last verified 2026-11-23
+Sources: https://microservices.io/patterns/data/saga.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/saga · Last verified 2026-11-27
 
 ## Why sagas exist
 With Database per Service, a rule that spans two services (Richardson's example: an order must not exceed a customer's credit limit, with Orders and Customers owned by different services) cannot be enforced in one local ACID transaction, and 2PC is ruled out. A saga is a reliably coordinated sequence of local transactions; on a business-rule failure, compensating transactions undo what earlier steps committed. You get consistency but lose two things: automatic rollback (you write the undo logic) and the "I" in ACID (isolation).
@@ -9,7 +9,7 @@ With Database per Service, a rule that spans two services (Richardson's example:
 | Class | Meaning | Design consequence |
 |---|---|---|
 | Compensable | Can be undone by an opposite-effect transaction | Needs a written, idempotent compensation |
-| Pivot | Point of no return; either the last compensable step or the first retryable one; may itself be non-compensable | Put the riskiest business check here |
+| Pivot | Point of no return; either the last compensable step or the first retryable one; may itself be non-compensable | Place it after every step that can fail for business reasons (design advice, not from the page) |
 | Retryable | After the pivot; idempotent, must eventually succeed | Retry with backoff; never compensate |
 
 Ordering rule (derived from the above): compensable steps first, pivot next, retryable steps last. Anything that can fail for business reasons belongs before or at the pivot.
@@ -24,12 +24,12 @@ Ordering rule (derived from the above): compensable steps first, pivot next, ret
 |---|---|---|
 | Semantic lock | Compensable step sets an app-level flag (e.g. `PENDING`) that other transactions must respect or wait on | Records mutated by a saga must not be treated as final by others |
 | Commutative updates | Make operations order-independent (debit/credit instead of set-balance) | Updates can be expressed as deltas |
-| Pessimistic view | Reorder steps so risky updates happen in retryable steps, removing dirty reads | You control step order |
+| Pessimistic view | Reorder steps so data updates happen in retryable steps, removing dirty reads | You control step order |
 | Reread value | Re-read before write; if changed, abort step and restart saga | Cheap optimistic check, low contention |
 | Version file | Log operations per record and apply in correct order | Out-of-order arrival (e.g. cancel before create) |
 | By value (risk-based) | Pick concurrency mechanism by business risk: saga for low-value, distributed transaction for high-value | Mixed-risk workloads |
 
-Richardson points to chapter 4.3 of *Microservices Patterns* for the full treatment; the page itself only names the countermeasures.
+Richardson's page does not list the anomalies, countermeasures or step classes (re-checked 2026-11-27); it says countermeasures are needed and points to chapter 4.3 of *Microservices Patterns*. The lists above come from the Azure page. Azure adds that compensations might not always succeed.
 
 ## Failure modes
 - Compensations that can themselves fail: they must be retryable and idempotent; park in a dead-letter or manual queue after bounded retries.

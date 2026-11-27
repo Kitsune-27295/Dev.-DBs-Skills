@@ -1,6 +1,6 @@
 # Fowler and Lewis: The Nine Characteristics in Depth
 
-Sources: https://martinfowler.com/articles/microservices.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/microservices.html · Last verified 2026-11-27
 
 The article stresses there is no formal definition; these are traits most, not all, microservice systems share.
 
@@ -16,9 +16,9 @@ The article stresses there is no formal definition; these are traits most, not a
 9. Evolutionary design: services are replaceable or disposable; things that change together belong together (if two services keep changing together, merge them); The Guardian kept a monolith core and added short-lived features as services; versioning is a last resort, prefer tolerant consumers.
 
 ## Sidebars worth remembering
-- Size: no fixed rule; examples run from "two pizza team" to one team supporting several services.
+- Size: no fixed rule; the sidebar cites Amazon's two-pizza team (no more than about a dozen people) and examples of one team supporting several services.
 - Synchronous calls considered harmful: chained synchronous calls multiply downtime; The Guardian limits itself to one synchronous call per user request.
-- SOA relation: overlaps with SOA, but many SOA efforts failed through ESB-centric design and central governance.
+- SOA relation: overlaps with SOA, but many SOA efforts failed through ESB-centric design and central governance; the comparison is owned by `soa-vs-microservices-architecture`.
 - Standards should be proven by several implementations, not imposed top-down.
 
 ## Authors' caution ("Are microservices the future?")

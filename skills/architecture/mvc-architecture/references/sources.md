@@ -1,15 +1,24 @@
-# Sources for the mvc-architecture skill
+# Sources: MVC Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-fetched on 2026-11-27 with WebFetch (Firecrawl had no credits).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Martin Fowler, "GUI Architectures" (2006), https://martinfowler.com/eaaDev/uiArchs.html | Historical lineage from Trygve Reenskaug's Smalltalk-80 MVC; **Separated Presentation** (domain model completely ignorant of UI) and **Observer Synchronization**; distinction between Domain Model and Application/Presentation Model; Model-View-Presenter (Supervising Controller vs. Passive View) and the **Humble View** principle for testability; warning on Semantic Diffusion around the term "MVC". |
-| 2 | Martin Fowler, *Patterns of Enterprise Application Architecture* Catalog, "Model View Controller" (2003), https://martinfowler.com/eaaCatalog/modelViewController.html | Concise definition of MVC splitting user interface interaction into three distinct roles (Model, View, Controller) and its origin in Smalltalk in the late 1970s. |
-| 3 | MDN Web Docs, "MVC - Glossary", https://developer.mozilla.org/en-US/docs/Glossary/MVC (source markdown: https://github.com/mdn/content/blob/main/files/en-us/glossary/mvc/index.md?plain=1) | Web-focused definitions of Model (data and business logic), View (layout and display), and Controller (routes commands to Model and View, including view-only formatting/sorting changes that don't mutate the Model); evolution from server-side Web MVC to client-side stores and Fetch-based partial updates; relationship to MVVM, MVP, and MVW. |
-| 4 | Marco Tulio Valente, *Engenharia de Software Moderna*, Cap. 7 "7.3 Arquitetura MVC", https://engsoftmoderna.info/cap7.html | Practical Web MVC flow (HTTP request -> Controller -> Model -> View -> HTTP response) and how Single Page Applications (SPAs) shift view rendering and presentation state to the browser while talking to the backend via JSON APIs. |
+| https://martinfowler.com/eaaDev/uiArchs.html | 200 OK; first published 18 July 2006, self-described draft | Separated Presentation, Observer Synchronization, section list of GUI styles, Humble View as a testability strategy |
+| https://martinfowler.com/eaaCatalog/modelViewController.html | 200 OK | One-line definition (three roles) and Reenskaug's late-1970s Smalltalk origin |
+| https://developer.mozilla.org/en-US/docs/Glossary/MVC | 200 OK | Web-oriented role definitions, the data-change and display-only flows, MVVM/MVP/MVW, AngularJS and Ember mention, IndexedDB |
+| https://engsoftmoderna.info/cap7.html | 200 OK; section 7.3 (Portuguese) | MVC = (View + Controllers) + Model, Web MVC flow, three-tier comparison, Vue temperature example, Gmail as SPA, two-way binding |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Rich-client MVC vs. Web MVC:** Fowler (Source 1) notes that classic Smalltalk MVC relied on stateful Observer Synchronization where widgets observed the Model directly, whereas Web MVC (Sources 3 and 4) operates over stateless HTTP request-response cycles where the Controller coordinates the Model and selects the View to render. Both share the core invariant: **Separated Presentation** (the Model never depends on the View or Controller).
-- **View-only updates through the Controller:** Source 3 notes that a Controller may update the View directly for purely presentational changes (e.g., re-sorting a displayed list alphabetically) without mutating the underlying Domain Model.
+- Fowler's essay says its descriptions rely on common accounts and are not authoritative; the style table in the lineage reference is my own synthesis, built from the page's section names only.
+- The Valente text was read through a summarizing fetch, not verbatim; the figures and examples listed were confirmed present.
+- Code sketches in the references are my own and were not executed.
+
+## Claims not adopted as fact
+
+- "Fowler calls MVC one of the most quoted and most misquoted patterns" (earlier draft): not found on the pages read.
+- "Fowler and Beck" as the source of the MVC benefits list (earlier draft): the benefits are attributed to Valente only.
+- Forms-and-Controls "three copies of data" and the Smalltalk-MVC and VisualWorks weakness cells (earlier draft): not confirmed; kept only as marked inference.
+- "MDN says MVC imposes more rigid structure than web code usually has" (earlier draft): not found.
+- MVVM equal to Presentation Model: treated as a close relative (inference); MDN lists MVVM only as MVC-based.

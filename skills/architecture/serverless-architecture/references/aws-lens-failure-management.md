@@ -1,13 +1,12 @@
 # AWS Serverless Lens: Failure Management and Pillar Structure
 
-Sources: https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html (intro only), plus sub-pages reliability-pillar.html, failure-management.html, security-pillar.html (extra pages) · Last verified 2026-11-23
+Sources: https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html · https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/failure-management.html · https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/security-pillar.html · Last verified 2026-11-27
 
-Read status: the welcome page yielded only its introduction (lens dated 2022-07-14, scoped to serverless-specific guidance on top of the main Framework). The design-principles page returned no body text, so nothing is claimed from it. Detailed content below comes from the failure-management page.
+All three pages were read on 2026-11-27. The welcome page shows the lens dated 2022-07-14 and scoped to serverless-specific guidance on top of the main Framework. The design-principles and reliability-pillar pages were not read, so nothing is claimed from them.
 
-## Structure facts that were read
+## Structure fact that was read
 
-- The reliability pillar has three areas: foundations, change management, failure management.
-- The security pillar lists five areas: identity and access management, detective controls, infrastructure protection, data protection, incident response. It notes serverless removes OS patching but OWASP and application-security practice still apply.
+- The security pillar lists five areas: identity and access management, detective controls, infrastructure protection, data protection, incident response. It says serverless removes OS patching but OWASP and application-security practice still apply.
 
 ## Failure management: asynchronous calls must be captured and retried
 

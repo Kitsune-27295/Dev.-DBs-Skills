@@ -1,6 +1,6 @@
 # Architecture Styles as Constraints (Azure Architecture Center)
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/ · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/ · Last verified 2026-11-27
 
 ## Core idea
 

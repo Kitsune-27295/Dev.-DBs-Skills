@@ -1,6 +1,6 @@
 # EIP Message Routing Patterns
 
-Sources: https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageRoutingIntro.html, https://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentBasedRouter.html · Last verified 2026-11-23
+Sources: https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageRoutingIntro.html, https://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentBasedRouter.html · Last verified 2026-11-27
 
 ## Frame
 
@@ -14,7 +14,7 @@ Solution: inspect message content and put the message on a different channel dep
 
 Maintenance: the router changes often as destinations come and go, so the logic must be easy to change; in advanced cases it becomes a configurable rules engine computing the channel from rules.
 
-Camel sketch (paraphrasing the page): read `direct:in`, `choice()` on the `type` header, `widget` goes to `direct:widget`, `gadget` to `direct:gadget`, otherwise `direct:other`, with a dead letter channel for errors.
+Camel sketch (paraphrasing the page): a dead letter channel is the error handler; messages from `direct:in` go through `choice()` on the `type` header: `widget` to `direct:widget`, `gadget` to `direct:gadget`, otherwise `direct:other`. The page lists Message Filter, Dynamic Router, Message Router, Invalid Message Channel, Pipes and Filters, Publish-Subscribe Channel, Routing Slip and Transactional Client as related, without explaining the Message Filter difference.
 
 ```
 route(msg):
@@ -33,7 +33,7 @@ route(msg):
 | Coupling | Router depends on all destinations | No component knows all destinations |
 | Adding a consumer | Edit the router | Add a subscriber with its own filter |
 
-Message Filter detail (see `middleware-interceptor-chain` for the filter-as-pipeline-stage view): it is a special Message Router with one output; matching messages pass, others are discarded. RabbitMQ direct exchanges implement filter-per-subscriber with binding keys.
+Message Filter: the chapter lists it as a router with one output that passes matching messages; its pipeline-stage view belongs to `middleware-interceptor-chain`.
 
 ## Other simple routers (summary table from the page)
 
@@ -44,9 +44,9 @@ Message Filter detail (see `middleware-interceptor-chain` for the filter-as-pipe
 | Recipient List | 1 | many (incl. 0) | no |
 | Splitter | 1 | many | no |
 | Aggregator | many | 1 | yes |
-| Resequencer | many | many | yes |
+| Resequencer | many | many (same count as consumed) | yes |
 
-Dynamic Router: control messages on a control port change routing logic; combinable with most other routers.
+Dynamic Router: control messages on a control port change routing logic at run time; any router type can be made dynamic. Message Broker is the chapter's architectural pattern: a central hub-and-spoke style built from routers.
 
 ## Composed routers
 

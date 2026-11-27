@@ -1,6 +1,6 @@
 ---
 name: serverless-architecture
-description: Use when designing, reviewing, or optimizing a Serverless (FaaS + BaaS) application (AWS Lambda, Azure Functions, Cloud Functions, EventBridge/Queues, managed databases/auth), managing cold starts, stateless execution limits, and connection pooling, or applying the AWS Well-Architected Serverless Lens. Gives FaaS/BaaS invariants, function design rules, testing strategy, and common cost/concurrency pitfalls.
+description: "Decide whether and how to build on managed backend services (BaaS) plus short-lived event-triggered functions (FaaS): statelessness, cold starts, duration and concurrency limits, connection exhaustion, retries with dead-letter queues, least-privilege roles, and the AWS Serverless Applications Lens failure guidance. Not for container or always-on service design (`microservices-architecture`), event-pattern theory (`event-driven-architecture`) or general retry mechanics (`circuit-breaker-retry-telemetry`). Use when designing, reviewing or costing a Lambda, Azure Functions or Cloud Functions application, or judging whether serverless fits a workload."
 ---
 
 # Serverless (FaaS & BaaS) Architecture
@@ -21,7 +21,7 @@ One idea: build systems out of **managed third-party backend services (BaaS)** a
 ## Core architectural rules and invariants
 
 1. **Functions must be strictly stateless across invocations:** Never store session data, in-flight workflow state, or local files expecting a future invocation to see them. Any state that must survive an invocation belongs in an external managed store (DynamoDB/Redis/S3/Database). Use module-level globals **only** for connection reuse and immutable cached config during warm reuse.
-2. **Keep functions single-purpose, small, and short-lived:** Each function has a strict platform timeout and scales along one trigger axis. Minimize dependency bundle size so cold-start initialization stays fast.
+2. **Keep functions single-purpose, small, and short-lived:** Each function has a platform timeout (five minutes in Roberts' 2018 article; AWS documentation read in 2026 allows up to 30 minutes for Lambda, so check the current limit) and scales along one trigger axis. Minimize dependency bundle size so cold-start initialization stays fast.
 3. **Separate business logic from the FaaS handler envelope:** Keep the provider-specific handler (`event, context`) as a thin **Driver Adapter** (`hexagonal-architecture`) that parses the trigger payload and calls pure, framework-free domain/use-case code. That enables fast local unit testing and painless migration to containers if traffic outgrows FaaS economics.
 4. **Guard downstream databases against connection exhaustion:** A burst of 500 concurrent FaaS containers opening raw PostgreSQL/MySQL connections will crash a relational database. Use HTTP/serverless data APIs, DynamoDB, or a connection proxy (RDS Proxy / PgBouncer) and cap function concurrency.
 5. **Every event-triggered function needs failure routing:** Triggers deliver events *at-least-once* (make handlers idempotent, `idempotency-fix`); configure Dead-Letter Queues (DLQs) or failure destinations, and bound retry counts so poison messages do not loop forever and explode the cloud bill (`database-cost-guard`).
@@ -71,3 +71,4 @@ One idea: build systems out of **managed third-party backend services (BaaS)** a
 
 - [BaaS, FaaS and trade-offs](references/baas-faas-tradeoffs.md) — when judging whether serverless fits and what limits apply
 - [AWS lens failure management](references/aws-lens-failure-management.md) — when designing DLQs, retries and stream error handling
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description or checking which skill owns a request.

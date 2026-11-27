@@ -1,13 +1,13 @@
 ---
 name: mvc-architecture
-description: Use when designing, reviewing, or refactoring a Model-View-Controller (MVC) application (server-rendered web MVC, rich-client MVC, or MVP/MVVM/Humble View derivatives) or untangling fat controllers, smart views, and anemic models. Gives the Separated Presentation rule, the responsibilities of Model, View, and Controller, testability via Humble View, and common mistakes.
+description: "Keep UI code from swallowing business rules: split a user-facing app into Model, View and Controller roles (Separated Presentation), choose a presentation model or presenter when screen state diverges from the domain, and make views humble so logic is unit-testable. Covers server-rendered web MVC, rich-client MVC, SPAs and the MVP/MVVM family, plus the fat-controller, smart-view and anemic-model failures. Not for backend structure beyond the UI boundary (see hexagonal-architecture, clean-architecture) or folder layout (package-by-feature-component). Use when designing, reviewing or refactoring an MVC-style app, untangling controllers or templates full of logic, or making a UI testable."
 ---
 
 # Model-View-Controller (MVC) Architecture
 
-One idea: enforce **Separated Presentation** — divide user-interface interaction into three distinct roles so domain state and business rules (**Model**) remain completely ignorant of how they are displayed (**View**) and how user input arrives (**Controller**). Sources and their claims: [references/sources.md](references/sources.md).
+One idea: enforce **Separated Presentation** — divide user-interface interaction into three distinct roles so domain state and business rules (**Model**) remain completely ignorant of how they are displayed (**View**) and how user input arrives (**Controller**). Sources, retrieved statuses and claims not adopted: [references/sources.md](references/sources.md).
 
-## Vocabulary (Fowler & Reenskaug roles)
+## Vocabulary (roles as in Fowler's and MDN's descriptions)
 
 | Term | Meaning | Test sentence |
 |---|---|---|
@@ -19,22 +19,22 @@ One idea: enforce **Separated Presentation** — divide user-interface interacti
 | Humble View | a view stripped of all decision logic so it barely needs testing, because an independently testable Presenter/Controller/ViewModel drives it | "if there is an `if` branch with business meaning, move it out of the View" |
 | Observer Synchronization | in rich-client MVC, the View observes the Model (or Presentation Model) and refreshes when state changes; in Web MVC, each HTTP request-response cycle re-renders or returns the updated View | "how the View learns the Model changed" |
 
-## Dependency and responsibility rules
+## 1. Dependency and responsibility rules
 
 1. **The Model knows neither View nor Controller:** The Model is the core of the application. It must never import controllers, views, HTML helpers, session objects, or UI components.
 2. **Controllers coordinate, Models decide:** A Controller parses input, checks transport-level concerns, invokes a method on the Model (or application service), and picks the View. Business rules, state transitions, and persistence invariants belong in the Model layer.
-3. **Views are read-only projections:** A View formats data handed to it. It must never execute database queries, mutate domain state, or compute business rules.
+3. **Views are read-only projections:** A View formats data handed to it. A display-only change (re-sorting a list) may go controller to view without touching the Model (MDN). It must never execute database queries, mutate domain state, or compute business rules.
 4. **Use a Presentation Model / ViewModel when screen state diverges from domain state:** Do not add UI-only flags (e.g., `isTabExpanded`, `redHighlightColor`) to Domain Model entities, and do not cram formatting logic into raw View templates. Put screen-specific adaptation in a ViewModel / Presenter.
 5. **Keep Views Humble:** GUI and template rendering are awkward and slow to test. Push all branching, formatting, and state coordination into a plain-code object (Model, ViewModel, or Presenter) that runs in fast unit tests without a browser or template engine.
 
-## Building order
+## 2. Building order
 
 1. **Model first (test-first):** Build and unit-test the Domain Model (data invariants and state transitions) with zero UI or HTTP dependencies.
 2. **Define the View contract / ViewModel:** Specify the exact data shape the screen or response needs, separate from internal persistence tables.
 3. **Write the thin Controller:** Map the incoming route/action and validated input parameters to a call on the Model, then map the result to the View/ViewModel.
 4. **Implement the Humble View:** Bind the template or UI component strictly to the ViewModel properties with minimal display-only conditionals.
 
-## Tests per role
+## 3. Tests per role
 
 | Role | Test | Uses |
 |---|---|---|
@@ -43,7 +43,7 @@ One idea: enforce **Separated Presentation** — divide user-interface interacti
 | Controller | route / action test | mocked or in-memory Model (verifies status codes, redirects, parameter binding) |
 | Humble View | snapshot or minimal end-to-end smoke test | rendered HTML/DOM on 1-2 representative flows |
 
-## When it earns its keep
+## 4. When it earns its keep
 
 - **Worth it:** Server-rendered web applications, REST/HTML hybrid apps, and desktop/client UIs where presentation changes frequently while domain rules must remain stable and unit-testable.
 - **Not worth it:** Pure headless data pipelines with no presentation variation, or deeply interactive client SPAs where fine-grained widget state and domain rules outgrow classic MVC (evolve the UI side to MVVM / Flux / Component-Store and the backend side to `hexagonal-architecture` or `clean-architecture`).
@@ -70,3 +70,5 @@ One idea: enforce **Separated Presentation** — divide user-interface interacti
 - [MVC lineage and Separated Presentation](references/mvc-lineage-and-separated-presentation.md) — read when checking the model/view/controller dependency direction or comparing GUI architecture styles.
 - [Web MVC, SPAs and the two strands](references/web-mvc-spas-and-two-strands.md) — read when applying MVC to server-rendered pages or single-page apps.
 - [MVP, Humble View and testability](references/mvp-humble-view-and-testability.md) — read when making a UI testable or choosing between presenter and presentation-model variants.
+- [references/trigger-evals.md](references/trigger-evals.md): should-trigger and near-miss prompts. Read when tuning the description.
+- [references/sources.md](references/sources.md): URLs, retrieved statuses, reading limits, claims not adopted.

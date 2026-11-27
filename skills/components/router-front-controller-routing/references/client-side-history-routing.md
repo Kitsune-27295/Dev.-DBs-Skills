@@ -1,6 +1,6 @@
 # Client-Side Routing with the History API
 
-Sources: https://developer.mozilla.org/en-us/docs/Web/API/History_API/Working_with_the_History_API · Last verified 2026-11-23
+Sources: https://developer.mozilla.org/en-us/docs/Web/API/History_API/Working_with_the_History_API · Last verified 2026-11-27
 
 ## Problem
 
@@ -11,7 +11,7 @@ The `History` interface has navigation methods (`back`, `forward`, `go`) and mod
 ## The three calls
 
 `history.pushState(state, "", url)`
-- `state`: any serializable object stored with the entry; delivered as `event.state`.
+- `state`: any serializable object stored with the entry; delivered as `event.state`. The guide does not say how it is serialized (structured clone is documented in MDN's History reference, not read here).
 - title: unused; always pass `""`.
 - `url`: shown in the address bar and used as `Referer` for the page's later requests; must be same-origin.
 
@@ -44,8 +44,8 @@ The guide's example fetches `creatures/<name>.json`, renders it, then pushes sta
 - Not serializable state (functions, DOM nodes) fails.
 - Do not render from the URL alone if the state is richer (inferred): decide whether state is the source of truth or the URL is, and re-fetch from the URL when `event.state` is null.
 - Server must serve the app shell for deep-link URLs (inferred; not in the guide).
-- Calling `pushState` does not trigger `popstate`; you render yourself.
-- Not covered by the MDN page: scroll restoration, detailed back/forward/go behavior.
+- `popstate` fires on navigation to an existing entry (Back, Forward); the guide's click handler renders directly after `pushState`, so render yourself.
+- Not covered by the MDN page: scroll restoration, the Navigation API, detailed back/forward/go behavior.
 
 ## Decision rules
 

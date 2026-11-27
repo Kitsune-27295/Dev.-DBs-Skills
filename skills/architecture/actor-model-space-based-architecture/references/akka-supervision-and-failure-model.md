@@ -1,6 +1,6 @@
 # Akka Actor Model: Messaging, Supervision and Failure Categories
 
-Sources: https://doc.akka.io/libraries/guide/concepts/akka-actor.html · Last verified 2026-11-23
+Sources: https://doc.akka.io/libraries/guide/concepts/akka-actor.html · https://doc.akka.io/libraries/akka-core/current/typed/fault-tolerance.html · https://doc.akka.io/libraries/akka-core/current/typed/mailboxes.html · Last verified 2026-11-27
 
 ## The problem the model answers
 
@@ -43,9 +43,18 @@ Parent supervisor:
   on child crash(CorruptState)     -> stop child, alert
 ```
 
-## What the page does not cover
+## Strategies and watching (Akka Typed fault-tolerance page)
 
-It does not discuss mailbox mechanics, backpressure, delivery guarantees, benchmarks or concrete APIs. Anything about bounded mailboxes in the skill comes from general practice, not this page.
+- Three strategies are described: resume (ignore the failure, take the next message), restart (reinstall the original behavior) and stop (the default when an exception is thrown and no strategy is defined). The page points to `SupervisorStrategy` for the full list and does not mention an escalate directive.
+- A parent calls `watch` on a child to learn when it ends. A failed child produces `ChildFailed` (carries the cause, extends `Terminated`). An unhandled `Terminated` makes the parent fail with a death-pact exception that its own supervisor handles. By default only the immediate parent sees the original exception; rethrowing passes it up.
+
+## Mailboxes (Akka Typed mailboxes page)
+
+Mailboxes are unbounded by default. A bounded mailbox can be selected per actor or by configuration; the non-blocking kind sends overflow to dead letters, while other bounded kinds block the sender only when a push timeout is non-zero.
+
+## What the pages do not cover
+
+Delivery guarantees, cross-sender ordering, benchmarks and concrete tuning. The concept guide itself does not mention mailboxes, backpressure, resume or escalate.
 
 ## How an agent should apply this
 
@@ -53,4 +62,5 @@ It does not discuss mailbox mechanics, backpressure, delivery guarantees, benchm
 - Give every actor a clear parent and an explicit restart/stop policy per failure type.
 - Never let callers depend on a restart being visible; keep references stable across restarts.
 - Model replies as messages; do not write code that blocks a thread waiting for an actor.
+- Pick a bounded mailbox or backpressure for any actor that a faster producer can feed.
 - Do not claim guarantees (ordering across senders, delivery) that this source does not make.

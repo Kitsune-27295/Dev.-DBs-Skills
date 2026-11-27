@@ -1,6 +1,6 @@
 # Front Controller and Gateway Routing
 
-Sources: https://martinfowler.com/eaaCatalog/frontController.html, https://learn.microsoft.com/en-us/azure/architecture/patterns/gateway-routing · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaCatalog/frontController.html, https://learn.microsoft.com/en-us/azure/architecture/patterns/gateway-routing · Last verified 2026-11-27 (Fowler page re-read; Microsoft routing page ms.date 2022-08-29, updated 2026-11-19)
 
 ## Front Controller: what it is
 
@@ -41,7 +41,7 @@ A gateway sits before applications, services or deployments and uses Layer-7 rou
 | Multiple instances | Client updated on each scale event | Registration complexity is hidden in the gateway |
 | Multiple versions (blue/green) | Client updated for traffic shifts | Run versions in parallel, shift or revert via gateway config |
 
-Global vs regional: the page contrasts Azure Front Door (global) with Application Gateway (regional). Use global when services span regions; use regional when you need fine control over balancing, for example between VMs.
+Global vs regional: the page contrasts Azure Front Door (global) with Application Gateway (regional). Use global when services span regions; use regional when you need fine control over balancing, for example between VMs. The page also lists routing away from regions with high carbon emissions as a use case, and says the gateway is the public endpoint, so limit public access to backends.
 
 Example shape (adapted from the page's Nginx sample): `location /app1 { proxy_pass http://10.0.3.10:80; }` repeated per path prefix.
 

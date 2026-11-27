@@ -1,69 +1,78 @@
 ---
 name: package-by-feature-component
-description: "Organize or refactor folder, package and module structure: replace horizontal Package by Layer (controllers/, services/, repositories/) with Package by Feature or Simon Brown's Package by Component, apply the Common Closure Principle (CCP) and enforce package-private or internal encapsulation. Use when a folder tree is grouped by technical layer and changes keep touching many folders. Not for one-file-per-request slices with CQRS and no shared services (use vertical-slice-architecture), naming the repo so it announces its domain (use screaming-architecture) or monorepo root layout (use repository-root-monorepo-architecture)."
+description: "Organize or refactor folder, package and module structure so a change opens one place: replace horizontal Package by Layer (controllers/, services/, repositories/) with Package by Feature or Package by Component (one public interface per business capability, implementation hidden), and choose and enforce package-private or internal visibility with architecture tests. Use when a folder tree is grouped by technical layer and changes keep touching many folders, or when choosing between feature folders and components. Not for per-request slices with CQRS (use vertical-slice-architecture), repo names that announce the domain (use screaming-architecture), repository root layout (use repository-root-monorepo-architecture) or the Common Closure Principle itself (use single-responsibility-cohesion)."
 ---
 
 # Package by Feature & Package by Component (vs. Package by Layer)
 
-One idea: stop grouping files by technical stereotype (`controllers/`, `services/`, `repositories/`, `models/`) where every business change touches every folder and every class must be `public`; instead, group code by **what changes together (Common Closure Principle)** using **Package by Feature** (one vertical slice / feature per folder) or **Package by Component** (cohesive business capability + its persistence encapsulated behind one public facade). Sources and their claims: [references/sources.md](references/sources.md).
+One idea: stop grouping files by technical stereotype (`controllers/`, `services/`, `repositories/`, `models/`), where every business change touches every folder and every type must be `public`; group by what changes together instead, either as **Package by Feature** (one folder per feature) or **Package by Component** (one coarse business capability with a single public interface and hidden internals). Sources and what was read: [references/sources.md](references/sources.md).
 
-## Vocabulary & The Three Packaging Styles (Simon Brown & Milan Jovanović)
+> **Scope boundary:** the Common Closure Principle (why co-changing code belongs together) is owned by `single-responsibility-cohesion`. Per-request slices and CQRS: `vertical-slice-architecture`. Names that announce the domain: `screaming-architecture`. Root layout and catch-all folders at repo level: `repository-root-monorepo-architecture`. Dependency direction: `clean-architecture`. This skill owns the choice between layer, feature and component, and how to enforce the boundary.
 
-| Packaging Style | Top-Level Folder Structure | Visibility of Internal Classes | Best Fit |
+## 1. The three packaging styles
+
+| Style | Top-level structure | Visibility of internals | Best fit |
 |---|---|---|---|
-| **1. Package by Layer** (Traditional Horizontal) | `controllers/`, `services/`, `repositories/`, `models/` | Almost everything must be **`public`** so layers can call each other across folders/projects | Small CRUD apps where technical layers are tiny and rarely change independently |
-| **2. Package by Feature** (Vertical Feature Folders) | `orders/place-order/`, `orders/cancel-order/`, `policies/renew-policy/` (each holds its controller/endpoint, handler, validator, DTO, and repo/query) | Everything inside a feature folder is **`internal` / package-private** except the endpoint/request entry point | Feature-rich applications, APIs, and `vertical-slice-architecture` systems |
-| **3. Package by Component** (Simon Brown's Hybrid) | `orders/` (owns `OrdersComponent` public service + internal domain + internal data access), kept separate from a thin top-level `web/` UI/API driver | Web/UI calls **only** the component's public interface; the component's entities, services, and DB repositories are **`internal` / package-private** | Medium-to-large modular systems and `modular-monolith-architecture` where multiple UIs/drivers share cohesive domain components |
+| **Package by Layer** | `Web`, `Business`, `Data` (projects or folders) | Types must be `public` so layers can call each other | Avoid as the top-level split |
+| **Package by Feature** | `orders/place-order/`, `policies/renew-policy/`, each holding command, handler, validator, repository, view model | Mostly feature-local; share little across features | Many small, independent features with little shared code |
+| **Package by Component** | `orders/` exposes one public interface; services, repositories and entities stay internal; delivery (web, CLI) is separate and calls only the interface | Only the component interface is public | Clear business capabilities needing encapsulation or later extraction |
 
-## Core architectural rules and invariants
+The author whose article this skill is built on (Jovanovic) recommends: start with components, and organize features inside each component. A component resembles a module in a modular monolith (`modular-monolith-architecture`).
 
-1. **Apply the Common Closure Principle (CCP):** *"Gather into packages those classes that change for the same reasons and at the same times."* When a product manager asks for a change to **Policy Renewal**, you should open `features/policies/renew/` (or the `policies/` component), not hunt across 4 projects and 12 horizontal folders.
-2. **Use Access Modifiers (`internal`, package-private, unexported) to enforce boundaries at compile time:**
-   - The fatal flaw of **Package by Layer** is that placing `PolicyService` in `services/` and `PolicyRepository` in `repositories/` forces `PolicyRepository` to be `public` — meaning *any* controller or unrelated service in the entire codebase can import and bypass it.
-   - When you **Package by Feature** or **Package by Component**, co-locating the business logic and data access inside the same package allows you to mark repositories, internal domain helpers, and DB entities **`internal` / package-private** so unauthorized cross-feature coupling is a **compiler error**, not just a code-review guideline.
-3. **Layers are a dependency-direction concept, not a folder mandate:** As Jovanović highlights ("Clean Architecture: The Missing Chapter"), Uncle Bob's concentric circles (`clean-architecture`) define **which direction dependencies point**, not a requirement to scatter one feature across 4 separate `.csproj` / npm / Java packages. You can enforce inward dependency rules *inside* a feature or component package while keeping all files for that feature together.
-4. **Choose Package by Feature vs. Package by Component based on UI/Driver coupling:**
-   - Choose **Package by Feature** when the HTTP endpoint / UI route is tightly aligned 1:1 with the business use case (the feature folder contains the endpoint + handler + data access).
-   - Choose **Package by Component** (Simon Brown) when the User Interface / HTTP delivery mechanism is separate from a coarse-grained business component (the component bundles business logic + persistence behind one public interface, and multiple drivers like Web, CLI, or GraphQL call that component).
-5. **Delete catch-all horizontal dumping grounds (`utils/`, `helpers/`, `common/`, `shared/models/`):** If a class is used by only one feature, move it into that feature's folder and make it private. If it is genuinely shared by 3+ features, put it in a specifically named domain/technical package (e.g., `money/`, `clock/`, `auth-context/`).
+## 2. Why Package by Layer fails
 
-## Refactoring order (From Package by Layer to Package by Feature/Component)
+1. One feature spans several projects, so a change touches all of them (the co-change problem owned by `single-responsibility-cohesion`).
+2. `public` types let any class bypass a layer: a controller can call a repository directly, which hides dependencies.
+3. The folder tree shows plumbing, not what the application does.
+4. Layers are a dependency-direction idea (`clean-architecture`), not a mandate to scatter one feature across projects.
 
-1. **Inventory the business capabilities / features:** List the actual domain nouns and use-case verbs hidden inside `controllers/`, `services/`, and `repositories/`.
-2. **Create top-level domain/feature folders (`src/features/<domain>/<use-case>` or `src/modules/<component>`):** Name folders after business capabilities (`orders/`, `billing/`, `inventory/`), never after frameworks or technical stereotypes (`screaming-architecture`).
-3. **Move one vertical slice at a time with its tests (`layered-refactor`):** Colocate the endpoint/controller, use-case handler, validator, DTOs, and persistence queries for that feature into its folder.
-4. **Tighten visibility immediately after moving:** Change `public` repositories, entities, and internal helpers to `internal` / package-private / non-exported so only the feature entry point or component interface remains public.
-5. **Add an import-boundary check in CI:** Forbid Feature A from importing internal files of Feature B (`eslint-plugin-boundaries`, `dependency-cruiser`, `ArchUnit`, `NetArchTest`).
+## 3. Choose feature or component
 
-## Testing strategy
+- Choose **feature** folders when the endpoint maps almost 1:1 to a use case and features rarely share code.
+- Choose **component** when a business capability has several entry points or needs a hard boundary; other code reaches its data only through the component interface.
+- Default for a new codebase: components with feature folders inside (the article's recommendation, a judgment, not a rule).
+- A tiny tool with 2 or 3 files stays flat (`repository-root-monorepo-architecture`).
 
-| Packaging Approach | Primary Test Scope | Benefit |
-|---|---|---|
-| **Package by Component** | Component-level black-box test through the component's public interface (against a real test DB or in-memory adapter) | Internal classes (`internal` services & repositories) can be refactored freely without breaking tests coupled to private implementation details |
-| **Package by Feature** | Vertical slice test (Request/Endpoint $\to$ Response + DB state assertion) co-located inside the feature folder (`place-order.test.ts`) | Deleting or changing a feature deletes/updates its test in the exact same folder |
+## 4. Enforce the boundary (escalate only on failure)
 
-## When it earns its keep
+1. **Visibility first:** make implementations `internal`/package-private/unexported (add `sealed` in C#), expose only the component interface. Language nuance: C# `internal` is scoped to an assembly, so inside one project it cannot stop every violation; Java package-private works per package.
+2. **Architecture tests:** fail the build on a forbidden dependency (for example controllers may depend only on component interfaces). Tools and the general idea live with `clean-architecture` and `layered-n-tier-architecture`; add the test in the same change that introduces the component.
+3. **Separate assembly/module per component:** strongest, but adds build complexity, slower IDE navigation and more deployable files; use only after a violation the first two steps could not stop.
 
-- **Worth it:** Almost any application with more than 3-4 domain concepts or more than 10 endpoints. Package by Feature and Package by Component scale cleanly from a single deployable monolith to a `modular-monolith-architecture` and allow extracting a microservice later by simply moving one self-contained folder.
-- **Not worth it:** A tiny single-purpose microservice or CLI utility with only 2-3 files total (where a flat folder with no subdirectories is idiomatic; see `repository-root-monorepo-architecture`).
+Never widen visibility to make a test compile; test through the public interface. Mantra from the source: pragmatism beats purism. Detail: [references/enforcing-component-encapsulation.md](references/enforcing-component-encapsulation.md).
+
+## 5. Refactoring order
+
+1. Inventory the domain nouns and use-case verbs hidden in the layer folders.
+2. Create one folder per capability, named for the business, not a framework.
+3. Move one vertical slice at a time with its tests (`layered-refactor`): endpoint, handler, validator, DTOs, queries.
+4. Tighten visibility right after each move.
+5. Add the architecture test, then repeat.
+
+## 6. Testing
+
+- **Component:** black-box tests through the public interface, against a test database or in-memory adapter; internals refactor freely.
+- **Feature:** a slice test (request to response plus state) co-located with the feature folder.
 
 ## Mistakes to catch
 
-- **"Fake Package by Feature" (Horizontal layers at the root, feature folders only inside `controllers/`):** Putting `controllers/orders/` at the top while still keeping a monolithic shared `services/` and `models/` folder where everything is `public`. Move the whole vertical stack into `orders/`.
-- **Leaving everything `public` / exported inside a feature folder:** Moving files into `features/orders/` but exporting the internal repository and DB row helpers from `index.ts` so `features/shipping/` still calls `OrderRepository` directly.
-- **Cross-feature spaghetti imports:** `features/checkout/` importing private DTOs or handlers from `features/cart/`. Communicate across features only via a narrow public component facade or in-process domain events.
+- **Fake package by feature:** `controllers/orders/` on top while `services/` and `models/` stay shared and public.
+- **Everything still exported:** files moved into `orders/` but the repository re-exported so `shipping/` calls it directly.
+- **Cross-feature imports:** `checkout/` importing private types from `cart/`; go through the owner's interface instead.
+- **A catch-all folder reborn:** `common/` or `shared/` refilled; a type used by one feature belongs in it, a truly shared one gets a specific name.
 
 ## Quick Decision Checklist
 
 - [ ] Is code grouped by what changes together, not by technical stereotype?
-- [ ] Would a change to one feature open a single folder?
-- [ ] Did I choose Package by Feature or by Component based on UI/driver coupling?
-- [ ] Are repositories and internal helpers private to their package?
-- [ ] Are catch-all folders (utils, helpers, common) removed or pushed into their feature?
-- [ ] Do features talk only through a narrow public facade or domain events?
-- [ ] Is there an import-boundary check in CI?
+- [ ] Would a typical change open one folder?
+- [ ] Did I choose feature or component on purpose (section 3)?
+- [ ] Are implementations hidden and only the component interface public?
+- [ ] Does a build-failing check guard the boundary?
+- [ ] Do features reach each other only through a public interface?
 
 ## Deep references
 
-- [Layer vs feature vs component trade-offs](references/layer-feature-component-trade-offs.md) — choosing the top-level packaging scheme
-- [Enforcing component encapsulation](references/enforcing-component-encapsulation.md) — internal, assemblies and architecture tests ladder
+- [Layer vs feature vs component trade-offs](references/layer-feature-component-trade-offs.md) - choosing the top-level packaging scheme
+- [Enforcing component encapsulation](references/enforcing-component-encapsulation.md) - visibility, assemblies and architecture tests ladder
+- [Trigger evals](references/trigger-evals.md) - should-trigger and near-miss prompts for the description
+- [Sources](references/sources.md) - retrieved statuses, reading limits, claims not adopted

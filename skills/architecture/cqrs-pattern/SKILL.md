@@ -1,6 +1,6 @@
 ---
 name: cqrs-pattern
-description: Use when evaluating, designing, or reviewing Command Query Responsibility Segregation (CQRS) or Command Query Separation (CQS) in a Bounded Context — splitting write models (Commands) from read models (Queries), handling eventual consistency between separate read/write stores, or avoiding unnecessary CQRS over-engineering on simple CRUD domains. Gives CQS vs CQRS rules, 3 levels of separation, sync/async projection rules, and common mistakes.
+description: "Decide whether and how to split the write model from the read model: Command Query Separation (CQS) at method level, CQRS in one Bounded Context, single-store versus separate-store read models, projection lag in the UI, and the Fowler cautions against CQRS on plain CRUD. Covers task-based commands, thin query projections, a four-rung ladder (CQS, reporting database, one store, two stores) and review mistakes. Not for persisting events (`event-sourcing-pattern`) or reliable publishing and distributed transactions (`saga-transactional-outbox-pattern`). Use when asked to evaluate, design or review CQRS or CQS, or when a CRUD model strains under read/write asymmetry."
 ---
 
 # CQRS (Command Query Responsibility Segregation) Pattern
@@ -15,16 +15,16 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 | CQRS | Greg Young's architectural pattern: using completely separate object/data models for Commands (writes) and Queries (reads) | "two distinct models instead of one shared CRUD entity graph" |
 | Task-Based Command | an explicit business intention object (e.g., `BookHotelRoomCommand`, not `UpdateRoomStatusDto`) validated and processed by a Command Handler | "models why the user is changing state, not a raw table row update" |
 | Read Model / Projection | a denormalized DTO, SQL view, or dedicated read store tailored 1:1 to a UI screen or query consumer | "zero domain logic; reads bypass domain aggregates entirely" |
-| Single-Store CQRS | separate Command and Query code models (e.g., rich DDD ORM aggregates for writes, raw SQL/Dapper/views for reads) over the **same** relational database | "strong ACID consistency with zero projection lag or sync buses" |
+| Single-Store CQRS | separate Command and Query code models (e.g., rich DDD ORM aggregates for writes, raw SQL/Dapper/views for reads) over the **same** relational database | "no propagation lag, because both models read the same committed data; Azure calls this the foundational level" |
 | Dual-Store CQRS | Command store and Read store are physically separate databases synchronized asynchronously via domain events | "independent read/write scaling, but introduces eventual consistency" |
 | Reporting Database | offloading only heavy analytical/reporting queries to a separate replica while keeping normal app reads and writes on a unified model | "simpler alternative when only a few complex reports hurt performance" |
 
 ## Core architectural rules and invariants
 
-1. **Commands mutate state and return no domain payload; Queries never mutate state:** A Command may only return an acknowledgment (`void`, `202 Accepted`, newly created ID/version, or validation errors). A Query must never alter observable state, write audit mutations, or trigger domain side effects.
+1. **Commands mutate state and return no domain payload; Queries never mutate state:** Meyer's CQS is strict, and Fowler follows it only where practical (he keeps stack `pop` as a useful idiom). For CQRS commands, returning just an acknowledgment, new ID or version, or validation errors is common practice (an inference, not stated by the sources). A Query must never alter observable state or trigger domain side effects.
 2. **Apply CQRS per Bounded Context, never across the entire system by default:** Most submodules of an application are simple CRUD and should stay CRUD. Use CQRS only in the specific Bounded Context that has severe read/write skew or complex collaborative domain invariants.
 3. **Never route Queries through Domain Aggregates:** If your Query handler loads a rich DDD Aggregate from a Repository just to map it to a DTO, you have paid the cost of CQRS without getting the benefit. Queries should project directly from the database (views, thin SQL, or materialized read tables) into the response DTO.
-4. **Prefer Single-Store CQRS before Dual-Store CQRS:** Start by separating the write model (domain aggregates + transactions) and read model (direct SQL projections or DB views) over the **same transactional database**. Only split into physically separate read and write databases when scaling or lock-contention measurements prove a single database cannot handle the load.
+4. **Prefer Single-Store CQRS before Dual-Store CQRS (this skill's ladder; Azure calls one store the foundational level and separate stores the advanced one):** Start by separating the write model (domain aggregates + transactions) and read model (direct SQL projections or DB views) over the **same transactional database**. Only split into physically separate read and write databases when scaling or lock-contention measurements prove a single database cannot handle the load.
 5. **Handle eventual consistency explicitly in Dual-Store CQRS:** When read projections update asynchronously via events, a user who submits a Command and immediately queries the Read Store may see stale data. Design the UI/API to handle this (e.g., return the new resource ID/version from the Command, use optimistic UI updates, or pass a version token so the read endpoint knows if the projection has caught up).
 6. **CQRS does not require Event Sourcing:** You can (and often should) use CQRS with standard relational state storage on the write side. Combine CQRS with `event-sourcing-pattern` only when an immutable event log is independently justified.
 
@@ -33,7 +33,7 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 1. **Enforce method-level CQS first:** Separate mutating methods from read-only methods across services and repositories.
 2. **Design task-based Commands and rich Write Aggregates:** Model writes around business intent (`PlaceOrder`, `CancelBooking`) that enforce invariants inside a transaction (`transaction-fix`, `race-condition-fix`).
 3. **Build thin Query projections over the same DB (Single-Store CQRS):** Write fast, read-only SQL queries or database views returning screen-shaped DTOs with proper indexes (`query-performance`).
-4. **Promote to Materialized Read Views (Dual-Store) only if required:** If read load or multi-table joins still bottleneck the write store, emit domain events via a Transactional Outbox to update a dedicated read store idempotently.
+4. **Promote to Materialized Read Views (Dual-Store) only if required:** If read load or multi-table joins still bottleneck the write store, emit domain events via a Transactional Outbox to update a dedicated read store idempotently (mechanics owned by `saga-transactional-outbox-pattern`).
 
 ## Testing strategy
 
@@ -46,8 +46,8 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 
 ## When it earns its keep
 
-- **Worth it:** Collaborative domains where multiple actors concurrently act on the same data with complex business validation, workloads with extreme read-to-write ratio asymmetry (e.g., 100:1 reads vs. writes needing independent scaling), or systems already using `event-sourcing-pattern` (which cannot easily answer ad-hoc queries without a materialized read projection).
-- **Not worth it:** Simple CRUD applications where the data read is virtually identical to the data written (Fowler warns that applying CQRS to a CRUD domain adds massive complexity, drags productivity, and puts projects in serious difficulty).
+- **Worth it:** Collaborative domains where multiple actors concurrently act on the same data with complex business validation, workloads with a large read/write disparity where each side must scale or be tuned independently (Fowler, Azure), or systems already using `event-sourcing-pattern` (which cannot easily answer ad-hoc queries without a materialized read projection).
+- **Not worth it:** Simple CRUD applications where the data read is virtually identical to the data written (Fowler: for most systems CQRS adds risky complexity, drags productivity and can put a project in serious difficulty; he also suggests a reporting database when only a few queries are heavy).
 
 ## Mistakes to catch
 
@@ -69,4 +69,6 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 ## Deep references
 
 - [From CQS to CQRS: Fowler cautions](references/cqs-to-cqrs-fowler-cautions.md) — before recommending CQRS at all
-- [Azure CQRS stores and Event Sourcing](references/azure-cqrs-stores-and-event-sourcing.md) — when splitting stores or adding outbox
+- [Azure CQRS stores and Event Sourcing](references/azure-cqrs-stores-and-event-sourcing.md) — when splitting stores or combining with events
+- [Trigger evals](references/trigger-evals.md) — sample prompts that should and should not load this skill
+- [Sources](references/sources.md) — retrieved statuses, reading limits, claims not adopted

@@ -1,12 +1,12 @@
 # Transactional Outbox: Relay Mechanics and the Cosmos DB Implementation
 
-Sources: https://microservices.io/patterns/data/transactional-outbox.html · https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos · Last verified 2026-11-23
+Sources: https://microservices.io/patterns/data/transactional-outbox.html · https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos · Last verified 2026-11-27 (Azure page dated 2026-02-23)
 
 ## The problem in one line
-Updating the database and publishing to a broker are two writes to two systems. Publishing mid-transaction may precede a rollback; publishing after commit may never happen if the process crashes. Order across service instances must also hold (E1 before E2 for the same aggregate).
+Updating the database and publishing to a broker are two writes to two systems. Publishing mid-transaction may precede a rollback; publishing after commit may never happen if the process crashes. Order must also hold: Richardson says messages go out in the order the application sent them (E1 before E2).
 
 ## Solution parts (Richardson)
-Sender service, database (business tables plus outbox), outbox (a table in SQL; an outbox attribute on the record in NoSQL), and a message relay. Messages are sent if and only if the transaction commits, and in application order. Drawbacks: easy to forget the outbox write; the relay can publish twice (crash after publish, before marking done), so consumers must be idempotent (e.g. track processed message ids). Relay options: Polling Publisher, Transaction Log Tailing.
+Sender service, database (business tables plus outbox), outbox (a table in SQL; an outbox attribute on the record in NoSQL), and a message relay. Messages are sent if and only if the transaction commits, and in application order. Drawbacks: easy to forget the outbox write; the relay can publish twice (crash after publish, before marking done), so consumers must be idempotent (e.g. track processed message ids). Relay options named by Richardson: Polling Publisher and Transaction Log Tailing (the page only links them; the table below is this skill's inference).
 
 ## Cosmos DB variant (Microsoft)
 - Atomicity comes from a transactional batch, which works only within one logical partition of one container. Business object and event documents therefore share the partition key and container; a `type` field (`contact` vs `domainEvent`) tells them apart.

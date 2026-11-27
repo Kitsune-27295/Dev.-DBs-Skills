@@ -1,6 +1,6 @@
 ---
 name: rate-limiter-throttler
-description: "Design and review admission control: rate limiting vs throttling vs load shedding, token bucket, leaky bucket, fixed and sliding window algorithms, per-tenant/per-user limits, concurrency limits, request priorities, 429/503 with Retry-After, distributed counters, client-side pacing against throttled APIs, and Stripe-style layered limiters with fail-open, kill switches and dark launches. Use when protecting an API or dependency from overload, adding quotas, choosing a limiting algorithm, shedding low-priority traffic, or pacing batch calls to a throttled service."
+description: "Design and review admission control: rate limiting vs throttling vs load shedding, token bucket, leaky bucket, fixed and sliding windows, per-tenant limits, concurrency limits, priorities, 429/503 with Retry-After, distributed counters, client-side pacing against throttled APIs, and Stripe-style layered limiters with fail-open, kill switches and dark launches. Not for where limiters are mounted (`middleware-interceptor-chain`, `api-gateway-reverse-proxy`), retry/backoff by callers (`circuit-breaker-retry-telemetry`) or queue workers (`background-worker-job-scheduler`). Use when protecting an API or dependency from overload, adding quotas, choosing a limiting algorithm, shedding low-priority traffic, or pacing batch calls to a throttled service."
 ---
 
 # Rate Limiter & Throttler (Admission Control)
@@ -56,8 +56,8 @@ Build in this order; each layer catches what the previous cannot:
 
 1. **Request rate limiter** (per user, token bucket, burst allowance, identical in test and live). Start here.
 2. **Concurrent requests limiter** (per user in-flight cap, e.g. 20) for CPU-heavy endpoints and retrying clients.
-3. **Fleet usage load shedder**: split critical vs non-critical methods, reserve a share of fleet capacity for critical (e.g. 20%), reject non-critical beyond the rest with 503.
-4. **Worker utilization load shedder**: on an overloaded machine shed lowest priority first (test traffic, then GETs, then POSTs; critical last), restore **slowly** to avoid flapping.
+3. **Fleet usage load shedder**: split critical vs non-critical methods, reserve a share of fleet capacity for critical (the article's example reservation is a hypothetical 20%), reject non-critical beyond the rest with 503.
+4. **Worker utilization load shedder**: on an overloaded machine shed lowest priority first (the article names four classes and says test-mode traffic goes first; derive the rest of your order from business impact), restore **slowly** to avoid flapping.
 
 Safety for all four: **fail open** (limiter or Redis bug must not break the API), **kill switch** (feature flag) and alerts on trigger rate, **dark launch** (observe what it would block before enforcing), incremental rollout. Details: [references/stripe-limiters-and-load-shedding.md](references/stripe-limiters-and-load-shedding.md).
 

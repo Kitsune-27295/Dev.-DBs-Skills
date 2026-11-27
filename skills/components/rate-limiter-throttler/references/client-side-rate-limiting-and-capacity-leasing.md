@@ -1,6 +1,6 @@
 # Client-Side Rate Limiting and Capacity Leasing
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/rate-limiting-pattern · https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/rate-limiting-pattern · https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling · Last verified 2026-11-27
 
 ## Why a caller needs its own limiter
 

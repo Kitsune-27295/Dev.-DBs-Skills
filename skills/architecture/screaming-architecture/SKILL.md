@@ -1,64 +1,60 @@
 ---
 name: screaming-architecture
-description: Use when designing or auditing a repository's top-level directory structure, package names, and use-case organization according to Robert C. Martin's (Uncle Bob's) Screaming Architecture principle — making the codebase scream its business domain and use cases ("Healthcare System", "Accounting Ledger", "Second Brain Vault") rather than its frameworks ("Rails", "Spring/Hibernate", "Next.js/Prisma").
+description: "Audit or design a repository's top-level folders, package names and use-case names so a newcomer can tell the business domain and its use cases at a glance, instead of the framework (controllers/, models/, prisma/). Gives the first-impression test, use-case naming in business verbs, keeping frameworks and delivery mechanisms at the edge, and testing use cases without server or database, following Robert C. Martin's 2011 post and Ivar Jacobson's use-case-driven view. Use when naming or restructuring top-level source folders, reviewing a framework-generated app tree, or asked what a codebase communicates. Not for dependency direction (use clean-architecture), choosing layer vs feature vs component packaging (use package-by-feature-component) or repository root layout (use repository-root-monorepo-architecture)."
 ---
 
 # Screaming Architecture
 
-One idea: just as the blueprints of a library scream **"Library"** (reading rooms, check-in desks, book galleries) and the blueprints of a house scream **"House"** (living room, kitchen, bedrooms) rather than **"Bricks and Mortar"**, the top-level directory structure and primary types of a software repository must **scream the business domain and use cases of the system** — never the web framework, ORM, or delivery mechanism. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: the top level of a repository should announce what the system is for (a clinic, a ledger, a vault), the way a building's plans announce a house or a library, not which framework or database it uses. Sources and what was read: [references/sources.md](references/sources.md).
 
-## Vocabulary (Robert C. Martin & Ivar Jacobson)
+> **Scope boundary:** the Dependency Rule and boundary crossing belong to `clean-architecture`; ports and adapters to `hexagonal-architecture`; how to group code (feature, component, layer) to `package-by-feature-component`; repo root and monorepo layout to `repository-root-monorepo-architecture`. This skill owns what the top-level names communicate.
 
-| Term | Meaning | Test sentence |
-|---|---|---|
-| Screaming Architecture | a top-level codebase layout whose folder and module names immediately tell a new engineer what business problem the system solves and what use cases it supports | "looking at `src/`, do I see `claims/`, `underwriting/`, `policies/` — or do I see `controllers/`, `prisma/`, `redux/`?" |
-| Use-Case Driven Structure | Ivar Jacobson's principle (*Object-Oriented Software Engineering*): software architecture exists to support the **use cases** of the system, independent of delivery details | "can a newcomer read all the use cases of the system without knowing whether it ships over HTTP, CLI, or MCP?" |
-| Delivery Mechanism | the transport channel through which use cases are invoked (Web/HTTP, Console/CLI, thick client, MCP tool server, background queue) | "the Web is a delivery detail, not an architecture" |
-| Framework at Arm's Length | treating frameworks (Spring, Rails, Next.js, ASP.NET, EF Core, Prisma) as peripheral tools plugged into outer adapters rather than letting them dictate the core folder tree and base classes | "use the framework; don't marry it or let it take over your domain model" |
+## 1. What the source claims (Martin, 2011)
 
-## Core architectural rules and invariants
+| Claim | Meaning |
+|---|---|
+| Plans reveal purpose | A software system should reveal its business domain, not its technologies |
+| Use-case driven | Following Ivar Jacobson, architecture is a structure that supports the system's use cases |
+| Frameworks at arm's length | "Frameworks are tools to be used, not architectures to be conformed to"; view them skeptically |
+| The web is a delivery detail | The same system could be console, web, thick client or service with little change |
+| Testable | Use cases unit-test without a web server or database; business objects are plain objects |
 
-1. **The First-Impression Litmus Test:** When a new developer opens the top-level source directory (`src/` or module root), their immediate reaction must be: *"Oh, this is a `<Business Domain>` system (e.g., Health-Care System, Order Fulfillment Engine, Knowledge Vault)"* — **never** *"Oh, this is a Rails / Spring Boot / Next.js / Laravel app."* Quick test: hide `package.json` / `pom.xml` / `go.mod` and show `tree -L 2 src/` to a stranger; they should guess the industry and product.
-2. **Name top-level packages and types after Domain Concepts and Use Cases:**
-   - **Bad (Framework-Screaming):** `src/controllers/`, `src/models/`, `src/views/`, `src/helpers/`, `src/middlewares/`, `src/repositories/`
-   - **Good (Domain & Use-Case Screaming):** `src/enrolment/` (`EnrollStudentUseCase`, `CancelEnrollmentUseCase`), `src/grading/`, `src/tuition-billing/`, `src/course-catalog/` (or inside `src/domain/` and `src/application/` organized by business capability).
-3. **Defer and isolate framework, database, and web decisions:** A good architecture centers on use cases so decisions about web servers, databases, and frameworks can be deferred, swapped, or tested without touching the core. Never inherit domain entities from framework base classes (`ActiveRecord::Base`, `Model`, `Entity`) or litter use cases with HTTP/ORM annotations.
-4. **The Web is a delivery mechanism, not the architecture:** Whether a use case is triggered by a REST endpoint, a GraphQL mutation, a CLI command, or an AI agent MCP tool call is an outer delivery detail (`hexagonal-architecture`, `clean-architecture`). The use case input/output contract must be transport-agnostic.
-5. **All use cases must be unit-testable in-situ without booting the framework:** You must be able to run the entire suite of domain and use-case tests **without** starting the web server, **without** connecting to a live database engine, and **without** booting a heavy framework container.
+## 2. The audit (about 15 minutes)
 
-## How to Audit and Refactor a Codebase to Scream its Domain
+1. **First-impression test:** list the top two levels of the source tree with package manifests hidden. Can a stranger name the industry and the product? (A heuristic built on the post's central question, not a quote.)
+2. **Count names:** domain nouns and use-case verbs versus technical stereotypes (`controllers`, `services`, `utils`, `dto`).
+3. **Use-case names:** replace generic `UserService.update(id, data)` or `OrderManager` with business verbs (`ApproveLoanApplication`, `DischargePatient`).
+4. **Framework imports:** grep use-case and entity files for framework or ORM types; they should be plain objects.
+5. **Test without infrastructure:** run one use case in a unit test with no HTTP and no database.
 
-1. **Run the `ls src/` / Directory Tree Audit:**
-   - List the top 2 levels of source directories.
-   - Count how many folder names are **Domain Nouns / Use-Case Verbs** vs. **Technical / Framework Stereotypes** (`controllers`, `services`, `utils`, `orm`, `dto`, `adapters`).
-2. **Extract explicit Use-Case classes/functions named in the Ubiquitous Language:**
-   - Replace generic CRUD methods (`UserService.update(id, data)`) with explicit business use cases (`ApproveLoanApplication`, `SealVaultSource`, `TransferFunds`, `DischargePatient`).
-3. **Push Framework Conventions to the Outermost Edge:**
-   - If a framework demands a special directory (e.g., Next.js `app/` routes or framework CLI folders), keep that directory as a **wafer-thin driver layer** that only parses the transport request and immediately calls into the domain-screaming core (`src/core/<domain-capability>/` or `packages/<bounded-context>/`).
-4. **Combine with `package-by-feature-component` and `clean-architecture` / `hexagonal-architecture`:**
-   - Organize the core by domain capability / feature slice so the directory tree serves as a living map of what the business does.
+## 3. Fixing it
 
-## When it earns its keep
+- Name top-level folders after business capabilities (`scheduling/`, `billing/`); how to group inside them is `package-by-feature-component`.
+- A directory a framework requires (routes, `app/`) stays a thin driver that parses the request and calls the core.
+- In a single-context service, `domain/` and `application/` at the top level with capability-named folders inside is acceptable; in a multi-context system the top level names the contexts (`modular-monolith-architecture`). Either satisfies the test if the business shows first (an inference from the post's goal).
+- Do not simply rename `controllers/` without moving logic: that is cosmetic.
 
-- **Worth it:** Every product with domain logic, business workflows, or multiple delivery channels where long-term maintainability, fast developer onboarding, and architectural clarity matter.
-- **Not worth it:** Pure technical infrastructure libraries whose actual domain *is* the technical mechanism itself (e.g., if you are authoring an HTTP router library, its domain naturally screams `routes/`, `headers/`, `middleware/`).
+## 4. When it does not apply
+
+A library whose domain is the technical mechanism itself (an HTTP router) legitimately has technical names. The post is about what the top level communicates, not a ban on every layer folder (inference).
 
 ## Mistakes to catch
 
-- **Letting the Framework Generator dictate the entire application architecture:** Running `rails new`, `nest new`, or `create-next-app` and stuffing all business rules directly inside the framework's generated `controllers/` or `app/api/` route files for the next 5 years.
-- **Generic CRUD naming (`OrderManager`, `DataHelper`, `ProcessService`):** Using vague technical nouns instead of the exact business use-case verbs spoken by domain experts.
-- **Confusing "Screaming Architecture" with ignoring Clean/Hexagonal boundaries:** Screaming Architecture does not mean dumping SQL and HTML into a folder just because the folder is named `billing/`. It means the top-level organization screams `billing/`, while keeping delivery (HTTP/UI) and persistence (DB) decoupled from the `billing` use cases and entities.
+- Letting the generator's tree (`rails new`, `create-next-app`) hold all business rules for years.
+- Vague nouns (`DataHelper`, `ProcessService`) instead of the verbs domain experts use.
+- Domain folders that still import framework types.
+- Reading the slogan as permission to put SQL and HTML in `billing/`: delivery and persistence stay decoupled (`clean-architecture`).
 
 ## Quick Decision Checklist
 
-- [ ] Would a stranger guess the product's domain from the top-level source tree?
-- [ ] Are top-level folders named after domain concepts and use cases, not controllers or services?
-- [ ] Are use cases named in business verbs instead of generic CRUD or Manager names?
-- [ ] Can use-case tests run without the web server, database or framework?
-- [ ] Is any framework-required directory kept a thin driver layer calling into the core?
-- [ ] Am I keeping Clean/Hexagonal boundaries rather than dumping SQL and HTML into a domain folder?
+- [ ] Would a stranger guess the product's domain from the top two levels?
+- [ ] Are use cases named in business verbs?
+- [ ] Do entities and use cases avoid framework types?
+- [ ] Can one use case be tested without server or database?
+- [ ] Are framework-required directories thin drivers?
 
 ## Deep references
 
-- [Screaming architecture argument](references/screaming-architecture-argument.md) — read when judging what a repo layout communicates
-- The dependency rule and boundary data are owned by `clean-architecture` (`references/dependency-rule-and-boundary-crossing.md`); read it when enforcing inward dependencies.
+- [Screaming architecture argument](references/screaming-architecture-argument.md) - read when judging what a repo layout communicates
+- [Trigger evals](references/trigger-evals.md) - should-trigger and near-miss prompts for the description
+- [Sources](references/sources.md) - retrieved statuses, reading limits, claims not adopted

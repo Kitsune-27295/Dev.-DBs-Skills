@@ -74,7 +74,7 @@ def checkout(order, shipping: Shipping): return order.total + shipping.cost(orde
 - Boolean/mode parameters that select behavior.
 - Core package importing concrete provider SDKs: arrow points the wrong way.
 
-## 7. Quick Decision Checklist
+## Quick Decision Checklist
 
 1. Is there a real, *recurring* axis of variation (2-3 instances)? If no, keep the plain code.
 2. Is a function parameter enough? Prefer it over a class.

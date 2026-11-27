@@ -1,6 +1,6 @@
 ---
 name: clean-architecture
-description: Use when designing, reviewing, or refactoring a Clean Architecture codebase (Entities/Domain, Use Cases/Application, Interface Adapters, Frameworks & Drivers), enforcing Uncle Bob's Dependency Rule, or crossing circle boundaries with Dependency Inversion and simple DTOs. Gives the four concentric circles, the Dependency Rule, boundary-crossing mechanics, test strategy per circle, and common mistakes.
+description: Keep business rules independent of frameworks, UI and database by arranging code in concentric circles (entities, use cases, interface adapters, frameworks and drivers) where source dependencies point only inward. Covers the Dependency Rule, output ports and presenters, DTOs across boundaries, test layers, a .NET project mapping and when the structure is not worth its cost. Use when designing, reviewing or refactoring a codebase for inward dependencies. For the ports-and-adapters vocabulary use `hexagonal-architecture`; for DI forms and the composition root use `dependency-inversion-composition-root`; for folder naming use `screaming-architecture`.
 ---
 
 # Clean Architecture
@@ -15,12 +15,12 @@ One idea: organize software into concentric circles — **Entities** (enterprise
 | 2. Use Cases (Application) | application-specific business rules that orchestrate the flow of data to and from Entities | "describes one automated operation of this specific application" |
 | 3. Interface Adapters | converts data from the format convenient for Use Cases/Entities to the format convenient for the DB, Web, or UI (Controllers, Presenters, Gateways/Repositories) | "translates between the inner circles and external technology" |
 | 4. Frameworks & Drivers | outermost details: web framework, database engine, ORM, UI, external APIs, wiring/bootstrap | "glue code and external tools kept at arm's length" |
-| Input / Output Port | interfaces owned by the Use Case circle: Input Port is implemented by the Use Case Interactor; Output Port is called by the Interactor and implemented by an outer Adapter (Presenter or Gateway) | "how control crosses a circle boundary against the flow of execution" |
+| Output Port | interface declared in the Use Case circle, called by the use case and implemented by an outer Adapter such as a Presenter; the post's text names the output port, and an input port on the entry side comes from its diagram (the diagram was not read) | "how control crosses a circle boundary against the flow of execution" |
 
 ## The Dependency Rule (what to check on every change)
 
 1. **Inward-only source dependencies:** Nothing in an inner circle can know anything at all about something in an outer circle. No name declared in an outer circle (functions, classes, variables, ORM annotations, framework types) may be mentioned by the code in an inner circle.
-2. **Invert control across boundaries:** When a Use Case (inner) needs to call a Presenter or Database Gateway (outer), the Use Case defines an **interface (Output Port)** inside the Use Case circle, and the outer Adapter implements it (Dependency Inversion Principle).
+2. **Invert control across boundaries:** When a Use Case (inner) needs to call a Presenter or Database Gateway (outer), the Use Case defines an **interface (Output Port)** inside the Use Case circle, and the outer Adapter implements it (Dependency Inversion Principle; wiring and DI forms are in `dependency-inversion-composition-root`).
 3. **Pass simple, isolated data structures across boundaries:** Never pass ORM rows, database records, or raw HTTP request objects inward. Data crossing a boundary must always be simple data structures (DTOs, Request/Response models, value structs) in the form most convenient for the **inner** circle.
 4. **Frameworks are details, not the architecture:** Keep web frameworks, ORMs, and vendor SDKs in the outermost ring. Do not let framework base classes or annotations infect Entities or Use Cases.
 5. **Four circles are a schematic, not a hard limit:** You may have more than four circles if needed, provided the Dependency Rule holds: dependencies always point toward higher-level policy (inward).
@@ -32,7 +32,7 @@ One idea: organize software into concentric circles — **Entities** (enterprise
 3. **Interface Adapters third:** Implement Controllers, Presenters, and persistence Gateways/Repositories that adapt external requests and databases to the Use Case interfaces.
 4. **Frameworks, Drivers, and Composition Root last:** Wire dependency injection, web server routes, and database connections in the outermost startup/infrastructure ring.
 
-## Tests per circle
+## Tests per circle (the skill's own layering; Microsoft's guide supports unit-testing the core in isolation and integration-testing infrastructure)
 
 | Circle | Test | Uses |
 |---|---|---|
@@ -41,7 +41,7 @@ One idea: organize software into concentric circles — **Entities** (enterprise
 | Interface Adapters (Controllers, Gateways) | integration test | real test DB for Gateways; mock/fake Use Cases for Controllers/Presenters |
 | Frameworks & Drivers (Web/App Host) | end-to-end / functional test | full wired application on critical user journeys |
 
-Automate the Dependency Rule with an architecture test (e.g., `NetArchTest`, `ArchUnit`, `dependency-cruiser`) that fails CI if `Domain` imports `Application`/`Infrastructure` or if `Application` imports `Infrastructure`/`Web`.
+Automate the Dependency Rule with an architecture test (tools such as `NetArchTest` or `ArchUnit` exist for this; not re-verified) that fails CI if `Domain` imports `Application`/`Infrastructure` or if `Application` imports `Infrastructure`/`Web`.
 
 ## When it earns its keep
 
@@ -72,3 +72,4 @@ Automate the Dependency Rule with an architecture test (e.g., `NetArchTest`, `Ar
 - [The Dependency Rule and Boundary Crossing](references/dependency-rule-and-boundary-crossing.md) — read when enforcing the rule or designing ports and presenters.
 - [Layers, Stability and Inversion of Control](references/layers-and-inversion-of-control.md) — read for the layer-by-layer rationale and how to place port interfaces.
 - [.NET Project Layout and the Composition Root](references/dotnet-layout-and-composition-root.md) — read when mapping the circles to .NET projects and wiring DI.
+- [Trigger evals](references/trigger-evals.md) — read when tuning or checking this skill's description.

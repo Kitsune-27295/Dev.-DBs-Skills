@@ -1,6 +1,6 @@
 # Microservice Premium, Monolith First and Adoption Readiness
 
-Sources: https://martinfowler.com/microservices/ · https://microservices.io/patterns/microservices.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/microservices/ · https://martinfowler.com/bliki/MicroservicePrerequisites.html · https://microservices.io/patterns/microservices.html · https://microservices.io/patterns/ · Last verified 2026-11-27
 
 ## Monolith first and the microservice premium
 Fowler's stance, the "Monolith First" observation and the Tilkov counterpoint are owned by `monolithic-architecture` (`references/monolith-first-evolution-paths.md`). Default to a modular monolith with enforced boundaries and extract when a force below justifies it (agent inference).
@@ -15,7 +15,7 @@ Fowler's stance, the "Monolith First" observation and the Tilkov counterpoint ar
 Saga (commands as local transactions), command-side replica, API composition (queries as local queries joined in memory), CQRS (separate query models). Asynchronous variants generally need the Transactional Outbox. Richardson's wider pattern language also lists decomposition (by business capability or subdomain, self-contained service), Strangler Application and anti-corruption layer for migration, API gateway and backend-for-front-end, service discovery, circuit breaker, consumer-driven contract tests and service component tests, and observability (log aggregation, metrics, distributed tracing, health check API).
 
 ## Prerequisites (Fowler's list)
-Rapid provisioning, basic monitoring, rapid application deployment; operations carries the biggest burden. Teams without these should not adopt the style.
+From the 2014 prerequisites note: rapid provisioning (a new server within hours, so heavy automation), basic monitoring (technical errors and business signals such as a drop in orders) and rapid application deployment (a pipeline taking no more than a couple of hours). The resource guide adds that operations carries the biggest burden and that teams lacking these competencies should not adopt the style.
 
 ## Migration guidance Fowler links
 Start with a simple service, then extract vertical business-relevant capabilities; each step an atomic improvement. For a data-rich service separate behavior first, then data, keeping one write copy at all times. Rethink tests because of network partitions.

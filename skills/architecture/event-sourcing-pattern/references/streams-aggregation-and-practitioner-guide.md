@@ -1,8 +1,8 @@
 # Streams, State Aggregation and Practitioner Guide (Dudycz)
 
-Sources: https://github.com/oskardudycz/EventSourcing.NetCore · Last verified 2026-11-23
+Sources: https://github.com/oskardudycz/EventSourcing.NetCore · Last verified 2026-11-27
 
-Read note: the page was truncated at about 100,000 of 111,000 characters, so later sections (the "decide" write-up and parts of optimistic concurrency) were not read here; they are only referenced by title. The material below is what the README states or lists.
+Read note: the README is mostly an index of links and videos (licence CC-BY-SA-4.0). The fetch returned about 100,000 of 111,000 characters, so the tail was not read; the README never mentions "decide", so the decide/evolve naming below is a common functional convention, not a source quote ("Keep your streams short!" is a video title in section 2.2).
 
 ## Vocabulary
 - Event: a past-tense, immutable fact, readable differently by different consumers. Typical fields: id, type, stream id, stream position, timestamp, metadata (correlation and causation ids).

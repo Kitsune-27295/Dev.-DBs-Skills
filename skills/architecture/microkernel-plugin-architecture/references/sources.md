@@ -1,14 +1,24 @@
-# Sources for the microkernel-plugin-architecture skill
+# Sources: Microkernel / Plug-in Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-fetched on 2026-11-27 with WebFetch (Firecrawl had no credits).
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | arc42 Quality Guide, "Plugin Architecture", https://quality.arc42.org/approaches/plugin-architecture | Intent, mechanism, applicability rule (skip when the extension set is small and fixed because maintaining a stable public extension API is permanent work); **Isolation as a dial** (in-process vs. classloader isolation vs. subprocess/sandbox containing crashes and malice); critical failure modes (breaking API changes stranding the ecosystem, memory/handle/thread leaks across unload cycles, startup registration timing races, and unsandboxed supply-chain incidents); verification via a shared **plugin compliance test suite** and a **chaos plugin**. |
-| 2 | University of Queensland (CSSE6400 Software Architecture), "Microkernel Architecture", https://csse6400.uqcloud.net/handouts/microkernel.pdf | Formal definitions of the four architectural elements: **Core System**, **Plug-ins**, **Plug-in Interface**, and **Registry**; **Definition 2 (Independent Plug-in Principle)** — plug-ins must not depend on other plug-ins; **Definition 3 (Standard Interface Principle)** — plug-ins must use a standard interface to avoid complicating the core; technical vs. domain partitioning (e.g., payroll processing core with tax/deduction plug-ins); extensions (Distributed Microkernel via REST/remote plug-ins, alternative contracts, plug-in private databases). |
-| 3 | Ahmed Hammad, `Software-Architecture-Patterns-Notes` (Mark Richards's *Software Architecture Patterns* summary), https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes | Mark Richards's Microkernel pattern evaluation: point-to-point in-process vs. OSGi/remote plug-in registry wiring; high ratings for evolutionary design, adaptability, and modularity; lower ratings for scalability when deployed as a single monolithic host process. |
-| 4 | Ilya Hardzeenka, Software Architecture Guild, "Architecture Styles — Microkernel Architecture", https://software-architecture-guild.com/guide/architecture/fundamentals/architecture-styles/#microkernel-architecture | Placement of Microkernel within monolithic and hybrid architecture styles; core responsibility for minimal operational skeleton vs. plug-in encapsulation of volatile features. |
+| https://quality.arc42.org/approaches/plugin-architecture | 200 OK | Intent, mechanism, isolation dial, four failure modes, verification recipe (compliance suite, chaos plugin, 100 load/unload cycles, p99 alert at 10 percent), use and skip rules, neighbors, battery-driver example |
+| https://csse6400.uqcloud.net/handouts/microkernel.pdf | 200 OK, PDF (dated 9 March 2026, last updated 2023-03-04); the fetch summarizer could not read it, so the text was extracted locally and read | Four elements, Independent Plug-in, Standard Interface and Domain Standard Interface principles, payroll example and `adjustPay` interface, technical vs domain partitioning, distributed microkernel, REST/RMI contracts, plug-in databases, adapter plug-ins |
+| https://github.com/ahmedhammad97/Software-Architecture-Patterns-Notes | 200 OK; personal notes repository (secondary) | Registry requirement, plug-in communication options, dependency concern; ratings are an image and not read |
+| https://software-architecture-guild.com/guide/architecture/fundamentals/architecture-styles/ | 200 OK | Microkernel grouped under monolithic styles, ideal for customizable product platforms, warning on plug-in dependency management |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **In-Process Monolithic Microkernel vs. Distributed Microkernel:** Richards (Source 3) classifies classic Microkernel as a monolithic deployment style (in-process plug-in modules loaded into one host binary), whereas UQ CSSE6400 (Source 2) and arc42 (Source 1) explicitly cover **Distributed / Subprocess Microkernels** where plug-ins run as out-of-process services or sandboxed child processes talking to the Core over IPC, stdio, or HTTP. Both share the exact same four elements and the Independent Plug-in and Standard Interface invariants.
+- The Hammad ratings comparison is an image; no rating is adopted.
+- Whether the Hammad notes derive from Richards's booklet was not confirmed from the page text.
+- The code sketches are my own and were not executed.
+
+## Claims not adopted as fact
+
+- Microkernel as the "limiting case where even built-in features are plugins" attributed to Richards and POSA (earlier draft): not on the pages read.
+- Extension hooks and marketplaces as arc42 neighbor approaches (earlier draft): not listed on the page.
+- ServiceLoader and Python entry points as arc42 mechanisms (earlier draft): the page names none; they stay as general practice.
+- High evolutionary-design ratings and lower scalability for single-process hosts (earlier draft): the ratings were not readable.
+- Sandbox examples (child process, WASM, container), memory caps and per-call timeouts: the skill's own advice, not sourced.
