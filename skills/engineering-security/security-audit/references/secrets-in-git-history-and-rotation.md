@@ -1,16 +1,16 @@
 # Secrets in Git History and Rotation
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html · https://github.com/gitleaks/gitleaks · Last verified 2026-11-24
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html · https://github.com/gitleaks/gitleaks · Last verified 2026-11-27
 
 Depth for class 4 of `security-audit`. For dependency and supply-chain review use `oss-deep-audit`; for how to keep secrets server-side in new code use `never-trust-the-client`.
 
 ## Why history matters
 
-A commit is a permanent record. Deleting a key in a later commit leaves it readable in every earlier commit, clone and fork. OWASP's secrets guidance says rewriting history to drop a secret breaks links to existing commits and never replaces revoking it. So the order is: revoke first, rotate second, clean up third.
+A commit is a permanent record. Deleting a key in a later commit leaves it readable in every earlier commit, clone and fork. OWASP's secrets guidance notes that squashing history to drop a secret rewrites history and breaks links to existing commits, so weigh it deliberately; it does not replace revoking. So the order is: revoke first, rotate second, clean up third.
 
 ## Scanning the history
 
-Gitleaks (MIT license, regex rules in a TOML config) scans a repository's patches with `gitleaks git`, a directory with `gitleaks dir`, and stdin with `gitleaks stdin`. The older `detect` and `protect` commands were deprecated in v8.19.0 and are hidden from help but still work, so old tutorials remain valid. A commit range can be passed through `--log-opts`. Reports can be saved and reused as a baseline so later runs show only new findings. The README states the tool is feature-complete with security patches only going forward, and points to a successor project; check which one your team standardizes on before pinning it in a pipeline (not evaluated here).
+Gitleaks (MIT license, regex rules in a TOML config) scans a repository's patches with `gitleaks git`, a directory with `gitleaks dir`, and stdin with `gitleaks stdin`. The older `detect` and `protect` commands were deprecated in v8.19.0 and are hidden from help but still work, so old tutorials remain valid. A commit range can be passed through `--log-opts`. Reports can be saved and reused as a baseline so later runs show only new findings. The README states the tool is feature-complete, with only security patches going forward, and names Betterleaks as the successor; check which one your team standardizes on before pinning it in a pipeline (the successor was not evaluated here).
 
 Operate read-only: run with an output path inside the report folder, never commit the raw report (it contains the secrets it found).
 
@@ -33,7 +33,7 @@ Defaults of the form `${VAR:-default}` are findings when the default works as a 
 3. Remove it from all places it lives: code, logs, CI variables, caches.
 4. Record who had access, when it was used, when last rotated.
 
-Related ideas: prefer short-lived credentials and identity-based CI access over long-lived static keys; keep production and development secrets apart; run more than one detector and merge results; add a pre-commit hook so the leak never lands.
+Related ideas from the OWASP guidance: prefer short-lived credentials and OIDC-based CI access over long-lived static keys; run more than one detector and correlate results; detect at developer level (IDE, pre-commit) so the leak never lands; restarting an app does not revoke a stolen credential. Keeping production and development secrets apart is this skill's own practice.
 
 ## Client-bundle variant
 

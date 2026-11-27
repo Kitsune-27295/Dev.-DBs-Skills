@@ -1,44 +1,40 @@
-# Implementation Order and Testing Strategy for Hexagonal Apps
+# Implementation Order and Testing Strategy
 
-Sources: https://jmgarridopaz.github.io/content/hexagonalarchitecture.html · https://docs.aws.amazon.com/pt_br/prescriptive-guidance/latest/cloud-design-patterns/hexagonal-architecture.html · https://github.com/jmgarridopaz/bluezone · https://github.com/emedina/hexagonal-spring-ref-app · Last verified 2026-11-23
+Sources: https://jmgarridopaz.github.io/content/hexagonalarchitecture.html · https://alistair.cockburn.us/hexagonal-architecture/ · https://docs.aws.amazon.com/pt_br/prescriptive-guidance/latest/cloud-design-patterns/hexagonal-architecture.html · https://github.com/emedina/hexagonal-spring-ref-app · https://github.com/jmgarridopaz/bluezone · Last verified 2026-11-27
 
 ## The four-step build order (Garrido de Paz)
 
-Start from the app as a black box with driver and driven port interfaces sketched (driven ports may be incomplete; they surface while implementing drivers).
+Start from the application as a black box with driver and driven ports sketched; driven ports may be incomplete and surface while you work.
 
 | Step | Drivers | Driven | Outcome |
 |---|---|---|---|
-| 1 | Test driver adapter (optionally BDD Given-When-Then) | Mock/in-memory adapters | Hexagon complete and testable in isolation |
-| 2 | Real driver adapters (web, REST) | Mocks kept | New drivers tested without infrastructure |
-| 3 | Test driver from step 1 | Real adapters (DB, email) | Each real adapter tested against the real device |
-| 4 | Real drivers | Real adapters | End-to-end; any combination can be configured |
+| 1 | Test driver | Mock or in-memory adapters | Hexagon complete, testable in isolation |
+| 2 | Real drivers (web, REST) | Mocks kept | New drivers tested without infrastructure |
+| 3 | Test driver from step 1 | Real adapters (database, email) | Each real adapter checked against the real device |
+| 4 | Real drivers | Real adapters | End to end; any combination configurable |
 
-Why this order works: business rules are verified before any technology exists, and each later step changes exactly one side.
+Rationale: business rules are verified before technology exists and each later step changes one side. Cockburn's report shows the same idea: acceptance tests against a mock database before the GUI or real database exists, then test databases in integration runs.
 
-## Test taxonomy (Nat Pryce, as used by Garrido)
+## Test taxonomy (Nat Pryce, as quoted by Garrido)
 
 - **Unit**: single objects inside the hexagon.
-- **Integration**: adapters, proving the translation between port and outside world.
-- **Acceptance**: driver port plus isolated hexagon, checking each use case's acceptance criteria.
-- **System**: whole system including adapters, deployment, startup.
+- **Integration**: adapters, checking the translation between port and outside world.
+- **Acceptance**: driver port plus isolated hexagon, against acceptance criteria.
+- **System**: whole system including deployment and startup.
 
-## Concrete shapes seen in the sources
+How many of each is a shape decision owned by `testing-pyramid-and-shapes`; no source here measures the right ratio.
 
-- **AWS sample (Python, Lambda + DynamoDB)**: the domain class `Recipient` knows nothing about DynamoDB; an input-port class receives output ports through its constructor and orchestrates load, domain call, save; a factory function wires the DynamoDB adapters; the Lambda handler only parses the event, calls the factory and returns a status. Domain unit tests need no mocks because the logic lives in the pure class (refuse a third slot, refuse two slots on one date).
-- **BlueZone (Java, Garrido)**: driver adapters Web UI and CLI; driven ports rate repository, ticket repository, payment service; which adapter serves each port is read from a properties file at startup, so a run can swap in mocks without recompiling. Its README states the rules (ticket end time from amount and rate; valid if now is between start and end).
-- **Medina reference app (Spring)**: modules application-core, api-adapter, in-memory-repositories, an external adapter, shared-kernel, assembly. In-memory repositories are first-class adapters. ArchUnit-based tests enforce: domain has no framework dependencies, ports are interfaces, adapters depend only on allowed packages; allowed dependencies live in a test resource config. Errors travel as `Either` values rather than exceptions (the project's own choice). The page did not show the actual rule definitions.
+## Shapes seen in the sources
+
+- **AWS sample (Python, Lambda and DynamoDB)**: a domain class with no outward knowledge; an input-port class that receives output ports through its constructor and orchestrates load, domain call, save; a factory that builds the DynamoDB adapters; a handler that parses the event, calls the factory and returns a status. Domain unit tests exercise the pure class with fixtures. The page is a machine translation; its English original prevails.
+- **BlueZone (Java, Garrido)**: driver adapters Web UI and CLI; driven ports rate repository, ticket repository, payment service. The README says: build once, edit a properties file to pick the adapter per port, then run. (GPL-3.0 licensed: ideas only here.)
+- **Medina reference app (Spring, MIT)**: modules application-core (domain, use-case handlers, ports), api-adapter, in-memory-repositories, an external adapter, shared-kernel and an assembly module. ArchUnit Hexagonal 1.0.0 tests cover: shared kernel limited to allowed libraries, domain free of infrastructure and frameworks, ports are interfaces, naming and structure of commands, queries and handlers, adapters depend only on allowed packages; allowed dependencies per layer are configured in a test resource file.
 
 ## Enforcing the rules mechanically
 
-Prose rules decay. Add an architecture test (ArchUnit on the JVM; for JS/TS an import-graph test or a dependency-cruiser style rule, my suggestion) that fails when the domain imports a framework, when one adapter family imports another, or when a driver imports an adapter. Run it in CI.
+Prose rules decay. Add an architecture test that fails when the hexagon imports a framework, when one adapter imports another, or when a driver imports a concrete adapter. ArchUnit is the JVM example; for other languages an import-graph test (own suggestion) does the same. Run it in CI.
 
-## Anti-patterns
-
-- Integration tests only: slow, and business-rule bugs hide behind infrastructure failures.
-- Mocking the domain in domain tests (inference: mock only driven ports).
-- Mocks that diverge from real adapters; share one contract test across both.
-
-## Example: contract test shared by two adapters (my sketch)
+## Contract test shared by adapters (own sketch)
 
 ```
 for adapter in [InMemoryTasks(), SqlTasks(testDb)]:
@@ -47,9 +43,15 @@ for adapter in [InMemoryTasks(), SqlTasks(testDb)]:
     assert adapter.byId(99) is None
 ```
 
+## Anti-patterns
+
+- Integration tests only: slow, and rule bugs hide behind infrastructure failures.
+- Mocking domain objects in domain tests (mock only driven ports).
+- A fake that diverges from the real adapter; share one contract test across both.
+
 ## How an agent should apply this
 
-- Build and test the hexagon with a test driver plus in-memory driven adapters before writing any real adapter.
-- Add a contract test run against every adapter of a driven port, the in-memory one included.
-- Add or keep an architecture test enforcing the dependency direction; run it before reporting structural work done.
-- Pick the test level by target: unit for rules, integration for adapters, acceptance for use cases, one system test for wiring.
+- Build and test the hexagon with a test driver and in-memory driven adapters before any real adapter.
+- Run one contract test against every adapter of a driven port, the in-memory one included.
+- Add or keep an architecture test for the dependency direction; run it before reporting structural work done.
+- Pick the test level by target: unit for rules, acceptance for use cases, integration for adapters, one system test for wiring.

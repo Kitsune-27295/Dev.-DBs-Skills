@@ -1,6 +1,6 @@
 # Flowchart: Edges, Chaining, Subgraphs, Styling, Escaping
 
-Sources: https://mermaid.js.org/syntax/flowchart.html · Last verified 2026-11-23
+Sources: https://mermaid.js.org/syntax/flowchart.html · Last verified 2026-11-27
 
 Complements the flowchart notes already in `SKILL.md`; this file covers the parts the cheatsheet omits.
 
@@ -43,7 +43,7 @@ flowchart LR
 
 ## Styling
 - Edges are numbered in definition order for `linkStyle 3 stroke:#ff3,stroke-width:4px;`; a list (`linkStyle 1,2,7 color:blue;`) or `default` targets several.
-- Curves: `basis`, `bumpX`, `bumpY`, `cardinal`, `catmullRom`, `linear`, `monotoneX`, `monotoneY`, `natural`, `step`, `stepAfter`, `stepBefore`. Diagram-wide via `config: flowchart: curve: stepBefore`; per edge (v11.10.0+) via `e1@{ curve: linear }`, which overrides the diagram setting (last change wins).
+- Curves (the page's list is introduced with "include", so it may not be exhaustive): `basis`, `bumpX`, `bumpY`, `cardinal`, `catmullRom`, `linear`, `monotoneX`, `monotoneY`, `natural`, `step`, `stepAfter`, `stepBefore`. Diagram-wide via `config: flowchart: curve: stepBefore`; per edge (v11.10.0+) via `e1@{ curve: linear }`, which overrides the diagram setting (last change wins).
 - Nodes: `style id1 fill:#f9f,stroke:#333,stroke-width:4px`; classes with `classDef name ...;`, `class a,b name;` or `A:::name`; a class called `default` applies to unclassed nodes.
 - External CSS rarely works because Mermaid's styles use `!important` and are scoped to the SVG id; use `classDef`.
 
@@ -53,10 +53,10 @@ flowchart LR
   A e1@==> B
   e1@{ animate: true }
 ```
-`animation: fast` or `slow` sets speed. A class can drive animation too (escape commas in `stroke-dasharray` as `\,`). Step animation (v12.3.0+): `e1@{ step: 1 }`, speed via `flowchart.stepDuration` (seconds), badges via `flowchart.stepNumbers: true`; hidden under reduced-motion preference.
+`animation: fast` or `slow` sets speed (no version is stated for these two; only step animation is tagged v12.3.0+). A class can drive animation too (the page says to escape commas in `stroke-dasharray` as `\,`, but its own animation example uses unescaped commas: test both). Step animation (v12.3.0+): `e1@{ step: 1 }`, speed via `flowchart.stepDuration` (seconds), badges via `flowchart.stepNumbers: true`; hidden under reduced-motion preference.
 
 ## Click interaction
-`click A callback "Tooltip"`, `click B "https://example.com" "Tooltip"`, `click C href "https://example.com" _blank` (targets `_blank`, `_self`, `_parent`, `_top`). Disabled when `securityLevel='strict'`, enabled with `'loose'`. Do not rely on clicks in GitHub-rendered Markdown (inference from strict-by-default hosting; not stated on this page).
+`click A callback "Tooltip"`, `click B "https://example.com" "Tooltip"`, `click C href "https://example.com" _blank` (targets `_blank`, `_self`, `_parent`, `_top`). Disabled when `securityLevel='strict'`, enabled with `'loose'`. The page does not state the default security level. Do not rely on clicks in GitHub-rendered Markdown (inference; not stated on the page).
 
 ## Escaping and keywords
 - Quote text containing parentheses etc.: `id1["This is the (text) in the box"]`.

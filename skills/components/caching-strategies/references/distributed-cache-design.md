@@ -1,6 +1,6 @@
 # Distributed and In-Memory Cache Design Decisions
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/best-practices/caching · https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/best-practices/caching · https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside · Last verified 2026-11-27
 
 ## Private vs shared cache
 
@@ -15,7 +15,7 @@ Use private for small, static or short-lived data and when a few seconds of dive
 
 ## When caching pays off
 
-Data read often and changed rarely; origin slow, contended, or far away. Caching also keeps reads available when DB connections are exhausted or the DB is briefly down. Cache computed results too, not just rows. Cache only the stable parts of an entity (name, address) and fetch the volatile part (balance) live.
+Data read often and changed rarely; origin slow, contended, or far away. Caching also keeps reads available when DB connections are exhausted or the DB is briefly down. Cache computed results too, not just rows (Azure caching guidance). Caching only the stable parts of an entity and fetching a volatile part live is our suggestion.
 
 ## The cache is never the source of truth
 
@@ -41,7 +41,7 @@ A service cannot force a client to evict. For web resources, change the URI when
 
 - Authenticate identities and restrict which can read/write.
 - To restrict subsets: split caches by server, or encrypt each subset with different keys.
-- Use TLS when the cache is reached over a public network.
+- Use TLS when the cache is reached over a network you do not control (our advice; the Azure page documents TLS only for its own product).
 - Do not put sensitive or security-related data in a shared cache; fetch it from the primary source (Azure cache-aside guidance). Never key by something that mixes users (see "private" below for HTTP).
 
 ## Anti-patterns

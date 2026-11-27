@@ -1,92 +1,97 @@
 ---
 name: adr-architecture
-description: "Author, review, supersede or govern Architecture Decision Records (ADRs): capture Architecturally Significant Requirements (ASRs) using Michael Nygard's template, MADR or Y-statements, keep an immutable decision log in Git, and avoid blind acceptance or blind reversal of past decisions. Use when a significant technical decision must be recorded, reviewed or superseded, or when judging whether an old ADR still holds. Not for the project glossary or ADR notes captured while sharpening domain terms in conversation (use domain-modeling) or for choosing between styles and technologies (use architecture-decision-trees-tradeoffs)."
+description: "Record why an architecture decision was made so later readers neither accept it blindly nor reverse it blindly: decide whether a choice is significant enough, write one short Architecture Decision Record (Nygard form, MADR or a Y-statement) with forces, considered options and honest consequences, keep it in Git, supersede instead of rewriting, and attach an automated check where possible. Use when a significant technical decision must be recorded, an ADR drafted or reviewed, an old ADR superseded, ADR process set up for a team, or when judging whether an old decision still holds. Not for choosing among styles or technologies (use architecture-decision-trees-tradeoffs), the domain glossary and terms captured in conversation (use domain-modeling) or full architecture documentation (use arc42-api-contracts-architecture)."
 ---
 
 # Architecture Decision Records (ADRs)
 
-One idea: prevent **blind acceptance** ("we are afraid to touch this legacy choice because nobody knows why it's there") and **blind reversal** ("we replaced this pattern and accidentally broke an untested non-functional constraint") by capturing every **Architecturally Significant Decision** as a short, version-controlled, append-only Markdown record (`docs/adr/NNNN-verb-phrase.md`) in the repository. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: **a short, version-controlled record of each significant decision, with the forces and the downsides, lets the next person change it for the right reasons.** Nygard names the two failures it prevents: accepting a decision blindly because nobody knows why it exists, and reversing it blindly and breaking what it protected. Sources, retrieved statuses and unadopted claims: [references/sources.md](references/sources.md).
 
-## Vocabulary (Michael Nygard, Zdun & GitHub ADR Organization)
+## 1. Vocabulary
 
-| Term | Meaning | Test sentence |
-|---|---|---|
-| Architecturally Significant Requirement (ASR) | a functional or non-functional requirement that has a measurable, high-cost-to-reverse effect on system structure, dependencies, interfaces, or quality attributes | "if reversing this choice later takes more than a day, it's architecturally significant" |
-| Architecture Decision (AD) | a justified design choice made among 2+ viable alternatives to satisfy an ASR | "names the chosen option AND the rejected alternatives with their trade-offs" |
-| Architecture Decision Record (ADR) | a short (1-2 page) text file recording a single AD, its context/forces, the decision, its lifecycle status, and its positive/negative consequences | "one decision per file, stored in Git next to the code" |
-| Decision Log | the chronological, immutable collection of all ADRs in a project (`docs/adr/`) | "reads like the intellectual history of why the architecture is shaped this way" |
-| Superseding (Never Deleting) | when context changes and a past decision is reversed, the old ADR is marked `Superseded by ADR-NNNN` and a new ADR is added | "never delete or rewrite history in an accepted ADR" |
-| Y-Statement | Zdun's ultra-compact 1-sentence ADR summary: *"In the context of `<use case>`, facing `<concern>`, we decided for `<option>` and neglected `<other options>`, to achieve `<quality>`, accepting `<downside>`."* | "forces explicit trade-off honesty in one sentence" |
+| Term | Meaning |
+|---|---|
+| Architecturally significant decision | a choice that shapes structure, non-functional characteristics, dependencies, interfaces or construction techniques (Nygard) |
+| ASR | a requirement with a measurable effect on the architecture and its quality (adr.github.io) |
+| AD | a justified design choice addressing an architecturally significant requirement |
+| ADR | one AD with its rationale, trade-offs and consequences |
+| Decision log | the set of ADRs of a project |
+| Superseded | the decision was replaced; the old record stays and points to the new one |
 
-## Core rules and invariants
+## 2. Decide whether to write one
 
-1. **Record only Architecturally Significant Decisions:** Do not write ADRs for trivial coding style rules (enforced by linters) or localized implementation details easily refactored in an hour. Write an ADR whenever a choice affects:
-   - Module/service boundaries, dependency rules, or data ownership,
-   - Database engines, message brokers, frameworks, or third-party vendor lock-in,
-   - Public API contracts, authentication/security models, or cross-cutting non-functional trade-offs (latency vs. consistency vs. cost).
-2. **Every ADR must list the Forces (Context) and the Rejected Alternatives:** An ADR that only states *"We chose PostgreSQL because it is good"* is useless. You must record the **competing forces** (team skill, budget, latency SLA, transaction volume) and **at least two considered options** with the honest reason the alternatives were rejected.
-3. **Be honest about Negative Consequences:** Every architectural decision is a trade-off. If the `Consequences` section lists only benefits and zero downsides, risks, or follow-up costs, the ADR is promotional fluff rather than engineering analysis.
-4. **ADRs are immutable once Accepted (Supersede, never overwrite):**
-   - Lifecycle states: `Proposed` $\to$ `Accepted` (or `Rejected`) $\to$ `Deprecated` / `Superseded by ADR-0042 (0042-new-choice.md)`.
-   - You may fix typos or append a late `Compliance / Verification` note, but to change the decision itself, write a **new** ADR that explains *what changed in the context* and links backward/forward to the old ADR.
-5. **Co-locate ADRs in Git and review them in Pull Requests:** Store ADRs in `docs/adr/` (or `doc/architecture/decisions/`) using sequential 4-digit numbering and present-tense imperative verb slugs (`0001-record-architecture-decisions.md`, `0002-use-postgresql-for-transactional-outbox.md`). Review the ADR in the same PR as the architectural change (or immediately before building it).
+Write an ADR when future developers will need the "why", or the decision affects coordination, maintainability or an external interface. Skip non-architectural, tiny, low-risk or single-developer choices, decisions already covered by a standard, and temporary workarounds or experiments (Henderson). A new decision that replaces or invalidates an earlier one always gets a new record. Whether to choose A or B at all: `architecture-decision-trees-tradeoffs`.
 
-## Canonical Nygard + MADR Hybrid Template
+## 3. Write the record
+
+One decision per file, one or two pages. Sections (Nygard): Title, Context, Decision, Status, Consequences.
+
+1. **Context**: the forces at play (technological, political, social, project-local), stated neutrally; say where they conflict.
+2. **Considered options**: add this section even to the Nygard form (MADR makes it required). At least two options plus "do nothing", each with the real reason it lost; no straw men.
+3. **Decision**: active voice, "We will ...", tied to the forces.
+4. **Consequences**: all of them, positive, negative and neutral. A record with no downside is advocacy.
+5. **Confirmation**: how the decision is checked (MADR's term), preferably an automated test or CI rule; see section 6.
+6. **Status**: Proposed, Accepted, Rejected, Deprecated, or Superseded by a link.
+7. Write full sentences as if talking to a future developer; bullets only for layout (Nygard).
+
+Skeleton (own composition from the Nygard and MADR section sets):
 
 ```markdown
-# ADR-NNNN: [Short imperative verb phrase, e.g., Use Transactional Outbox for Order Events]
-
-- **Status:** Proposed | Accepted | Superseded by ADR-MMMM (MMMM-slug.md)
-- **Date:** YYYY-MM-DD
-- **Deciders:** [Names / Roles]
-
-## Context and Problem Statement
-[1-3 paragraphs describing the technical/business forces at play, constraints, and the specific problem or ASR. State facts neutrally.]
-
-## Considered Options
-1. **[Option A — Chosen]** — brief summary, pros, cons.
-2. **[Option B — Rejected]** — why it was viable and the specific reason it lost.
-3. **[Option C — Do Nothing / Status Quo]** — what breaks if we make no change.
-
+# 0007 Use PostgreSQL for order storage
+Status: Accepted (2026-03-02)
+## Context and problem
+<forces, neutral, conflicts named>
+## Considered options
+<A chosen; B rejected because ...; do nothing: what breaks>
 ## Decision
-We will **[explicit action]**, because **[core rationale tied to the forces above]**.
-
-> *Y-Statement:* In the context of [context], facing [concern], we decided for [option] and neglected [alternatives], to achieve [system qualities], accepting [downside/cost].
-
+We will ...
 ## Consequences
-- **Positive:** [What becomes easier, faster, or safer]
-- **Negative / Trade-offs:** [What becomes harder, slower, or requires extra maintenance]
-- **Compliance / Verification:** [How we enforce or test this decision automatically — e.g., ArchUnit test, CI check, linter rule]
+Good: ... Bad: ... Neutral: ...
+## Confirmation
+<test or check that keeps this true>
 ```
 
-## Verification and maintenance checklist
+Y-statement short form, one sentence: use case, concern, chosen option, quality sought, accepted downside. The long form adds the neglected options and a "because" rationale (adr.github.io). Template choice and field details: [references/adr-team-governance-and-enforcement.md](references/adr-team-governance-and-enforcement.md).
 
-| Check | Question to verify |
-|---|---|
-| Scope | Does this file cover **exactly one** decision? (If it decides DB + Auth + UI framework, split it into 3 ADRs.) |
-| Alternatives | Could a skeptical engineer see why Option B was rejected without asking in Slack? |
-| Trade-offs | Are the negative consequences and operational costs explicitly acknowledged? |
-| Automated enforcement | Does `Compliance / Verification` name an automated test or boundary check so the decision doesn't decay into shelfware? |
-| Bidirectional links | If this ADR supersedes an older one, is the older ADR's `Status` updated to link forward to this one? |
+## 4. Name, number and place
 
-## Mistakes to catch
+- Nygard: `doc/arch/adr-NNN.md`, numbers sequential and never reused. MADR: `NNNN-title-with-dashes.md` under `docs/decisions/`. Henderson: a present-tense imperative verb phrase, lowercase, dashes (`choose-database.md`). Pick one convention per repository and keep it.
+- Store the record in the repository next to the code and review it in the pull request that builds the change (own recommendation).
 
-- **Writing a 30-page "Software Architecture Document" instead of modular ADRs:** As Nygard notes, large monolithic specification documents are never read and never kept up to date. Keep each ADR to 1-2 pages of high-signal Markdown.
-- **Retroactive justification ("Resume-Driven ADR"):** Picking a complex technology first (e.g., Kubernetes + Kafka for a 10-user internal tool) and writing fake straw-man alternatives to justify it.
-- **Modifying an Accepted ADR in place when reversing a decision:** Deleting the old rationale erases why the team tried the first approach — causing a future team to repeat the exact same mistake 18 months later.
-- **Orphan Decisions with zero verification:** Writing an ADR saying *"Domain layer must never import Infrastructure"* without adding an architecture import test (`clean-architecture`, `hexagonal-architecture`) to enforce it in CI.
+## 5. Change, supersede, amend
+
+- Reversal: write a new ADR that says what changed in the context; mark the old one superseded with a pointer, and link both ways. Never delete a record or hide a reversal.
+- Mutability is disputed: Nygard keeps superseded records; Henderson says records are largely immutable yet teams found dated additions ("added after the decision") worked better in practice. Rule here: fix typos and add dated notes freely; never change the decision text itself.
+- Review a record about a month after the decision against what happened, and periodically thereafter (Henderson's examples: one month; at least yearly).
+
+## 6. Keep it from becoming shelfware
+
+If a decision can be checked mechanically (dependency direction, "every state change emits an event"), put the check in CI and cite the ADR in it. Dependency-direction example: `hexagonal-architecture`, `clean-architecture`. Prose-only decisions decay; state which ones are prose-only.
+
+## 7. Mistakes to catch
+
+- A thirty-page architecture document instead of small records (Nygard: large documents go stale unread).
+- Retroactive justification: pick the technology first, then invent weak alternatives.
+- Context written as advocacy rather than forces.
+- Only benefits under Consequences.
+- Several decisions in one record.
+- Editing an accepted decision in place when reversing it.
+- ADRs turned into forced paperwork (Henderson: lead with the why).
 
 ## Quick Decision Checklist
 
-- [ ] Is this decision architecturally significant, not a lint-enforced style rule or an hour-long refactor?
-- [ ] Does the ADR cover exactly one decision, with the forces and at least two considered options?
-- [ ] Does it say why each rejected alternative lost, with no straw-man options?
-- [ ] Are the negative consequences and trade-offs listed, not only benefits?
-- [ ] If reversing a decision, am I writing a new ADR and linking the old one as Superseded, not editing the Accepted one?
-- [ ] Does Compliance / Verification name an automated check, so the ADR is not shelfware?
-- [ ] Is the ADR short (1-2 pages), in docs/adr/, and reviewed in the same PR as the change?
+- [ ] Is the decision significant and will a future reader need its why?
+- [ ] One decision per record, one or two pages?
+- [ ] Forces named neutrally, including conflicts?
+- [ ] At least two real options plus do-nothing, each with a reason it lost?
+- [ ] Negative and neutral consequences listed?
+- [ ] Is there a check (automated if possible) or an explicit "prose only" note?
+- [ ] If reversing: new record, old one marked superseded, links both ways?
+- [ ] Stored in Git, numbered per the repository's convention, reviewed in the PR?
 
 ## Deep references
 
-- [Nygard's original ADR form](references/nygard-original-adr-form.md) — read when writing or reviewing an ADR's content and style
-- [ADR governance and enforcement](references/adr-team-governance-and-enforcement.md) — read when setting team process, choosing a template or automating checks
+- [references/nygard-original-adr-form.md](references/nygard-original-adr-form.md): read when writing or reviewing an ADR's content and style.
+- [references/adr-team-governance-and-enforcement.md](references/adr-team-governance-and-enforcement.md): read when setting team process, choosing a template or automating checks.
+- [references/trigger-evals.md](references/trigger-evals.md): read when tuning this skill's description.
+- [references/sources.md](references/sources.md): URL statuses, reading limits, claims not adopted.

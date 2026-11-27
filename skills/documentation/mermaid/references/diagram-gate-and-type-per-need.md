@@ -1,6 +1,6 @@
 # Does the Diagram Earn Its Place? Gate and Type-per-Need
 
-Sources: https://mermaid.js.org/intro/ · https://mermaid.js.org/syntax/flowchart.html · https://mermaid.js.org/syntax/sequenceDiagram.html · https://mermaid.js.org/syntax/stateDiagram.html · https://mermaid.js.org/syntax/entityRelationshipDiagram.html · Last verified 2026-11-24
+Sources: https://mermaid.js.org/intro/ · https://mermaid.js.org/syntax/flowchart.html · https://mermaid.js.org/syntax/sequenceDiagram.html · https://mermaid.js.org/syntax/stateDiagram.html · https://mermaid.js.org/syntax/entityRelationshipDiagram.html · Last verified 2026-11-27
 
 The method comes from an internal documentation workflow (generic part only, rewritten here); the syntax facts come from the Mermaid pages above, already summarized in the sibling references.
 

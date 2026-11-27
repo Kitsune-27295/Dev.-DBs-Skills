@@ -1,6 +1,6 @@
 # Sequence Diagrams: Participants, Arrows, Blocks, Config
 
-Sources: https://mermaid.js.org/syntax/sequenceDiagram.html · Last verified 2026-11-23
+Sources: https://mermaid.js.org/syntax/sequenceDiagram.html · Last verified 2026-11-27
 
 ## Participants and actors
 - Order of first appearance sets column order unless participants are declared first.
@@ -18,7 +18,7 @@ Sources: https://mermaid.js.org/syntax/sequenceDiagram.html · Last verified 202
 | `-x` / `--x` | cross at end |
 | `-)` / `--)` | open arrow (async) |
 
-Half-arrow and central-connection variants (v11.12.3+) exist (`Alice->>()John: Hello John` connects to a central lifeline); verify against the target renderer before using.
+Half-arrow and central-connection variants (v11.12.3+) exist, but the page's half-arrow table lists some entries twice with different descriptions: check the live editor before using them.
 
 ## Activations
 Explicit `activate John` / `deactivate John`, or shortcut `Alice->>+John: ...` and `John-->>-Alice: ...`. Activations on the same actor stack.

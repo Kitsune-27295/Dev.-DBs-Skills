@@ -1,5 +1,7 @@
 # Security audit: report and issue drafts
 
+Last verified 2026-11-27. No external source: the structure below is this skill's own convention.
+
 Format of the deliverable of `security-audit`. Read it after the audit and before writing the report.
 
 ## Report contents

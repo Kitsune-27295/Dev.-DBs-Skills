@@ -1,6 +1,6 @@
 # Bulkhead Isolation: Partitioning Consumers and Services
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead · Last verified 2026-11-27 (source page ms.date 2026-03-19)
 
 ## Problem
 
@@ -45,7 +45,7 @@ containers:
     limits:   {memory: 128Mi, cpu: "1"}
 ```
 
-A bounded in-process analogue (own inference, not from source):
+A bounded in-process analogue (our sketch, not from the source):
 
 ```
 pools = {"payments": Semaphore(20), "search": Semaphore(50)}

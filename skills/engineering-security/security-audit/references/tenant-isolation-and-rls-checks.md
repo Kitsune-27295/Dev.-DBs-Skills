@@ -1,6 +1,6 @@
 # Tenant Isolation and RLS Checks
 
-Sources: https://www.postgresql.org/docs/current/ddl-rowsecurity.html · https://supabase.com/docs/guides/database/postgres/row-level-security · https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/current/ddl-rowsecurity.html · https://supabase.com/docs/guides/database/postgres/row-level-security · https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · Last verified 2026-11-27 (PostgreSQL page showed version 19 documentation)
 
 This file covers class 1 of `security-audit` at the policy level: how row-level security (RLS) behaves, and what an auditor should confirm. Deployment exposure (ports, grants, roles, who can reach the API) belongs to `database-exposure`; the rule "enforce on the server" belongs to `never-trust-the-client`.
 
@@ -8,21 +8,21 @@ This file covers class 1 of `security-audit` at the policy level: how row-level 
 
 - RLS is switched on per table, separately from ordinary `GRANT`s. Only the table owner turns it on or manages its policies.
 - With RLS on and **no** policy, the default is deny: ordinary roles see and change no rows.
-- Disabling RLS does not delete policies; they are ignored, which is a silent failure mode.
+- Setting `row_security` to `off` does not bypass policies: it raises an error if a policy would filter any row, so omitted rows cannot go unnoticed.
 - `USING` filters rows that already exist (select, update, delete). `WITH CHECK` validates rows being written (insert, update). If `WITH CHECK` is omitted, `USING` is reused for it.
 - Several permissive policies combine with OR; restrictive ones combine with AND.
 - Superusers and roles with `BYPASSRLS` skip RLS. The table owner skips it too unless `FORCE ROW LEVEL SECURITY` is set.
-- Referential-integrity checks bypass RLS, and `TRUNCATE` is not governed by it.
-- Policies that read other tables can leak information or race under default isolation; the docs suggest locking or security-definer helpers.
+- Unique, primary-key and foreign-key checks bypass RLS, and `TRUNCATE` and `REFERENCES` are not governed by it.
+- Policies that consult other tables can leak data under READ COMMITTED; the docs suggest `SELECT ... FOR SHARE`, security-definer functions or locking the referenced table.
 
 ## Mechanics worth knowing (Supabase docs)
 
-- Tables are not protected until RLS is enabled on each one; the docs even suggest an event trigger to enable it on new tables, which implies it is not automatic. New `public` tables on existing projects start with broad grants to the API roles.
+- RLS must be enabled on each table in an exposed schema. New `public` tables on existing projects grant every privilege to the `anon`, `authenticated` and `service_role` API roles; adding policies does not remove those grants, so revoke and re-grant only what each role needs.
 - RLS on with no policies: nothing is returned through the client key until policies exist.
 - Grants are checked before policies; a missing grant fails with error `42501`.
 - The privileged "secret" key bypasses RLS when the request carries no user token; keep it out of the browser.
-- Views typically run with their creator's rights and so bypass RLS; on Postgres 15+ use `security_invoker = true`, otherwise keep the view out of exposed schemas.
-- Update needs a matching select policy as well.
+- Views bypass RLS by default; on Postgres 15+ set `security_invoker = true` so the view follows the underlying tables' policies, on older versions revoke access from the API roles or keep the view in an unexposed schema.
+- A `using` clause that filters rows out returns zero rows without an error; a missing grant or a `with check` violation raises `42501`.
 
 ## Audit procedure
 

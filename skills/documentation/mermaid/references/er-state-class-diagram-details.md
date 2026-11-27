@@ -1,6 +1,6 @@
 # ER, State, and Class Diagrams: Detail Reference
 
-Sources: https://mermaid.js.org/syntax/entityRelationshipDiagram.html · https://mermaid.js.org/syntax/stateDiagram.html · https://mermaid.js.org/syntax/classDiagram.html · Last verified 2026-11-23
+Sources: https://mermaid.js.org/syntax/entityRelationshipDiagram.html · https://mermaid.js.org/syntax/stateDiagram.html · https://mermaid.js.org/syntax/classDiagram.html · Last verified 2026-11-27
 
 ## ER diagrams
 - Statement: `<first-entity> [<relationship> <second-entity> : <label>]`; the label reads from the first entity's perspective.
@@ -39,7 +39,7 @@ erDiagram
 - `<<choice>>`, `<<fork>>`, `<<join>>` via `state x <<choice>>`; concurrent regions separated by `--` inside a composite.
 - Notes: `note right of S1 ... end note` or `note left of S2 : text`.
 - `direction LR` at top level or inside a composite. Comments `%%`.
-- `classDef` / `class` / `:::` work, but cannot style start/end states or composites (documented limitation).
+- `classDef` / `class` / `:::` work, but the page says styles cannot be applied to start/end states or within composites; its `:::` section contradicts the first limit for start/end, so test before relying on either.
 - Use `stateDiagram-v2`; the docs still show the older `stateDiagram` renderer.
 
 ```mermaid
@@ -55,8 +55,8 @@ stateDiagram-v2
 
 ## Class diagrams
 - Declaration: `class Animal`, implicit via relationship, label form `class Animal["Animal with a label"]`, backtick names for specials.
-- Members: `Class : +String owner` or brace block; `()` marks a method; return type after `)`: `+deposit(amount) bool`. Visibility `+ - # ~`; classifiers `*` (abstract method) and `$` (static). Generics `List~int~`, nestable, no commas.
-- Relations: `<|--`, `*--`, `o--`, `-->`, `--`, `..>`, `..|>`, `..`; reversed forms like `--|>` allowed; two-way `Animal <|--|> Zebra`; labels `A <|-- B : implements`; lollipop `bar ()-- foo`.
+- Members: `Class : +String owner` or brace block; `()` marks a method; return type after `)`: `+deposit(amount) bool`. Visibility `+ - # ~`; classifiers `*` (abstract method) and `$` (static). Generics `List~int~`, nestable; commas inside generics are documented as unsupported.
+- Relations: `<|--`, `*--`, `o--`, `-->`, `--`, `..>`, `..|>`, `..`; reversed forms like `--|>` allowed; two-way `Animal <|--|> Zebra`; labels `A <|-- B : implements`; lollipop `bar ()-- foo` (the page says an interface should not be shared between classes, yet its own example does; test it).
 - Cardinality as quoted strings around the arrow: `Customer "1" --> "*" Ticket`; values `1`, `0..1`, `1..*`, `*`, `n`, `0..n`, `1..n`, or free text.
 - Annotations (`<<interface>>`) inline, on a separate line, or inside the body.
 - Notes: `note "text"`, `note for MyClass "text"`.

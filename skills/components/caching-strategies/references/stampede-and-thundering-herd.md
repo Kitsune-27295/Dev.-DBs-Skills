@@ -1,10 +1,10 @@
 # Cache Stampede (Thundering Herd) Mitigation
 
-Sources: https://upstash.com/kb/thundering-herd-problem-cache-stampede · https://learn.microsoft.com/en-us/azure/architecture/patterns/throttling (caching is not a throttle) · Last verified 2026-11-23
+Sources: https://upstash.com/kb/thundering-herd-problem-cache-stampede (vendor knowledge-base article; its benchmarks are the author's, not independent) · Last verified 2026-11-27
 
 ## The failure
 
-A hot key expires (or is evicted/flushed). Every request arriving in the next hundreds of milliseconds misses, none knows another is rebuilding, and all hit the database. The window lasts as long as one rebuild takes: the Upstash example is 10 req/s with a 3 s query giving roughly 30 rebuilds. Triggers: hot-key expiry under peak load, slow rebuilds, bulk warm-up jobs that write thousands of keys with the same TTL, cache restarts. Symptom: hits drop while misses and database load spike right after expiry or a flush. The same shape appears in client retries against a recovering server; jitter spreads those too.
+A hot key expires (or is evicted/flushed). Every request arriving in the next hundreds of milliseconds misses, none knows another is rebuilding, and all hit the database. The window lasts as long as one rebuild takes: the Upstash example is 10 req/s with a 3 s query giving roughly 30 rebuilds. Triggers: hot-key expiry under peak load, slow rebuilds, bulk warm-up jobs that write thousands of keys with the same TTL, cache restarts. Symptom: hits drop while misses and database load spike right after expiry or a flush. The same shape appears in client retries against a recovering server (our observation; see `circuit-breaker-retry-telemetry`).
 
 ## Five mitigations (and what each does not solve)
 

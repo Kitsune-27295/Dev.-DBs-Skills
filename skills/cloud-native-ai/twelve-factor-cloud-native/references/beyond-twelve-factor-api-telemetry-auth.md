@@ -1,51 +1,42 @@
 # Beyond Twelve-Factor: API First, Telemetry, Authentication and Authorization
 
-Sources: https://kloudease.com/en/blog/12-15-factor-app-cloud-native-standards/ · Last verified 2026-11-23
+Sources: https://kloudease.com/en/blog/12-15-factor-app-cloud-native-standards/ · Last verified 2026-11-27
 
-The article (a vendor blog, so treat framing as opinion) describes Kevin Hoffman's *Beyond the Twelve-Factor App* (2016): the original twelve reordered and sharpened, plus three factors for distributed systems. The original model covers a single app on a PaaS; the additions cover distribution, declarative operations and security by default.
+The article is a vendor blog, so treat its framing as opinion. It credits Kevin Hoffman's 2016 book *Beyond the Twelve-Factor App* with reordering and sharpening the original twelve and adding three factors. The original model covers one app on a platform; the additions address distribution and security. The primary text of the book was not read here.
 
 ## 13 API First
 
-Design the interface before the implementation; a versioned contract (OpenAPI, Protobuf) is the first artifact. Payoffs: consumers build against mocks, breaking changes surface in review, contract tests run in CI. Reason for the factor: the original twelve say nothing about interfaces, yet many-service systems live or die on them.
+Design the interface before the implementation, with a versioned contract such as OpenAPI or Protobuf as the first artifact. Payoffs named: teams build against mocks, breaking changes surface in review, contract tests run in the pipeline.
 
 ## 14 Telemetry
 
-Extends Logs (11) to three data kinds: application metrics (throughput, error rate), health metrics (status, availability), and domain events. Examples: structured logs, a Prometheus-compatible endpoint, distributed tracing with propagated context headers; OpenTelemetry is named as the common standard. Rationale quoted from the article: "What an application does not reveal about itself, no platform can make visible after the fact."
+Expose three kinds of data: application metrics, health status and domain events. Short-lived containers cannot be inspected by logging into a machine, so the app must provide the data itself: structured logs, a Prometheus-compatible metrics endpoint, distributed tracing; OpenTelemetry is named as the common standard. Quoted in the article: "What an application does not reveal about itself, no platform can make visible after the fact." Instrumentation design lives in `circuit-breaker-retry-telemetry`.
 
 ## 15 Authentication and Authorization
 
-Every call is authenticated and authorized, internal ones included; identities short-lived, permissions explicit, secrets never in the image or repo. On Kubernetes: RBAC, central secrets management, mTLS between services, policy that rejects insecure configuration. Reason: no trusted internal network.
+Authenticate and authorize every request, internal calls included. Identities are short-lived, permissions explicit, secrets kept out of images and repositories. On Kubernetes the article lists RBAC, central secrets management, mTLS and policy enforcement. Flow and token design lives in `authn-authz-guard`.
 
-## Changes to original factors
+## Maturity context
 
-| Original | Extended by |
-|---|---|
-| Logs (11) | Telemetry (14): metrics, health, events |
-| Config (3) | Credentials (15): separate lifecycle, rotation, audit, storage outside repo |
-| Disposability (9) | Kubernetes needs: health probes, resource requests, graceful SIGTERM, defined termination periods |
+The article cites the CNCF Cloud Native Maturity Model (five aspects across five levels). From the move into production onward it expects multiple replicas, externalized configuration, meaningful health probes and an SBOM per release. These are the article's reading of the model; the model itself was not fetched.
 
-The article does not enumerate every other reformulation, so do not attribute further changes to it.
-
-## Operational context
-
-The CNCF Cloud Native Maturity Model is cited: from production readiness onward expect multiple replicas, externalized config, meaningful readiness probes, an SBOM per release, sized resources. Common obstacles: session state in memory or disk, secrets mixed into plain config, apps that ignore SIGTERM and drop requests. A provider running an app as SREaaS treats these as prerequisites (JSON logs with correlation ID, Prometheus metrics, health endpoint, SBOM).
+## Own illustration (not from the article)
 
 ```yaml
-# illustrative Kubernetes fragment (own example)
 readinessProbe: { httpGet: { path: /healthz, port: 8080 } }
 resources: { requests: { cpu: 100m, memory: 128Mi } }
-terminationGracePeriodSeconds: 30
+terminationGracePeriodSeconds: 30     # keep above the app's drain time
 envFrom: [ { secretRef: { name: app-credentials } } ]
 ```
 
-## Use when / avoid when
+## Use when and avoid when
 
-Use the extra factors when many services exchange calls or run on Kubernetes. Avoid adopting 15 factors as a checklist for a single small monolith; the first twelve plus basic logging usually suffice (inference).
+Use the three factors when many services exchange calls or the platform is Kubernetes. A small single-service app usually needs the first twelve plus basic logging (this skill's judgment, not a source claim).
 
 ## How an agent should apply this
 
-- Require an OpenAPI or Protobuf contract and contract tests before new service-to-service calls.
-- Add health endpoint, metrics and trace propagation as part of "done" for a new service.
-- Keep credentials in a secret store, not in ordinary env config files; plan rotation.
-- Check probes, resource requests and SIGTERM handling in manifests.
-- Cite the vendor article as opinion; cite 12factor.net for the original rules.
+- Require a contract (OpenAPI or Protobuf) and contract tests before new service-to-service calls.
+- Count a health endpoint, metrics and trace propagation as part of done for a new service.
+- Keep credentials in a secret store, not in ordinary config files, and plan rotation.
+- Check probes, resource requests and SIGTERM handling in manifests as practice, not as article claims.
+- Cite the vendor article as opinion and 12factor.net for the original rules; do not attribute a mapping of old factors to new ones to it.

@@ -1,6 +1,6 @@
 # Cache-Aside, Read-/Write-Through, Write-Behind and TTL
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside · https://learn.microsoft.com/en-us/azure/architecture/best-practices/caching · https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/caching-patterns.html (served body was the ElastiCache lazy-loading/write-through/TTL page) · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside · https://learn.microsoft.com/en-us/azure/architecture/best-practices/caching · https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/caching-patterns.html (the served body is the ElastiCache page "Caching strategies for Memcached", not the Redis whitepaper) · Last verified 2026-11-27
 
 ## Vocabulary
 
@@ -9,7 +9,7 @@ Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-asi
 | Cache-aside (lazy loading) | The application | App checks cache, on miss loads store, fills cache | App writes store, then invalidates (or overwrites) the cache entry |
 | Read-through | The cache layer | App only asks cache; cache loads on miss | n/a |
 | Write-through | The cache layer or app, synchronously | Reads served from cache | Store and cache updated in the same operation; success returned only after both succeed |
-| Write-behind (write-back) | The cache layer, asynchronously | Reads served from cache | Cache acknowledges, store updated later (not read from source; common definition, treat as inference) |
+| Write-behind (write-back) | The cache layer, asynchronously | Reads served from cache | Cache acknowledges, store updated later. The Azure cache-aside page only names it among the features of commercial caching systems (changes are written back to the store automatically); the delay and its risks are our inference |
 
 Cache-aside is how an application emulates read-through when the cache product does not provide it (Azure cache-aside page). It is the default choice because it works with any cache and survives cache loss.
 
@@ -44,7 +44,7 @@ def update_user(u):
 - Under eventual consistency (replicated store) the instance that repopulates the cache may read an old replica and re-cache old data. Read from the primary, or use shorter TTLs for such keys.
 - A local in-process cache is private per instance, so instances diverge. Expire private caches sooner or move to a shared cache.
 
-## Lazy loading vs write-through (AWS/ElastiCache page)
+## Lazy loading vs write-through (AWS ElastiCache page, Memcached edition)
 
 | | Lazy loading | Write-through |
 |---|---|---|
@@ -60,9 +60,9 @@ The page's conclusion: combine them, and put a TTL on every write. TTL does not 
 - Write-through: update store and cache in one write and answer only after both succeed; higher write latency and more coordination. Use only for read-heavy paths needing read-after-write freshness. For data rarely read after write, or constantly changing, invalidate or bypass the cache.
 - Highly dynamic, non-critical data (e.g. device telemetry) may live only in the cache if losing an occasional change is acceptable (inference: never for audited data).
 
-## Write-behind (not read from source)
+## Write-behind (risks are our inference)
 
-Write-behind batches or delays store writes for throughput. Risks that follow from the definition (own inference): data loss if the cache node dies before flush, ordering and retry complexity, and the cache effectively becoming the system of record. Reject it for critical data; if needed, front it with a durable queue (see `background-worker-job-scheduler`) instead of trusting volatile memory.
+No fetched source analyzes write-behind; the Azure cache-aside page only lists it next to read-through and write-through. Writing back later is what the name means, so the risks that follow are our inference: data loss if the cache node dies before flush, ordering and retry complexity, and the cache effectively becoming the system of record. Reject it for critical data; if needed, front it with a durable queue (see `background-worker-job-scheduler`) instead of trusting volatile memory.
 
 ## Lifetime, eviction, priming
 

@@ -1,6 +1,6 @@
 # End-to-end triage order for a slow screen
 
-Sources: https://www.postgresql.org/docs/current/pgstatstatements.html · https://www.postgresql.org/docs/current/queries-limit.html · https://web.dev/articles/vitals · Last verified 2026-11-24 · Method adapted from an internal project's performance procedure (method only; no text, names or figures reused)
+Sources: https://www.postgresql.org/docs/current/pgstatstatements.html · https://www.postgresql.org/docs/current/queries-limit.html · https://web.dev/articles/vitals · Last verified 2026-11-27 · Method adapted from an internal project's performance procedure (method only; no text, names or figures reused)
 
 ## The question first
 
@@ -15,9 +15,9 @@ Ask: is it one slow thing, or many fast things? They have opposite fixes. One sl
 | 3 | Index under row-level security | plan run as the application role, policy column leading in the index | policy column indexed, row-local policy |
 | 4 | Payload | response size, unbounded lists | paginate (`pagination-and-index-design.md`), return only the fields the screen needs |
 | 5 | Cache | what is cached, for how long, under which key | tune freshness to the data's rate of change; a shared cache key must include the tenant or the response can leak across tenants (`caching-strategies`) |
-| 6 | Browser | bundle size, re-render count, the field metrics in the web.dev vitals guidance | lazy-load, split, memoize derived values |
+| 6 | Browser | bundle size, re-render count, the field metrics in the web.dev vitals guidance: Largest Contentful Paint (good at 2.5 s or less), Interaction to Next Paint (200 ms or less) and Cumulative Layout Shift (0.1 or less), read at the 75th percentile; that page was last updated 2024-10-31, so check current thresholds | lazy-load, split, memoize derived values |
 
-Independent calls made one after another on the server side are a fast-things problem too: run them in parallel. Count queries, do not guess: N+1 is invisible when you profile a single request and obvious when you count.
+Independent calls made one after another on the server side are a fast-things problem too: run them in parallel. The statements view only helps if the module is preloaded and query ids are on. Count queries, do not guess: N+1 is invisible when you profile a single request and obvious when you count.
 
 ## Closing
 

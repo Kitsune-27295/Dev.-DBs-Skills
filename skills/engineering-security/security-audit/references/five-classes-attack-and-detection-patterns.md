@@ -1,6 +1,6 @@
 # Five Classes: Attack and Detection Patterns
 
-Sources: https://top10.owasp.org/2021/A01_2021-Broken_Access_Control · https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization · https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html · Last verified 2026-11-24
+Sources: https://top10.owasp.org/2025/A01_2025-Broken_Access_Control · https://top10.owasp.org/2021/A01_2021-Broken_Access_Control · https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization · https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html · Last verified 2026-11-27
 
 `SKILL.md` names the five classes and the audit rules. This file adds, per class, how the flaw shows up in generated code, a cheap way to confirm it, and what usually turns out to be a false positive. Boundary: fixing is `never-trust-the-client`; a database reachable over an API is `database-exposure`; ordering fixes against other concerns is `fundamentals-audit`; a full supply-chain or dependency deep dive is `oss-deep-audit`.
 
@@ -20,7 +20,7 @@ A code generator follows the request literally. "Create the route that fetches a
 - **Manifestation:** a role or `isAdmin` flag read from `localStorage`, a cookie value, a JWT payload decoded in the browser, or a response field the client trusts; UI components or routes hidden with `if (role === 'admin')`.
 - **Verify in code:** grep the front end for role checks, then for each gate open the matching endpoint and look for the same privilege check there. The gate is harmless only when the server independently denies.
 - **Test idea (on a running copy you own):** change the stored role value or the intercepted response field and reload; if more UI appears and the server still answers privileged calls, it is exploitable.
-- **False positives:** purely cosmetic hiding where the endpoint is properly guarded. OWASP's authorization guidance says client checks may help usability but must never decide access.
+- **False positives:** purely cosmetic hiding where the endpoint is properly guarded. The OWASP authorization cheat sheet says client checks may help usability but are easy to bypass; enforce server side, deny by default, on every request.
 
 ## Class 3: IDOR / BOLA
 
@@ -32,7 +32,7 @@ order = Orders.find(id=params.id, owner=session.user_id)   # scoped lookup
 if not order: return 404                                    # same answer for missing and forbidden
 ```
 - **False positives:** public objects; admin-only routes that already enforce the role (still check the role check exists); random ids do not make a missing check safe, only harder to guess.
-- OWASP files this as the top API risk (API1:2023) and describes comparing only the session user id with the id parameter as insufficient on its own for object-level rules.
+- OWASP lists it as API1:2023 (BOLA) and says comparing only the session user id with the id parameter is not a sufficient solution, because objects often belong to other entities (shops, vehicles, documents); each object access needs a permission check for that object and action. Broken access control is #1 in both the 2021 and 2025 general Top 10, and both name insecure direct object references. Random ids (GUIDs) are advised only as defence in depth; the two-user test from the IDOR cheat sheet (user A requests user B's objects across read, create, update, delete, export) is the cheap confirmation.
 
 ## Class 4: exposed keys
 

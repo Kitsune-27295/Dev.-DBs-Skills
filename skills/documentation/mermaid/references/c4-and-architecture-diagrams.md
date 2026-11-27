@@ -1,6 +1,6 @@
 # C4 and Architecture (`architecture-beta`) Diagrams
 
-Sources: https://mermaid.js.org/syntax/c4.html · https://mermaid.js.org/syntax/architecture.html · Last verified 2026-11-23
+Sources: https://mermaid.js.org/syntax/c4.html · https://mermaid.js.org/syntax/architecture.html · Last verified 2026-11-27
 
 ## C4 in Mermaid
 Five types: `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`. Syntax follows C4-PlantUML, but layout comes from statement order (no automatic algorithm) and styling is fixed (no skins or CSS).
@@ -19,7 +19,7 @@ Five types: `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deploymen
 ### Style and layout controls
 - `UpdateElementStyle(elementName, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)` and `UpdateRelStyle(from, to, ?textColor, ?lineColor, ?offsetX, ?offsetY)`.
 - `UpdateLayoutConfig(?c4ShapeInRow, ?c4BoundaryInRow)`: defaults 4 shapes per row, 2 boundaries per row.
-- Not supported: `Lay_U/D/L/R` (not planned). Unfinished per the page: sprites, tags, links, `Legend`, `AddElementTag`, `AddRelTag`, `RoundedBoxShape()`, `EightSidedShape()`, `DashedLine()`, `DottedLine()`, `BoldLine()`. Do not emit these.
+- Not supported: `Lay_U/D/L/R` (not planned). Unfinished per the page: sprites, tags, links, `Legend`, `AddElementTag`, `AddRelTag`, `RoundedBoxShape()`, `DashedLine()` and similar helpers (the page's own examples still pass `$tags`, so its list and examples disagree: avoid them). Since v11.17.1 C4 text wrapping is on by default; `c4.wrap: false` turns it off.
 
 ```mermaid
 C4Context
@@ -33,8 +33,8 @@ C4Context
 
 (Own sketch composed from documented macros; the page's own examples are longer.)
 
-## `architecture-beta` (v11.1.0+, beta; syntax may change incompatibly)
-- Blocks can be declared in any order, but an id must be declared before it is referenced.
+## `architecture-beta` (beta; the page warns the syntax may change incompatibly)
+- Declare every id before it is referenced (this pack's rule; the page does not state an ordering rule).
 - `group id(icon)[Title] (in parent)?`, `service id(icon)[Title] (in parent)?`, `junction id (in parent)?` (a junction is a potential four-way split).
 - Edge: `serviceId{group}?:SIDE -- SIDE:serviceId{group}?` where SIDE is `T`, `B`, `L`, `R`; `<` and `>` add arrowheads. The `{group}` modifier applies only to services inside a group, and group ids cannot be used directly in edges.
 - Icons: built-in `cloud`, `database`, `disk`, `internet`, `server`; Iconify packs after registration, referenced as `pack:name` (e.g. `logos:aws-s3`).

@@ -1,6 +1,6 @@
 # Circuit Breaker: State Machine, Counters and Tuning
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker · Last verified 2026-11-27 (source page ms.date 2025-02-05)
 
 ## Purpose and boundary with Retry
 
@@ -22,14 +22,16 @@ Half-Open exists so a recovering service is not flooded the instant the timer fi
 
 - **Open duration too long**: errors continue after the fault is fixed. **Too short**: the breaker flaps and trial calls add latency. Match it to the realistic recovery pattern; an increasing timeout (seconds first, then minutes) is a valid adaptation.
 - **Probe instead of timer**: Open can end by pinging a health endpoint or replaying a previously failed call rather than waiting blindly.
-- **Failure type weighting**: require more timeouts than hard "unavailable" errors before tripping, or the reverse; a breaker can look at the exception type.
-- **Accelerated tripping**: a 429 or 503 carrying a retry-after hint can trip immediately and hold for at least that long.
+- **Failure type weighting**: the page's example requires a larger number of timeout exceptions than "service unavailable" failures before tripping; a breaker can look at the exception type.
+- **Accelerated tripping**: an error response can carry enough information (for example that an overloaded shared resource wants a retry in a few minutes) for the breaker to trip at once and stay tripped for a minimum time. Reading a `Retry-After` header for this is our application of that idea.
 - **Resource differentiation**: one breaker per independent backend (shard, tenant, region), never one for a whole logical service, or one sick shard blocks healthy ones.
 - **Manual override**: when recovery time is highly variable, expose force-open and force-close controls.
 - **Concurrency**: many instances share the breaker; its bookkeeping must not serialize calls.
 - **Failed request replay**: while Open, requests may be journaled and replayed later instead of dropped.
 - **Long external timeouts**: a breaker cannot save you if each call blocks for a long timeout before counting as a failure; shorten timeouts and add a bulkhead.
-- **Adaptive thresholds**: the page notes that static counts are deterministic but sometimes suboptimal and that ML-adjusted thresholds are an emerging option (treat as optional, not baseline).
+- **Adaptive thresholds**: the page notes that static counts are deterministic but sometimes suboptimal and that AI or ML-adjusted thresholds can improve resiliency (treat as optional, not baseline).
+- **Multiregion and mesh**: the page also covers region-aware breaking through global load balancers, and service-mesh sidecars that break circuits without code changes.
+- **Monitoring**: the page asks for visibility into failed and successful requests and suggests distributed tracing; a state-change event per transition is a good alert source.
 
 ## When not to use
 
@@ -38,6 +40,7 @@ Half-Open exists so a recovering service is not flooded the instant the timer fi
 - When dependencies already handle retries well and the breaker only adds complexity.
 - Message/event-driven flows where dead-letter queues already isolate failures.
 - When the platform (service mesh sidecar, global load balancer health checks) already breaks circuits.
+- When waiting for a reset would add unacceptable delay.
 
 ## Example: pseudo-code
 

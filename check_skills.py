@@ -3,6 +3,7 @@
 
     python check_skills.py <skills folder>          # e.g. skills, .claude/skills or ~/.claude/skills
     python check_skills.py --write-manifest         # maintainers: rewrite MANIFEST.sha256 from skills/
+    python check_skills.py --redundancy [folder]    # repeated paragraphs across skills (first pass of the redundancy review)
 
 Skill folders are found one or two levels deep, so both the pack layout (`skills/<category>/<name>/`) and a flat
 installed folder (`<name>/`) work; a skill name must be unique across categories. When the folder is this pack's own
@@ -157,6 +158,77 @@ def write_manifest() -> int:
     return 0
 
 
+REDUNDANCY_SKIP_FILES = {"sources.md", "trigger-evals.md"}
+REDUNDANCY_MIN_CHARS = 180
+REDUNDANCY_REPORT = 0.55  # shingle overlap that is worth a reviewer's attention
+REDUNDANCY_FAIL = 0.90  # near-verbatim copy: fails the check
+
+
+def _paragraphs(text: str) -> list[str]:
+    """Prose paragraphs only: no front matter, code, tables, headings, checklists, link lists or Sources/Last verified lines."""
+    text = re.sub(r"\A---\n.*?\n---\n", "", text, flags=re.S)
+    text = re.sub(r"```.*?```", "", text, flags=re.S)
+    keep = []
+    for block in re.split(r"\n\s*\n", text):
+        b = block.strip()
+        if len(b) < REDUNDANCY_MIN_CHARS or b.count("\n") > 12:
+            continue
+        if b.startswith(("|", "#", "- [ ]", "Sources:", "Last verified", "Source:")):
+            continue
+        if all(re.match(r"\s*[-*] \[[^\]]*\]\([^)]*\)", line) for line in b.splitlines()):
+            continue
+        keep.append(b)
+    return keep
+
+
+def _shingles(text: str, size: int = 5) -> set[str]:
+    words = re.findall(r"[a-z0-9]+", text.lower())
+    return {" ".join(words[i:i + size]) for i in range(max(0, len(words) - size + 1))}
+
+
+def redundancy(root: pathlib.Path) -> tuple[list[str], list[str]]:
+    """Deterministic first pass of the redundancy review: (failures, findings for a reviewer).
+
+    Finds a paragraph repeated across two skills, a reference file that restates its own SKILL.md, and two files of
+    different skills that are mostly the same text. It cannot see the same rule in different words: that is the
+    reviewer's job (skill-creation-workflow, references/redundancy-review.md).
+    """
+    skills, _ = skill_folders(root)
+    items: list[tuple[str, str, set[str], str]] = []  # (skill, file, shingles, paragraph)
+    for folder in skills:
+        for md in sorted(folder.rglob("*.md")):
+            if md.name in REDUNDANCY_SKIP_FILES:
+                continue
+            rel = md.relative_to(folder).as_posix()
+            for paragraph in _paragraphs(md.read_text(encoding="utf-8")):
+                sh = _shingles(paragraph)
+                if len(sh) >= 20:
+                    items.append((folder.name, rel, sh, paragraph))
+    index: dict[str, set[int]] = {}
+    for i, (_, _, sh, _) in enumerate(items):
+        for s in sh:
+            index.setdefault(s, set()).add(i)
+    pairs: set[tuple[int, int]] = set()
+    for ids in index.values():
+        if 1 < len(ids) <= 8:
+            ordered = sorted(ids)
+            pairs.update((a, b) for k, a in enumerate(ordered) for b in ordered[k + 1:])
+    failures: list[str] = []
+    findings: list[str] = []
+    for a, b in sorted(pairs):
+        (sa, fa, sha, pa), (sb, fb, shb, _) = items[a], items[b]
+        cross = sa != sb
+        intra = sa == sb and fa != fb and "SKILL.md" in (fa, fb)
+        if not (cross or intra):
+            continue
+        overlap = len(sha & shb) / min(len(sha), len(shb))
+        if overlap < REDUNDANCY_REPORT:
+            continue
+        line = f"{sa}/{fa} <-> {sb}/{fb}: {overlap:.0%} of a paragraph repeated ({pa[:70].strip()!r}...)"
+        (failures if overlap >= REDUNDANCY_FAIL else findings).append(line)
+    return failures, findings
+
+
 def check(root: pathlib.Path) -> list[str]:
     skills, duplicates = skill_folders(root)
     if not skills:
@@ -194,6 +266,15 @@ def check(root: pathlib.Path) -> list[str]:
 def main(argv: list[str]) -> int:
     if argv == ["--write-manifest"]:
         return write_manifest()
+    if argv and argv[0] == "--redundancy":
+        root = pathlib.Path(argv[1] if len(argv) > 1 else PACK_DIR / "skills").expanduser()
+        failures, findings = redundancy(root)
+        for line in failures:
+            print(f"  [FAIL] {line}")
+        for line in findings:
+            print(f"  [REVIEW] {line}")
+        print(f"{'FAILED' if failures else 'OK'}: {len(failures)} near-verbatim copy(ies), {len(findings)} for the reviewer in {root}")
+        return 1 if failures else 0
     if len(argv) != 1:
         print(__doc__)
         return 2

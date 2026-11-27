@@ -1,8 +1,8 @@
 # PostgreSQL coverage gap table
 
-Sources: https://www.postgresql.org/docs/current/ ( explicit-locking, sql-select, queries-limit, indexes-partial, indexes-index-only-scans, indexes-multicolumn, indexes-expressional, ddl-rowsecurity, sql-insert, populate, routine-vacuuming, runtime-config-connection, runtime-config-client, ddl-partitioning, ddl-identity-columns, sql-syntax-lexical, pgstatstatements ) · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/current/ ( explicit-locking, sql-select, queries-limit, indexes-partial, indexes-index-only-scans, indexes-multicolumn, indexes-expressional, ddl-rowsecurity, sql-insert, populate, routine-vacuuming, runtime-config-connection, runtime-config-client, ddl-partitioning, ddl-identity-columns, sql-syntax-lexical, pgstatstatements ) · Last verified 2026-11-27
 
-This table records a topic-level audit of the Postgres and Supabase guidance in the repository. The audit used a third-party skill collection about Postgres and Supabase best practices (38 rule files grouped by prefix: connections, data, locks, monitoring, query, schema, security, advanced) only as a list of topics; no text from it is reused. Every gap was filled from the official PostgreSQL documentation listed above, in the files named in the last column. Rule: one owner per topic; a neighbor links instead of repeating.
+This table records a topic-level audit of the Postgres and Supabase guidance in the repository. The audit used a third-party skill collection about Postgres and Supabase best practices (its file count and grouping were read locally and not re-verified on 2026-11-27) only as a list of topics; no text from it is reused. Every gap was filled from the official PostgreSQL documentation listed above, in the files named in the last column. Rule: one owner per topic; a neighbor links instead of repeating.
 
 | Topic | Where it was covered before | Gap | Action (owner file) |
 |---|---|---|---|

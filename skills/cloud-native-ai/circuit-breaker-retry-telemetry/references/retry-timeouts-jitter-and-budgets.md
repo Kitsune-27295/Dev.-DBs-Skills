@@ -1,6 +1,6 @@
 # Retries, Timeouts, Jitter and Retry Budgets
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/retry · https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/ (301 redirect to https://builder.aws.com/content/3EumjoZascWd1oZiEgL8ORlv3qE/timeouts-retries-and-backoff-with-jitter, read there) · https://azure.microsoft.com/en-us/blog/using-the-retry-pattern-to-make-your-cloud-application-more-resilient/ · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/retry (ms.date 2024-07-18) · https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/ (301 redirect to https://builder.aws.com/content/3EumjoZascWd1oZiEgL8ORlv3qE/timeouts-retries-and-backoff-with-jitter, read there; article by Marc Brooker, published 2019-12-05) · https://azure.microsoft.com/en-us/blog/using-the-retry-pattern-to-make-your-cloud-application-more-resilient/ (2018) · Last verified 2026-11-27
 
 ## Timeouts come first
 
@@ -22,26 +22,27 @@ Match the policy to context: an interactive request should give up after few sho
 Retries are "selfish": they spend server capacity to raise one caller's odds. In overload they deepen the problem. Layering multiplies: with 5 stacked layers each retrying 3 times, a failing database sees 3^5 = 243 times the load. Rules that follow:
 
 - Retry at one layer only (usually the one with the fullest context); lower layers fail fast and report the reason upward.
-- Cap both delay and attempt count; a cap on delay alone leaves every client retrying at the same capped cadence.
-- Retry only while the dependency looks healthy; stop when retries no longer raise availability.
+- Cap both delay and attempt count; the article notes that a cap on delay alone leaves many clients retrying constantly at the capped rate, and prefers limiting retries and handling failure earlier in the architecture.
+- Retry only while the dependency looks healthy (our corollary: stop when retries no longer raise availability, which a budget or breaker enforces).
+- The article also says a single retry point can still waste work done by earlier calls, so choose the layer with the most context.
 
 ## Jitter
 
-Without randomness, callers that failed together back off to the same instant and collide again. Add jitter to retry delays and also to periodic jobs, timers and delayed work, because short spikes hide inside aggregated metrics. The article's examples: per-minute schedules that all fired at the top of the minute or at midnight did the same work with less capacity once jittered. A stable per-host offset is easier to debug than fresh randomness each time.
+Without randomness, callers that failed together back off to the same instant and collide again. Add jitter to retry delays and also to periodic jobs, timers and delayed work, because short spikes hide inside aggregated metrics. The article's examples are clients on regular schedules that synchronize at the start of a minute or after midnight. It recommends a consistent per-host offset over fresh randomness, so overload patterns repeat and are easier to diagnose. It gives no jitter formula and points to a separate AWS Architecture Blog post, whose body could not be read (see sources).
 
 ## Budgets versus circuit breakers
 
-Brooker cautions that breakers add modal behavior that is hard to test and can slow recovery, and favors a local token bucket: each retry spends a token; tokens refill slowly; when empty, only the first attempt is made (or retries drop to a fixed trickle). AWS SDKs adopted this in 2016. Azure's guidance favors the breaker for sustained outages. Use both if you want: the budget bounds amplification, the breaker adds fast-fail plus fallback.
+Brooker cautions that breakers add modal behavior that is hard to test and can significantly lengthen recovery, and favors a local token bucket: calls retry while tokens remain, then retries drop to a fixed rate. The article says AWS added this to its SDK in 2016. Azure's guidance favors the breaker for sustained outages. Use both if you want: the budget bounds amplification, the breaker adds fast-fail plus fallback.
 
 ## Idempotency and what to retry
 
 - Retry reads freely. Retry writes only if idempotent or protected by a client-supplied token (EC2 RunInstances style).
-- 4xx generally not retryable; 5xx may be. Eventual consistency blurs this: a "not found" right after create can later succeed.
+- Our working rule: 4xx is generally terminal, while 5xx, 429 and timeouts may be retried, and eventual consistency can blur it (a "not found" right after create can later succeed). This rule was not read from a fetched source.
 - Consumers of redelivered messages need the Idempotent Consumer pattern.
 
 ## Logging and tests
 
-Log early failed attempts at informational level and only the final exhausted failure as an error, so self-healing blips do not page anyone. Test retry code against each failure mode for load amplification, races and bottlenecks.
+The Azure Retry pattern says to log early failures as informational entries and only the failure of the last attempt as an error, so self-healing blips do not flood operators with alerts. It also asks that retry code be tested against varied failure conditions for load, races and bottlenecks.
 
 ## Platform reality
 
@@ -51,7 +52,7 @@ Hosting in the cloud or containers does not make an app resilient (Azure blog). 
 
 ```
 delay = min(cap, base * 2**attempt)
-sleep(random(0, delay))             # full jitter
+sleep(random(0, delay))             # our full-jitter formulation
 if not budget.try_spend(): raise    # token bucket
 ```
 

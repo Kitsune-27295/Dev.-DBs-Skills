@@ -1,13 +1,28 @@
-# Sources for the adr-architecture skill
+# Sources — ADR Architecture
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize the canonical sources and separate architectural rules from author claims.
+Every URL below was re-checked on 2026-11-27 (Last verified 2026-11-27). Fetched with WebFetch (Firecrawl had no credits); a small model summarized each page, so quotes are not verbatim.
 
-| # | Source | What the skill takes from it |
+| Source | Retrieved status | What it contributed |
 |---|---|---|
-| 1 | Michael Nygard, "Documenting Architecture Decisions" (Cognitect Blog, 2011-11-15), https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions | Origin of the modern lightweight ADR: critique of massive unread specification documents; the twin dangers of **Blind Acceptance** (fear of changing legacy choices) and **Blind Reversal** (breaking hidden non-functional requirements); definition of "architecturally significant" decisions (structure, non-functional characteristics, dependencies, interfaces, construction techniques); the canonical 5-part template (**Title**, **Context**, **Decision**, **Status**, **Consequences**); sequential numbering (`doc/arch/adr-NNN.md`), 1-2 page length, and append-only superseding lifecycle (`Proposed -> Accepted -> Deprecated / Superseded`). |
-| 2 | GitHub ADR Organization (Olaf Zimmermann, Oliver Kopp, et al.), "Architectural Decision Records (ADRs)", https://adr.github.io/ | Formal definitions of **Architectural Decision (AD)**, **Architecturally Significant Requirement (ASR)**, **ADR**, and **Decision Log** within Architectural Knowledge Management (AKM); Uwe Zdun's **Y-statement** format (*"In the context of..., facing..., we decided for... and neglected..., to achieve..., accepting..."*); MADR (Markdown Architectural Decision Records) and integration with Azure Well-Architected and AWS Prescriptive Guidance. |
-| 3 | Joel Parker Henderson, `architecture-decision-record` (GitHub repository), https://github.com/architecture-decision-record/architecture-decision-record | Practical ADR conventions: file-naming standards (present-tense imperative verb phrases, `NNNN-title-with-dashes.md`), teamwork governance (who can raise an ADR, what justifies raising vs. not raising an ADR, lifecycle criteria), and template comparisons (Nygard, MADR, Y-statements, Tyree-Akerman, Alexandrian pattern form). |
+| https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions | 200 | Motivation, significance criteria, five parts and style rules, numbering, superseding, compounding effect, short anecdotal trial. |
+| https://adr.github.io/ | 200 | Definitions of AD, ASR, ADR, decision log; credits Nygard; mentions a seven-template comparison. Does not itself describe MADR or the Y-statement. |
+| https://adr.github.io/adr-templates/ (added) | 200 | MADR and Nygard summaries, Y-statement short and long forms, ISO/IEC/IEEE 42010 Annex A note. |
+| https://adr.github.io/madr/ (added) | 200 | MADR sections, status values, file naming, version 4.0.0 (2024-09-17), MIT or CC0-1.0. |
+| https://github.com/architecture-decision-record/architecture-decision-record | 200 | Naming, when to write, lifecycle and acceptance examples, mutability notes, review cadence, template list. Licence not stated on the page. |
+| https://medium.com/olzzio/y-statements-10eb07b5a177 (added) | 403 | Nothing adopted; Y-statement info came from adr.github.io. |
 
-## Notes on disagreements and nuances across sources
+## Reading limits
 
-- **Nygard Minimal Template vs. MADR (Considered Options Section):** Nygard's original 2011 template (Source 1) includes only `Title`, `Status`, `Context`, `Decision`, and `Consequences`. Later industry templates cataloged by Sources 2 and 3 (especially MADR and Y-statements) explicitly add a **`Considered Options`** section because engineers frequently omitted rejected alternatives when using the bare Nygard format. This skill combines Nygard's conciseness with MADR's explicit `Considered Options` and a 1-sentence `Y-Statement`.
+- Summaries came from a small model reading page text, not the raw pages.
+- Henderson's licence was not confirmed; only facts and ideas are used, in the skill author's own words.
+- Scripts or data files: this skill has none; nothing was run.
+- Third-party skill text: none reused.
+
+## Claims not adopted as fact
+
+- The earlier draft's rule of thumb "if reversing takes more than a day it is significant": not in any source; dropped.
+- The earlier draft's claim that adr.github.io integrates with Azure Well-Architected and AWS Prescriptive Guidance: not on the page read.
+- The earlier draft's claim that engineers "frequently omitted" rejected alternatives in the Nygard format, motivating MADR: no source states it. The skill adds Considered Options as its own recommendation.
+- The earlier draft's absolute "immutable once Accepted": Henderson reports dated amendments worked better in practice; the skill now forbids only changing the decision text.
+- The exact wording of the Y-statement template: originating article unreachable; only the short and long forms are described.
+- Any measured benefit of ADRs: Nygard's experience is anecdotal.

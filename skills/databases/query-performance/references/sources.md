@@ -1,37 +1,42 @@
-# Sources — Query performance
+# Sources — Query Performance
 
-Every source below was checked during skill authoring (2026-11-24).
-
-| Source | Retrieved status | What it contributed to SKILL.md |
-|---|---|---|
-| Video "Banco de Dados | Fundamentos para Vibe Coders #EP2", channel mano deyvin, published 2026-11-12, https://www.youtube.com/watch?v=TL4T9ZESamI — chapter 04 "A linha que falta" (15:50-21:28) | Transcript read from a saved copy; video page not re-fetched | The index-as-book-index analogy, the foreign key without index case, "do not index everything", the prompt's checks (WHERE, JOIN, ORDER BY, loops, high offset, EXPLAIN ANALYZE) |
-| Author's handout, https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe — section "3. Performance: a linha que falta" | Saved copy read; page not re-fetched | The four measured pairs, the prompt text, and the rules on `CREATE INDEX CONCURRENTLY` |
-| PostgreSQL docs "Constraints", https://www.postgresql.org/docs/current/ddl-constraints.html | 200 (read through a summarizing fetch tool) | Confirms primary key and unique constraints create an index and a foreign key does not create one on the referencing columns |
-
-## Claims and caveats (the author's measurements, not verified here)
-
-- 5 million orders: foreign key lookup 58 ms without an index, 0.37 ms with one. Handout adds `date(col)` vs range 151 ms to 0.64 ms, `count(*) > 0` vs `EXISTS` 104 ms to 0.15 ms, `OFFSET` vs cursor 232 ms to 0.18 ms. The test ran on a 2 vCPU, 8 GB VPS. These are the video's claims; I did not reproduce them. Treat them as illustrative orders of magnitude.
-- The video's throughput remarks (20 users, about 5 requests per second at about 4 seconds each without the index; 9,503 requests in 2 ms with it) are not explained well enough in the transcript to interpret; do not quote them.
-- The documentation statement that the foreign key does not auto-index is verified at the page.
-
-## Discrepancies with SKILL.md (not edited)
-
-- `SKILL.md` says to create the index with `CREATE INDEX CONCURRENTLY` and notes it cannot run in a transaction block; the handout only says to use it for large production tables and warn first. (resolved 2026-11-24: the CREATE INDEX page confirms `CONCURRENTLY` cannot run in a transaction block and a failed run leaves an invalid index to drop and retry, so the `SKILL.md` attribution to the PostgreSQL documentation holds.)
-- `SKILL.md` adds `NOT IN` to `NOT EXISTS` and expression indexes for wrapped columns; the PostgreSQL wiki (see `schema-and-constraints`) supports `NOT EXISTS`, the rest is general knowledge.
-- The video mentions "function on a column" and "offset" checks; the handout adds `count` vs `EXISTS`. `SKILL.md` includes all.
-
-## Added 2026-11-24
+Every URL below was re-fetched and checked during the 2026-11-27 rebuild. Last verified 2026-11-27. "current" PostgreSQL documentation was version 19 on that date; versions 15 to 18 remain supported.
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| Third-party skill collection on Postgres and Supabase best practices, read for topic coverage only, no text reused (license: MIT per the collection; not verified here) | read locally | topic list for the gap table only (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/queries-limit.html, https://www.postgresql.org/docs/current/sql-select.html | 200 (summarizing fetch tool) | offset cost, unique ordering for paging (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/functions-comparisons.html | 200 (summarizing fetch tool) | lexicographic row comparison for keyset paging; index use for it not stated on the page (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/indexes-multicolumn.html, indexes-partial.html, indexes-index-only-scans.html, indexes-expressional.html | 200 (summarizing fetch tool) | composite order, partial matching rule, INCLUDE and visibility map, expression index cost (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/ddl-rowsecurity.html | 200 (summarizing fetch tool) | per-row policy evaluation, row-local preference; no indexing advice or benchmarks on the page (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/pgstatstatements.html | 200 (summarizing fetch tool) | columns and normalization; the N+1 reading is the skill's inference (added 2026-11-24) |
-| https://www.postgresql.org/docs/current/sql-insert.html, https://www.postgresql.org/docs/current/populate.html, https://www.postgresql.org/docs/current/routine-vacuuming.html | 200 (summarizing fetch tool) | ON CONFLICT semantics, bulk loading advice, ANALYZE and partitioned tables (added 2026-11-24) |
-| https://web.dev/articles/vitals | 200 (summarizing fetch tool) | the three web vitals metrics named in the triage reference (added 2026-11-24) |
-| Internal project skill, read for method only; no text, names or figures reused (end-to-end performance procedure) | read locally | triage order and "one slow thing versus many fast things" (added 2026-11-24) |
+| https://www.postgresql.org/docs/current/ddl-constraints.html | 200 (summarizing fetch tool) | Primary and unique keys create an index; a foreign key does not on the referencing columns; referenced side must be indexed |
+| https://www.postgresql.org/docs/current/sql-createindex.html | 200 (summarizing fetch tool) | `CONCURRENTLY`: no transaction block, two scans, invalid index on failure, one build per table, no partitioned parents; `INCLUDE` limits; expression index notes (added 2026-11-27) |
+| https://www.postgresql.org/docs/current/using-explain.html | 200 (summarizing fetch tool) | Reading `EXPLAIN ANALYZE`, per-loop averages, rows removed by filter, rollback for writes (added 2026-11-27) |
+| https://www.postgresql.org/docs/current/queries-limit.html | 200 (summarizing fetch tool) | Offset cost; unique `ORDER BY` for stable pages |
+| https://www.postgresql.org/docs/current/functions-comparisons.html | 200 (summarizing fetch tool) | Lexicographic row comparison, null stops the comparison; index use is not stated on the page |
+| https://www.postgresql.org/docs/current/indexes-multicolumn.html | 200 (summarizing fetch tool) | Leading equality plus first range limit the scan; three-column advice; skip scan described without a version |
+| https://www.postgresql.org/docs/18/release-18.html | 200 (summarizing fetch tool) | Skip scan for multicolumn B-tree is new in 18 (added 2026-11-27) |
+| https://www.postgresql.org/docs/current/indexes-partial.html | 200 (summarizing fetch tool) | Implication matching, parameter caveat, many partial indexes warning, partial unique |
+| https://www.postgresql.org/docs/current/indexes-index-only-scans.html | 200 (summarizing fetch tool) | Visibility map, `INCLUDE` support, oversized entries, GIN has no index-only scans |
+| https://www.postgresql.org/docs/current/indexes-expressional.html | 200 (summarizing fetch tool) | Write cost, same-expression rule, unique on `lower()` |
+| https://www.postgresql.org/docs/current/ddl-rowsecurity.html | 200 (summarizing fetch tool) | Per-row evaluation, row-local policies best, sub-select races, bypass rules; no indexing advice or benchmarks |
+| https://www.postgresql.org/docs/current/pgstatstatements.html | 200 (summarizing fetch tool) | Preload and restart, query ids, columns, normalization, `track` default, `queryid` stability |
+| https://www.postgresql.org/docs/current/sql-insert.html | 200 (summarizing fetch tool) | `ON CONFLICT` target, `EXCLUDED`, atomic outcome, cardinality error, `RETURNING` |
+| https://www.postgresql.org/docs/current/populate.html | 200 (summarizing fetch tool) | Bulk loading advice |
+| https://www.postgresql.org/docs/current/routine-vacuuming.html | 200 (summarizing fetch tool) | No autovacuum analyze on partitioned parents; visibility map |
+| https://wiki.postgresql.org/wiki/Don%27t_Do_This | 200 (summarizing fetch tool) | `NOT IN` and `BETWEEN` pitfalls (added 2026-11-27 as re-read) |
+| https://web.dev/articles/vitals | 200 (summarizing fetch tool) | Three Core Web Vitals and thresholds; page last updated 2024-10-31 |
+| https://manodeyvin.com.br/p/banco-de-dados-fundamentos-para-vibe | 200 (summarizing fetch tool) | The four measured pairs, the CONCURRENTLY remark; server named only as a VPS plan |
+| https://www.youtube.com/watch?v=TL4T9ZESamI | 200 but only navigation text returned | Title only; channel, date and chapters could not be re-verified |
+| Third-party skill collection on Postgres and Supabase practices, read for topic coverage only, no text reused (MIT per the collection, not verified) | read locally, not re-fetched | Topic list for the gap table |
+| Internal project skill, read for method only, no text, names or figures reused | read locally | Triage order |
 
-Claims not adopted: the internal skill's "about 4x" RLS cost figure is unverified and not cited. Skip scan version for B-tree is not stated on the page read. The statements-view page was read in its current-version form; check the version you run.
+## Reading limits
+
+- Pages were read through a summarizing fetch tool, not raw HTML; quotes are paraphrased.
+- The documentation fetched is the "current" version (19); statements about older versions rest on the release notes cited.
+- No script or data file in this skill was edited or run in this rebuild.
+
+## Claims not adopted
+
+- The author's millisecond figures (58 to 0.37 ms, 151 to 0.64 ms, 104 to 0.15 ms, 232 to 0.18 ms): not reproduced; illustrative only.
+- The earlier "2 vCPU, 8 GB" test server: the handout names only a VPS plan, so it is dropped.
+- The video's throughput remarks (requests per second): not interpretable, not quoted.
+- The internal skill's "about 4x" RLS cost: unverified.
+- Planner use of an index for the row-comparison keyset pattern: not stated on the page; check with `EXPLAIN`.
+- Indexing advice for RLS policy columns: the documentation gives none; it is the skill's inference.

@@ -20,7 +20,7 @@ Detail and worked example: [references/creation-workflow-and-degrees-of-freedom.
 
 ## 2. Admission check
 
-Apply the admission questions and contract checklist in `agent-skills-context-engineering` (`references/skill-admission-and-baseline-first.md`). If the agent already does the task well without the skill, or the need is a one-line rule, stop: put it in an instruction file (`skill-orchestrator`) instead.
+Apply the admission questions and contract checklist in `agent-skills-context-engineering` (`references/skill-admission-and-baseline-first.md`). If the agent already does the task well without the skill, or the need is a one-line rule, stop: put it in an instruction file (`skill-orchestrator`) instead. A rule that already has an owner in the pack becomes a pointer (`references/redundancy-review.md`).
 
 ## 3. Design
 
@@ -60,8 +60,8 @@ Add a script when traces show the agent re-inventing the same logic each run, or
 
 ## 7. Validate (structure)
 
-1. Run this pack's checker (`python check_skills.py skills` at the repo root) as an example of a local gate: frontmatter, size, headings, link targets.
-2. Optionally run the specification's reference validator `skills-ref validate ./my-skill` (the repository's own README calls it demonstration-only, so treat a pass as a format smoke test, not approval). It checks frontmatter fields, name rules and the 1,024 and 500 character limits, not the body.
+1. Run this pack's checker (`python check_skills.py skills`, then `python check_skills.py --redundancy`) as a local gate: frontmatter, size, headings, link targets, repeated paragraphs.
+2. Optionally run `skills-ref validate ./my-skill` from the specification repository: a format smoke test, not approval (details in the validation reference).
 3. Check LF line endings, forward-slash paths, no machine paths or secrets.
 
 Commands and caveats: [references/validation-packaging-and-host-paths.md](references/validation-packaging-and-host-paths.md).
@@ -113,7 +113,7 @@ One idea: <single sentence>.
 ## Pre-publish checklist
 
 - [ ] Three example requests written; baseline without the skill recorded
-- [ ] Admission check passed; no rule duplicated from a neighbor skill (linked instead)
+- [ ] Admission check passed; redundancy pass run (`--redundancy`); no rule duplicated from a neighbor skill (linked instead)
 - [ ] Description at most 1,000 characters, imperative, ends "Use when ...", boundary stated
 - [ ] Body under the size cap; links one level deep, each with a "read when" condition
 - [ ] Scripts print actionable errors and are labeled run vs read
@@ -130,7 +130,7 @@ One idea: <single sentence>.
 - [ ] Is every section either fragile-and-exact or flexible-and-explained, never vague?
 - [ ] Did the trigger eval include near-miss negatives and a held-out set?
 - [ ] Does the skill beat the baseline on quality or cost, and did I measure tokens?
-- [ ] Is the target host's path, field support and network or package limit confirmed?
+- [ ] Is the target host's path, field support and limit confirmed?
 
 ## Mistakes to Catch
 
@@ -148,4 +148,5 @@ One idea: <single sentence>.
 - [references/description-writing-and-trigger-evals.md](references/description-writing-and-trigger-evals.md): description patterns, real limits, eval set design, train/validation loop, output-eval layout. Read in steps 4 and 8.
 - [references/validation-packaging-and-host-paths.md](references/validation-packaging-and-host-paths.md): validators, packaging, install paths and limits per host. Read in steps 7 and 9.
 - [references/reference-repos-audit-notes.md](references/reference-repos-audit-notes.md): what the public skills repositories actually contain (licence, structure, validators). Read before borrowing from them.
+- [references/redundancy-review.md](references/redundancy-review.md): script pass, reviewer protocol, applying cuts, guard. Read in steps 2 and 7.
 - [references/sources.md](references/sources.md): every URL with retrieved status, reading limits and claims not adopted.

@@ -1,6 +1,6 @@
 # Diff Review Mode (security review of a pull request)
 
-Sources: https://owasp.org/www-project-code-review-guide/ · https://owasp.org/www-project-code-review-guide/assets/OWASP_Code_Review_Guide_v2.pdf · https://github.com/OWASP/www-project-code-review-guide · Last verified 2026-11-24
+Sources: https://owasp.org/www-project-code-review-guide/ · https://owasp.org/www-project-code-review-guide/assets/OWASP_Code_Review_Guide_v2.pdf · https://github.com/OWASP/www-project-code-review-guide · Last verified 2026-11-27 (v2 PDF re-fetched from its redirect target and text-extracted)
 
 ## What this mode is
 

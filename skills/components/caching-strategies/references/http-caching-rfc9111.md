@@ -1,6 +1,6 @@
 # HTTP Caching Semantics (RFC 9111)
 
-Sources: https://httpwg.org/specs/rfc9111.html · https://www.rfc-editor.org/rfc/rfc5861.txt (stale-while-revalidate, stale-if-error) · Last verified 2026-11-23
+Sources: https://httpwg.org/specs/rfc9111.html · https://www.rfc-editor.org/rfc/rfc5861.txt (stale-while-revalidate, stale-if-error) · https://www.rfc-editor.org/rfc/rfc8246.txt (immutable) · Last verified 2026-11-27
 
 ## Model
 
@@ -8,27 +8,27 @@ HTTP caching is optional but reuse is the default unless a rule or configuration
 
 ## Storing: when a response may be stored
 
-A cache must not store a response unless: the method and final status are understood, `no-store` is absent, and for shared caches `private` is absent and the request had no `Authorization` header unless the response allows sharing. It also needs explicit cacheability (`public`, `private` for private caches, `Expires`, `max-age`, `s-maxage` for shared, or a heuristically cacheable status). `Authorization` requests can be reused by a shared cache only if the response has `must-revalidate`, `public`, or `s-maxage`. Proxy-auth headers are never stored. 206 partials are stored only with Range support.
+A cache must not store a response unless: the method and final status are understood, `no-store` is absent, and for shared caches `private` is absent. It also needs explicit cacheability (`public`, `private` for private caches, `Expires`, `max-age`, `s-maxage` for shared, or a heuristically cacheable status). Separately, section 3.5 says a shared cache must not use a stored response to a request carrying `Authorization` unless the response has `must-revalidate`, `public`, or `s-maxage`; the rule is about reuse, not storage. The exact wording of the storage conditions was read through a summarizing fetch, so recheck section 3 before quoting it. Proxy-auth headers are never stored. 206 partials are stored only with Range support.
 
 ## Freshness
 
 `response_is_fresh = freshness_lifetime > current_age`.
 
-Freshness lifetime, first match wins: (1) `s-maxage` in a shared cache; (2) `max-age`; (3) `Expires` minus `Date`; (4) heuristic. Heuristics are only for responses without explicit freshness; with `Last-Modified` a typical value is about 10% of the time since modification. Invalid freshness values should be treated as stale. `Expires` is ignored when `max-age` exists; invalid dates such as `0` mean already expired. `Pragma` is deprecated and `Warning` obsolete.
+Freshness lifetime, first match wins: (1) `s-maxage` in a shared cache; (2) `max-age`; (3) `Expires` minus `Date`; (4) heuristic. Heuristics are only for responses without explicit freshness and are a permission (a cache MAY assign one); with `Last-Modified` the RFC calls about 10% of the time since modification a typical setting, not a requirement. Invalid freshness values should be treated as stale. `Expires` is ignored when `max-age` exists; invalid dates such as `0` mean already expired. `Pragma` is deprecated and `Warning` is obsoleted (sections 5.4 and 5.5), so ignore the `Warning` header that RFC 5861 still mentions.
 
-Age calculation: `apparent_age = max(0, response_time - date)`; `corrected_age_value = age_header + (response_time - request_time)`; `corrected_initial_age = max(apparent_age, corrected_age_value)` (conservative); `current_age = corrected_initial_age + (now - response_time)`. A cache serving without validation must send `Age: current_age`. Presence of `Age` means the origin did not generate it for this request.
+Age calculation: `apparent_age = max(0, response_time - date)`; `corrected_age_value = age_header + (response_time - request_time)`; `corrected_initial_age = max(apparent_age, corrected_age_value)` (the conservative choice the RFC suggests for old caches; when every cache on the path is HTTP/1.1 or later, `corrected_age_value` MAY be used directly); `current_age = corrected_initial_age + (now - response_time)`. A cache serving without validation must send `Age: current_age`. Presence of `Age` means the origin did not generate it for this request.
 
 ## Cache-Control response directives (caches must obey)
 
 | Directive | Effect |
 |---|---|
 | `max-age=N` | Stale after N seconds |
-| `s-maxage=N` | Shared caches only; overrides max-age and Expires; implies proxy-revalidate; permits shared reuse of Authorization responses |
+| `s-maxage=N` | Shared caches only; overrides max-age and Expires; incorporates the semantics of proxy-revalidate; permits shared reuse of Authorization responses |
 | `no-cache` | Always validate with the origin before reuse (it still allows storing). With field names: those fields excluded or revalidated |
 | `no-store` | Do not store any part of request or response |
 | `private` | Shared caches must not store; private may. With field names: only those fields are private |
 | `public` | May store even if otherwise prohibited; makes it heuristically cacheable |
-| `must-revalidate` | Once stale, never reuse without successful validation; if disconnected, error (504), not stale |
+| `must-revalidate` | Once stale, never reuse without successful validation; if disconnected, the cache must return an error (504 is a SHOULD, unless a more applicable status exists), not stale content |
 | `proxy-revalidate` | must-revalidate for shared caches only |
 | `must-understand` | Cache only if it understands the status code; pair with `no-store` as fallback |
 | `no-transform` | Intermediaries must not alter content |
@@ -44,7 +44,8 @@ A stored response with `Vary` can be reused without revalidation only if all nom
 Not allowed under `no-cache`, `must-revalidate`, `proxy-revalidate`, or `s-maxage` (shared), unless disconnected or explicitly permitted (`max-stale`, extensions). RFC 9111 only cites extensions; RFC 5861 (Informational) defines them:
 
 - `stale-while-revalidate=N`: serve stale up to N seconds past expiry while revalidating in the background. `max-age=600, stale-while-revalidate=30`. Revalidation only starts when a request arrives in the window, so sparse traffic still waits on the origin.
-- `stale-if-error=N`: on 500, 502, 503 or 504 (or error on revalidation) serve a stale response no more than N seconds stale. `max-age=600, stale-if-error=1200` means errors up to t=1800 s can be masked. It does not change freshness; the response should carry `Age`. As a request directive it applies to that request only.
+- `stale-if-error=N`: when a 500, 502, 503 or 504 would otherwise be returned, serve a stale response no more than N seconds stale. `max-age=600, stale-if-error=1200` means errors up to t=1800 s can be masked. It does not change freshness; the response should carry `Age`. It can appear in requests too. RFC 5861 is Informational and an independent submission, and it predates RFC 9111's obsoleting of `Warning`.
+- `immutable` (RFC 8246, Standards Track): the origin will not change the response during its freshness lifetime, so clients should not revalidate it; it does not apply once the response is stale, and a forced reload can still override it.
 
 ## Validation
 
@@ -69,7 +70,7 @@ Cache poisoning (parsing differences between proxy and user agent), timing attac
 
 ## Recipes
 
-- Fingerprinted static assets: `Cache-Control: public, max-age=31536000, immutable` (immutable is not in RFC 9111; from the wider ecosystem, not read from source).
+- Fingerprinted static assets: `Cache-Control: public, max-age=31536000, immutable` (`immutable` is RFC 8246; the one-year value is a common convention, not a rule).
 - Per-user API response: `Cache-Control: private, max-age=0, must-revalidate` plus ETag.
 - Shared, tolerant of staleness: `public, s-maxage=60, stale-while-revalidate=30`.
 - Never cacheable: `no-store`.

@@ -1,90 +1,93 @@
 ---
 name: hexagonal-architecture
-description: Use when designing, reviewing or changing code in a Ports & Adapters (hexagonal) codebase - adding a use case, a driving adapter (CLI, MCP, HTTP), a driven adapter (database, filesystem, network, model provider), a port, or the composition root - or when a dependency points the wrong way (a use case importing a driver, SQL or node:fs outside an adapter). Gives the dependency rules, the order to build things in, a test per layer, and the common mistakes. Also use before splitting a layered module into hexagon plus adapters.
+description: "Keep business logic independent of technology with Ports & Adapters (hexagonal architecture, Cockburn 2005): classify actors as driver or driven, shape ports by purpose, put adapters outside, wire everything in one composition root, build and test the core first against in-memory fakes, and guard the dependency direction with a test. Use when adding a use case, a driver adapter (CLI, HTTP, agent tool), a driven adapter (database, file system, network, model provider) or a port, when a dependency points the wrong way (a use case importing a driver or SQL), or before deciding whether a module needs ports at all. Not for ring-by-ring layering rules (use clean-architecture), the injection mechanics (use dependency-inversion-composition-root) or slicing by feature (use vertical-slice-architecture)."
 ---
 
 # Hexagonal architecture (Ports & Adapters)
 
-One idea: the application is a closed area with no knowledge of technology. Everything outside it (people, tests, other programs, databases, mail servers) talks to it through **ports** and is translated by **adapters**. Dependencies point inward only. Sources and their claims: `references/sources.md`.
+One idea: **the application is a closed area that names no technology; everything outside it (people, tests, other programs, databases, mail servers) talks to it through ports, and adapters translate.** Dependencies point inward only. Sources, retrieved statuses and unadopted claims: [references/sources.md](references/sources.md).
 
-## Vocabulary (use these words, they stop arguments)
+## 1. Vocabulary
 
 | Term | Meaning | Test sentence |
 |---|---|---|
-| Hexagon | the application: domain plus use cases plus its ports | "no technology is named in here" |
-| Driver (primary) actor | triggers the conversation: user, test, cron, another system | "who starts it? the actor" |
-| Driven (secondary) actor | provides what the app needs: repository (read and write) or recipient (send and forget) | "who starts it? the application" |
-| Driver port (inbound) | the API the hexagon offers; boundary of the use cases | "this port is for ...ing something" |
-| Driven port (outbound) | the SPI the hexagon requires; shaped by what the use case needs, never by the technology | named for purpose, not for tool |
-| Driver adapter | turns a technology request into a call on a driver port | CLI parser, HTTP handler, MCP tool, test case |
-| Driven adapter | implements a driven port with one technology | SQLite repository, filesystem, fake in memory |
-| Composition root | the only place that picks adapters and wires them | `main`, bootstrap |
+| Hexagon | the application: business logic plus its ports | "no technology is named in here" |
+| Driver (primary) actor | starts the conversation: user, test, scheduler, another system | "who starts it? the actor" |
+| Driven (secondary) actor | contacted by the application: a *repository* (read and write) or a *recipient* (send only) | "who starts it? the application" |
+| Driver port | the application's API, its use-case boundary | named for a purpose: "for ...ing" |
+| Driven port | what the application requires from outside | shaped by the need, not by the tool |
+| Adapter | translates one technology to or from a port; one port can have many | CLI parser, HTTP handler, SQL repository, in-memory fake |
+| Composition root | the one startup place that knows everything and wires it | `main`, bootstrap |
 
-Ports belong to the hexagon, not to the adapter. Draw it `actor -> adapter -> (port) hexagon`, never `actor -> port -> adapter`.
+Ports belong to the hexagon, not to the adapter. The flow is `actor -> adapter -> port -> hexagon`, never `actor -> port -> adapter`.
 
-## Dependency rules (what to check on every change)
+## 2. Dependency rules (check on every change)
 
-1. The hexagon depends on nothing but the language runtime. No database driver, no HTTP, no `node:fs`, no framework, no vendor SDK.
-2. Driver adapters depend on a driver port (or the use case that implements it). They never reach into the domain's internals or into a driven adapter.
-3. Driven adapters depend on the hexagon (they implement its port). They never import another adapter; if two adapters need the same thing, it belongs in the hexagon or a port.
-4. Only the composition root imports concrete adapters, and only to hand them to the hexagon.
-5. Layers inside the hexagon (domain, use cases) are your choice; the pattern says nothing about them. Keep rule 1 true for all of them.
-6. Never put technology annotations or ORM types on a domain object. Map at the adapter boundary and accept the small cost.
+1. The hexagon depends on nothing but the language runtime: no database driver, HTTP, file system API, framework or vendor SDK.
+2. Driver adapters call a driver port. Driven adapters implement a driven port. Both depend on the hexagon, never the reverse.
+3. No adapter imports another adapter. Shared need: move it into the hexagon or a port.
+4. Only the composition root names concrete adapters, and only to hand them to the hexagon.
+5. The pattern prescribes no layers inside the hexagon (Cockburn criticizes layer drawings; Garrido lists "three layers" as a misreading). Choose internal structure freely, keep rule 1 true. Ring-by-ring layer rules: `clean-architecture`.
+6. Map at the adapter boundary; keep ORM or transport annotations off domain objects when you can afford the mapping.
 
-Asymmetry to remember: the driver adapter knows the application (it calls it); the application knows the driven port (it calls it) but never which adapter sits behind it. This is Configurable Dependency (dependency injection through a constructor argument or a registry).
+Asymmetry: a driver adapter knows the application; the application knows its driven ports but never the adapter behind them. Injection mechanics: `dependency-inversion-composition-root`.
 
-## Building order (from the canonical article)
+## 3. Ports: classify, then name
 
-1. Define the ports around the application as a black box. Expect to refine driven ports while writing use cases; add them when a use case needs them.
-2. Implement each driver port **test-first**, driven by a test adapter, with in-memory fakes behind the driven ports. The hexagon is now complete and testable in isolation.
-3. Add the real driver adapters (CLI, HTTP, MCP), still on the fakes.
-4. Add the real driven adapters (database, filesystem, network), still driven by the tests.
-5. Wire real with real in the composition root and run end to end.
+1. Ask who starts the conversation. Actor starts: driver port. Application starts: driven port; then repository or recipient.
+2. Name by purpose (`ForStoringTasks`, `ForNotifyingPeople`), never by technology or table.
+3. Granularity is your choice: one driver port per use case (easy to test, different drivers see different subsets), or a grouped port for a small app. Cockburn expects most applications to need only two to four ports.
+4. Reject a port with one implementation, one caller and no need for a test double.
 
-## Tests per layer
+Detail and a naming example: [references/ports-and-adapters-conceptual-model.md](references/ports-and-adapters-conceptual-model.md).
 
-| Layer | Test | Uses |
+## 4. Build order (Garrido de Paz)
+
+1. Test driver adapter plus mock or in-memory driven adapters: the hexagon is complete and testable alone. Driven ports surface while you write this; add them then.
+2. Real driver adapters (web, CLI, agent tool), mocks kept.
+3. Real driven adapters (database, email), driven by the step-1 test driver.
+4. Real drivers with real driven adapters, wired in the composition root; any combination is configurable.
+
+## 5. Tests per layer
+
+| Layer | Test (Pryce terms) | Uses |
 |---|---|---|
 | Domain objects | unit | nothing |
-| Use cases (driver port) | acceptance, most of the suite | in-memory fakes of the driven ports |
-| Driven adapter | integration, few | the real technology plus a contract check that it honors the port |
-| Driver adapter | integration, few | a real or recorded request against a fake hexagon |
-| Whole system | system, one success and one failure per flow | everything real |
+| Use cases through the driver port | acceptance, bulk of the suite | in-memory fakes of driven ports |
+| Adapter | integration | the real technology plus a contract check that it honors the port |
+| Whole system | system, few | everything real |
 
-Guard the rules with an architecture test (import graph scan) so a wrong-way import fails the build; do not rely on review.
+Guard rule direction with an architecture test (an import-graph scan or a tool such as ArchUnit) so a wrong-way import fails the build. Test-shape economics: `testing-pyramid-and-shapes`; test-first loop: `tdd`.
 
-## When it earns its keep
+## 6. Does it pay off?
 
-Worth it: long-lived system, several kinds of client (CLI, web, agent tools), technology that will change, rich business rules. Not worth it: a small CRUD with fixed technology (the adapter layer becomes a cost with no payoff). Say which case you are in before adding ports.
+Garrido: small projects may not justify the complexity; medium and large long-lived ones usually do, and mock adapters help dev and test even when production technology never changes. Hombergs: rich business rules pay off, plain CRUD is probably overhead. AWS: adapters are justified when inputs or outputs vary. All costs (complexity, indirection, mapping, build time) are argued, not measured. State the case in one sentence naming a concrete variation before adding a port. Cost of speculative structure: `yagni-evolutionary-architecture`. Detail: [references/when-hexagonal-pays-off-costs-and-tradeoffs.md](references/when-hexagonal-pays-off-costs-and-tradeoffs.md).
 
-## Mistakes to catch
+## 7. Mistakes to catch
 
-- Reading "three layers: domain, ports, adapters" into the pattern. The pattern prescribes none.
-- A port shaped like the database ("findByJoinedTable") instead of the need ("find notes the reader may see").
-- A use case that builds an SQL string, opens a file or calls `fetch`. Move it behind a driven port.
-- A driver adapter that holds business rules (validation, permission, sensitivity ceilings). Rules live in the hexagon so every driver gets them; a rule missing in one transport is a security bug.
+- A port shaped like the database (`findWithJoins`) instead of the need.
+- A use case that builds SQL, opens a file or calls the network.
+- Business rules (validation, permissions) inside a driver adapter: every other driver then lacks them.
 - Two adapters importing each other, or an adapter importing the composition root.
-- A global that lets any code fetch a concrete adapter. Resolve ports through the one locator that the composition root fills.
-- Inventing a port for something that will never vary and has one caller.
-
-## In this repository
-
-Map the six areas to the rules above and follow `AGENTS.md`: `src/domain` (pure), `src/ports` (inbound and outbound interfaces plus the runtime locator), `src/application` (use cases), `src/adapters` (driven, one family per folder, no cross-family imports), `src/drivers` (CLI, MCP, HTTP; never import `src/adapters`), `src/bootstrap` (the only wiring root). The strict check lives in the architecture test; run it before finishing any structural change.
+- A global that lets any code fetch a concrete adapter.
+- One adapter per port and no fake: the testability payoff is never collected.
+- Keeping the ceremony while rules live in adapters: cost paid, benefit lost.
 
 ## Quick Decision Checklist
 
-- [ ] Does the hexagon depend on nothing but the language runtime (no driver, HTTP, node:fs, framework or SDK)?
-- [ ] Are ports shaped by the use case's need, not by the database or other technology?
-- [ ] Do business rules live in the hexagon rather than in a driver adapter?
-- [ ] Do adapters avoid importing each other, with only the composition root wiring concrete adapters?
-- [ ] Is each use case tested first against in-memory fakes of the driven ports?
-- [ ] Is an architecture test (import graph scan) guarding the dependency rules?
-- [ ] Is the system long-lived with several clients or changing tech, and not a small fixed-tech CRUD?
+- [ ] Does the hexagon import nothing but the language runtime?
+- [ ] Was each port classified (driver, driven repository, driven recipient) and named by purpose?
+- [ ] Are business rules in the hexagon, not in a driver adapter?
+- [ ] Do adapters avoid importing each other, with only the composition root wiring concrete ones?
+- [ ] Is each use case tested against in-memory fakes before a real adapter exists?
+- [ ] Does an architecture test fail the build on a wrong-way import?
+- [ ] Can I name the concrete variation (second client, planned swap, need for a fake) that justifies each port?
 
 ## Deep references
 
-- [Sources](references/sources.md) — read for URL status and claims not adopted.
-- [Ports and Adapters: conceptual model](references/ports-and-adapters-conceptual-model.md) — read when classifying actors, naming ports, or settling port granularity and composition-root duties.
-- [Implementation order and testing strategy](references/implementation-order-and-testing-strategy.md) — read when planning the build sequence, test levels, contract tests or architecture tests.
-- [Use cases, command objects and dependency inversion](references/use-cases-ports-and-dependency-inversion.md) — read when writing a use case, its input and output ports, or deciding where logic lives.
-- [When hexagonal pays off: costs and trade-offs](references/when-hexagonal-pays-off-costs-and-tradeoffs.md) — read when deciding whether a module needs ports at all.
+- [references/ports-and-adapters-conceptual-model.md](references/ports-and-adapters-conceptual-model.md): read when classifying actors, naming ports or settling granularity and composition-root duties.
+- [references/implementation-order-and-testing-strategy.md](references/implementation-order-and-testing-strategy.md): read when planning the build sequence, contract tests or architecture tests.
+- [references/use-cases-ports-and-dependency-inversion.md](references/use-cases-ports-and-dependency-inversion.md): read when writing a use case, its command object and output ports.
+- [references/when-hexagonal-pays-off-costs-and-tradeoffs.md](references/when-hexagonal-pays-off-costs-and-tradeoffs.md): read when deciding whether a module needs ports.
+- [references/trigger-evals.md](references/trigger-evals.md): read when tuning this skill's description.
+- [references/sources.md](references/sources.md): URL statuses, reading limits, claims not adopted.

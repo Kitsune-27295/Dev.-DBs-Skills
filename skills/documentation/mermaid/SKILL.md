@@ -1,10 +1,10 @@
 ---
 name: mermaid
-description: "Generate, validate, repair and improve syntax-correct Mermaid diagrams (flowchart, sequence, class, ER, state, C4, architecture, gantt, timeline, mindmap and more) from requirements or from code, and fix diagrams that fail to render or need a better layout. Use whenever a flow, schema, lifecycle or hierarchy is clearer visually than in prose. Not for deciding which C4 levels, boxes and relationships to show (use c4-model-architecture); use this skill only for the Mermaid syntax and rendering of that diagram."
+description: "Write, repair and validate Mermaid diagrams that actually render, from requirements or from real code: choose the diagram type (flowchart, sequence, class, ER, state, C4, architecture-beta, gantt, timeline, mindmap and more), quote labels, avoid reserved words, pin theme and layout for the target host, split oversized diagrams, and check the result with mermaid-cli or a manual checklist. Also fixes blocks that fail to render or read badly. Use when a flow, schema, lifecycle or hierarchy is clearer as a picture than as prose, or when a Mermaid block is broken. Not for deciding which C4 levels, boxes and relationships to show (use c4-model-architecture); this skill covers only the Mermaid syntax and rendering of that diagram."
 ---
 # Mermaid Diagram Engineering
 
-Use this skill whenever an architecture, workflow, data model, state progression, chronology, or entity relationship is clearer as a picture than as dense prose, or when an existing Mermaid block is broken or hard to read. For hierarchical C4 abstraction discipline (what belongs at L1 vs. L2 vs. L3), see `c4-model-architecture`. Sources and claims: [references/sources.md](references/sources.md).
+Use this skill whenever an architecture, workflow, data model, state progression, chronology, or entity relationship is clearer as a picture than as dense prose, or when an existing Mermaid block is broken or hard to read. For hierarchical C4 abstraction discipline (what belongs at L1 vs. L2 vs. L3), see `c4-model-architecture`. Sources, retrieved statuses and unverified claims: [references/sources.md](references/sources.md). Version-gated facts below were checked against the Mermaid docs on 2026-11-27 (docs shown were v12.4.0; a v13 alpha exists).
 
 ---
 
@@ -29,8 +29,8 @@ Use this skill whenever an architecture, workflow, data model, state progression
    - In flowcharts, `A---oB` and `A---xB` parse as circle/cross arrows! Write `dev --- ops` or capitalize (`dev---Ops`).
 5. **Stable ids, human labels**: ids are short ASCII (`authSvc`), display text lives in the label. Keep existing ids when editing.
 6. **One idea per diagram.** If prose or a table is shorter than the diagram, use prose or a table instead.
-7. **Size limits**: stock Mermaid / `mmdc` defaults to `maxTextSize: 50000` and `maxEdges: 500` (check GitHub's active version with a ```` ```mermaid\ninfo\n``` ```` snippet when needed). Past roughly 25–30 nodes, split by domain into several diagrams or collapsible `subgraph`s (`one@{ view: collapsed }` in v11.17+); never ship a hairball.
-8. **Comments** use `%% text` on their own line (never `#`, which collides with entity codes and hex colors in some diagram blocks). Legacy `%%{init: ...}%%` directives still parse in older engines, but prefer YAML frontmatter (`---`) on line 1 (section 5).
+7. **Size limits**: Mermaid's documented config defaults are `maxTextSize: 50000` and `maxEdges: 500`; a host can change them (check GitHub's active version with a ```` ```mermaid\ninfo\n``` ```` snippet when needed). As a readability rule of thumb (this pack's, not Mermaid's), past roughly 25–30 nodes split by domain into several diagrams or collapsible `subgraph`s (`one@{ view: collapsed }`, v11.17.0+); never ship a hairball.
+8. **Comments** use `%% text` on their own line, with no braces inside the text. `%%{ }%%` directives allow only limited changes just before rendering; prefer YAML frontmatter (`---`) on line 1 (section 5). Misspelled config keys are ignored silently, so an unthemed result usually means a typo.
 
 ---
 
@@ -62,7 +62,7 @@ The first line after any frontmatter and `%%` comments is the exact type keyword
 | Wire/binary formats | Packet | `packet-beta` |
 | Multi-axis comparison | Radar | `radar-beta` |
 
-`-beta` keywords and recent additions (v11.x/v12.x) vary across host renderers (GitHub Markdown vs. latest Mermaid Live vs. local `mmdc`). When targeting GitHub or Obsidian, prefer stable features or test against the target renderer.
+`-beta` keywords (the architecture page itself warns its syntax may change incompatibly) and recent additions (v11.x/v12.x) vary across host renderers (GitHub Markdown vs. latest Mermaid Live vs. local `mmdc`). When targeting GitHub or Obsidian, prefer stable features or test against the target renderer.
 
 ---
 
@@ -93,8 +93,8 @@ flowchart LR
     a["Client"] --> b["API"]
 ```
 
-- **v12.0.0+ default shift:** Flowcharts, ER, State, and Class diagrams default to `theme: redux-color`, `look: neo`, and `layout: elk` in Mermaid v12+, whereas v11/GitHub/classic views used `theme: default`, `look: classic`, and `layout: dagre`. Override explicitly in frontmatter if layout/look portability across hosts matters, or set `layout: elk` intentionally on dense 15+ node graphs (noting ELK must be available in the target renderer).
-- **`themeVariables`** only apply when `theme: base`; named themes (`default`, `neutral`, `dark`, `forest`, `redux`, `redux-dark`, `neo`, `neo-dark`) ignore variables. Colors **must** be hex (`#rrggbb` / `#rgb`).
+- **v12.0.0+ default shift:** Flowcharts, ER, State, and Class diagrams default to `theme: redux-color`, `look: neo`, and `layout: elk` in Mermaid v12+ (ELK is bundled since v12.0.0; the tiny build omits it and falls back to Dagre), whereas older versions used `theme: default`, `look: classic`, and `layout: dagre`. The global config defaults are theme `default` and look `classic`. Override explicitly in frontmatter when portability across hosts matters; the 15+ node ELK suggestion is this pack's judgement, not a documented threshold.
+- **`themeVariables`** only apply when `theme: base`; the other named themes (`default`, `neutral`, `dark`, `forest`, `redux`, `redux-dark`, `redux-color`, `redux-dark-color`, `neo`, `neo-dark`) ignore variables. Colors **must** be hex (`#rrggbb` / `#rgb`); color names are not recognized.
 - Put diagram titles in frontmatter `title:` (never add an extra fake box node for the title).
 - Keep light/dark contrast readable (neutral dark slate `#1e293b` with bright `#f8fafc` text and semantic `#3b82f6` / `#10b981` / `#f59e0b` / `#ef4444` strokes works on both GitHub light and dark themes).
 
@@ -121,7 +121,7 @@ Run the strongest check available, and state explicitly what ran:
 
 1. **Parser/renderer (preferred):**
    - Single `.mmd` file: `npx -p @mermaid-js/mermaid-cli mmdc -i diagram.mmd -o diagram.svg` (transparent dark export: `-t dark -b transparent`; pipe stdin: `-i -`; load custom Iconify packs: `--iconPacks @iconify-json/logos`).
-   - Markdown document: `npx -p @mermaid-js/mermaid-cli mmdc -i doc.template.md -o doc.md` parses every ```` ```mermaid ```` fence. A non-zero exit code fails validation immediately.
+   - Markdown document: `npx -p @mermaid-js/mermaid-cli mmdc -i doc.template.md -o doc.md` renders every ```` ```mermaid ```` fence. Treat a non-zero exit status or an error message as a failure; the README does not document exit codes, so confirm once with a deliberately broken file.
 2. **Manual checklist** (when Node/`mmdc` is unavailable; state clearly that no parser executed):
    - [ ] Fenced as ```` ```mermaid ```` (or `.mmd` file), YAML frontmatter is on line 1, comments use `%%`.
    - [ ] Exact type keyword from section 3; arrows match the diagram type (`-->` flowchart, `->>` sequence, `||--o{` ER).
@@ -155,3 +155,4 @@ Run the strongest check available, and state explicitly what ran:
 - [GitHub rendering and mmdc validation](references/github-rendering-and-mmdc-validation.md) — version check, Copilot workflow, mmdc flags and validation limits.
 - [Does the diagram earn its place? Gate and type-per-need](references/diagram-gate-and-type-per-need.md) — read before drawing any diagram in documentation.
 - [Syntax cheatsheet per diagram type](references/syntax-cheatsheet-per-type.md) — read before writing syntax for a chosen type (moved from this file's former section 4).
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts for tuning the description.
