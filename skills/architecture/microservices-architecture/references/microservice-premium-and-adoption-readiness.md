@@ -2,13 +2,8 @@
 
 Sources: https://martinfowler.com/microservices/ · https://microservices.io/patterns/microservices.html · Last verified 2026-11-23
 
-## Fowler's stance
-Every style has trade-offs and most situations are better served by a monolith. Benefits: strong module boundaries (help larger teams), independent deployment, technology diversity. Costs: distribution (remote calls are slow and fail), eventual consistency, operational complexity needing a mature ops team. Teams adopt too eagerly and underestimate the "Microservice Premium", a tax on cost and risk.
-
-## Monolith First vs the counterpoint
-- Fowler's colleagues observed that successful microservice systems mostly began as a monolith that grew too large and was split; systems built as microservices from scratch mostly ran into serious trouble.
-- Counterpoint (Stefan Tilkov, 2015): starting monolithic is usually wrong, since a team unable to build a well-structured monolith is unlikely to build well-structured services.
-- The resolution for an agent (inference): start with a modular monolith with enforced boundaries, and extract when a force below justifies it.
+## Monolith first and the microservice premium
+Fowler's stance, the "Monolith First" observation and the Tilkov counterpoint are owned by `monolithic-architecture` (`references/monolith-first-evolution-paths.md`). Default to a modular monolith with enforced boundaries and extract when a force below justifies it (agent inference).
 
 ## Richardson's forces
 - Dark energy (favor splitting): simpler components, team autonomy, fast pipelines, multiple stacks, segregating by scalability, availability or security needs.

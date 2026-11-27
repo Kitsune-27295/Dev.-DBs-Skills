@@ -45,6 +45,8 @@ The article recommends building a Range class: the richer behavior (overlap, con
 
 Benefits listed: explicitness, type checking, validation, preventing meaningless operations (arithmetic on IDs). Small candidates: points, money, ranges, phone numbers. Larger structures can be values too when they have no conceptual identity and are not shared by reference; functional languages default to this.
 
+Context decides: an address can be a plain value in one system and a linked reference hierarchy in a mapping system. Older J2EE literature used "value object" to mean DTO; do not confuse the two.
+
 ## Decision rules
 
 | Use a value object when | Avoid when |

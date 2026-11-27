@@ -32,7 +32,7 @@ One idea: scale your repository topology from the **simplest flat layout that fi
    - **Stage 2 (Growing Single Application):** Add `internal/` (or `src/`) partitioned by domain capability (`screaming-architecture`, `package-by-feature-component`).
    - **Stage 3 (Multi-Binary / Multi-Driver System):** Add `cmd/<binary-name>/main` (or `src/drivers/{cli,http,mcp}`) as thin composition roots calling `internal/`.
    - **Stage 4 (Workspace Monorepo):** Separate deployable applications (`apps/` or `services/`) from shared internal libraries (`packages/` or `libs/`).
-2. **Avoid the `golang-standards/project-layout` & `pkg/` / `utils/` trap:** As the Go team and LevelUpGo emphasize, `golang-standards/project-layout` is **not** an official standard. Do not create a `pkg/` wrapper folder (every non-`internal` directory in a repo is already importable), and never create catch-all `utils/`, `helpers/`, or `common/` folders.
+2. **Avoid the `golang-standards/project-layout` & `pkg/` / `utils/` trap:** As the Go team and LevelUpGo emphasize, `golang-standards/project-layout` is **not** an official standard. Do not create a `pkg/` wrapper folder (every non-`internal` directory in a repo is already importable); for catch-all `utils/`/`helpers/`/`common/` folders see `package-by-feature-component`.
 3. **Keep the Repository Root clean and predictable:** The root directory belongs to **universal project contracts and entrypoints**, not random scratch scripts:
    - Documentation & Governance: `README.md`, `LICENSE`, `CHANGELOG.md`, `CONTRIBUTING.md`, `AGENTS.md` / `CLAUDE.md`, `.github/CODEOWNERS`.
    - Build & Workspace manifests: `package.json` / `pnpm-workspace.yaml` / `go.mod` / `Cargo.toml` / `Makefile`, lockfiles, and `docs/` (`adr-architecture`, `arc42-api-contracts-architecture`).
@@ -63,15 +63,6 @@ repo-root/
 └── README.md
 ```
 
-## Verification checklist
-
-| Check | How to verify |
-|---|---|
-| No circular package dependencies | Run `madge --circular`, `dependency-cruiser`, `nx graph`, or compiler check in CI |
-| Affected-only CI | Verify a PR touching only `apps/web` does not re-run slow integration suites for unrelated backend services |
-| Zero orphan / 1-file `utils/` directories | Audit directories with only 1 tiny helper file and inline them into their caller or a cohesive domain package |
-| Path ownership | Verify `.github/CODEOWNERS` maps every `apps/*` and `packages/*` folder to an accountable team |
-
 ## Mistakes to catch
 
 - **A "Monorepo" that is just 10 folders with no workspace graph or boundary rules:** Putting 10 apps in one Git repo without affected-build caching or import rules — resulting in 45-minute CI builds on every typo commit and hidden circular imports across apps.
@@ -83,9 +74,9 @@ repo-root/
 - [ ] Am I using the simplest flat layout that fits now, without scaffolding empty directories?
 - [ ] Did I weigh coupling, security boundaries and tooling investment before choosing monorepo or polyrepo?
 - [ ] Is the repository root limited to universal project contracts and entrypoints?
-- [ ] In a monorepo, do apps import packages but never the reverse, with no circular dependencies?
-- [ ] Is CI affected-only, and does CODEOWNERS cover every app and package?
-- [ ] Am I avoiding a pkg/ wrapper, a God shared package and one-file utils folders?
+- [ ] In a monorepo, do apps import packages but never the reverse, with no circular dependencies (CI runs `madge --circular`, `dependency-cruiser` or `nx graph`)?
+- [ ] Is CI affected-only (a PR touching only `apps/web` does not rerun unrelated suites), and does CODEOWNERS map every app and package to a team?
+- [ ] Am I avoiding a pkg/ wrapper and a God shared package (catch-all folders: `package-by-feature-component`)?
 - [ ] Are tests co-located with the code they test?
 
 ## Deep references

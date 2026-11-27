@@ -30,7 +30,7 @@ Duplicate orders, negative stock, a coupon or invite redeemed more than once, a 
 
 ## Source
 
-Martin Kleppmann, "How to do distributed locking": the storage service that holds the data must check a monotonically increasing fencing token and reject lower ones, and for correctness locks he recommends a database with reasonable transactional guarantees. Using a unique key, conditional UPDATE or row lock for the same job is this skill's own application of that idea (from the handout).
+Martin Kleppmann, "How to do distributed locking", read through `references/locks-vs-database-guards-kleppmann.md`; the unique key, conditional UPDATE and row lock are this skill's own application (from the handout).
 
 ## Quick Decision Checklist
 

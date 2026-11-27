@@ -10,14 +10,7 @@ Read-only. It inspects, ranks and writes **DB-AUDIT.md**; it changes nothing. Th
 ## Steps
 
 1. **Detect:** engine and host, ORM or query layer, migration tool, where the app connects from, and what the code reads (never print secret values). Done when the stack is stated. For SQL Server, PostgreSQL or SQLite, `sql-server-diagnostics`, `postgres-diagnostics` and `sqlite-diagnostics` hold ready read-only scripts for the engine in use: reach for them to gather the evidence of the areas below.
-2. **Check each area read-only,** using the matching skill's steps as the checklist and marking a part **not applicable** when it does not apply:
-   - exposure, secrets and access rules: `database-exposure`
-   - backups that restore: `backup-restore-drill`
-   - bills that scale with usage: `database-cost-guard`
-   - multi-write operations: `transaction-fix`
-   - constraints, money and time types: `schema-and-constraints`
-   - schema history and environments: `migrations-and-environments`
-   - slow queries and indexes: `query-performance`
+2. **Check each of the seven areas in the Run order below read-only,** using the matching skill's steps as the checklist and marking a part **not applicable** when it does not apply.
 3. **Rate each finding** with a risk (high, medium, low) and a `file:line` or setting that proves it.
 4. **Write DB-AUDIT.md:** what is correct, findings by risk each with the skill that fixes it, where to start, and the run order below.
 
@@ -25,11 +18,15 @@ Read-only. It inspects, ranks and writes **DB-AUDIT.md**; it changes nothing. Th
 
 Closed doors cannot be reopened, lost data cannot be rebuilt, bills grow silently, and speed comes last:
 
-1. `database-exposure` (the open door)
-2. `backup-restore-drill`
-3. `database-cost-guard`
-4. then `transaction-fix`, `schema-and-constraints`, `migrations-and-environments`, in that order
-5. last `query-performance`
+| # | Area | Skill |
+|---|---|---|
+| 1 | exposure, secrets and access rules (the open door) | `database-exposure` |
+| 2 | backups that restore | `backup-restore-drill` |
+| 3 | bills that scale with usage | `database-cost-guard` |
+| 4 | multi-write operations | `transaction-fix` |
+| 5 | constraints, money and time types | `schema-and-constraints` |
+| 6 | schema history and environments | `migrations-and-environments` |
+| 7 | slow queries and indexes (last) | `query-performance` |
 
 Where to start: the first area with a high-risk finding, in that order.
 
@@ -42,6 +39,7 @@ Default to a relational database, **Postgres**, for anything with money, users, 
 - No file other than DB-AUDIT.md is created; no query runs against production.
 - Statistics quoted in the lesson (bills, counts of exposed databases, speed-ups) are third-party or the author's claims, not findings; cite a source or omit.
 - Each fix starts from the report and waits for the owner's OK.
+- Rules every fix skill follows: production is never touched (hand over the statement and let a human run it), and data is never deleted to make a rule pass.
 
 Source: the handout of the second database lesson of mano deyvin (audit prompt, run order and "which database" note).
 

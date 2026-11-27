@@ -15,7 +15,7 @@ Facts reflect the Playwright docs as of release 1.65 (undated in the release not
 
 | Id | Rule (condensed) | Detail owner |
 |---|---|---|
-| INTEG | Never remove or loosen an assertion, turn a failing test into `.skip()`/`fixme`, raise a timeout to get green, or change a business expectation to match behavior. Sole exception: a classified product defect with evidence, annotated with a tracking reference and listed in the report. | registry |
+| INTEG | Never weaken a test to get green (golden rule: `integration-tests`), including `.skip()`/`fixme` and raised timeouts. Sole exception: a classified product defect with evidence, annotated with a tracking reference and listed in the report. | registry |
 | VBC | Never claim pass, fixed or done without a command run this turn and its output read. Keep evidence (logs, traces, code) apart from inference and label each. | [failure analysis](references/failure-analysis-and-root-cause-discipline.md) |
 | PRESERVE | Run `git status` before any change; never delete user files or commits; no destructive git command unless asked. | registry |
 

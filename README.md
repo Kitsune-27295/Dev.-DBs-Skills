@@ -294,7 +294,10 @@ Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 # 1. Validar frontmatter YAML, links relativos e referências cruzadas das 131 skills
 python check_skills.py skills
 
-# 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
+# 2. Redundância: parágrafos repetidos entre skills (cópia quase literal falha; o resto vai para revisão)
+python check_skills.py --redundancy
+
+# 3. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
 node --test test/mcp-server.test.mjs
 ```
 

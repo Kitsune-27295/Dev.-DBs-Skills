@@ -100,7 +100,7 @@ Signatures, the loop pseudocode, escalation template and the mapping of exits to
 
 ### Never weaken a check to get green
 
-No deleted, skipped or loosened assertions, raised timeouts, regenerated snapshots or expectations edited to match output, mocking the very behavior an AC is about, stale or cached output, or coverage offered as proof. The only legitimate change to a failing check is a proven check bug, recorded with its reason. Before trusting a new check, show it red for the right reason: revert-the-fix, or mutate then restore and diff against a pristine copy. Methods: [references/anti-cheating-and-weak-checks.md](references/anti-cheating-and-weak-checks.md).
+Never delete, skip or loosen a check to get green (golden rule: `integration-tests`); also no regenerated snapshots, mocking the very behavior an AC is about, stale or cached output, or coverage offered as proof. The only legitimate change to a failing check is a proven check bug, recorded with its reason. Before trusting a new check, show it red for the right reason: revert-the-fix, or mutate then restore and diff against a pristine copy. Methods: [references/anti-cheating-and-weak-checks.md](references/anti-cheating-and-weak-checks.md).
 
 ## 8. Completion report
 

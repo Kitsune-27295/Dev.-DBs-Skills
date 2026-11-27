@@ -41,4 +41,4 @@ description: "Move business rules from the browser or app to the server and lock
 ## Deep references
 
 - [Sources](references/sources.md) — provenance, unverified statistics and which steps are the skill author's additions
-- [Server-side checks and key classification](references/server-side-checks-and-key-classification.md) — when classifying keys or deciding what moves server-side
+- [Server-side checks and key classification](references/server-side-checks-and-key-classification.md) — framing, the video-observation caveat and own examples (price recompute, key rotation)

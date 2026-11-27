@@ -20,9 +20,7 @@ At startup a host loads only each skill's name and description; the agent activa
 
 | Where | Limit found |
 |---|---|
-| Agent Skills specification (`description`) | 1-1024 characters |
-| Claude platform docs (Skills overview and best practices) | max 1,024 characters, no XML tags |
-| Reference validator `skills-ref` | description max 1024, compatibility max 500 |
+| Spec and `skills-ref` validator | 1-1024 characters (format facts: `agent-skills-context-engineering`) |
 | Claude Code listing | `description` plus `when_to_use` truncated at 1,536 characters |
 | This pack's rule | at most 1,000 characters, ends with "Use when ..." |
 
@@ -34,8 +32,7 @@ The pack's 1,000 is a deliberate margin inside the 1,024 spec cap, not a vendor 
 - User intent over implementation: describe what the person wants, including phrasings that do not name the domain.
 - Slightly pushy: list contexts explicitly.
 - Concise: a few sentences; it is paid for on every turn across all skills.
-- Third person (Anthropic): the text is injected into a system prompt.
-- Add the negative boundary when a neighbor skill exists.
+- Third person, exclusion clause naming the neighbor skill, and collision handling: `skill-description-and-trigger-design` in `skill-orchestrator` (description as routing condition).
 
 Before: `description: Process CSV files.`
 After (own example): `description: Analyze tabular data files (CSV, TSV, spreadsheets): summary stats, derived columns, charts, cleaning. Not for database loading or formula editing in a workbook. Use when the user has a data file and wants to explore or visualize it, even if they never say "CSV".`

@@ -8,12 +8,7 @@ An orchestrator that routes among skills must know exactly what a skill is, what
 
 A skill is a directory with a required `SKILL.md` (YAML frontmatter + Markdown body). Optional directories by convention: `scripts/`, `references/`, `assets/`, plus any other files.
 
-| Field | Required | Constraint in the spec |
-|---|---|---|
-| `name` | yes | 1-64 chars; unicode lowercase letters, digits, hyphens; no leading/trailing hyphen; no `--`; must equal the parent directory name |
-| `description` | yes | 1-1024 chars; says what the skill does and when to use it; include keywords that help an agent recognize the task |
-
-The body has no format restriction. Optional fields (`license`, `compatibility`, `metadata`, experimental `allowed-tools`) and the body layout rules are tabulated in `agent-skills-context-engineering` section 1 and not repeated here. File references use relative paths from the skill root, one level deep.
+Two fields are required: `name` (1-64 chars, lowercase letters, digits, hyphens, equal to the parent directory name) and `description` (1-1024 chars, what plus when). The full field table, the optional fields (`license`, `compatibility`, `metadata`, experimental `allowed-tools`) and the body layout rules are owned by `agent-skills-context-engineering` (`references/skill-format-and-authoring-rules.md`) and not repeated here. The body has no format restriction; file references are relative paths from the skill root, one level deep.
 
 ## 2. Three loading stages: claimed versus specified
 
@@ -31,11 +26,11 @@ The Strapi post says the standard is adopted by "26+ platforms" (Claude, Codex, 
 
 ## 4. Validation with skills-ref
 
-The repo `agentskills/agentskills` (code Apache 2.0, docs CC-BY-4.0, as shown on its page) hosts `skills-ref`. Commands: `skills-ref validate path/to/skill` (checks frontmatter and naming), `skills-ref read-properties` (JSON), `skills-ref to-prompt a b` (emits the XML block of available skills for a system prompt). Its README says it is for demonstration, not production. It checks structure, not whether the description routes well; that needs trigger evals (`skill-description-and-trigger-design.md`).
+The `skills-ref` validator of `agentskills/agentskills` (commands, demonstration-only status) is described in `skill-creation-workflow` (`references/validation-packaging-and-host-paths.md`). It checks structure, not whether the description routes well; that needs trigger evals (`skill-description-and-trigger-design.md`).
 
 ## 5. Spec versus vendor extensions
 
-- Anthropic's best-practices page adds rules the open spec does not state: no XML tags in `name`/`description`, `name` may not contain the reserved words `anthropic` or `claude`, gerund-style names recommended (preferred, not required). Description writing style (third person, what plus when) is owned by [skill-description-and-trigger-design.md](skill-description-and-trigger-design.md).
+- Anthropic's extra rules (no XML tags in `name`/`description`, reserved words `anthropic` and `claude` in `name`, gerund names preferred) are listed once in `agent-skills-context-engineering`, `references/skill-format-and-authoring-rules.md`. Description writing style is owned by [skill-description-and-trigger-design.md](skill-description-and-trigger-design.md).
 - Claude Code adds header keys such as `model`, `effort`, `context`, invocation controls; `model-effort-routing` covers them. A portable pack keeps routing rules in the body (the spec lets clients ignore unknown keys, but strict uploaders reject them: see `portable-skill-frontmatter` in `model-effort-routing`).
 - The Anthropic PDF guide requires kebab-case folder and `name`, forbids `<` `>` in frontmatter, and lists a zip step for upload; treat these as vendor packaging advice.
 

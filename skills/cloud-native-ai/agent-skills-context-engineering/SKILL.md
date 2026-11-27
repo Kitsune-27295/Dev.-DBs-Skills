@@ -19,10 +19,8 @@ A portable skill is a folder containing at minimum `SKILL.md`, with optional `sc
 |---|---|---|
 | `name` | Yes | 1–64 chars; lowercase alphanumeric + hyphens (`a-z`, `0-9`, `-`); no leading/trailing `-` or `--`; **must match parent directory name** |
 | `description` | Yes | 1–1024 non-empty chars; states *both* what the skill does and specific trigger keywords/contexts for *when* to activate it |
-| `license` | No | Short license identifier (e.g., `Apache-2.0`) or bundled license file name |
-| `compatibility` | No | 1–500 chars; only include for hard runtime dependencies (tools, Python version, network) |
-| `metadata` | No | Flat string-to-string key/value map (`author`, `version`); avoid nested collections |
-| `allowed-tools` | No | Experimental space-separated pre-approved tool list (support varies by runtime) |
+
+Optional fields (`license`, `compatibility` 1-500 chars, `metadata`, experimental `allowed-tools`) and the reserved-word divergence: [references/skill-format-and-authoring-rules.md](references/skill-format-and-authoring-rules.md).
 
 ### Three / Four Stages of Progressive Disclosure
 1. **Discovery / Advertise (~100 tokens/skill `*claim*`):** Only `name` and `description` load into the system prompt at startup so agents can route among 100+ skills cheaply.

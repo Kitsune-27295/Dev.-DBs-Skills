@@ -20,7 +20,7 @@ Do not start a new system with microservices, even one you expect to grow large.
 Caveat: you cannot assume any system can be decomposed; many have too many inter-module dependencies, and attempts often become messes. Gradual extraction worked mainly where the monolith was already well modularized.
 
 ## Counter-argument
-Starting with microservices builds the habits early, teams scale along service lines, and replacements of known systems have clearer boundaries; staying modular enough to split later takes real discipline. Fowler's own rule: avoid starting with microservices unless the team already has experience with them.
+Starting with microservices builds the habits early, teams scale along service lines, and replacements of known systems have clearer boundaries; staying modular enough to split later takes real discipline. Stefan Tilkov (2015) goes further: a team unable to build a well-structured monolith is unlikely to build well-structured services. Fowler's own rule: avoid starting with microservices unless the team already has experience with them.
 
 ## How an agent should apply this
 - Default recommendation for greenfield: one deployable with strict internal modules; justify any service split with a measured need.

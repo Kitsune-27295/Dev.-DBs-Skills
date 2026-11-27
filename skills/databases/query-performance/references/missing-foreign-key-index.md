@@ -15,7 +15,7 @@ On 5 million orders, the lookup went from 58 ms to 0.37 ms after one `CREATE IND
 ## Two costs of the fix
 
 - The index uses disk and every insert or update on the table must maintain it. The lesson is explicit: do not index every column.
-- On a large live table, build it with `CREATE INDEX CONCURRENTLY` (the handout asks to warn the owner first). The CREATE INDEX page confirms it cannot run in a transaction block, takes two table scans, allows one concurrent build per table, and leaves an invalid index to drop and retry if it fails.
+- On a large live table, build it with `CREATE INDEX CONCURRENTLY` (the handout asks to warn the owner first); the caveats are in step 4 of `SKILL.md`.
 
 ## Also affects deletes
 

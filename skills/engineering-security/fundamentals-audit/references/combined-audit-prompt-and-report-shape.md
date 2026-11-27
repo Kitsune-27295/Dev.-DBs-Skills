@@ -4,21 +4,9 @@ Sources: handout section "Prompt de auditoria (os 5 de uma vez, sem alterar nada
 
 The combined audit appears only in the handout, not in the video.
 
-## Structure of the prompt
+## Structure of the prompt and report shape
 
-An opening role (senior engineer auditing an AI-built app) and a hard constraint: change no project file, run no migration, install nothing; read code, run read-only commands, write a report. Then five ordered steps, with findings noted at the end of each before moving on.
-
-| Step | What it asks |
-|---|---|
-| 1 Integration tests | Test tool configured? Test database separate from production? Command to run everything? Run it only if it cannot touch production and count passes and failures. Which critical flows have route-level tests, which only mocked unit tests, which none |
-| 2 Client trust | Rules only in the front end; keys in client code or browser-exposed variables classified public or secret; for an API-exposed database, tables with security off and over-permissive policies, each explained in plain language |
-| 3 Race conditions | Each read-decide-write on a limited resource, what happens with two simultaneous requests, whether a constraint, atomic operation or row lock exists; flag in-memory locks, expiring Redis locks, cached reads, and say if the database alone would do |
-| 4 Idempotency | Raw-body signature check, processed-events record with unique id, what happens on a double delivery, idempotency keys on gateway calls |
-| 5 Separation | Longest files and whether each mixes screen, rules and data access; name candidate number 1 |
-
-## Report shape
-
-A report file at the project root: one table per step (finding, risk high/medium/low, file and line, suggested fix); at the top, the five highest-risk findings in order; "not verified" plus the reason for anything that could not be checked, never a guess; ends by naming which of the five fix prompts to run first and why.
+An opening role (senior engineer auditing an AI-built app) and a hard constraint: change no project file, run no migration, install nothing. Then five ordered steps with findings noted after each, and a report file. The five steps and the report shape are in `fundamentals-audit` SKILL.md ("The audit" and "Deliverable"); this file only adds how the handout prompt relates to them.
 
 ## How it maps to the per-topic prompts
 

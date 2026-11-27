@@ -27,16 +27,15 @@ One idea: decouple **event producers** from **event consumers** through asynchro
    - Use **Publish-Subscribe** (e.g., Event Grid, SNS/SQS, RabbitMQ) when current subscribers need near-real-time push notifications and processed events do not need historical replay.
    - Use **Event Streaming** (e.g., Kafka, Event Hubs) when events must be retained in an ordered, durable log for high-volume stream processing, temporal windowing, or onboarding new consumers that replay history.
    - Do not confuse Pub/Sub (every subscriber gets every event) with **Competing Consumers** on a queue (each work item is processed by only one worker instance).
-4. **Publish reliably (Transactional Outbox) and consume idempotently:** Never dual-write to a database and an event broker in raw application code. Persist the event in a local Transactional Outbox within the same DB transaction, and make every consumer idempotent (`idempotency-fix`) because brokers guarantee *at-least-once* delivery, not *exactly-once*.
-5. **Make hidden control flows observable:** Event Notification scatters multi-step business flows across decoupled listeners, making the overall process invisible in source code. Propagate a **Correlation ID** and **Causation ID** on every event envelope and enforce distributed tracing.
-6. **Plan for out-of-order arrival and poison events:** Network partitions and retries reorder events. Include a monotonic version/sequence number or timestamp per aggregate on every event, and configure a Dead-Letter Queue (DLQ) so malformed or failing events do not block the partition/subscription forever.
+4. **Make hidden control flows observable:** Event Notification scatters multi-step business flows across decoupled listeners, making the overall process invisible in source code. Propagate a **Correlation ID** and **Causation ID** on every event envelope and enforce distributed tracing.
+5. **Plan for out-of-order arrival and poison events:** Network partitions and retries reorder events. Include a monotonic version/sequence number or timestamp per aggregate on every event, and configure a Dead-Letter Queue (DLQ) so malformed or failing events do not block the partition/subscription forever.
 
 ## Building order
 
 1. **Map the domain events and ownership:** Identify the producer of each fact, whether consumers need thin notifications or Event-Carried State Transfer, and whether a multi-step flow requires a Saga orchestrator instead of pure choreography.
 2. **Define a versioned event schema envelope:** Standardize metadata (`eventId`, `eventType`, `schemaVersion`, `occurredAt`, `aggregateId`, `aggregateVersion`, `correlationId`, `causationId`) plus the payload.
-3. **Wire the Producer with a Transactional Outbox:** Commit domain state and the outbox row atomically; let a relay publish to the broker.
-4. **Build Idempotent Consumers with DLQs:** Record processed `eventId`s (or check `aggregateVersion`) inside the consumer's transaction, and route permanent failures to a monitored DLQ.
+3. **Publish and consume reliably:** Never dual-write to a database and a broker; use a Transactional Outbox and idempotent consumers (at-least-once delivery) as defined in `saga-transactional-outbox-pattern` and `idempotency-fix`.
+4. **Route permanent failures to a monitored DLQ,** and check `aggregateVersion` to detect stale or out-of-order events.
 
 ## Testing strategy
 
@@ -55,8 +54,7 @@ One idea: decouple **event producers** from **event consumers** through asynchro
 ## Mistakes to catch
 
 - **The Passive-Aggressive Command Trap (Fowler):** Using Event Notification when the sender implicitly depends on a specific receiver executing a side effect. When that flow spans 5 event hops, nobody can read the code and tell what happens on failure.
-- **Dual-write without Outbox:** Publishing to Kafka/RabbitMQ before or after `db.commit()` without an Outbox — losing events or emitting phantom events on rollback.
-- **Non-idempotent consumers:** Processing a redelivered `PaymentSucceeded` event twice and double-crediting an account (`idempotency-fix`).
+- **Unreliable publishing:** dual-writing to the DB and the broker, or non-idempotent consumers that double-apply a redelivered event (`saga-transactional-outbox-pattern`, `idempotency-fix`).
 - **Breaking event schemas in place:** Renaming or deleting fields in a published event payload without versioning or upcasting, crashing downstream consumers.
 - **Unbounded callback storms on thin Event Notifications:** Emitting a thin notification to 20 subscribers who all immediately fire synchronous HTTP `GET` requests back to the producer at the exact same millisecond (fix with Event-Carried State Transfer).
 
@@ -65,8 +63,7 @@ One idea: decouple **event producers** from **event consumers** through asynchro
 - [ ] Have I named the pattern: Event Notification, Event-Carried State Transfer, or an explicit Command?
 - [ ] Is each event a past-tense fact, not a disguised command that depends on a specific receiver?
 - [ ] Did I choose Pub/Sub or Event Streaming deliberately, not confusing it with competing consumers?
-- [ ] Is publishing done through a Transactional Outbox instead of a dual write?
-- [ ] Is every consumer idempotent, given at-least-once delivery?
+- [ ] Is publishing reliable (Outbox, no dual write) and every consumer idempotent (`saga-transactional-outbox-pattern`)?
 - [ ] Does each event carry correlation and causation IDs plus a version, with a DLQ for failures?
 - [ ] Are event schemas versioned rather than changed in place?
 - [ ] Is a Saga or Command needed because the producer cares about the outcome?

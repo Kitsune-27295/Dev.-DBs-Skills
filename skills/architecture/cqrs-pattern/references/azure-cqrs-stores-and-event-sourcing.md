@@ -35,7 +35,7 @@ Use: collaborative multi-user data (fine-grained commands cut conflicts), task-b
 
 ## Combined with Event Sourcing
 
-The event store is the write model and single source of truth; the read model builds denormalized materialized views from events and can be rebuilt by replay, acting like a durable read-only cache. Costs: lag, a different design approach, and view-generation expense. Mitigation: periodic snapshots instead of replaying full history.
+The event store becomes the write model and read models are projections rebuilt by replay; projections, snapshots, lag and costs are owned by `event-sourcing-pattern`.
 
 ## Example: command handler skeleton (inference-free, mirrors the page's shape)
 

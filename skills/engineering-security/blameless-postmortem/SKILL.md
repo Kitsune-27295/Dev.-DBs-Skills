@@ -76,16 +76,7 @@ When you are the agent writing it, the same rule applies to you: you describe yo
 
 ## 5. Follow-ups that get done
 
-A good follow-up is Actionable (starts with a verb, produces a usable outcome), Specific (scope is narrow, what is excluded is clear) and Bounded (you can tell when it is finished). Cover the types below (at least one aimed at the cause):
-
-| Type | Question it answers | Example |
-|---|---|---|
-| Investigate | What happened and why? | Reproduce the stalled job with the saved input and attach the trace |
-| Mitigate (this time) | How did we limit this occurrence? | Roll back the release (done) |
-| Repair | How do we undo the damage? | Restore the missing rows from the verified backup |
-| Detect | How do we notice sooner? | Alert when the nightly load writes zero rows |
-| Mitigate (future) | How do we reduce size or duration next time? | Add a restore runbook and rehearse it |
-| Prevent | How do we stop recurrence? | Add a pre-merge check that rejects a schema change without a rollback script |
+A good follow-up is Actionable (starts with a verb, produces a usable outcome), Specific (scope is narrow, what is excluded is clear) and Bounded (you can tell when it is finished). Cover the types investigate, mitigate (this time), repair, detect, mitigate (future) and prevent, with at least one aimed at the cause; what each type is for: [references/action-items-and-follow-through.md](references/action-items-and-follow-through.md).
 
 Rules: at least one Prevent or future-Mitigate item aimed at the cause, not only the symptom; prefer changing the system (a check, a guard, a default) over "be more careful" or "train people"; one owner and a due date each; a tracking link; a validation step saying how you will know it worked (`verification-loop`). Review the open list on a schedule; a postmortem whose follow-ups never close has taught nothing.
 

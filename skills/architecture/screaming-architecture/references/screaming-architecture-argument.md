@@ -47,7 +47,7 @@ infrastructure/  http/  postgres/
 
 ## Boundary with sibling skills
 
-Dependency direction and boundary crossing are covered in the Clean Architecture reference file; hexagonal and modular-monolith structuring belong to `hexagonal-architecture` and `modular-monolith-architecture`.
+Dependency direction and boundary crossing are covered by `clean-architecture` (`references/dependency-rule-and-boundary-crossing.md`); hexagonal and modular-monolith structuring belong to `hexagonal-architecture` and `modular-monolith-architecture`.
 
 ## How an agent should apply this
 

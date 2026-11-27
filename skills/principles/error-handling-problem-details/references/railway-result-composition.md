@@ -1,6 +1,6 @@
 # Railway-Oriented Programming: Result Composition
 
-Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit.com/posts/recipe-part2/ · Last verified 2026-11-23
+Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit.com/posts/recipe-part2/ · https://github.com/swlaschin/railway-oriented-programming-example · Last verified 2026-11-23
 
 ## What the pages say
 
@@ -27,6 +27,14 @@ Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit
 | `plus` / `&&&` | Run two switches on the same input; on success combine values, on failure **combine errors** (caller supplies the combine functions) — gives accumulating validation |
 
 The page states the failure type must be identical along the whole pipeline because bind/map pass failures along without transforming them; for non-expert teams, prefer `>>`/`|>` or locally defined operators over exotic ones (series guidance).
+
+## Pitfalls and example repo
+
+- `tryCatch` takes a handler so the caller decides how an exception becomes a failure; plain `ex.Message` loses type info.
+- Operator-heavy code puts off non-experts; define any custom operator at the top of the module that uses it, and choose one spelling per codebase.
+- Optional steps (say, debug logging): substitute `id` when the step is disabled.
+- Serial `bind` stops at the first failure; use `plus` when users should see every error at once, with a caller-supplied way to merge successes and failures.
+- The example repo (swlaschin/railway-oriented-programming-example) contrasts a C# version nesting null checks, try/catch and logging with a flat F# pipeline of lifted functions; its DAO returns explicit failure codes and its DTO converter collects all validation errors in one pass.
 
 ## TypeScript sketch (own code)
 

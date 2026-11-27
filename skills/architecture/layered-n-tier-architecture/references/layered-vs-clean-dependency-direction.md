@@ -11,12 +11,7 @@ Sources: https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-a
 Compile-time dependencies run UI -> BLL -> DAL, so the most important code (BLL) depends on data-access details and often on a database existing. Testing business logic then needs a test database. The guide's fix is dependency inversion, not more layers.
 
 ## Clean architecture structure
-- **Application Core:** entities, aggregates, interfaces, domain services, specifications, custom exceptions, domain events. Defines abstractions (data access, file system, network); no dependency on UI or Infrastructure; may use simple DTOs.
-- **Infrastructure:** EF DbContext, migrations, repositories, services like a file logger or SMTP notifier; implements Core interfaces and references Core.
-- **UI:** controllers, filters, middleware, views, view models, startup; references Core; reaches infrastructure strictly through Core interfaces, with no direct instantiation or static calls to Infrastructure types.
-- **Composition root** (Program/Startup) wires implementations to interfaces via DI; UI may reference Infrastructure only there.
-
-Result: Core unit-tests in isolation; Infrastructure gets integration tests; implementations swap easily.
+Owned by `clean-architecture` (`dotnet-layout-and-composition-root.md`): Application Core, Infrastructure, UI and the composition root. Result: Core unit-tests in isolation, Infrastructure gets integration tests, implementations swap easily.
 
 ## Side-by-side
 | Aspect | Classic N-layer | Clean |
@@ -27,7 +22,7 @@ Result: Core unit-tests in isolation; Infrastructure gets integration tests; imp
 | Cost | lowest ceremony | extra abstractions, composition root |
 
 ## Monolith notes from the same page
-Scaling a monolith duplicates everything; if only a few parts are hot (their e-commerce example: product browsing) that wastes resources, and every change forces full retest and redeploy. Microservices only pay off when independent feature slices exist and independent scaling is needed; otherwise cloning the whole instance is simpler. The guide calls Clean Architecture the most appropriate way to structure non-trivial monoliths with DI.
+Scaling and redeploy costs of a monolith, and when to split, are owned by `monolithic-architecture` (`monolith-structure-deployment-and-comparison.md`).
 
 ## Example (own sketch)
 ```

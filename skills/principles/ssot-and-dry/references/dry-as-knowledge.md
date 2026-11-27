@@ -47,6 +47,13 @@ Hardest to detect. Their anecdote: an audit of a US state's systems found over 1
 - Removing duplication adds indirection; worth it only when the shared fact really is one.
 - Caching/denormalization is legitimate when encapsulated; unencapsulated it is a DRY bug.
 - Generated artifacts shift duplication from humans to tooling; the cost is a generation step that must be enforced.
+- Exposed data structures couple callers to a module's internals; prefer accessor functions.
+
+## Failure modes
+
+- Merging coincidentally identical code (the age/quantity trap), then splitting it later with flag parameters.
+- Treating DRY as a lint rule on token similarity, when the unit is a fact the business can change.
+- Hand-copying external schemas instead of generating them, so every upstream change is a silent break.
 
 ## How an agent should apply this
 

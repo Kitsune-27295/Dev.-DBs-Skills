@@ -21,7 +21,7 @@ Foreign key actions on delete or update: `NO ACTION` (default, checked at statem
 
 ## The index asymmetry
 
-The documentation says deleting a referenced row or updating a referenced column forces a scan of the referencing table, so indexing the referencing columns is often a good idea, but declaring the foreign key does not do it. Referenced columns, by contrast, always have an index because they must be a primary key or unique. This is the "trap" the lesson plants in chapter 02 and pays off in chapter 04; see `query-performance`.
+Referenced columns always have an index (they must be a primary key or unique); the referencing column does not get one from the foreign key declaration. The rule and the fix are owned by `query-performance`.
 
 ## Example: rule in the database, not only the code
 

@@ -33,7 +33,7 @@ One idea: structure an application as a suite of **independently deployable, loo
 1. **Verify the prerequisites and domain maturity:** Confirm whether you should start `monolithic-architecture` / `modular-monolith-architecture` first. Only decompose when subdomain boundaries are stable and independent team delivery or scaling demands it.
 2. **Identify subdomains and system operations:** Map business capabilities and DDD Bounded Contexts; assign each subdomain to one service with a clear public API and private data store.
 3. **Design distributed operations explicitly:** For every cross-service write, define the Saga steps and compensating transactions; for every cross-service read, choose between API Gateway/BFF composition or a local CQRS projection updated by events.
-4. **Implement each service internally with clean boundaries:** Inside a service, use `hexagonal-architecture` or `clean-architecture` plus the **Transactional Outbox** and **Idempotent Consumer** (`idempotency-fix`) patterns.
+4. **Implement each service internally with clean boundaries:** Inside a service, use `hexagonal-architecture` or `clean-architecture` plus the Transactional Outbox and idempotent consumers (`saga-transactional-outbox-pattern`, `idempotency-fix`).
 5. **Verify contracts in CI:** Gate every service pipeline on unit tests, component tests (in-process with testcontainers/fakes), and Consumer-Driven Contract tests.
 
 ## Tests per level (the Microservice Testing Pyramid)
@@ -54,8 +54,7 @@ One idea: structure an application as a suite of **independently deployable, loo
 
 - **The Distributed Monolith:** Splitting code into 12 repositories that all read/write the same central database or require coordinated multi-service deployments.
 - **Nano-services / Entity services:** Creating a service per database table (`UserService`, `AddressService`, `PhoneNumberService`) instead of around a cohesive business capability / aggregate lifecycle — resulting in chatty synchronous calls for every operation.
-- **Dual-writing to DB and Broker without an Outbox:** Calling `db.save()` followed by `broker.publish()` in application code without a Transactional Outbox — guaranteeing inconsistent state when the process crashes or the broker blips.
-- **Missing Idempotency on Consumers:** Assuming a message broker delivers events "exactly once." Brokers deliver *at-least-once*; every event consumer and Saga step must be idempotent (`idempotency-fix`).
+- **Unreliable event publishing:** dual-writing to the DB and the broker, or consumers that are not idempotent (see `saga-transactional-outbox-pattern` and `idempotency-fix`).
 - **Breaking API changes without versioning:** Modifying or removing a field in a REST/gRPC response or event payload without backward compatibility or contract tests.
 
 ## Quick Decision Checklist

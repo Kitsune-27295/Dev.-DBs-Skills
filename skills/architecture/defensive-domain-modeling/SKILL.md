@@ -75,14 +75,7 @@ From Scott Wlaschin (*Railway Oriented Programming*):
 
 Model multi-step fallible use cases as a **two-track railway** (`Ok(value)` on the success track, `Err(error)` on the failure track), replacing ad-hoc `try/catch` and silent `null` returns with explicit composable error flows.
 
-| Combinator / Adapter | Purpose in the pipeline |
-|---|---|
-| `bind` (`flatMap` / `>>=`) | Connects a two-track function (`A -> Result<B, E>`) after the previous step; short-circuits immediately if already on the failure track |
-| `map` | Lifts a pure single-track function (`A -> B`) onto the two-track `Result<A, E> -> Result<B, E>` |
-| `tee` (dead-end void effect) | Executes a void side-effect step (audit log, metric emission) while keeping the `Ok(value)` flowing forward |
-| `tryCatch` | Wraps throwing third-party/I/O calls at the outer boundary into explicit `Result` failures |
-| `doubleMap` (`bimap`) | Translates domain error variants into boundary HTTP/CLI/UI responses at the edge |
-| **`plus` (applicative / parallel validation)** | Runs independent field parsers in parallel and **accumulates all errors** (`Err(Error[])`) instead of short-circuiting on the first bad input field |
+Core adapters: `bind` chains the next fallible step and short-circuits on failure; `map` lifts a pure function; `tee` runs a side-effect step and passes the value on; `tryCatch` wraps throwing I/O at the boundary; `doubleMap` translates errors at the edge; `plus` runs independent field parsers and **accumulates all errors**. Combinator table, TypeScript sketch and pitfalls: `error-handling-problem-details` (`references/railway-result-composition.md`).
 
 **Crucial scoping rule (Wlaschin's warning):** Use Railway-Oriented Programming for sequential application workflows and boundary validation pipelines where explicit domain failures matter. **Do NOT wrap every tiny pure helper function in `Result<T, E>`** — pure math/transformations inside the core stay single-track (`A -> B`) and lift with `map` only when wired into the pipeline.
 
@@ -110,6 +103,5 @@ Model multi-step fallible use cases as a **two-track railway** (`Ok(value)` on t
 ## Deep references
 
 - [Parse, Don't Validate: Mechanics and Limits](references/parse-dont-validate-mechanics.md) — read for head/NonEmpty reasoning, two-phase design, and the author's own caveats.
-- [Illegal States, Union Types and Value Objects](references/illegal-states-and-value-objects.md) — read when modeling a rule as a union or choosing value vs reference object.
+- For worked union examples and Fowler Value Object mechanics read `value-objects-type-invariants` (`references/states-as-types.md`, `references/value-object-mechanics.md`).
 - [Tell-Don't-Ask, Law of Demeter, CQS and Guard Clauses: Source Detail](references/tell-dont-ask-demeter-cqs-guards.md) — read for what each source actually says, including Fowler's caveats.
-- [Railway-Oriented Pipelines: Composition, Validation and Limits](references/railway-pipeline-composition.md) — read when building or reviewing a Result pipeline with parallel validation.

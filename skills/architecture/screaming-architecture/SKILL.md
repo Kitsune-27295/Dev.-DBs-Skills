@@ -18,7 +18,7 @@ One idea: just as the blueprints of a library scream **"Library"** (reading room
 
 ## Core architectural rules and invariants
 
-1. **The First-Impression Litmus Test:** When a new developer opens the top-level source directory (`src/` or module root), their immediate reaction must be: *"Oh, this is a `<Business Domain>` system (e.g., Health-Care System, Order Fulfillment Engine, Knowledge Vault)"* — **never** *"Oh, this is a Rails / Spring Boot / Next.js / Laravel app."*
+1. **The First-Impression Litmus Test:** When a new developer opens the top-level source directory (`src/` or module root), their immediate reaction must be: *"Oh, this is a `<Business Domain>` system (e.g., Health-Care System, Order Fulfillment Engine, Knowledge Vault)"* — **never** *"Oh, this is a Rails / Spring Boot / Next.js / Laravel app."* Quick test: hide `package.json` / `pom.xml` / `go.mod` and show `tree -L 2 src/` to a stranger; they should guess the industry and product.
 2. **Name top-level packages and types after Domain Concepts and Use Cases:**
    - **Bad (Framework-Screaming):** `src/controllers/`, `src/models/`, `src/views/`, `src/helpers/`, `src/middlewares/`, `src/repositories/`
    - **Good (Domain & Use-Case Screaming):** `src/enrolment/` (`EnrollStudentUseCase`, `CancelEnrollmentUseCase`), `src/grading/`, `src/tuition-billing/`, `src/course-catalog/` (or inside `src/domain/` and `src/application/` organized by business capability).
@@ -37,14 +37,6 @@ One idea: just as the blueprints of a library scream **"Library"** (reading room
    - If a framework demands a special directory (e.g., Next.js `app/` routes or framework CLI folders), keep that directory as a **wafer-thin driver layer** that only parses the transport request and immediately calls into the domain-screaming core (`src/core/<domain-capability>/` or `packages/<bounded-context>/`).
 4. **Combine with `package-by-feature-component` and `clean-architecture` / `hexagonal-architecture`:**
    - Organize the core by domain capability / feature slice so the directory tree serves as a living map of what the business does.
-
-## Verification checklist
-
-| Check | Question | Pass Condition |
-|---|---|---|
-| Top-level directory check | If you hide `package.json` / `pom.xml` / `go.mod` and show `tree -L 2 src/` to a stranger, can they guess what industry and product this codebase is for? | Yes — domain nouns and use cases dominate the tree |
-| Delivery ignorance check | Can a reader locate every business use case in the repository and understand its inputs, outputs, and rules before finding out where the views, HTTP controllers, or SQL tables live? | Yes — views, controllers, and DB gateways are isolated details |
-| Framework-free test check | Do the use-case tests run in milliseconds using plain objects without booting the web framework or database? | Yes — zero framework startup in domain/use-case specs |
 
 ## When it earns its keep
 
@@ -69,4 +61,4 @@ One idea: just as the blueprints of a library scream **"Library"** (reading room
 ## Deep references
 
 - [Screaming architecture argument](references/screaming-architecture-argument.md) — read when judging what a repo layout communicates
-- [Clean Architecture dependency rule](references/clean-architecture-dependency-rule.md) — read when enforcing inward dependencies and boundary data
+- The dependency rule and boundary data are owned by `clean-architecture` (`references/dependency-rule-and-boundary-crossing.md`); read it when enforcing inward dependencies.

@@ -35,6 +35,7 @@ after : POST /products/batch {ids:[...]}          # one remote call, one failure
 
 ## How an agent should apply this
 - Check a proposed service against all nine traits; if team ownership (2, 3) or per-service data (6) is missing, call it a distributed monolith.
+- Treat a shared database or a central rule engine as evidence of SOA-style coupling.
 - Refuse in-process-style fine-grained APIs across the network; design coarse operations.
 - Allow at most one synchronous hop on the user path; make the rest asynchronous.
 - Treat service pairs that always change together as a merge candidate.

@@ -65,15 +65,13 @@ Use the gateway to collapse N client calls into one when clients are on high-lat
 - Do not couple backends to each other through the gateway.
 - Prefer a batch operation on one service over a gateway when the problem is chatty calls to a single service.
 
-## 6. Gateway vs BFF Boundary
+## 6. Gateway vs BFF Boundary, and When to Use a Gateway
 
-| | Shared API gateway | BFF |
-|---|---|---|
-| Serves | All clients | One client type (web, mobile, partner) |
-| Owns | Edge concerns, routing, thin aggregation | Client-specific API shape and composition |
-| Owned by | Platform/edge team | Client team |
+A shared gateway stays generic (edge concerns, routing, thin aggregation). Per-client API shaping and client-team ownership go to `bff-pattern`, which owns the gateway-versus-BFF comparison and the forces behind it.
 
-If client-specific shaping starts accumulating in the shared gateway, split out a BFF (`bff-pattern`) and keep the gateway generic.
+- Justify a gateway by naming the forces that apply (many services, chatty mobile clients, partitioning to hide); skip it for one or two services.
+- Count its cost: one more component to build, deploy and operate, plus an extra network hop to monitor.
+- Under high load build it on a non-blocking, event-driven stack; do not route internal service-to-service traffic through it (a mesh or direct calls fit better).
 
 ## 7. Failure Modes
 
@@ -101,4 +99,3 @@ If client-specific shaping starts accumulating in the shared gateway, split out 
 
 - [RFC 9110 intermediaries and status codes](references/rfc9110-intermediaries-and-status-codes.md) — when implementing proxy behavior, retries, or error mapping.
 - [Gateway offloading and aggregation](references/gateway-offloading-and-aggregation.md) — when deciding what moves into the gateway and how to compose calls.
-- [API gateway pattern and BFF boundary](references/api-gateway-pattern-and-bff-boundary.md) — when justifying a gateway, per-client variants, and its costs.

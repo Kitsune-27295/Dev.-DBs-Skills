@@ -50,9 +50,7 @@ Pros: control over order; separates invokers from executors (SRP); add handlers 
 
 Problem: a company sends price changes and promotions to large customers, but each wants only certain items. How does a component avoid receiving unwanted messages?
 
-Solution: a Message Filter, a special Message Router with a single output channel; messages matching criteria pass, others are discarded. It is part of the messaging system (unlike a Selective Consumer inside an endpoint).
-
-RabbitMQ illustration: a fanout exchange copies to all queues; a direct exchange places messages into queues whose binding key equals the routing key. Consumers bound with "Widget" and "Gadget" each get only their messages; a queue may have several binding keys and several queues may share one key.
+Solution: a Message Filter, a router with a single output channel; matching messages pass, others are discarded. As a pipeline stage it sits in the messaging system, unlike a Selective Consumer inside an endpoint. Router comparison and broker bindings (RabbitMQ) are owned by `router-front-controller-routing` (`eip-message-routing-patterns.md`).
 
 Related: Content-Based Router, Selective Consumer, Pub-Sub Channel, Recipient List, Dead Letter Channel.
 

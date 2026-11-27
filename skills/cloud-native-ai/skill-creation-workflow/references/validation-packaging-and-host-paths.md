@@ -16,7 +16,7 @@ The specification page recommends the `skills-ref` library: `skills-ref validate
 
 ## Portable frontmatter
 
-Specification fields: `name` (max 64, lowercase letters, digits, hyphens, matches the folder), `description` (max 1024), optional `license`, `compatibility` (max 500), `metadata` (string-to-string map), `allowed-tools` (experimental, space-separated). Claude Code adds fields (for example `disable-model-invocation`, `model`, `effort`, `context`, `when_to_use`); the Claude Code page says Claude.ai uploads, the Skills API and `package_skill.py` accept only the six standard keys and error on others. Keep a portable skill to the standard keys. Antigravity's page lists `name` as optional (defaults to the folder name) and `description` as required. Codex can read an optional `agents/openai.yaml` for UI metadata and invocation policy.
+Specification fields and their limits: see `agent-skills-context-engineering` (`references/skill-format-and-authoring-rules.md`). Claude Code adds fields (for example `disable-model-invocation`, `model`, `effort`, `context`, `when_to_use`); the Claude Code page says Claude.ai uploads, the Skills API and `package_skill.py` accept only the six standard keys and error on others. Keep a portable skill to the standard keys. Antigravity's page lists `name` as optional (defaults to the folder name) and `description` as required. Codex can read an optional `agents/openai.yaml` for UI metadata and invocation policy.
 
 ## Host paths and install
 

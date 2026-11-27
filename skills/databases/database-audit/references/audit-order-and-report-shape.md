@@ -16,19 +16,11 @@ Underlying logic (the author's, restated): irreversible harms first (leak, data 
 
 ## Safety rules shared by every prompt (handout)
 
-Run on a separate branch; read the plan the AI proposes before accepting it; never let the AI touch production: it hands over the command and a human runs it. Each fix prompt also carries its own "rules" line (never delete data to pass a constraint, no business-rule changes, no production runs).
+Branch, backup and tests before any fix: `fundamentals-audit`. Each fix prompt also carries its own "rules" line (never delete data to pass a constraint, no business-rule changes, no production runs).
 
 ## Anatomy of the general audit prompt
 
-The prompt is read-only: no file edits, no writes to the database. It fixes seven checks in order and asks for a report with, per finding, the risk (high, medium, low) and which of the seven fix prompts resolves it, ending with "where to start". Each check is phrased as a question that can be answered from code and settings:
-
-1. Door: does the database accept outside connections; keys or passwords in front end or git; who reads and writes each table through the public API.
-2. Backup: does one exist, where, has anyone tested a restore.
-3. Cost: how it bills, where code reads too much (loop, listener, offset).
-4. Transaction: multi-table writes without a transaction.
-5. Constraints and modeling: money as float, timestamps without time zone, missing foreign keys, rules only in code.
-6. Migrations: real schema against migration files; dev and production separated.
-7. Performance: foreign keys without index, function on a column in `WHERE`, `count` instead of `EXISTS`, high `OFFSET`.
+The prompt is read-only: no file edits, no writes to the database. It fixes seven checks in the order above and asks for a report with, per finding, the risk (high, medium, low) and which fix skill resolves it, ending with "where to start". Each check is one question answerable from code and settings, defined by its owner skill in the table above.
 
 ## Report shape
 
@@ -37,7 +29,6 @@ The prompt is read-only: no file edits, no writes to the database. It fixes seve
 Stack: <engine, host, ORM, migration tool>
 Correct: <what already holds>
 | # | Area | Finding | Evidence (file:line or setting) | Risk | Fix skill |
-Run order: exposure, backup, cost, transaction, schema, migrations, performance
 Start here: <first area with a high-risk finding>
 ```
 
@@ -47,8 +38,5 @@ The source prompt lists seven checks in the video's "door, backup, cost, transac
 
 ## How an agent should apply this
 
-- Run all seven checks read-only, in the order above, and write one report; do not start a fix inside the audit.
-- Give every finding a risk and proof (a `file:line` or a setting); mark parts that do not apply as not applicable.
-- Pick "where to start" as the first area, in run order, that has a high-risk finding.
+- Follow `SKILL.md` (steps, Run order, Rules); this file adds the rationale and the report shape.
 - Quote the lesson's statistics only as the author's claims.
-- Require the owner's OK per fix and keep production out of reach.

@@ -2,18 +2,8 @@
 
 Sources: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/ · https://engsoftmoderna.info/cap7.html · Last verified 2026-11-23
 
-## Styles are constraints
-The Azure guide defines an architecture style as a family of architectures sharing characteristics; it constrains the allowed elements and relationships, and desirable properties emerge only if you respect the constraints. Its warning: adopting a style superficially, without its constraints, yields none of the benefits; but sometimes it is better to relax a constraint than chase purity. Choose with stakeholders, starting from the problem and prioritized nonfunctional requirements (time to market favors maintainability/testability; a tight budget favors simplicity). Changing direction later is costly, so invest upfront and keep measuring.
-
-## How N-tier compares (guide's table, paraphrased)
-| Style | Dependency management | Best-fit domain |
-|---|---|---|
-| N-tier | horizontal tiers divided by subnet | traditional business domain, low update frequency |
-| Web-Queue-Worker | front end and worker decoupled by async messaging | simple domain with some heavy tasks |
-| Microservices | vertical functional services calling via APIs | complicated domain, frequent updates |
-| Event-driven | producers/consumers, independent view per subsystem | IoT, real-time |
-
-The guide notes horizontal layering makes it hard to change one feature without touching several layers, which limits agility for frequent updates. Complexity must match the domain: too simplistic leads to a big ball of mud.
+## Styles are constraints and how N-tier compares
+Styles as constraints, the selection process and the style comparison table are owned by `architecture-decision-trees-tradeoffs` (`architecture-styles-as-constraints.md`). N-tier fits a traditional business domain with low update frequency. Horizontal layering makes it hard to change one feature without touching several layers, which limits agility for frequent updates. Complexity must match the domain: too simplistic leads to a big ball of mud.
 
 ## Valente's treatment (Engenharia de Software Moderna, ch. 7)
 - Layered architecture: a layer uses only the layer directly below. Benefits: partitions complexity, constrains dependencies, layers can be swapped, one layer reused by several above. Classic examples: protocol stacks (HTTP over TCP over IP over Ethernet), Dijkstra's THE system.

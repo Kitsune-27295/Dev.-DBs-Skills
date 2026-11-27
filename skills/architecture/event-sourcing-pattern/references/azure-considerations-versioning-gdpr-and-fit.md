@@ -22,7 +22,7 @@ Richardson frames it as a fix for atomically updating state and publishing event
 | Circular logic | Event handlers that raise events that trigger the same handlers can loop |
 | Testing | Given past events, when command, then new events; plus integration tests for projections, idempotency and schema evolution |
 | Personal data | Store personal data outside the stream and reference by id, or crypto-shred: encrypt per-subject and delete the key |
-| Internal vs public events | Low-level domain events often need translation into integration events before crossing a boundary |
+| Internal vs public events | Translate to integration events before crossing a boundary (see `streams-aggregation-and-practitioner-guide.md`) |
 
 ## Use when / avoid when
 Use when intent and history matter, replay or rollback is valuable, you need decoupled consumers, or you already use CQRS and accept eventual consistency. Avoid for plain CRUD, prototypes and MVPs, mostly-static reference data, strict real-time consistency of views, or teams new to event-driven systems.

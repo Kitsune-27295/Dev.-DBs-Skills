@@ -18,6 +18,9 @@ SSOT answers "where is the single home of this fact?" Bounded Context answers "w
 | Same *word*, two contexts | Two facts that share a name. Keep two models. |
 | Same fact genuinely owned by one context but needed by another | The owner publishes it (API, event, contract); consumers hold a **translated read model**, not the owner's class. |
 | Two contexts truly co-own a small stable concept | Explicit shared kernel with joint ownership and change protocol; keep it tiny. |
+| Two modules in one deployable, owned by groups with different vocabulary | Probably two contexts; treat the module boundary like a context boundary. |
+
+The source page does not discuss team topology; reading boundaries off team ownership is an application of the idea, not a claim of the article.
 
 ## Worked example
 

@@ -20,7 +20,7 @@ Boundary with neighbors: type-level modeling (Value Objects, sum types, `Result`
 | Client UI | Browser form checks | Convenience only; never a control. Re-validate on the server |
 | Domain core | Aggregates, services | Receives parsed types; does **not** re-check raw strings (no shotgun parsing) |
 
-**Two-phase program shape:** phase 1 = parse/validate (failures are expected and reported); phase 2 = execution (few, genuinely exceptional failures). Never start acting on part of the input before the rest is proven valid. See [references/parse-dont-validate-at-the-edge.md](references/parse-dont-validate-at-the-edge.md).
+**Two-phase program shape:** phase 1 = parse/validate (failures are expected and reported); phase 2 = execution (few, genuinely exceptional failures). Never start acting on part of the input before the rest is proven valid. Push the proof upward to the edge but no further, return the refined value instead of `void`/`boolean`, and see `defensive-domain-modeling` (`references/parse-dont-validate-mechanics.md`) for shotgun parsing, `NonEmpty` and opaque types.
 
 ## 2. The Pipeline (do it in this order)
 
@@ -108,6 +108,5 @@ Guard clauses stop checks that depend on a failed prerequisite. Combine with par
 
 ## Deep references
 
-- [Parse, Don't Validate at the Edge](references/parse-dont-validate-at-the-edge.md) — when deciding where checks live, shotgun parsing, total functions, push-proof-upward rules
 - [OWASP Input Validation Rules](references/owasp-input-validation-rules.md) — when writing or reviewing concrete validation rules, regex, uploads, headers, Unicode
 - [Notification Pattern and Error Collection](references/notification-pattern-error-collection.md) — when returning multiple errors or refactoring throw-on-first validation

@@ -83,6 +83,7 @@ Worked examples and before/after: [references/dry-refactoring-recipes.md](refere
 
 ## Deep references
 
+- [Rule registry format](references/rule-registry-format.md) — read when building or maintaining a rule registry: row fields, agreement and confidence scales, maintenance rule. (added 2026-11-27)
 - [DRY as knowledge: the five duplication kinds](references/dry-as-knowledge.md) — read for the Pragmatic Programmer's definitions, acid test and worked examples.
 - [DRY refactoring recipes and detection](references/dry-refactoring-recipes.md) — read when executing a deduplication step by step.
 - [Bounded Context limits on DRY](references/bounded-context-limits.md) — read before sharing a model or type across modules, services or teams.

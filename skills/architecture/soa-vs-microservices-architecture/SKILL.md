@@ -34,16 +34,16 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 ## Evaluation and migration workflow
 
 1. **Audit the current service estate against the 6 dimensions above:** Identify whether your "microservices" are actually coarse-grained SOA services sharing one database or blocked on a central integration team.
-2. **Isolate the Canonical Schema trap:** Replace company-wide shared entity models with Bounded-Context-specific contracts and Anti-Corruption Layers.
+2. **Isolate the Canonical Schema trap:** apply rules 1 and 5 (per-context contracts behind an ACL).
 3. **Extract business orchestration out of the ESB:** Move workflow state machines out of the transport bus into domain-owned **Saga Orchestrators** (`saga-transactional-outbox-pattern`) or application services wrapped in code-level tests.
-4. **Decouple shared databases:** Assign single-service ownership to every table and expose data across boundaries via versioned APIs or domain events.
+4. **Decouple shared databases:** apply rule 5 (single-service table ownership; cross-boundary data via versioned APIs or domain events).
 
 ## Testing strategy
 
 | Architecture | Critical Tests | Focus |
 |---|---|---|
 | SOA Integration Estate | protocol mediation, schema validation (WSDL/OpenAPI), ACL translation tests, and ESB fault/timeout isolation tests | ensures heterogeneous systems communicate without cascading stalls when one legacy backend is slow |
-| Microservices Estate | unit tests, in-process Service Component tests, and **Consumer-Driven Contract tests (Pact)** | ensures each service deploys independently without breaking consumers or requiring a full enterprise staging environment |
+| Microservices Estate | see the testing pyramid in `microservices-architecture` | unit, service-component and Consumer-Driven Contract tests |
 
 ## When each earns its keep
 
@@ -52,7 +52,7 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 
 ## Mistakes to catch
 
-- **"SOA in Microservice Clothing" (Distributed Monolith):** Calling your architecture "Microservices" while 15 services share a single relational database and require coordinated Friday-night deployments.
+- **"SOA in Microservice Clothing":** services that share one database or need lockstep deployments (the Distributed Monolith, see `microservices-architecture`).
 - **Putting domain business rules inside the ESB / API Gateway:** Writing pricing, eligibility, or workflow branching logic inside MuleSoft/BizTalk/Camel/Kong routing rules where developers cannot unit-test them locally.
 - **The Canonical Data Model Bottleneck:** Forcing Billing, Shipping, Marketing, and Support to agree on one giant 300-field `EnterpriseOrder` schema instead of letting each Bounded Context model only the fields relevant to its role.
 - **Synchronous request chaining across Enterprise Services:** Chaining 5 synchronous SOA services over an ESB so a slowdown in one legacy system exhausts thread pools across the entire enterprise.
@@ -64,10 +64,9 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 - [ ] Am I avoiding a company-wide canonical data model in favor of per-context contracts?
 - [ ] Does every table have a single owning service, with shared databases untangled first?
 - [ ] Are legacy endpoints wrapped in an Anti-Corruption Layer, migrating incrementally rather than big bang?
-- [ ] Do my microservices truly deploy independently, or are they SOA in microservice clothing?
 - [ ] Are long synchronous chains across services avoided?
 
 ## Deep references
 
 - [SOA vs microservices comparison dimensions](references/soa-vs-microservices-comparison-dimensions.md) — when comparing scope, data, communication and governance
-- [Lewis and Fowler microservice characteristics and SOA lineage](references/lewis-fowler-microservices-characteristics-and-soa-lineage.md) — when auditing whether a system is really microservices
+- The nine Lewis and Fowler characteristics (audit "is it really microservices?"; a shared database or a central rule engine is evidence of SOA-style coupling) live in `microservices-architecture`, file `references/fowler-lewis-nine-characteristics.md`.

@@ -47,8 +47,7 @@ Example shape (adapted from the page's Nginx sample): `location /app1 { proxy_pa
 
 ## Failure modes
 
-- Gateway as single point of failure or bottleneck: scale out, load-test to avoid cascading failure.
-- Public gateway with publicly reachable backends: restrict backends to the gateway or a private network.
+- Gateway as single point of failure, bottleneck or bypassable (publicly reachable backends): see failure modes in `api-gateway-reverse-proxy`.
 - Routing rules that couple to a service's internals: backend change forces gateway change.
 - One or two services only: pattern is unnecessary overhead (the page says it may not be suitable).
 

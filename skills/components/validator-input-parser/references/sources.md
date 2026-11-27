@@ -4,7 +4,7 @@ Every URL below was checked during skill authoring (2026-11-23).
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
-| https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/ | 200 OK (read via WebFetch; Firecrawl had no credits) | Parser vs validator, shotgun parsing (LangSec), NonEmpty example, "push the burden of proof upward", two-phase program |
+| https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/ | 200 OK (read via WebFetch; Firecrawl had no credits) | Two-phase program shape and parse-at-the-edge rule (mechanics live in `defensive-domain-modeling`) |
 | https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html | 200 OK (WebFetch) | Syntactic vs semantic, allowlist, size/depth limits, decode once, JSON schema config, Unicode, regex, uploads, email, Host headers, pitfalls |
 | https://martinfowler.com/articles/replaceThrowWithNotification.html | 200 OK (WebFetch) | Notification pattern, why not exceptions for validation, step-by-step refactoring, guard clauses |
 

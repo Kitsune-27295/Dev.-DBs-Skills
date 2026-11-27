@@ -16,13 +16,9 @@ Written in reply to a manager who argued microservices make OCP less important, 
 
 His closing point: simplicity needs principles; "just be simple" gives no guidance.
 
-## SRP post (2014)
+## SRP and OCP posts (2014)
 
-Traces the idea to Parnas (1972, modules around design decisions likely to change), Dijkstra (separation of concerns) and Constantine's coupling/cohesion. Definition: one reason to change. He resolves "what is a reason?" by tying it to people: code is not responsible for fixes, programmers answer to stakeholders. The `Employee` example: `calculatePay` (CFO), `reportHours` (COO/auditors), `save` (CTO/DBAs). "This principle is about people." Alternate wording: gather what changes for the same reasons, separate what changes for different ones. Why it matters: changing one stakeholder's feature should not break another's.
-
-## OCP post (2014)
-
-Contrasts Meyer's 1988 "open and closed" (compiled library, approved baseline) with Martin's version: extend behavior without modifying the system, so new features ship as new code (new jar/dll/gem) with old code untouched. Shotgun Surgery is the counter-state. Evidence offered: plugin-extended tools (IDEs, Vim, TextMate, Minecraft). Mechanism: OO separation of policy from detail and inverting dependencies that cross significant boundaries, so "the system doesn't know about the plugins; the plugins know about the system".
+Summaries (Parnas and Dijkstra lineage, the `Employee` actors example, Meyer versus Martin on OCP, plugin boundaries) live in `single-responsibility-cohesion` (`references/srp-actors-and-reasons-to-change.md`) and `open-closed-principle` (`references/ocp-and-plugin-boundaries.md`). Sources: the two 2014 posts listed above.
 
 ## Where the SKILL.md wording needs care (my own reading)
 

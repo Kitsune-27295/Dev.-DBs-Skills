@@ -21,14 +21,9 @@ Sources: video, run-order summary at about 30:07-31:16 (https://www.youtube.com/
 
 My inference on how they chain: the concurrency tests asked for by race and idempotency fixes are written in the style set up in step 1; the unique constraint behind a processed-events table is the same mechanism as the race guard; characterization tests in the refactor reuse the integration setup. So skipping step 1 makes steps 3 to 5 each reinvent test setup.
 
-## Shared process rules (both sources)
+## Shared process rules
 
-- Separate branch, never commit directly to main.
-- Each prompt shows its plan first; read it before accepting.
-- New migrations are reviewed before they run; production is not touched unseen.
-- Do not run a prompt whose effect you do not understand ("watch first, then run").
-- No magic prompt: the video says each one hands over the rod, not the fish; read the report, fix item by item.
-- Do not run two processes on the same area at once (stated in the refactor chapter, generalized in SKILL.md).
+Branch, plan-first, migration review and one-process-at-a-time rules live in SKILL.md ("Pre-run safety rules"). The video adds one point only: no prompt is magic, each hands over the rod, not the fish, so read the report and fix item by item.
 
 ## How an agent should apply this
 

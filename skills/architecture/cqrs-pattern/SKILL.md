@@ -69,4 +69,4 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 ## Deep references
 
 - [From CQS to CQRS: Fowler cautions](references/cqs-to-cqrs-fowler-cautions.md) — before recommending CQRS at all
-- [Azure CQRS stores and Event Sourcing](references/azure-cqrs-stores-and-event-sourcing.md) — when splitting stores, adding outbox or event sourcing
+- [Azure CQRS stores and Event Sourcing](references/azure-cqrs-stores-and-event-sourcing.md) — when splitting stores or adding outbox
