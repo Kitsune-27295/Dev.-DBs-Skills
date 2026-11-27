@@ -10,7 +10,7 @@ import { createMcpHandler } from "../src/mcp-core.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PACK_ROOT = path.resolve(__dirname, "..");
 
-test("MCP initialize, tools/list, resources/list, and prompts/list expose all 130 skills", async () => {
+test("MCP initialize, tools/list, resources/list, and prompts/list expose all 131 skills", async () => {
   const handle = createMcpHandler(PACK_ROOT);
 
   const init = await handle({
@@ -40,14 +40,14 @@ test("MCP initialize, tools/list, resources/list, and prompts/list expose all 13
   ]);
 
   const listCall = await handle({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "list_skills", arguments: {} } });
-  assert.equal(listCall.result.structuredContent.count, 130);
+  assert.equal(listCall.result.structuredContent.count, 131);
 
   const resourcesRes = await handle({ jsonrpc: "2.0", id: 4, method: "resources/list" });
   assert.equal(resourcesRes.result.resources[0].uri, "skill://index.json");
-  assert.equal(resourcesRes.result.resources.length, 131);
+  assert.equal(resourcesRes.result.resources.length, 132);
 
   const promptsRes = await handle({ jsonrpc: "2.0", id: 5, method: "prompts/list" });
-  assert.equal(promptsRes.result.prompts.length, 130);
+  assert.equal(promptsRes.result.prompts.length, 131);
 });
 
 test("MCP skill consumption tools, resources, prompts, and traversal protection", async () => {
@@ -94,7 +94,7 @@ test("MCP skill consumption tools, resources, prompts, and traversal protection"
     params: { uri: "skill://index.json" },
   });
   const indexPayload = JSON.parse(resRead.result.contents[0].text);
-  assert.equal(indexPayload.count, 130);
+  assert.equal(indexPayload.count, 131);
 
   const promptRes = await handle({
     jsonrpc: "2.0",
@@ -204,7 +204,7 @@ test("MCP install_skills and check_installed_skills handle dry_run, idempotency,
       params: { name: "check_installed_skills", arguments: {} },
     });
     assert.equal(packCheck.result.structuredContent.ok, true);
-    assert.equal(packCheck.result.structuredContent.checkedCount, 130);
+    assert.equal(packCheck.result.structuredContent.checkedCount, 131);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

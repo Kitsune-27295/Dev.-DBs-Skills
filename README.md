@@ -1,18 +1,18 @@
 # Dev.-DBs-Skills
 
-Catálogo unificado de **130 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
+Catálogo unificado de **131 Agent Skills** portáteis ([`agentskills.io`](https://agentskills.io)) para **Claude Code**, **Antigravity IDE**, **Codex CLI**, **Cursor**, **VS Code** e **Windsurf**, utilizáveis e instaláveis via **servidor MCP (*stdio*)** ou **CLI Python / `npx skills`**.
 
 ---
 
 ## O que este projeto faz
 
-Reúne num único pacote verificável **130 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
+Reúne num único pacote verificável **131 skills autocontidas** cobrindo todo o ciclo de engenharia de software e dados:
 
 - **Skills pilares (2):** `skill-orchestrator` + `model-effort-routing` formam o protocolo de início de tarefa: a primeira decide quais instruções e skills se aplicam e em que ordem (incluindo regras comportamentais estilo Karpathy para `CLAUDE.md`/`AGENTS.md`), a segunda decide modelo, esforço e delegação, sempre pela solução mais econômica e eficaz.
 - **Arquitetura & Design de Software (27 skills):** estilos arquiteturais (Hexagonal, Clean, Layered, Modular Monolith, Microservices, EDA, CQRS, Event Sourcing, Vertical Slice, BFF, Micro-Frontends, Microkernel, Actor Model/Space-Based), DDD estratégico, SSOT/SOLID pragmático, modelagem defensiva e módulos profundos.
 - **Componentes de Software (13 skills):** Router/Front Controller, API Gateway/Reverse Proxy, Middleware, Cache, Background Worker, Rate Limiter, AuthN/AuthZ, Repository/Unit of Work, DTO/Mapper/ACL, Validator, Feature Flags, State Machine, E-mail transacional.
 - **Princípios & Conceitos Fundamentais (7 skills):** aprofundamentos de SSOT/DRY, OCP, SRP, DIP/Composition Root, KISS/YAGNI/AHA, Value Objects e Problem Details/Result.
-- **Cloud-Native, Resiliência, Evolução & IA (18 skills):** coordenação multiagente, MCP Apps, memória de sessão e higiene de memória, portão de qualidade de texto, relatório de custo de agentes, migração de configuração e diagnóstico Zabbix, orquestração de instruções e skills (CLAUDE.md/AGENTS.md, roteamento), roteamento de modelo e esforço (a opção mais econômica e eficaz), pesquisa profunda na web com citações verificadas, 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering.
+- **Cloud-Native, Resiliência, Evolução & IA (19 skills):** coordenação multiagente, MCP Apps, memória de sessão e higiene de memória, portão de qualidade de texto, relatório de custo de agentes, migração de configuração e diagnóstico Zabbix, orquestração de instruções e skills (CLAUDE.md/AGENTS.md, roteamento), roteamento de modelo e esforço (a opção mais econômica e eficaz), pesquisa profunda na web com citações verificadas, 12/15-Factor, Circuit Breaker/Retry/OpenTelemetry, Expand–Contract zero-downtime, YAGNI evolutivo, pirâmides/troféus de testes, Agentic RAG e Context/Harness Engineering, criação de skills.
 - **Documentação, Diagramas & Contratos (5 skills):** ADRs, arc42 + OpenAPI/AsyncAPI, C4 Model, Diátaxis e Mermaid.
 - **Workflow de Engenharia — Matt Pocock Pack (20 skills):** triagem, *wayfinder*, retrospectiva, *handoff*, protótipo, modelagem de domínio, guardrails de git, *wizard*, módulos profundos em TS, pre-commit e questionários (12 skills adicionadas do upstream MIT), fluxo ponta a ponta (`setup-matt-pocock-skills` → `grill-me` / `grilling` → `to-spec` → `to-tickets` → `implement` + `tdd` → `code-review`), com invocação autônoma pelo modelo liberada para execuções completas de ponta a ponta.
 - **Fundamentos de Engenharia & Segurança (28 skills):** revisão e descrição de PRs, desempenho de aplicações, auditorias de simplificação, acessibilidade (WCAG), testes confiáveis no CI, ameaças e triagem de vulnerabilidades, verificação em ciclo fechado, segurança operacional e pós-mortem sem culpa, auditoria geral, diagnóstico de bugs por loop de feedback (`diagnosing-bugs`), automação de QA com Playwright (ciclo completo com guardrails anti-batota), padrões de escrita de código limpo para agentes, auditoria somente leitura de repositórios open-source externos, commits atômicos e higiene Git, proteção anti-client-trust, *race conditions*, idempotência, refatoração incremental em camadas, testes de integração com DB real e auditoria de segurança, gestão de dependências e cadeia de suprimentos.
@@ -22,7 +22,7 @@ Reúne num único pacote verificável **130 skills autocontidas** cobrindo todo 
 ## Por que usar este repositório
 
 - **Zero dependências externas em runtime:** tanto o servidor MCP em Node.js ESM ([bin/mcp-server.mjs](bin/mcp-server.mjs)) como os scripts CLI ([install_skills.py](install_skills.py) e [check_skills.py](check_skills.py)) usam exclusivamente bibliotecas padrão.
-- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 130 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
+- **Dupla via de consumo (MCP + instalação local):** carregue instruções sob demanda via *progressive disclosure* (`skill://index.json`, `get_skill`) sem poluir o contexto com as 131 skills de uma vez, ou instale uma seleção exata no workspace/máquina.
 - **Integridade verificada por SHA-256 e validação estática:** cada arquivo em `skills/` possui hash registrado em [MANIFEST.sha256](MANIFEST.sha256) e passa por validação de frontmatter, links relativos e referências cruzadas.
 - **Portabilidade multi-agente:** funciona com `.claude/skills`, `.agents/skills` (Antigravity), `.codex/skills`, `.cursor/skills` e diretórios globais (`~/.claude/skills`, `~/.gemini/config/skills`).
 
@@ -95,7 +95,7 @@ Depois de conectado, basta pedir ao agente no chat:
 **Script Python incluído ([install_skills.py](install_skills.py)):**
 
 ```bash
-# Instalar todas as 130 skills no projeto atual (./.claude/skills)
+# Instalar todas as 131 skills no projeto atual (./.claude/skills)
 python install_skills.py --project .
 
 # Instalar globalmente no usuário (~/.claude/skills)
@@ -127,14 +127,14 @@ Implementado em [src/mcp-core.mjs](src/mcp-core.mjs) e exposto em [bin/mcp-serve
 
 | Superfície MCP | Identificadores | O que faz |
 |---|---|---|
-| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 130 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
+| **Tools — Descoberta & Uso** | `list_skills`, `search_skills`, `get_skill`, `read_skill_file` | Lista/pesquisa as 131 skills, lê `SKILL.md` sob demanda (com `include_references` opcional) e acede a `references/sources.md`, templates e scripts `.sql` com proteção contra *path traversal*. |
 | **Tools — Instalação & Auditoria** | `install_skills`, `check_installed_skills` | Copia 1, várias ou todas (`["*"]`) as skills para `claude`, `antigravity`, `agents`, `codex`, `cursor` ou `target_dir`, verifica hashes SHA-256 em [MANIFEST.sha256](MANIFEST.sha256) e valida links/frontmatter. |
 | **Resources** | `skill://index.json`, `skill://{name}/{+path}` | Expõe o catálogo JSON completo e qualquer arquivo interno via URI `skill://`. |
-| **Prompts** | Todas as 130 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
+| **Prompts** | Todas as 131 skills em `prompts/list` / `prompts/get` | Permite invocar qualquer skill como *prompt*/*slash* do cliente MCP com argumento opcional `context`. |
 
 ---
 
-## Catálogo Completo (130 Skills)
+## Catálogo Completo (131 Skills)
 
 Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesquise pelo nome exato abaixo.
 
@@ -270,6 +270,7 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 | 128 | Componentes de Software | [`transactional-email-engineering`](skills/transactional-email-engineering/SKILL.md) | Engenharia do módulo de e-mail de saída: SPF/DKIM/DMARC, requisitos dos provedores, supressão de bounces, fila idempotente, HTML acessível com lint e segurança, sem prometer entregabilidade. |
 | 129 | Fundamentos de Engenharia & Segurança | [`dependency-management-and-versioning`](skills/dependency-management-and-versioning/SKILL.md) | Escolher, declarar, travar e atualizar dependências por ecossistema: SemVer, lockfiles, instalações determinísticas, conflitos de diamante, purl e builds reproduzíveis. |
 | 130 | Fundamentos de Engenharia & Segurança | [`software-supply-chain-security`](skills/software-supply-chain-security/SKILL.md) | Defende e documenta a cadeia de suprimentos de software: ameaças, CI endurecido, SLSA, SBOM, OSV e licenças, sem afirmar segurança só por SBOM ou scan limpo. |
+| 131 | Cloud-Native, Resiliência, Evolução & IA | [`skill-creation-workflow`](skills/skill-creation-workflow/SKILL.md) | Procedimento para criar, avaliar e publicar uma skill: baseline, descrição, evals de gatilho, validação e instalação por host. |
 
 ---
 
@@ -280,7 +281,7 @@ Use o menu **Outline** do GitHub para pular diretamente entre seções, ou pesqu
 Execute antes de abrir *pull requests* ou após sincronizar atualizações:
 
 ```bash
-# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 130 skills
+# 1. Validar frontmatter YAML, links relativos e referências cruzadas das 131 skills
 python check_skills.py skills
 
 # 2. Executar a suíte de testes do servidor MCP (handshake, tools, resources, prompts, SHA-256, stdio)
@@ -308,7 +309,7 @@ Dev.-DBs-Skills/
 │   └── mcp-server.test.mjs # Testes automatizados do servidor MCP (node --test)
 ├── install_skills.py       # Instalador idempotente Python com verificação SHA-256
 ├── check_skills.py         # Validador estático de frontmatter, links e referências
-└── skills/                 # As 130 skills autocontidas
+└── skills/                 # As 131 skills autocontidas
     ├── a11y-audit/
     ├── actor-model-space-based-architecture/
     ├── adr-architecture/
@@ -409,6 +410,7 @@ Dev.-DBs-Skills/
     ├── setup-ts-deep-modules/
     ├── simplification-audit/
     ├── single-responsibility-cohesion/
+    ├── skill-creation-workflow/
     ├── skill-orchestrator/
     ├── soa-vs-microservices-architecture/
     ├── software-supply-chain-security/
