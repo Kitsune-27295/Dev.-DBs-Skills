@@ -1,18 +1,16 @@
 # Notification Pattern and Error Collection
 
-Sources: https://martinfowler.com/articles/replaceThrowWithNotification.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/replaceThrowWithNotification.html · Last verified 2026-11-27
 
 ## Problem
 
-Throwing an exception on the first failed check has two flaws (Fowler, 2014):
+Throwing an exception on the first failed check has two flaws (Fowler, article of 9 December 2014):
 1. **Wrong signal.** Exceptions mark behavior outside a code path's expected bounds; validation failures on external input are expected. Fowler's position: if a failure is expected behavior, do not use exceptions.
 2. **Whack-a-mole.** Fail-fast reports one error per attempt, so the user fixes problems one by one.
 
 ## The pattern
 
-A **Notification** object accumulates errors. Each check calls `addError` instead of throwing; the validator returns the notification; the caller asks `hasErrors()` and reads the details. Simplest form is a list of strings; a small dedicated class states intent better and can later carry error objects (message plus cause, and in our extension field path and stable code). A bare boolean result gives no diagnostics.
-
-Existing implementations of the idea: Java Bean Validation (`Set<ConstraintViolation>`) and Spring `Errors`; check your platform before writing one.
+A **Notification** object accumulates errors. Each check calls `addError` instead of throwing; the validator returns the notification; the caller asks `hasErrors()` and reads the details. Simplest form is a list of strings; a small dedicated class states intent better and can later carry error objects (message plus cause, and in our extension field path and stable code). A bare boolean result gives no diagnostics. Before writing one, check whether your platform or schema library already collects violations (author advice; the article does not name specific libraries).
 
 ## When to use it, when not
 
@@ -30,7 +28,7 @@ Heuristic from *The Pragmatic Programmer*, cited by Fowler: would the code still
 2. **Convert checks last-to-first.** Replacing a throw with `addError` naively lets execution continue into code that assumed the earlier check stopped it (a null date then blows up in parsing). Working backwards keeps each step safe.
 3. **Extract per-field methods** (`validateNumberOfSeats(note)`, `validateDate(note)`) and replace if/else with **guard clauses**: record the error and `return`.
 4. **Extend the Notification** when a throw carried a cause: add `addError(message, exception)`, store small error objects.
-5. **Move up the stack:** callers use `validation()` directly, remove `check()`, rework its tests, and add tests proving multiple errors are collected.
+5. **Finish:** once callers can use `validation()` directly, drop the throwing wrapper and add tests proving multiple errors are collected (author extension; the 2026-11-27 digest of the article did not list this step).
 
 Principle: smallest behavior-preserving steps, tests green throughout.
 

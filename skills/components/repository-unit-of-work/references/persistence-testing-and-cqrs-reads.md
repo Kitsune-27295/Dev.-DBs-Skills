@@ -1,6 +1,6 @@
 # Persistence Testing and CQRS Reads
 
-Sources: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design · https://martinfowler.com/eaaCatalog/repository.html · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design · https://martinfowler.com/eaaCatalog/repository.html · Last verified 2026-11-27
 
 ## Writes through repositories, reads around them
 Microsoft's guidance: in a DDD microservice the only channel that updates the database is the repositories (one per aggregate root), because the root controls invariants. Queries change nothing, so they may use other channels. With CQS/CQRS, side queries run outside the domain model using plain SQL (their example uses Dapper), joining any tables the screen needs, unconstrained by aggregates. A command handler then loads aggregates through repositories, mutates them in memory, and persists in a transaction.
@@ -29,10 +29,3 @@ Because the repository is an abstraction, caching, logging and retry can wrap it
 
 ## Anti-patterns
 Mock-only persistence testing; fakes that diverge from SQL semantics (ordering, null handling, uniqueness); running hundreds of DB tests in unit stage; query methods growing parameters until the repository is a query engine.
-
-## How an agent should apply this
-- Route read screens to query services; keep repositories for aggregate load/save.
-- Provide an in-memory fake plus a shared contract test run against the real engine.
-- Keep DB-backed tests small in number and isolated (own schema/transaction); see `integration-tests` and `testing-pyramid-and-shapes`.
-- If a repository grows reporting methods, split them out.
-- State which tests prove aggregate invariants (unit) vs persistence mapping (integration).

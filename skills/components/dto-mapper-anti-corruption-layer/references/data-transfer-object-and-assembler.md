@@ -1,9 +1,9 @@
 # Data Transfer Object and Assembler
 
-Sources: https://martinfowler.com/eaaCatalog/dataTransferObject.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaCatalog/dataTransferObject.html · https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · Last verified 2026-11-27
 
 ## Definition
-Fowler (PoEAA 2003): a DTO is an object that carries data between processes to reduce the number of method calls. It exists because remote calls are expensive, so each call should move more data, and because many parameters (or multiple return values) are awkward. The DTO holds everything for one call, must be serializable, and also encapsulates the serialization mechanism so wire-format logic sits in one place. An assembler on the server side usually moves data between the DTO and domain objects. A 2013 note on the page says batching remote calls is the main reason, encapsulated serialization secondary; the Java community first called it "value object" and then "Transfer Object", which is why it must not be confused with the DDD Value Object.
+Fowler (PoEAA): a DTO is an object that carries data between processes to reduce the number of method calls. It exists because remote calls are expensive, so each call should move more data, and because many parameters (or multiple return values) are awkward. The DTO holds everything for one call, must be serializable, and also encapsulates the serialization mechanism so wire-format logic sits in one place. An assembler on the server side usually moves data between the DTO and domain objects. A note dated 2013-08-11 on the page says batching remote calls is the main reason, encapsulated serialization secondary; the Sun/Java community first called it "value object" and later "Transfer Object", which is why it must not be confused with the DDD Value Object.
 
 ## Mechanics
 1. Define a flat, serializable shape for exactly one use case (request or response).

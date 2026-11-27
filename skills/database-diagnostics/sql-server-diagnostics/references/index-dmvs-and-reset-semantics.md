@@ -1,6 +1,6 @@
 # Index DMVs: Missing, Unused and Their Reset Rules
 
-Sources: https://learn.microsoft.com/en-us/sql/relational-databases/indexes/tune-nonclustered-missing-index-suggestions · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-group-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-index-usage-stats-transact-sql · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/sql/relational-databases/indexes/tune-nonclustered-missing-index-suggestions · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-group-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-index-usage-stats-transact-sql · Last verified 2026-11-27
 
 Scripts covered: `indexes/missing_indexes`, `indexes/unused_indexes`, `indexes/index_fragmentation` (only the pointer in section 4), `indexes/vector_indexes` (2025). This is analysis of what the numbers mean; the generic index-design side belongs to `query-performance`.
 

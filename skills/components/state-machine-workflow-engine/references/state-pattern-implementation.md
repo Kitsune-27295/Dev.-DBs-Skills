@@ -1,6 +1,6 @@
 # State Pattern Implementation
 
-Sources: https://refactoring.guru/design-patterns/state · Last verified 2026-11-23
+Sources: https://refactoring.guru/design-patterns/state · Last verified 2026-11-27
 
 ## Intent
 
@@ -28,7 +28,7 @@ A `Document` can be Draft, Moderation or Published; `publish()` behaves differen
 
 ## State vs Strategy
 
-Both delegate to helper objects. Strategy keeps the helpers independent and unaware of each other. State allows concrete states to know each other and change the context's state. The page also lists Bridge, State, Strategy and Adapter as structurally similar composition patterns that solve different problems.
+Both delegate to helper objects. The page says strategies almost never know about each other, while concrete states may know each other and start transitions. The page also lists Bridge, State, Strategy and Adapter as structurally similar composition patterns that solve different problems.
 
 ## Pros and cons
 
@@ -57,11 +57,3 @@ class Doc { private state: DocState = new Draft();
 ## Failure modes
 
 State classes reaching into context internals (leaky encapsulation); states that create each other, coupling them all together; transitions scattered so nobody can draw the machine; state objects holding per-instance data making them non-shareable; persisting the object instead of the state name.
-
-## How an agent should apply this
-
-- Refactor conditionals one method at a time: extract interface, move the branch per state, keep tests green.
-- Keep the interface minimal: only state-varying operations.
-- Centralize transition knowledge (in the states or one table) and produce a diagram from it.
-- Persist the state identifier and rehydrate through a registry.
-- Skip the pattern for two or three stable states; use an enum plus a transition table.

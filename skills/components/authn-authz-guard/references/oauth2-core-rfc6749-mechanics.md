@@ -1,8 +1,8 @@
 # OAuth 2.0 Core Mechanics (RFC 6749)
 
-Sources: https://datatracker.ietf.org/doc/html/rfc6749 · Last verified 2026-11-23
+Sources: https://datatracker.ietf.org/doc/html/rfc6749 · Last verified 2026-11-27
 
-Read in two chunks covering roles through security considerations (section 10). Where RFC 6749 differs from RFC 9700, RFC 9700 wins (implicit and password grants are now discouraged or prohibited).
+Read in two chunks covering roles through security considerations (section 10). The 2026-11-27 re-read confirmed: 10-minute maximum code lifetime (recommended), codes short-lived and single-use, guessing-probability bounds, client credentials limits, refresh rotation idea, native apps and external browsers, authorization-endpoint error codes. Endpoint rules, the Basic-auth preference, token-endpoint error codes and the `no-store` requirement come from the 2026-11-23 pass only (the later digest showed `no-store` in the example response). Where RFC 6749 differs from RFC 9700, RFC 9700 wins (implicit and password grants are now discouraged or prohibited).
 
 ## Roles
 Resource owner (grants access), resource server (hosts data, accepts access tokens), client (acts on the owner's behalf), authorization server (authenticates owner, obtains consent, issues tokens). Client types: confidential (can hold a secret) vs public (browser/native apps). A `client_id` is not a secret.
@@ -19,7 +19,7 @@ Resource owner (grants access), resource server (hosts data, accepts access toke
 | Authorization code | user present, web/native | the default, always with PKCE (RFC 9700); code single-use, short-lived (~10 min suggested) |
 | Implicit | token in fragment | avoid (RFC 9700) |
 | Password | username/password to token endpoint | do not use |
-| Client credentials | machine-to-machine, confidential clients only | fine; no refresh token |
+| Client credentials | machine-to-machine, confidential clients only (MUST) | fine; a refresh token SHOULD NOT be included |
 | Extension (URI `grant_type`) | e.g. SAML bearer assertion | case by case |
 
 Key params: `response_type`, `client_id`, `redirect_uri` (must be identical at token step), `scope`, `state` (CSRF binding), `code`, `grant_type`.
@@ -31,7 +31,7 @@ Success (200 JSON): `access_token`, `token_type`, recommended `expires_in`, opti
 `grant_type=refresh_token`; scope cannot exceed original; confidential clients authenticate; token bound to its client; server may rotate (client discards old). Refresh tokens go only to the AS, never to resource servers.
 
 ## Security considerations (section 10, condensed)
-Authenticate clients where possible, otherwise rely on registered redirect URIs; tokens/codes only over TLS; guessing probability at most 2^-128 (2^-160 preferred); codes single-use and revoke derived tokens on replay; require matching `redirect_uri` at exchange; protect redirect endpoint and authorization endpoint from CSRF (`state`); use external browser for native apps (clickjacking/phishing); validate `state` and `redirect_uri` as untrusted input; no open redirectors; refresh token rotation recommended; never put secrets in `state` or `scope`.
+Authenticate clients where possible, otherwise rely on registered redirect URIs; tokens/codes only over TLS; guessing probability at most 2^-128 (2^-160 recommended); codes short-lived and single-use; on repeated exchange attempts the server SHOULD try to revoke tokens already issued; require matching `redirect_uri` at exchange; protect redirect endpoint and authorization endpoint from CSRF (`state`); use external browser for native apps (clickjacking/phishing); validate `state` and `redirect_uri` as untrusted input; no open redirectors; refresh token rotation recommended; `state` and `scope` SHOULD NOT carry sensitive client or owner data in plain text.
 
 ## Failure modes
 Treating OAuth as login (it is delegated authorization; use OIDC); trusting a bearer token without audience check; storing refresh tokens in browsers; skipping `state`.

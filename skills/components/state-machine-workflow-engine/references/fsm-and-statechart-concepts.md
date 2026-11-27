@@ -1,6 +1,6 @@
 # FSM and Statechart Concepts
 
-Sources: https://statecharts.dev/what-is-a-state-machine.html · https://statecharts.dev/what-is-a-statechart.html · Last verified 2026-11-23
+Sources: https://statecharts.dev/what-is-a-state-machine.html · https://statecharts.dev/what-is-a-statechart.html · Last verified 2026-11-27
 
 ## Finite-state machine
 
@@ -8,7 +8,7 @@ An FSM can be in exactly one of a finite number of states at a time and changes 
 
 ## Why: state explosion in variables
 
-Program state is the set of variables and values at a moment. Five independent booleans give 32 combinations, many invalid. A machine models only valid states and the allowed next state from each; it replaces the variables by one thing that can only be in valid states. (The page presents this as the benefit; the phrase "state explosion" is used by us, and the statechart page itself does not discuss it.)
+Program state is the set of variables and values at a moment. Five independent booleans give 32 combinations, many invalid. A machine models only valid states and the allowed next state from each; it replaces the variables by one thing that can only be in valid states. (The page makes the 32-combination point; the phrase "state explosion" is ours.)
 
 ## Definition vs execution
 
@@ -50,12 +50,3 @@ Pros: explicit legal transitions, visualizable, finite review surface. Cons: dia
 ## Failure modes
 
 Missing initial state in a region; overlapping guards giving non-deterministic choice; side effects in guards; delayed transitions that survive restarts without persistence; entry actions that assume a previous state.
-
-## How an agent should apply this
-
-- Start from a list of valid states and a transition matrix; challenge any boolean pair that creates impossible combinations.
-- Use hierarchy when several states share the same exit event (`cancel`).
-- Use parallel regions for independent concerns instead of cross-product states.
-- Make guards mutually exclusive or ordered, with a defined fallback.
-- Put timeouts in delayed transitions and persist the deadline so restarts keep them.
-- Specify each region's initial state explicitly.

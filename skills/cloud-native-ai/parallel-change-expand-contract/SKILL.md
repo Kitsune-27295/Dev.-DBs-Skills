@@ -1,76 +1,58 @@
 ---
 name: parallel-change-expand-contract
-description: Use when executing breaking database schema migrations, renaming database columns/tables, changing API contracts, or refactoring public interfaces in production systems with zero downtime — using Danilo Sato and Martin Fowler's Parallel Change (Expand and Contract) pattern across three discrete deployment phases (Expand, Transition, Contract).
+description: "Plan or review a breaking change to a live schema, API field or endpoint, event payload or public interface so old and new consumers keep working throughout the rollout: expand (add the new beside the old), migrate (dual-write, backfill, move readers, stop writing the old), contract (remove the old only on evidence that nothing uses it), each phase its own release. Covers where rollback stops being cheap and where PostgreSQL locks or rewrites hide in the expand and contract steps. Not for choosing a migration tool or environment setup (use `migrations-and-environments`) or for deciding what to delete (use `simplification-audit`). Use when renaming or splitting a column or table, changing a type, reshaping an API contract, or refactoring a public interface without downtime."
 ---
 
-# Parallel Change & Expand-Contract Pattern
+# Parallel Change (Expand and Contract)
 
-One idea: **never execute a breaking schema or contract change in a single step in production**. Instead, split the change into three distinct phases (**Expand**, **Transition / Migrate**, and **Contract**) across separate deployments so that old and new versions of application code can run simultaneously without downtime or data loss. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: **never ship a breaking change in one step; add the new beside the old, move every consumer across, then remove the old, as separate releases so old and new code can run at the same time.** Sources, retrieved statuses and claims not adopted: [references/sources.md](references/sources.md).
 
-## Vocabulary (Danilo Sato, Martin Fowler & Prisma Data Guide)
+Origin: Danilo Sato's 2014 article on Martin Fowler's site names three phases (expand, migrate, contract) and credits Joshua Kerievsky with documenting the technique in 2006. The seven-step database form comes from the Prisma Data Guide; batching, throttling and zero-use monitoring are not in either page and are this skill's own design.
 
-| Term | Meaning | Test sentence |
+## 1. The three phases
+
+| Phase | What ships | Exit test |
 |---|---|---|
-| Breaking Change | an alteration to a database schema, API schema, or class interface that breaks running consumers or queries | "dropping a column or renaming an API field is an immediate breaking change" |
-| Parallel Change | an evolutionary design technique that implements a breaking change by introducing the new structure in parallel with the old | "both representations coexist temporarily in production" |
-| 1. Expand Phase | adding the new column, table, or API field alongside the existing one without altering or breaking existing consumers | "non-breaking schema expansion; nullable or default-valued" |
-| 2. Transition Phase | updating application code to write to both representations and read from the new one, backfilling legacy data asynchronously | "dual-write in place, background worker backfills historic rows" |
-| 3. Contract Phase | removing the old column, table, trigger, or legacy endpoint once all consumers and rows have migrated | "safe cleanup only after zero callers touch the legacy field" |
-| Dual-Writing | writing mutations to both the old and new columns or data stores during the transition period | "guarantees rollback capability if the new code fails" |
+| **Expand** | New column, table, field or endpoint beside the old; nothing existing changes; new database columns are nullable or defaulted | Old code and old clients still pass unchanged |
+| **Migrate** | Writers write both; data backfilled; readers cut over in stages; then writers stop writing the old | Every reader and writer uses the new form, evidence in hand |
+| **Contract** | Old structure removed | The old form had zero use for an agreed window |
 
----
+Prisma's seven steps map as: deploy schema (expand); write to both; backfill (steps 2 and 3 may swap); test the new interface; cut reads over; stop writing the old (migrate); remove the old (contract). Write the contract step and its exit metric into the ticket before starting expand.
 
-## The Three Discrete Phases
+## 2. Rules that prevent the usual outages
 
-```mermaid
-flowchart TD
-  subgraph Phase1["Phase 1: Expand (Deploy 1)"]
-    E1["Add new column/field (Nullable or with Default)"]
-    E2["Existing app continues reading/writing old column"]
-  end
+1. **Expand is additive only.** A new `NOT NULL` column with no default breaks every writer that does not know it yet. Add `NOT NULL` after backfill and cutover.
+2. **Know what the engine does to the table.** In PostgreSQL, adding a column with a non-volatile default does not rewrite the table; a volatile default, stored generated column, identity column or constrained domain type does. `SET NOT NULL` scans the whole table unless a valid `CHECK` constraint already proves no nulls; `ADD CONSTRAINT ... NOT VALID` then `VALIDATE CONSTRAINT` avoids the long exclusive lock. Other engines differ: check yours. Detail: [database playbook](references/database-expand-contract-playbook.md).
+3. **Dual-write, but do not call it a rollback guarantee.** Rollback is easy at most points, but once reads move to the new structure, data that exists only there is lost on rollback. Name the rollback point and what it costs.
+4. **Close the window between expand and cutover.** Old code writes only the old column; rows written after the backfill miss the new one. Dual-write, or pause writes until new code is live.
+5. **Backfill in small throttled batches** (the batch size is yours to tune; one bulk transaction on a large table risks long locks and timeouts). Make the backfill idempotent so a failed run can retry.
+6. **Contract on evidence, not on a calendar.** Show no reads or writes of the old form, then remove it. The drop is destructive: apply the gate in `ops-safety`.
+7. **Never skip contract.** Fowler's article warns that two permanent paths leave you worse off than before. Give migration an owner and a visible end; mark the old form deprecated.
+8. **Release after each phase.** Never combine expand and contract in one deploy; during rolling deployments, old instances still query the old form until the last one is replaced.
 
-  subgraph Phase2["Phase 2: Transition (Deploy 2 + Backfill)"]
-    T1["App writes to BOTH old and new columns (Dual-Write)"]
-    T2["App reads from NEW column (with fallback to old if null)"]
-    T3["Background batch worker backfills historical records"]
-  end
+## 3. Choosing the shape
 
-  subgraph Phase3["Phase 3: Contract (Deploy 3 + Schema Clean)"]
-    C1["App writes ONLY to new column; stops reading old"]
-    C2["Verify 0 queries touch legacy column"]
-    C3["Drop old column, constraints, and triggers"]
-  end
+- **Schema:** the seven-step form above, one release per step.
+- **Code or class interface:** add the new method beside the old, make the old delegate to the new, move callers, delete. Many internal callers: use branch by abstraction.
+- **Remote API:** widen the payload on the same endpoint or add a new endpoint instead of a new version; track which consumers still use the old field.
+- **Events (inference, not in the sources):** consumers of stored or queued messages see old and new payloads for as long as old messages exist; for event-sourced streams see the versioning notes in `event-sourcing-pattern`.
 
-  Phase1 --> Phase2
-  Phase2 --> Phase3
-```
-
----
-
-## When It Earns Its Keep
-
-- **Production Relational Databases:** Zero-downtime environments where running instances cannot be stopped for maintenance windows.
-- **Microservice APIs & Public SDKs:** Evolving REST/gRPC contracts consumed by mobile apps or third-party clients that cannot be upgraded simultaneously.
-- **Distributed Event Streams:** Changing event payloads in Kafka/RabbitMQ while legacy consumers are still processing old message formats.
-
-## Common Mistakes to Catch
-
-1. **Adding a `NOT NULL` constraint without a default in Phase 1:** Instantly crashes existing app instances when they insert rows without knowing about the new column.
-2. **Dropping the old column before all app instances are running Phase 3:** In rolling deployments, instances running old code will crash when querying the dropped column.
-3. **Synchronous bulk backfill in production:** Locking millions of rows in a single transaction causes database deadlocks and timeouts. Always backfill in small, throttled batches (e.g., 500 rows per batch).
-4. **Skipping rollback planning:** Dual-writing allows you to safely rollback to Phase 1 code if Phase 2 introduces critical bugs.
+Phases, variants and caveats: [references/parallel-change-phases-and-variants.md](references/parallel-change-phases-and-variants.md).
 
 ## Quick Decision Checklist
 
-- [ ] Is the breaking change split into Expand, Transition and Contract across separate deployments?
-- [ ] Is the new column or field nullable or defaulted in the Expand phase?
-- [ ] Does the Transition phase write to both representations and read from the new one?
-- [ ] Is the backfill done in small, throttled batches rather than one bulk transaction?
-- [ ] Do I have a rollback plan relying on dual-writing?
-- [ ] Have I verified zero queries touch the legacy field before dropping it?
-- [ ] Are all app instances running Phase 3 code before the old column is dropped?
+- [ ] Is the change split into expand, migrate and contract as separate releases, with the contract exit metric written down first?
+- [ ] Is every new column or field nullable or defaulted in expand?
+- [ ] Do I know whether this engine rewrites or locks the table for each DDL statement?
+- [ ] Do writers write both forms, and is the gap before cutover closed?
+- [ ] Is the backfill batched, throttled and safe to retry?
+- [ ] Is the rollback point named, with the data lost after it?
+- [ ] Is there evidence of zero use of the old form, and did the destructive gate run, before the drop?
+- [ ] Does the migration have an owner and an end date?
 
 ## Deep references
 
-- [Parallel change phases and variants](references/parallel-change-phases-and-variants.md) — code/API refactoring, feature flags, branch by abstraction, caveats
-- [Database expand/contract playbook](references/database-expand-contract-playbook.md) — seven-step schema migration, dual writes, backfill, rollback limits
+- [Parallel change phases and variants](references/parallel-change-phases-and-variants.md) — read for code or API refactoring, feature flags, branch by abstraction, caveats.
+- [Database expand/contract playbook](references/database-expand-contract-playbook.md) — read for the seven-step schema migration, a tool-managed example, PostgreSQL lock and rewrite facts, rollback limits.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description.
+- [Sources](references/sources.md) — retrieved statuses, reading limits, claims not adopted.

@@ -1,10 +1,10 @@
 # OpenFeature API, Context, Providers and Hooks
 
-Sources: https://openfeature.dev/docs/reference/intro/ · https://openfeature.dev/docs/reference/concepts/evaluation-api · https://openfeature.dev/docs/reference/concepts/evaluation-context · https://openfeature.dev/docs/reference/concepts/provider · https://openfeature.dev/docs/reference/concepts/hooks · Last verified 2026-11-23
+Sources: https://openfeature.dev/docs/reference/intro/ · https://openfeature.dev/docs/reference/concepts/evaluation-api · https://openfeature.dev/docs/reference/concepts/evaluation-context · https://openfeature.dev/docs/reference/concepts/provider · https://openfeature.dev/docs/reference/concepts/hooks · Last verified 2026-11-27
 
 ## What it is
 
-An open specification for feature flagging: a vendor-agnostic SDK API that plugs into open-source or commercial flag backends, self-hosted or cloud. Flags are evaluated at runtime, are often context-aware, and their configuration can change without redeploying. Building blocks: Evaluation API, Evaluation Context, Providers, Hooks, Events (also Tracking and SDK paradigms pages exist; not read in depth).
+An open specification for feature flagging: a vendor-agnostic SDK API that plugs into open-source or commercial flag backends, self-hosted or cloud. Flags are evaluated at runtime, are often context-aware, and their configuration can change without redeploying. Building blocks: Evaluation API, Evaluation Context, Providers, Hooks, Events.
 
 ## Evaluation API
 
@@ -22,13 +22,12 @@ An open specification for feature flagging: a vendor-agnostic SDK API that plugs
 ## Providers
 
 - Translate between the API and a flag system: wrap a vendor SDK, call REST, or read a file. **One provider registered at a time globally** (registering another overrides); with none, defaults are returned.
-- **Domains:** register providers under names and bind clients by `getClient(domain)`, mixing providers in one app. **Multi-Provider** combines several via strategies such as `FirstMatchStrategy`.
-- Errors: thrown or returned per language idiom; SDK returns the default and exposes error data. A **disabled flag is not an error**: it yields a disabled reason. Targeting key not required by the spec; providers document their behavior. Unsupported flag types are converted (e.g. JSON in a string) or raise an error.
-- Writing one: implement the SDK's provider interface (resolution methods for boolean/string/number/object, metadata name; client-side adds `onContextChange`), use SemVer, document the spec version, test, list it.
+- **Domains:** register providers under names and bind clients by `getClient(domain)`, mixing providers in one app. The **Multi-Provider** spec lets one client combine several providers under a strategy (the page's example is first-match).
+- Errors: thrown or returned per language idiom; SDK returns the default and exposes error data. A **disabled flag is not an error**: it yields a disabled reason. A backend that needs a missing targeting key may raise an error or generate one; the provider documents which. Unsupported flag types are converted (e.g. JSON in a string) or raise an error.
 
 ## Hooks
 
-Stages: **before** (can modify context; runs before success is known), **after** (successful evaluations; validation, telemetry), **error** (flag service unreachable, missing flag, type mismatch, before-hook failure), **finally** (always; cleanup; named `finallyAfter` in some languages). Registered at API (every evaluation), client, or invocation level. Order: before runs API → client → invocation; after/error/finally run invocation → client → API. Same-level hooks run in insertion order.
+Stages: **before** (can modify context; runs before success is known), **after** (successful evaluations; validation, telemetry), **error** (missing flag, type mismatch, a before hook that throws), **finally** (always; cleanup; named `finallyAfter` in some languages). Registered at API (every evaluation), client, or invocation level. Order: before runs API → client → invocation; after/error/finally run invocation → client → API. Same-level hooks run in insertion order.
 
 ## Example (TypeScript-style, our wiring)
 
@@ -47,12 +46,3 @@ Gains: swap vendor without touching call sites; uniform telemetry via hooks; con
 ## Failure modes
 
 Risky default value; passing raw PII as context; multiple code paths creating differently-configured clients accidentally; hooks that throw in before stage and silently drop to defaults; relying on registering providers at runtime mid-request.
-
-## How an agent should apply this
-
-- Register the provider once at the composition root; never import the vendor SDK elsewhere.
-- Always pass the safe legacy default and a stable targeting key.
-- Wrap flags in named domain functions rather than exposing the OpenFeature client to business code.
-- Put logging and metrics in hooks, not at each call site.
-- Test with an in-memory/test provider; assert behavior when the provider errors.
-- Keep context minimal; filter PII in a before hook.

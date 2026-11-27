@@ -1,6 +1,6 @@
 # Linux Kernel Coding Style: Functions, Naming, Exits
 
-Sources: https://docs.kernel.org/process/coding-style.html (chapters 1, 4, 6, 7, 8, 16, 22 read; chapter 8 is summarized in the comments file) · Last verified 2026-11-24
+Sources: https://docs.kernel.org/process/coding-style.html (chapters 1, 4, 6, 7, 8, 16, 22 read; chapter 8 is summarized in the comments file) · Last verified 2026-11-27
 
 License note: the kernel documentation is under the GPL; this file paraphrases and quotes at most a few words. The guide is written for C kernel code, so each rule is tagged as transferable or C-specific.
 

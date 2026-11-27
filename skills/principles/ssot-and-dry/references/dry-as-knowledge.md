@@ -1,10 +1,10 @@
 # DRY as Knowledge: the Five Duplication Kinds
 
-Sources: https://media.pragprog.com/titles/tpp20/dry.pdf · Last verified 2026-11-23
+Sources: https://media.pragprog.com/titles/tpp20/dry.pdf · Last verified 2026-11-27 (read from the publisher's sample chapter PDF, extracted locally)
 
 ## Definition and why it matters
 
-Thomas and Hunt define DRY as: every piece of knowledge needs a single, unambiguous, authoritative representation within a system. Their argument is about time: knowledge is unstable (requirements, regulations, algorithms change), so programmers are always in "maintenance mode". Each duplicate is a future inconsistency: "not whether you will forget, but when". The 20th-anniversary edition explicitly corrects the first edition's reading that DRY means "do not copy-paste lines".
+Thomas and Hunt define DRY (Tip 15, "DRY--Don't Repeat Yourself") as: every piece of knowledge must have a single, unambiguous, authoritative representation within a system. Their argument is about time: knowledge is unstable (requirements, regulations, algorithms change), so programmers are always in "maintenance mode". Each duplicate is a future inconsistency: "not whether you will forget, but when". The 20th-anniversary edition explicitly corrects the first edition's reading that DRY means "do not copy-paste lines".
 
 **Acid test** (paraphrased): when one facet changes, do you edit several places, in several formats (code and docs, schema and a struct holding it)? Then it is not DRY.
 
@@ -14,7 +14,7 @@ Their `print_balance` example shows layered discovery: (1) negative-number handl
 
 ## Coincidence is not duplication
 
-`validate_age` and `validate_quantity` have identical bodies (integer, min 0). The authors say a reviewer who calls this a DRY violation is wrong: the knowledge differs, the rules coincide. Decision rule (derived): if the business owner could change one rule without the other being affected, they are separate facts.
+`validate_age` and `validate_quantity` have identical bodies (integer, min 0). The authors say a reviewer who calls this a DRY violation is wrong: the code is the same but the knowledge differs; two separate things just happen to have the same rules. Decision rule (derived): if the business owner could change one rule without the other being affected, they are separate facts.
 
 ## Kind 2 — Documentation duplication
 
@@ -40,7 +40,7 @@ Any interface to the outside world (APIs, schemas, error codes) forces your code
 
 ## Kind 5 — Interdeveloper duplication
 
-Hardest to detect. Their anecdote: an audit of a US state's systems found over 10,000 programs each with its own Social Security number validation. Remedies are social: frequent communication, forums, a "project librarian", a central place for utilities, reading others' code in reviews. Tip 16: make it easier to reuse than to rewrite.
+Hardest to detect. Their anecdote: a US state's government systems were surveyed for Y2K compliance and the audit found more than 10,000 programs that each had a different Social Security number validation. At module level, shared functionality with no obvious owner gets implemented many times. Remedies are social: frequent communication, a project librarian, a central place for utilities, reading others' code in reviews. Tip 16: make it easier to reuse than to rewrite.
 
 ## Forces and trade-offs
 
@@ -62,4 +62,4 @@ Hardest to detect. Their anecdote: an audit of a US state's systems found over 1
 - Replace stored derived fields with accessors; if caching, keep it private to one module.
 - At system edges prefer generating or validating against one spec over hand-mirroring.
 - For interdeveloper duplication, search the repo for existing implementations before writing a new helper.
-- Leave lookalike rules alone unless the same business owner would change both.
+- Leave lookalike rules alone unless the same business owner would change both (test: `SKILL.md` section 3).

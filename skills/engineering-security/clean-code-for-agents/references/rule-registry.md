@@ -1,6 +1,6 @@
 # Rule Registry (Single Source of Truth for Rule Ids)
 
-Sources: all files listed in the Owner column, plus the source list in [sources.md](sources.md) · Last verified 2026-11-24
+Sources: all files listed in the Owner column, plus the source list in [sources.md](sources.md) · Last verified 2026-11-27
 
 Registry method (id, canonical sentence, owner, agreement, confidence, maintenance): `ssot-and-dry`, `references/rule-registry-format.md`. `SKILL.md` and the references cite the id and do not restate the rule. Agreement `conflict` names the decision id in [rule-conflicts-and-resolutions.md](rule-conflicts-and-resolutions.md).
 
@@ -62,7 +62,7 @@ Files: STAND = [comments-stand-alone-at-head.md](comments-stand-alone-at-head.md
 | Id | Canonical rule | Owner | Other sources | Agreement / conflict | Confidence |
 |---|---|---|---|---|---|
 | EB-01 | Handle only failures that can really occur at this boundary; name the failure and who observes it; no defensive wrapper without one. | SIM (section 2) | GR | conflict: CF-10 | medium |
-| EB-02 | Handle or explicitly ignore every error or return value, with a stated reason when ignored. | P10F | TB, K | agree; P10 calls it the most violated rule | high |
+| EB-02 | Handle or explicitly ignore every error or return value, with a stated reason when ignored. | P10F | TB, K | agree; P10 says it is possibly the most frequently violated rule | high |
 | EB-03 | Validate untrusted input and return errors; assert only states that cannot happen; never pad assertions to a count. | P10F | TB | partial: CF-10 | medium |
 | EB-04 | Validate and fail fast near the top of a function; give error messages context. | AGF | G (root cause), P10 | single secondary source | low |
 | EB-05 | Do not halt the process for a recoverable condition; reserve crashes for corrupt state. | KERN | TB (crashes on corruption) | partial: right for a database, not a web request | medium |
@@ -84,7 +84,7 @@ Files: STAND = [comments-stand-alone-at-head.md](comments-stand-alone-at-head.md
 
 | Id | Rule family | Owner | Why not general | Confidence |
 |---|---|---|---|---|
-| NG-01 | Zig/TigerBeetle-specific: static allocation, explicit-width integers instead of `usize`, no dependencies, 80-column limit, allocator rules, "zero technical debt" as policy | P10F, AGF | Language and organization choices of one database team | high |
+| NG-01 | Zig/TigerBeetle-specific: static allocation, explicit-width integers instead of `usize`, no dependencies, a hard 100-column limit (TigerStyle; a derived skill changes it to 80), allocator rules, "zero technical debt" as policy | P10F, AGF | Language and organization choices of one database team | high |
 | NG-02 | C and safety-critical-specific: no dynamic allocation after init, no function pointers, preprocessor limits, no recursion or goto as absolutes, two assertions per function as a quota | P10F | Provable-bound rules for real-time C; apps in managed languages should not copy them | high |
 
 ## How an agent should apply this

@@ -1,6 +1,6 @@
 ---
 name: dependency-inversion-composition-root
-description: "Deep dive on Dependency Inversion in practice: the three Dependency Injection forms (constructor, setter, interface) and when each fits, the Composition Root (one place where the object graph is wired, Pure DI vs container, Register-Resolve-Release), Service Locator vs injection, why Service Locator hides dependencies (anti-pattern), and separating configuration from use. Deep dive; for the overview see `pragmatic-solid-and-ssot`; architecture-level DIP lives in `clean-architecture` and `hexagonal-architecture`. Use when wiring dependencies, removing `new` or static lookups from business code, choosing constructor vs setter injection, or reviewing container/locator usage."
+description: "Wire dependencies so business code never builds or looks up its collaborators: constructor vs setter vs interface injection, the Composition Root (one place near the entry point, Pure DI or a container confined to it), why Service Locator hides dependencies, and separating configuration from use. Architecture-level dependency direction lives in `clean-architecture` and `hexagonal-architecture`; the overview lives in `pragmatic-solid-and-ssot`. Use when wiring dependencies, removing `new` or static lookups from business code, choosing constructor or setter injection, deciding where a container may be referenced, or reviewing locator and container usage."
 ---
 
 # Dependency Inversion, DI Forms & the Composition Root
@@ -23,7 +23,7 @@ Naive: `MovieLister` constructs `ColonDelimitedMovieFinder("movies1.txt")`, so t
 | **Setter** | `setFinder(x)` after creation | Optional deps, many params, named values | Object can exist half-configured; name init-only setters clearly (`initFoo`) |
 | **Interface** | Component implements `InjectFinder` etc. | Rarely; framework-driven | Invasive: many marker interfaces |
 
-Recommendation (Fowler): start with constructor injection, move to setter only where constructor problems appear, support both when you build a container. The bigger principle is **separating configuration from use**.
+Recommendation (Fowler): start with constructor injection, move to setter only where constructor problems appear. The bigger principle is **separating configuration from use**.
 
 ## 3. The Composition Root
 
@@ -31,9 +31,9 @@ Definition (Seemann): a (preferably unique) place where modules are composed, **
 
 1. Only *applications* have a Composition Root; libraries and frameworks expose DI-friendly constructors/factories and let the app compose.
 2. Pure DI (hand-written `new` wiring) or a DI Container both fit; a container is referenced **only** from the root, and its Register-Resolve-Release cycle happens entirely there.
-3. One root per process; compose as late as practical in the entry point but no later than the first request/unit of work.
+3. One root per process, as close to the entry point as possible (the article says composing earlier only limits options; "no later than the first request" is this skill's inference).
 4. Application classes never see the container.
-5. Modules should not register themselves with a container (couples them to it); use convention-based discovery in the root if needed.
+5. Modules should not register themselves with a container (couples them to it and to each other); configure them from the root or discover them by convention there (author's comment replies).
 
 ```python
 # main.py -- the only file that knows concrete types
@@ -48,7 +48,7 @@ Structure, per-framework entry points, multi-app and library cases: [references/
 
 ## 4. Service Locator
 
-A locator is a registry (often static/singleton) classes query: `Locator.Resolve<IOrderValidator>()`. It decouples from implementations but **hides dependencies**: the constructor says nothing, so missing registrations fail at run time, adding a call can break production without a compile error, and judging whether a change is breaking requires understanding the whole app. Variants (concrete or abstract/injected locator) do not fix this. Fowler judged locator and injection roughly equivalent for *application* classes (slight simplicity edge to the locator) and injection better for *reusable components*; Seemann's later position is harder: an anti-pattern in application code, acceptable only inside the Composition Root. Dynamic string-keyed locators are the worst (untraceable keys). Full comparison: [references/service-locator-anti-pattern.md](references/service-locator-anti-pattern.md).
+A locator is a registry (often static/singleton) classes query: `Locator.Resolve<IOrderValidator>()`. It decouples from implementations but **hides dependencies**: the constructor says nothing, so missing registrations fail at run time, adding a call can break production without a compile error, and judging whether a change is breaking requires understanding the whole app. Variants (concrete or abstract/injected locator) do not fix this. Fowler judged locator and injection roughly equivalent for *application* classes (slight simplicity edge to the locator) and injection better for *reusable components*; Seemann's position is harder: an anti-pattern (later also called a SOLID and encapsulation violation), acceptable only inside the Composition Root. Dynamic string-keyed locators are the worst (untraceable keys). Full comparison: [references/service-locator-anti-pattern.md](references/service-locator-anti-pattern.md).
 
 **Rule for agents:** in application/business code, reject `Locator.get(...)`, `container.resolve(...)`, `ServiceProvider` parameters, and static singletons; require constructor parameters. Allowed: locator/container *inside* the Composition Root, framework-owned factories at true entry points, and (legacy, temporary) an ambient context as a stepping stone.
 
@@ -89,3 +89,5 @@ Policy owns the interface (`PaymentGateway` defined in the domain, implemented i
 - [DI forms and trade-offs](references/di-forms-and-tradeoffs.md) — read when choosing constructor vs setter vs interface injection or code vs file configuration.
 - [Composition Root](references/composition-root.md) — read when placing wiring code, using a container, or structuring libraries and multiple apps.
 - [Service Locator anti-pattern](references/service-locator-anti-pattern.md) — read when reviewing locator/container use or migrating legacy lookups to injection.
+- [Trigger evals](references/trigger-evals.md) — read when tuning this skill's description.
+- [Sources](references/sources.md) — fetch status per URL, reading limits, claims not adopted.

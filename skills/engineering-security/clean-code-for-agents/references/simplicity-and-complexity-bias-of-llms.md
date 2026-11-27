@@ -1,6 +1,6 @@
 # Simplicity and the Complexity Bias of LLMs
 
-Sources: https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · https://grugbrain.ai/ (satire tribute page) · https://market.lobehub.com/s/skills/neversight-learn-skills.dev-grug-brain-development (marketplace copy, MIT per its metadata) · Last verified 2026-11-24
+Sources: https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · https://grugbrain.ai/ (satire tribute page) · https://market.lobehub.com/s/skills/neversight-learn-skills.dev-grug-brain-development (marketplace copy, MIT per its metadata) · Last verified 2026-11-27
 
 Licensing note: the essay states no license (all rights stay with its author); the agent skill repo is MIT. Everything below is paraphrased; no text is reproduced.
 

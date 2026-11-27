@@ -1,16 +1,16 @@
 # Lock modes, SKIP LOCKED, advisory locks and deadlocks
 
-Sources: https://www.postgresql.org/docs/current/explicit-locking.html · https://www.postgresql.org/docs/current/sql-select.html (locking clause) · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/current/explicit-locking.html · https://www.postgresql.org/docs/current/sql-select.html (locking clause) · Last verified 2026-11-27
 
 Reading blocked sessions is in `locks-and-activity-interpretation.md`; proving a race fix is in `race-condition-fix`. This file explains the mechanics those two rely on.
 
 ## Row-level locks
 
-Four modes, strongest first: `FOR UPDATE`, `FOR NO KEY UPDATE`, `FOR SHARE`, `FOR KEY SHARE`. They block only writers and other lockers of the same row, never plain reads, and last until the transaction ends. An `UPDATE` that does not touch key columns takes the second mode, so it does not block foreign-key checks, which take the weakest. `DELETE` takes the strongest. Locking a row can write to disk (the row is marked), so locks are not free on huge row sets.
+Four modes, strongest first: `FOR UPDATE`, `FOR NO KEY UPDATE`, `FOR SHARE`, `FOR KEY SHARE`. They block only writers and other lockers of the same row, never plain reads, and last until the transaction ends. An `UPDATE` that does not need `FOR UPDATE` (the docs: only one changing a column with a unique index usable by a foreign key does) takes the second mode, so it does not block foreign-key checks, which take the weakest. `DELETE` takes the strongest. Locking a row can write to disk (the row is marked), so locks are not free on huge row sets.
 
 ## Table-level locks and DDL
 
-`ACCESS EXCLUSIVE` conflicts with everything including plain reads. It is taken by `DROP TABLE`, `TRUNCATE`, `REINDEX`, `CLUSTER`, `VACUUM FULL`, many `ALTER TABLE` forms and a bare `LOCK TABLE`. `CREATE INDEX` without `CONCURRENTLY` takes `SHARE` and blocks writes; `CREATE INDEX CONCURRENTLY`, plain `VACUUM` and `ANALYZE` take `SHARE UPDATE EXCLUSIVE`. Inference worth knowing: the lock manager queues waiters, so a queued `ACCESS EXCLUSIVE` request makes later plain queries wait behind it. Run risky DDL with a short `lock_timeout` (`connection-limits-and-pooling.md`).
+`ACCESS EXCLUSIVE` conflicts with everything including plain reads. It is taken by `DROP TABLE`, `TRUNCATE`, `REINDEX`, `CLUSTER`, `VACUUM FULL`, many `ALTER TABLE` forms and a bare `LOCK TABLE`. `CREATE INDEX` without `CONCURRENTLY` takes `SHARE` and blocks writes; `CREATE INDEX CONCURRENTLY`, plain `VACUUM` and `ANALYZE` take `SHARE UPDATE EXCLUSIVE`. Own inference, not stated on the page: the lock manager queues waiters, so a queued `ACCESS EXCLUSIVE` request makes later plain queries wait behind it. Run risky DDL with a short `lock_timeout` (`connection-limits-and-pooling.md`).
 
 ## NOWAIT and SKIP LOCKED
 

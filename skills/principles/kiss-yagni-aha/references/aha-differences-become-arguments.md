@@ -1,6 +1,6 @@
 # AHA, DRY/WET and the Rule of Three
 
-Sources: https://kentcdodds.com/blog/aha-programming · https://martinfowler.com/bliki/RuleOfThree.html (404 — see note) · Last verified 2026-11-23
+Sources: https://kentcdodds.com/blog/aha-programming · https://martinfowler.com/bliki/RuleOfThree.html (404 — see note) · Last verified 2026-11-27
 
 ## Vocabulary as used by the article
 
@@ -10,16 +10,15 @@ Sources: https://kentcdodds.com/blog/aha-programming · https://martinfowler.com
 
 ## Rule of Three — status
 
-The Fowler page `RuleOfThree.html` returned 404 (also on the `www.` host), so nothing was read from it. As **background knowledge, not read from source**: the heuristic says tolerate one repetition and consider abstracting at the third occurrence, because three data points reveal what varies. Treat it as a default waiting period, not a law (own inference, consistent with Dodds' "abstract when it feels right").
+The Fowler page `RuleOfThree.html` returned 404 again on 2026-11-27, so nothing was read from it. As **background knowledge, not read from source**: the heuristic says tolerate one repetition and consider abstracting at the third occurrence, because three data points reveal what varies. Treat it as a default waiting period, not a law (own inference, consistent with Dodds' "abstract when it feels right").
 
-## The four experiences in the article
+## The three experiences in the article
 
-1. **Too much duplication**: the same bug fixed in eight places — a shared function would have helped.
-2. **Bad abstraction**: AngularJS controllers handed `this` to a function that attached members (pseudo-inheritance). Reused far more than three times, yet scary to change; duplication would have been better.
-3. **Premature abstraction**: looks perfect for use case #1, gets bent to fit each new case, accumulates `if` statements and loops.
-4. **Late, good abstraction**: using a copy-paste detector (jsinspect) on a client codebase, the right abstractions were obvious from outside.
+1. **Too much duplication**: heavy copy-paste in an inherited codebase; one bug had to be fixed in eight places.
+2. **Bad abstraction**: AngularJS controllers handed `this` to a function that attached members (pseudo-inheritance). The author found it confusing, was afraid to change it, and wished the code had been duplicated instead.
+3. **Late, good abstraction**: running a copy-paste detector (jsinspect) over a client codebase made the right abstractions obvious from outside.
 
-Lesson (article): count of call sites is not the criterion; **quality of understanding** is.
+The article also warns that an early abstraction tends to be bent to fit later use cases. Lesson: the count of call sites is not the criterion; **quality of understanding** is, and no fixed count is given.
 
 ## Differences become arguments (procedure)
 
@@ -41,8 +40,8 @@ const users = (await fetchAll("/users", ["id", "email"])).map(toUserView);
 
 ## Cost model of getting it wrong (article)
 
-- A wrong abstraction is harder to follow and debug than duplicates and makes people afraid to touch it; every new use case adds a conditional.
-- Over-early design work (performance tuning, API design) can be wasted when features change.
+- A wrong abstraction makes people afraid to touch it (experience 2); the Metz article describes each new use case adding a conditional.
+- Over-early design work can be wasted when features change (own inference).
 - The opposite error (never abstracting) has a real cost too: parallel edits and drift.
 
 ## Decision table

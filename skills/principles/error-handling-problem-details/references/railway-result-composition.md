@@ -1,12 +1,12 @@
 # Railway-Oriented Programming: Result Composition
 
-Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit.com/posts/recipe-part2/ · https://github.com/swlaschin/railway-oriented-programming-example · Last verified 2026-11-23
+Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit.com/posts/recipe-part2/ · https://github.com/swlaschin/railway-oriented-programming-example · Last verified 2026-11-27
 
 ## What the pages say
 
 - The landing page frames ROP as a recipe for the "happy path vs real-world failures" problem (validation, logging, network/service errors). It is *not* a monad tutorial, uses `Either` specialized with a list of custom error types, and warns "don't take it to extremes" (linking an "Against ROP" post). Aim: a consistent template, "basically only one way to write the code", not the only valid approach.
 - The recipe components: **bind**, **Kleisli composition** (`>=>`), **map**, **tee** (for unit-returning functions such as logging), **exception mapping**, **`&&&`** (parallel validation), custom error types for domain modeling, extensions (logging, domain events, compensating transactions).
-- The series page defines the mechanics below.
+- The landing page does not name `tryCatch`, `doubleMap` or `plus`; the recipe part 2 page does, and defines the mechanics below.
 
 ## Mechanics
 
@@ -26,7 +26,7 @@ Sources: https://fsharpforfunandprofit.com/rop/ · https://fsharpforfunandprofit
 | `succeed` / `fail` | Constructors so the representation can change later |
 | `plus` / `&&&` | Run two switches on the same input; on success combine values, on failure **combine errors** (caller supplies the combine functions) — gives accumulating validation |
 
-The page states the failure type must be identical along the whole pipeline because bind/map pass failures along without transforming them; for non-expert teams, prefer `>>`/`|>` or locally defined operators over exotic ones (series guidance).
+The series states the failure type must be identical along the whole pipeline because bind/map pass failures along without transforming them; for non-expert teams, prefer `>>`/`|>` or locally defined operators over exotic ones (series guidance).
 
 ## Pitfalls and example repo
 
@@ -64,16 +64,8 @@ Use pipeline: `parse -> validate -> loadAccount -> debit -> persist -> notify` w
 - Errors carry data (field, id), not prebuilt messages; messages belong to presentation/problem details.
 - Accumulate **only** where independent (validation); sequential steps stop at the first failure.
 
-## Result vs exceptions — decision
-
-| Use `Result` | Use exceptions |
-|---|---|
-| Failure is an expected business/validation outcome | Programming bug, broken invariant, corrupted state |
-| Caller can and should branch | Nobody up the stack can recover except the global handler |
-| Composition of several fallible steps | Failure inside a framework callback that expects throws |
-| Public use-case API | Deep infrastructure faults that a boundary adapter maps once |
-
-Rule: do not do both for the same failure; do not catch exceptions to create `Err` anywhere except deliberate boundary adapters.
+## Result vs exceptions
+The decision table lives in `SKILL.md` section 4. Rule kept here: do not do both for the same failure, and catch exceptions to create `Err` only in deliberate boundary adapters.
 
 ## Failure modes
 

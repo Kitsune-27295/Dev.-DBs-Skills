@@ -1,6 +1,6 @@
 # Google Review Standard and "What to Look For", Applied to Agent-Written Code
 
-Sources: https://google.github.io/eng-practices/review/reviewer/standard.html · https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://github.com/google/eng-practices (read as raw `review/reviewer/standard.md` and `looking-for.md`) · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/reviewer/standard.html · https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://github.com/google/eng-practices (read as raw `review/reviewer/standard.md` and `looking-for.md`) · Last verified 2026-11-27
 
 License: the repository ships a Creative Commons Attribution 3.0 Unported license file. This file paraphrases; attribution is given above. Google writes for human reviewers of a "CL" (change list); here the same checks become the author's self-review, because the agent is the author.
 

@@ -1,6 +1,6 @@
 # Money: Currency, Rounding and Allocation
 
-Sources: https://martinfowler.com/eaaCatalog/money.html · https://martinfowler.com/bliki/ValueObject.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaCatalog/money.html · https://martinfowler.com/bliki/ValueObject.html · Last verified 2026-11-27
 
 ## What the sources say (read)
 

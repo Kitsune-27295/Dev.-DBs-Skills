@@ -1,6 +1,6 @@
 ---
 name: dto-mapper-anti-corruption-layer
-description: "Shape and translate data at boundaries: Data Transfer Objects per use case, explicit Mappers/assemblers, and Anti-Corruption Layers that protect a domain model from legacy or third-party semantics. Covers where mappers live, pure and tested translation, DTO vs entity vs value object, ACL ports/adapters/translators, migration-time ACLs and their lifetime. Use when exposing or consuming APIs/events, integrating a legacy or external system, designing request/response shapes, debugging model leakage, mass assignment, or auto-mapper drift."
+description: "Keep foreign data shapes and vocabularies out of your domain model: one DTO per use case at each process or trust boundary, explicit pure mappers owned by the adapter, and an Anti-Corruption Layer (port, adapter, translator) when a legacy or third-party system speaks different semantics, with its lifetime recorded. Not for validation rules (validator-input-parser), error bodies (error-handling-problem-details) or persistence (repository-unit-of-work). Use when exposing or consuming APIs or events, integrating a legacy or external system, designing request/response shapes, or debugging model leakage, mass assignment or auto-mapper drift."
 ---
 
 # DTO, Mapper & Anti-Corruption Layer
@@ -15,7 +15,7 @@ Boundary: this skill owns boundary data shapes and translation between models an
 
 | Tool | Question it answers | Fowler/Microsoft source |
 |---|---|---|
-| DTO | What shape crosses this process or trust boundary? | Carries data between processes to reduce calls; serializable; assembler on the server |
+| DTO | What shape crosses this process or trust boundary? | Carries data between processes to cut remote calls; serializable; an assembler on the server moves data to and from domain objects |
 | Mapper | Who converts between two independent models so they stay unaware of each other? | Object that sets up communication between two independent objects |
 | ACL | How do I stop a foreign system's semantics from corrupting my design? | Facade/adapter layer translating between subsystems with different semantics |
 
@@ -70,7 +70,7 @@ class LegacyBilling(BillingPort):          # port owned by the domain
 7. Asynchronous translation (message broker) when the legacy system cannot meet throughput.
 8. For incremental migration, pair with `parallel-change-expand-contract`.
 
-Vendor rule: the vendor lives behind an adapter at the edge and the domain knows ports; handle partial failure explicitly (raise, per-source outcome, unavailable state, never empty-as-unknown). Worked example: [vendor behind an adapter](references/vendor-behind-an-adapter.md).
+Vendor behind an adapter, with partial-failure handling (never empty-as-unknown): [vendor behind an adapter](references/vendor-behind-an-adapter.md).
 
 ## 6. Placement
 
@@ -103,3 +103,4 @@ Vendor rule: the vendor lives behind an adapter at the edge and the domain knows
 - [Mapper pattern and translation code](references/mapper-pattern.md) — where mappers live, explicit vs auto-mapping, tests.
 - [Anti-Corruption Layer](references/anti-corruption-layer.md) — structure, considerations, lifetime, failure modes.
 - [Vendor behind an adapter](references/vendor-behind-an-adapter.md) — port-first design, adapter-only vendor terms and partial-failure handling.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts with the expected skill.

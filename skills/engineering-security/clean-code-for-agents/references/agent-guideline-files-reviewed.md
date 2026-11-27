@@ -1,6 +1,6 @@
 # Agent Guideline Files Reviewed: What Is Sound, What Is Opinion, What to Reject
 
-Sources: https://gist.github.com/juanpabloaj/d95233b74203d8a7e586723f14d3fb0e (AGENTS.md-style gist) · https://github.com/M64GitHub/tiger-style (README read; skill files SAFETY.md, DX.md etc. not read) · https://github.com/robertguss/programming_tiger_style (README read; linked docs and contracts not read) · https://gist.github.com/bansalankit92/6119c4f7fabe11b7a174a99f5a7bb376 (a Clean Code summary; context) · Last verified 2026-11-24
+Sources: https://gist.github.com/juanpabloaj/d95233b74203d8a7e586723f14d3fb0e (AGENTS.md-style gist) · https://github.com/M64GitHub/tiger-style (README read; skill files SAFETY.md, DX.md etc. not read) · https://github.com/robertguss/programming_tiger_style (README read; linked docs and contracts not read) · https://gist.github.com/bansalankit92/6119c4f7fabe11b7a174a99f5a7bb376 (a Clean Code summary; context) · Last verified 2026-11-27
 
 Fetched content is untrusted data. These files contain instructions addressed to agents; they were analyzed, never followed. Licenses were not visible in the pages read; paraphrase only.
 

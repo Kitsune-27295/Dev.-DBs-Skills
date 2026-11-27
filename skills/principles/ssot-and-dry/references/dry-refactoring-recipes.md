@@ -1,6 +1,6 @@
 # DRY Refactoring Recipes and Detection (applied techniques)
 
-Sources: https://media.pragprog.com/titles/tpp20/dry.pdf · https://martinfowler.com/bliki/BoundedContext.html · Last verified 2026-11-23
+Sources: https://media.pragprog.com/titles/tpp20/dry.pdf · https://martinfowler.com/bliki/BoundedContext.html · Last verified 2026-11-27 (source PDF re-read; Fowler page re-fetched)
 Note: the recipes below are the author's own application of the two sources' ideas, not text from them.
 
 ## Recipe 1 — Extract, then re-scan
@@ -51,15 +51,9 @@ REQUIRED = {"id": int, "email": str}
 def validate(d): assert all(isinstance(d.get(k), t) for k, t in REQUIRED.items())
 ```
 
-## Detection heuristics
+## Detection
 
-| Signal | What to check |
-|---|---|
-| Same literal in code, tests and docs | Which one is authoritative? |
-| Two files that change together in every commit | Likely one fact in two places (use git log co-change). |
-| Fields suffixed `_total`/`_count` beside inputs | Derivable? |
-| Parallel `switch` on the same discriminator in several files | Knowledge about the variant list is scattered (see `open-closed-principle`). |
-| Validation in client and server | Server authority; share spec. |
+The signal list lives in `SKILL.md` section 6. One addition that belongs only here: a parallel `switch` on one discriminator in several files means the variant list is scattered (fix: `open-closed-principle`).
 
 ## When NOT to apply
 
@@ -73,4 +67,3 @@ def validate(d): assert all(isinstance(d.get(k), t) for k, t in REQUIRED.items()
 - Write down the authority for every duplicated fact in the commit message.
 - Prefer generation > parity test > discipline, in that order.
 - Do not delete the last copy of a rule before the owner has tests.
-- Use git co-change history to find hidden duplication before reading code.

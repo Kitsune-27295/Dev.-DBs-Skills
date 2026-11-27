@@ -1,8 +1,8 @@
 # Martin's SOLID Posts: What They Actually Say
 
-Sources: https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html · https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html · https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html · https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html · https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html · Last verified 2026-11-27
 
-Anchored to the SOLID table in SKILL.md section 3. The SRP slug on the site is spelled `SingleReponsibilityPrinciple` (missing "s"); this is the working URL.
+Anchored to the SOLID table in SKILL.md section 2. The SRP slug on the site is spelled `SingleReponsibilityPrinciple` (missing "s"); this is the working URL.
 
 ## "SOLID Relevance" (2020)
 
@@ -22,7 +22,7 @@ Summaries (Parnas and Dijkstra lineage, the `Employee` actors example, Meyer ver
 
 ## Where the SKILL.md wording needs care (my own reading)
 
-- The SRP quote in SKILL.md ("responsible to one, and only one, actor") is the later formulation; this 2014 post's literal text is "one reason to change" with the people/stakeholder explanation.
+- SKILL.md words SRP as "one reason to change, traced to one stakeholder group", which is this 2014 post's literal text plus its people explanation; the "one actor" phrasing is the later formulation and is not used.
 - None of the three posts says "do not create single-implementation interfaces". The anti-ceremony stance in SKILL.md is the skill's own pragmatic rule, supported by `codebase-design` and the Harvard handbook; see `interface-considered-harmful-reading.md`.
 - OCP in the post is about architecture-scale plugin boundaries, not speculative factories inside one module.
 

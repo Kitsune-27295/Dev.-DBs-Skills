@@ -1,6 +1,6 @@
 # Locks and Activity Interpretation
 
-Sources: https://www.postgresql.org/docs/18/view-pg-locks.html, https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/18/view-pg-replication-slots.html · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/18/view-pg-locks.html, https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/18/view-pg-replication-slots.html · Last verified 2026-11-27
 
 Covers `locks/blocking`, `connections/connections_by_state`, `connections/long_running`, `deadlocks/deadlock_counters`, `replication/replication_status`, `replication/replication_slots`, `backup/archiver_status`.
 
@@ -8,7 +8,7 @@ Covers `locks/blocking`, `connections/connections_by_state`, `connections/long_r
 
 `pg_stat_activity.state` is `active`, `idle`, `idle in transaction` or `idle in transaction (aborted)` (also `starting`, `fastpath function call`, `disabled`). State and wait event are independent: an active backend may or may not be waiting. `xact_start` is when the transaction began; `state_change` is when the state last moved, so `now() - state_change` is how long a session has idled. `backend_xmin` is the horizon that holds back vacuum.
 
-`wait_event_type` values: `Lock` (heavyweight lock), `LWLock`, `IO`, `IPC`, `Client`, `Activity`, `BufferPin`, `Timeout`, `Extension`. The blocking script filters on `Lock`.
+`wait_event_type` values: `Lock` (heavyweight lock), `LWLock`, `IO`, `IPC`, `Client`, `Activity`, `BufferPin`, `Timeout`, `Extension`, `InjectionPoint` (18). The blocking script filters on `Lock`.
 
 ## Locks
 

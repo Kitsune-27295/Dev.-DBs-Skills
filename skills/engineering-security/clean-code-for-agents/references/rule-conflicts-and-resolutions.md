@@ -1,6 +1,6 @@
 # Rule Conflicts and Resolutions
 
-Sources: https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29 · https://github.com/victorcorcos/clean-code · https://github.com/tahsinature/coding-principles · https://refactoring.guru/refactoring/smells · Last verified 2026-11-24
+Sources: https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29 · https://github.com/victorcorcos/clean-code · https://github.com/tahsinature/coding-principles · https://refactoring.guru/refactoring/smells · Last verified 2026-11-27
 
 Real duplications are resolved to one canonical statement and one owner; coincidental agreements are noted as such (method: `ssot-and-dry`). Ousterhout's deep-module idea is cited as endorsed by the Grug essay's reading list (it names *A Philosophy of Software Design*); the book itself was not read for this file, so that part is labeled as background knowledge, not read from source. Sources covered by other files (Google, kernel, Power of 10, TigerStyle, comments) are cross-referenced only.
 

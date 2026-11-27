@@ -1,11 +1,11 @@
 ---
 name: ssot-and-dry
-description: "Deep dive on DRY as Single Source of Truth (SSOT): one authoritative representation per piece of knowledge, the five kinds of duplication (code, documentation, data, representational, interdeveloper), coincidental-similarity tests, derived-data and accessor recipes, generating artifacts from one schema, and where DRY must stop at Bounded Context boundaries. Deep dive; for the overview see `pragmatic-solid-and-ssot`. Use when hunting duplicated business rules, drifting docs/schemas/types, stored derived fields, or deciding whether two similar blocks or two contexts should share one definition."
+description: "Decide where one piece of knowledge should live and stop it drifting: DRY as a single authoritative representation (SSOT), the five kinds of duplication (code, documentation, data, representational, interdeveloper), the test that separates real duplication from coincidental lookalikes, derived-data and generate-from-one-spec recipes, and where DRY must stop at Bounded Context boundaries. Deep dive; the overview is `pragmatic-solid-and-ssot`; variants without edits are `open-closed-principle`, grouping by actor is `single-responsibility-cohesion`. Use when one rule or enum lives in code, docs, schema and UI, when stored fields duplicate derivable ones, or when deciding if two similar blocks or two contexts should share a definition."
 ---
 
 # SSOT & DRY — Knowledge Has One Home
 
-One idea: **every piece of knowledge has a single, unambiguous, authoritative representation** — and *knowledge* means a rule, a fact or an intent, not a run of identical characters. Duplicated syntax that encodes two different facts is fine; one fact written in two formats (code + comment, schema + class, API + client) is the real bug. Sources and fetch outcomes: [references/sources.md](references/sources.md). This is a deep dive; for the compact overview tables (and Rule of Three, KISS) see `pragmatic-solid-and-ssot`.
+One idea: **every piece of knowledge has a single, unambiguous, authoritative representation** — and *knowledge* means a rule, a fact or an intent, not a run of identical characters. Duplicated syntax that encodes two different facts is fine; one fact written in two formats (code + comment, schema + class, API + client) is the real bug. Sources, fetch outcomes and unadopted claims: [references/sources.md](references/sources.md). This is a deep dive; for the compact overview tables (and Rule of Three, KISS) see `pragmatic-solid-and-ssot`.
 
 Boundaries with neighbors: extension via strategies/plugins is `open-closed-principle`; grouping code by who asks for changes is `single-responsibility-cohesion`; dependency direction and wiring is `dependency-inversion-composition-root`; "do not build it yet" is `kiss-yagni-aha`; type-level single definition of a rule is `value-objects-type-invariants`; DB-level enforcement is `schema-and-constraints`; contract-first APIs are `arc42-api-contracts-architecture`.
 
@@ -39,19 +39,11 @@ Two functions with identical bodies are duplicate **only if a change to the rule
 
 ## 4. Where DRY stops: Bounded Context
 
-The same word (Customer, Product, Meter) has different attributes and invariants in different contexts; total unification of a large domain model is usually infeasible or not worth its cost. So: **apply SSOT inside one context; across contexts keep separate models and translate at the boundary** (DTO, mapper, anti-corruption layer). Never merge two contexts' classes to save lines. A shared *kernel* is a deliberate, small, jointly-owned exception, not a default. Mechanics, boundary signals and a worked example: [references/bounded-context-limits.md](references/bounded-context-limits.md). Module-level consequences: `modular-monolith-architecture`, `ddd-domain-heuristics-debiasing`.
+The same word (Customer, Product, Meter) has different attributes and invariants in different contexts; total unification of a large domain model is usually infeasible or not worth its cost. So: **apply SSOT inside one context; across contexts keep separate models and translate at the boundary** (DTO, mapper, anti-corruption layer). Never merge two contexts' classes to save lines. A shared kernel (a DDD term from Evans, not on Fowler's page) is a deliberate, small, jointly-owned exception, not a default. Mapper and anti-corruption mechanics: `dto-mapper-anti-corruption-layer`. Mechanics, boundary signals and a worked example: [references/bounded-context-limits.md](references/bounded-context-limits.md). Module-level consequences: `modular-monolith-architecture`, `ddd-domain-heuristics-debiasing`.
 
 ## 5. Refactoring recipes
 
-Do these one step at a time, tests green after each (`tdd`):
-
-1. **Extract-and-recheck.** Pull out the repeated rule, then re-scan: copy-paste fixes often reveal a second duplication (field width repeated in every format string) and a third *implicit* one (separator length tied to column width). Decide per case whether the link is real intent or coincidence.
-2. **Make derived data derived.** Replace stored `total` with `total()`; where the DB needs it, use a generated column/constraint, not application discipline.
-3. **Uniform access.** Expose stored and computed attributes through the same notation, so storage can change without caller edits.
-4. **Generate, don't mirror.** Replace hand-written DTO/doc/client with output from one spec; add a CI step that fails when generated output is stale.
-5. **Table-driven validation over duplicated types.** When mirroring an external schema as fixed classes is costly, keep a map plus one declarative validator that checks required keys and formats.
-
-Worked examples and before/after: [references/dry-refactoring-recipes.md](references/dry-refactoring-recipes.md).
+One step per commit, tests green after each (`tdd`): extract-and-recheck, derived instead of stored, uniform access, generate-don't-mirror, table-driven validation. Preference order for keeping mirrors honest: generate, then a parity test, then discipline. Steps and before/after: [references/dry-refactoring-recipes.md](references/dry-refactoring-recipes.md).
 
 ## 6. Detection heuristics for agents
 
@@ -61,6 +53,7 @@ Worked examples and before/after: [references/dry-refactoring-recipes.md](refere
 - Look for comments that paraphrase the next 5 lines.
 - Same regex/validation in client and server: server is the authority, share the spec or generate (`never-trust-the-client`).
 - Divergent copies of "the same" helper in different packages: diff them; differences reveal whether the rule really was one.
+- Two files that change in every commit together (git co-change): likely one fact in two places.
 
 ## 7. Anti-patterns to reject
 
@@ -83,6 +76,7 @@ Worked examples and before/after: [references/dry-refactoring-recipes.md](refere
 
 ## Deep references
 
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description.
 - [Rule registry format](references/rule-registry-format.md) — read when building or maintaining a rule registry: row fields, agreement and confidence scales, maintenance rule. (added 2026-11-27)
 - [DRY as knowledge: the five duplication kinds](references/dry-as-knowledge.md) — read for the Pragmatic Programmer's definitions, acid test and worked examples.
 - [DRY refactoring recipes and detection](references/dry-refactoring-recipes.md) — read when executing a deduplication step by step.

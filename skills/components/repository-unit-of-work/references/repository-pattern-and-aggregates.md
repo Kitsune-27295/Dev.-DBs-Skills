@@ -1,6 +1,6 @@
 # Repository Pattern and Aggregates
 
-Sources: https://martinfowler.com/eaaCatalog/repository.html · https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaCatalog/repository.html · https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design · Last verified 2026-11-27
 
 ## Definition
 Fowler (Hieatt and Mee, PoEAA 2003): a Repository mediates between the domain and data-mapping layers using a collection-like interface for domain objects. Clients build queries declaratively and the repository returns matching objects; query construction lives in one place and the dependency runs one way, from persistence toward the domain. It sits on top of a mapping layer such as Data Mapper.
@@ -34,14 +34,7 @@ A classic DAL class works per table/row, is tightly coupled to callers, and ofte
 ## Forces and trade-offs
 - Benefits: testable domain logic, one place for query logic, swappable storage, enforced aggregate boundary.
 - Costs: indirection; hides persistence power (Bogard's critique quoted by Microsoft: it hides important details of the persistence mechanism, and with CQRS repositories may be unnecessary). Microsoft states repositories are optional, unlike aggregates and a rich domain model.
-- Fowler's guidance: worth it with a complex domain model, many domain classes or heavy querying.
+- Fowler's page has no explicit when-to-use section; its text implies value with a complex domain model, many domain classes or heavy querying (our reading).
 
 ## Anti-patterns
 Generic CRUD repository per entity; repository methods returning DTOs or view models (that is a query service); business rules inside the repository; leaking ORM entities or lazy-loaded proxies upward; one repository holding unrelated aggregates ("god repository").
-
-## How an agent should apply this
-- Count aggregates, not tables, when deciding how many repositories to create.
-- Put the interface in the domain/application layer; implementation in infrastructure (`hexagonal-architecture`, `clean-architecture`).
-- Reject repositories on thin CRUD apps with an anemic model; use the ORM directly.
-- Give finders domain names; move read-model joins to query services.
-- Do not add a repository for a child entity; reach it through its root.

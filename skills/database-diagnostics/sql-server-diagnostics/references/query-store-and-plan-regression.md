@@ -1,6 +1,6 @@
 # Top Queries, the Plan Cache and Query Store
 
-Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/performance/monitoring-performance-by-using-the-query-store · https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-query-store-runtime-stats-transact-sql · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2025 · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/performance/monitoring-performance-by-using-the-query-store · https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-query-store-runtime-stats-transact-sql · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2025 · Last verified 2026-11-27
 
 Scripts covered: `queries/top_queries_cpu`, `top_queries_duration`, `top_queries_reads`. The pack has no Query Store script; this file explains where the cache-based scripts stop and when to ask for Query Store data. Generic tuning workflow belongs to `query-performance`.
 
@@ -11,7 +11,7 @@ One row per statement inside a cached plan. The row lives exactly as long as the
 Units that trip people up:
 - `total_worker_time` (CPU) and `total_elapsed_time` are in microseconds but accurate only to milliseconds. The scripts divide by 1000 to show milliseconds.
 - `execution_count` is since the plan was last compiled, not since restart. Two plans for the same text have separate rows (`plan_generation_num` tells recompiles apart).
-- `statement_start_offset` and `statement_end_offset` are bytes inside the batch text; the scripts divide by 2 for characters because the text is UTF-16. An end offset of -1 means to the end.
+- `statement_start_offset` and `statement_end_offset` are bytes inside the batch text; the scripts divide by 2 for characters because the text is UTF-16. The page says -1 marked the end of the batch only before 2014, but its own example still handles -1, so keep that branch.
 - `query_hash` groups statements that differ only by literals; `query_plan_hash` groups similar plans. The page's example aggregates by `query_hash` to find the true heaviest "shape". The pack groups per plan row, so one query with many literal variants can hide below one-off heavy ones.
 - Memory-optimized or natively compiled objects report zeros for several columns (reads, writes); CPU may be inaccurate under 1 ms.
 
@@ -27,14 +27,14 @@ Units that trip people up:
 
 Query Store persists queries, plans and runtime stats per database, in time buckets, so it survives restarts and plan eviction and keeps several plans per query. Three stores: plan, runtime stats, wait stats (wait stats capture since 2017). Key views: `sys.query_store_query`, `query_store_query_text`, `query_store_plan`, `query_store_runtime_stats`, `query_store_runtime_stats_interval`, `query_store_wait_stats`, and `sys.database_query_store_options` for the current mode and state.
 
-Reading `runtime_stats`: one row per plan, execution type and interval; the current interval can have several rows (flushed and in-memory), so aggregate by plan, execution type and interval. Durations and CPU are in microseconds, reads and writes in 8 KB pages, memory in 8 KB pages. `execution_type` 0 is regular, 3 client-aborted, 4 exception: filter on 0 before comparing averages. A documented reporting quirk: DOP columns can show very large numbers on many-core systems.
+Reading `runtime_stats`: one row per plan, execution type and interval; the current interval can have several rows (flushed and in-memory), so aggregate by plan, execution type and interval. Durations and CPU are in microseconds, reads and writes in 8 KB pages, memory in 8 KB pages. `execution_type` 0 is regular, 3 client-aborted, 4 exception: filter on 0 before comparing averages. A documented reporting quirk (runtime-stats page remarks): DOP columns can show very large numbers on many-core systems, mainly with user-defined functions; it is a reporting issue, not a runtime one.
 
-Plan regression workflow in words: find a query whose average duration or CPU rose after a time T; see whether a second plan id appeared around T; compare the plans; if the older plan was better, force it (`sp_query_store_force_plan`) or fix the cause (statistics, parameter sniffing, compatibility level). Only plans that Query Store holds can be forced. Forcing is a change to the instance, so the owner runs it.
+Plan regression workflow in words: find a query whose average duration or CPU rose after a time T; see whether a second plan id appeared around T; compare the plans; if the older plan was better, force it (`sp_query_store_force_plan`) or fix the cause (statistics, parameter sniffing, compatibility level). Only plans Query Store saved can be forced (the monitoring page also says the plan must still be retained). Forcing is a change to the instance, so the owner runs it.
 
 Defaults by version, from the Query Store page and What's New pages:
 - 2019: off by default for new databases.
 - 2022: on by default in read-write mode for new databases; upgraded or restored databases keep their previous setting.
-- Readable secondary replicas: the Query Store page and What's New 2025 apply it to 2025; What's New 2022 also lists it. Uncertain; see Claims in sources.md.
+- Readable secondary replicas: the Query Store page marks the feature "Applies to SQL Server 2025" and What's New 2025 says it is now on by default; What's New 2022 still lists it in its table. Treat 2025 as the documented version; see Claims in sources.md.
 - Cannot be enabled on `master` or `tempdb`. Plans for DDL are not captured; natively compiled procedures need an explicit switch.
 
 ## 4. Query Store state can lie
@@ -46,7 +46,7 @@ Example check to hand to the owner (read-only):
 SELECT actual_state_desc, desired_state_desc, current_storage_size_mb, max_storage_size_mb
 FROM sys.database_query_store_options;   -- run in each user database
 ```
-(Column names are from general knowledge of the view; the options-view page was not fetched, only referenced by the monitoring page.)
+(Column names confirmed on the `sys.database_query_store_options` page. An actual state of `READ_ONLY` while `READ_WRITE` is desired has a `readonly_reason` bitmap, for example 65536 for the size limit; `READ_CAPTURE_SECONDARY` is the expected state when Query Store for secondary replicas is on.)
 
 ## How an agent should apply this
 

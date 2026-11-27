@@ -1,6 +1,6 @@
 # Sources — Clean Code for Agents
 
-Every URL below was checked during skill authoring (2026-11-24).
+Every URL below was checked during skill authoring (2026-11-24) and re-fetched on 2026-11-27 (curl or WebFetch; statuses below are from the re-check).
 
 | Source | Retrieved status | What it contributed |
 |---|---|---|
@@ -11,12 +11,12 @@ Every URL below was checked during skill authoring (2026-11-24).
 | https://stackoverflow.blog/2021/12/23/best-practices-for-writing-code-comments/ | 200 OK | Nine comment rules: no duplication, links, bug-fix notes, TODO use |
 | https://gist.github.com/bansalankit92/6119c4f7fabe11b7a174a99f5a7bb376 | 200 OK (raw); a Clean Code summary, not a commentary on the SO post | Strict "comments are failure" position, good and bad comment lists |
 | https://en.wikipedia.org/wiki/The_Power_of_10:_Rules_for_Developing_Safety-Critical_Code | 200 OK | Rule list cross-check, C focus, MISRA complement |
-| https://web.eecs.umich.edu/~imarkov/10rules.pdf | 200 OK (pdftotext) | Original ten rules with rationale; C-targeted; rule 7 self-described as most violated |
-| https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md | 200 OK (raw) | 70-line limit, assertions, units in names, why/how comments, Zig-specific rules |
-| https://github.com/M64GitHub/tiger-style | 200 OK (raw README only; skill files not read) | Zig-oriented Claude skill; 80-column change; severity model |
+| https://web.eecs.umich.edu/~imarkov/10rules.pdf | 200 OK (spinroot copy read with pdftotext; umich copy not machine-readable via WebFetch) | Original ten rules with rationale; C-targeted; rule 7 (check return values) called possibly the most frequently violated |
+| https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md | 200 OK (raw, 2026-11-27; WebFetch returned 503 once) | 70-line hard limit, two assertions per function, units in names, why comments, 100-column limit, Zig-specific rules |
+| https://github.com/M64GitHub/tiger-style | 200 OK (raw README only; skill files not read) | Zig-oriented Claude skill; changes 100 columns to 80 by its own account; severity model |
 | https://github.com/robertguss/programming_tiger_style | 200 OK (raw README only; linked docs not read) | Contract System v2, TDD gates, risk tiers |
 | https://gist.github.com/juanpabloaj/d95233b74203d8a7e586723f14d3fb0e | 200 OK (raw) | AGENTS.md-style general rules; "avoid TODO" conflicts with the Stack Overflow article |
-| https://spinroot.com/gerard/pdf/P10.pdf | 200 OK (head check only; not read, the umich copy was used) | Alternate copy location of the original paper |
+| https://spinroot.com/gerard/pdf/P10.pdf | 200 OK (read 2026-11-27: 60-line and two-assertion rules, rule 7 rationale confirmed) | Alternate copy location of the original paper |
 | https://grugbrain.dev/ | 200 OK (WebFetch digest; no license stated) | Complexity as main enemy, saying no / 80-20, late factoring and cut points, DRY vs simple repetition, locality of behavior, Chesterton's fence, testing and refactoring advice |
 | https://grugbrain.ai/ | 200 OK (satire product page, tribute to the essay) | Confirms the essay's themes applied to LLM agents; no extra rules used |
 | https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md | 200 OK via raw.githubusercontent.com (repo MIT) | LLM-specific complexity bias, stop questions, fake vs real cut points, helper-earns-its-keep, no hard pivot |
@@ -57,3 +57,15 @@ Every URL below was checked during skill authoring (2026-11-24).
 ## Added 2026-11-24
 
 - Leak taxonomy and the single resolvability test in `comments-stand-alone-at-head.md` were written from two third-party agent-skill documents on trimming reasoning-transcript leakage and on a prose standard, read locally for ideas only (Third-party skill read for ideas, no text reused; licenses not confirmed) (added 2026-11-24). The Google review standard already recorded above supports the history-belongs-in-version-control position; the rest is the author's synthesis.
+
+## Re-verification 2026-11-27
+
+- Confirmed unchanged: Google review standard and looking-for points, kernel numbers (one or two screenfuls, 5-10 locals, 3 indentation levels, comments say what not how), Stack Overflow nine rules, grug themes, P10 60 lines and two assertions per function.
+- Corrected: TigerStyle's own column limit is 100, not 80 (80 is a derived skill's change); P10 calls return-value checking possibly the most frequently violated rule, not definitively the most.
+- Scripts or data files: none in this skill.
+
+## Claims not adopted as fact
+
+- Which smells LLM output shows most (inference, not a measurement).
+- Any numeric limit as universal; each stays a per-source trigger.
+- Ousterhout's deep-module idea (background knowledge, not read from a source here).

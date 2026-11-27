@@ -1,79 +1,65 @@
 ---
 name: ddd-domain-heuristics-debiasing
-description: Use when mapping business subdomains into Core, Supporting, and Generic classifications, decoupling strategic DDD (Ubiquitous Language + Bounded Contexts) from tactical implementation patterns (Transaction Script, Active Record, Domain Model, Event-Sourced), plotting Core Domain Charts (Differentiation vs. Complexity), or running a 5-step Debiasing Decisions Checklist in architecture reviews and ADRs.
+description: "Decide where to invest in a domain and how to guard the decision against bias: classify subdomains as Core, Supporting or Generic, plot them on a Core Domain Chart (differentiation vs complexity), pick a per-context implementation pattern (Transaction Script, Active Record, Domain Model, Event-Sourced) instead of forcing aggregates everywhere, and run the five-step Debiasing Decisions Checklist before an architecture choice or ADR. Not for the ADR file format (`adr-architecture`), aggregate or value-object design (`defensive-domain-modeling`) or event-store mechanics (`event-sourcing-pattern`). Use when mapping subdomains, choosing how much DDD a module deserves, or reviewing a decision that merely feels right."
 ---
 
 # DDD Domain Heuristics & Architectural Debiasing
 
-One idea: **do not let DDD tactical patterns (Aggregates/Entities) dictate every service boundary, and do not trust architectural gut feelings ("this just feels right") without structured debiasing**. Separate *where* competitive value lives (**Strategic DDD & Core Domain Charts**) from *how* logic is coded inside each boundary (**Tactical Patterns**), and counter cognitive biases explicitly at decision time. Sources and their claims: [references/sources.md](references/sources.md).
+One idea: **do not let tactical DDD patterns (aggregates, entities) dictate every boundary, and do not trust "this feels right" without a structured check.** Separate *where* competitive value lives (strategic: Ubiquitous Language, Bounded Contexts, subdomain classification) from *how* logic is coded inside each context (implementation pattern), and counter known biases at decision time. Sources and their status: [references/sources.md](references/sources.md).
 
-## 1. Decoupling Strategic DDD from Tactical Implementation (Vlad Khononov)
+## 1. Apply DDD to DDD (Khononov, 2016)
 
-Applying DDD to DDD itself clarifies what is irreplaceable vs. interchangeable:
+Khononov classifies DDD's own parts the way DDD classifies a business:
 
-| DDD Layer | Subdomain Role | Purpose & Invariant |
+| DDD element | Role he gives it | Why |
 |---|---|---|
-| **Ubiquitous Language** | **Core Domain** | Shared, unambiguous business-domain terminology spoken consistently in workshops, docs, tests, and code |
-| **Bounded Context** | **Supporting Subdomain** | Explicit linguistic & boundary perimeter inside which a Ubiquitous Language term holds **exactly one meaning** |
-| **Domain Implementation Pattern** | **Generic Subdomain** | Interchangeable code pattern implementing domain logic inside a Bounded Context (**Transaction Script**, **Active Record**, **Domain Model**, **Event-Sourced Domain Model**) |
+| Ubiquitous Language | Core domain | The main lever against project failure from poor collaboration |
+| Bounded Context | Supporting subdomain | Keeps each term single-meaning, so it supports the language |
+| Domain implementation patterns | Generic subdomain | Off-the-shelf (Fowler's PoEAA): Transaction Script, Active Record, Domain Model, Event-Sourced Domain Model |
 
-### Pattern-to-Complexity Fit Inside a Bounded Context
-1. **Simple domain / low invariant complexity:** Start with **Transaction Script** or **Active Record** (even inside a DDD project). A Bounded Context with a strict Ubiquitous Language does **not** need Aggregates or Value Objects when business rules are simple CRUD.
-2. **Complex state invariants / rich lifecycle:** Use **Domain Model** (Aggregates protecting invariants) or **Event-Sourced Domain Model** (`event-sourcing-pattern`).
-3. **Evolution Rule:** Business complexity usually *grows* rather than shrinks. Upgrade an individual Bounded Context's implementation pattern independently as its Ubiquitous Language deepens — without rewriting sibling contexts.
+What the article says about choosing: each pattern fits a level of complexity; it must be expressive enough for the Ubiquitous Language in code; the choice is not permanent and can move to a richer pattern as complexity grows. It gives **no** thresholds per pattern.
 
-## 2. Strategic Portfolio Mapping: Core Domain Charts (DDD Crew)
+Own heuristic (inference, not from the article): start with the simplest pattern that fits and name the signal that triggers an upgrade (rules start to interact, the same conditionals are copied across scripts, audit or "why is it in this state" questions). Pattern details beyond the four names are standard Fowler-style knowledge; event stores are owned by `event-sourcing-pattern`.
 
-Plot every subdomain or Bounded Context on a 2D strategic chart (**X-axis: Business Differentiation**, **Y-axis: Domain/Model Complexity**) — calibrating Business Differentiation with product/business stakeholders and Complexity with engineers:
+## 2. Core Domain Charts (DDD Crew)
 
-| Quadrant | Business Differentiation | Complexity | Architectural & Sourcing Strategy |
-|---|---|---|---|
-| **Core Domain** (Top-Right) | High (direct competitive advantage / ROI) | High (hard for competitors to copy) | **Build in-house** with top domain talent; invest in Domain Model / Event Sourcing (`clean-architecture`, `hexagonal-architecture`) and highest test rigor |
-| **Supporting Subdomain** (Bottom-Left/Mid) | Moderate / niche differentiation | Low–Moderate | **Keep simple in-house** (Transaction Script / Active Record / minimal services); avoid over-engineering |
-| **Generic Subdomain** (Bottom-Left) | Zero differentiation (commoditized) | Low–High (solved externally) | **Buy SaaS, adopt Open Source, or outsource** (auth, billing, notifications, generic CMS) instead of burning Core team capacity |
-| **Migration Variant** | Swap Y-axis to **Migration Effort / Risk** | — | Prioritize migrating high-differentiation + tractable-effort contexts first |
+Plot each subdomain, capability or Bounded Context on two axes: **business differentiation** and **complexity**. Product and business people judge differentiation; engineers judge complexity. The chart is a discussion aid, not a scoring model. Variants: portfolio, context map with Team Topologies interaction modes, and architecture migration (relabel the y-axis to sequence moves).
 
-### Clues for Calibrating Differentiation & Complexity
-- **Differentiation:** How hard would a new entrant or rival find copying this? What direct revenue/brand/engagement leverage comes from it? What brand damage results if it fails repeatedly?
-- **Essential vs. Accidental vs. Operational Complexity:** Separate genuine rule/discovery complexity and scale from *accidental* technical bloat (legacy over-engineering) and manual off-system workarounds.
+- **Complexity clues:** essential domain difficulty, accidental technical complexity (a solution more complex than its function needs), operational complexity outside the software, difficulty discovering new rules, scale, scarce specialist talent, newcomer ramp-up time.
+- **Differentiation clues:** how hard a rival would find matching it, advantage now and potential, brand damage from repeated failure, Cynefin domain.
 
-## 3. Five-Step Debiasing Decisions Checklist (DDD Crew Toolkit)
+**Inference, not on the DDD Crew page** (it names no quadrants and gives no build/buy advice): a reading many teams use is high/high = Core, build in-house with the strongest people and richer patterns; low differentiation = Generic, buy, adopt or outsource; in between = Supporting, keep simple. Treat it as a starting point for the debate. Pattern placement for the Core context: `clean-architecture`, `hexagonal-architecture`.
 
-Research shows **knowing about biases does not eliminate them** (`*claim*`: Morewedge et al. / Soll, Milkman & Payne); embed behavioral prompts directly into ADRs (`adr-architecture`) and architecture sessions whenever a choice triggers *"this just feels right"*:
+## 3. Five-step Debiasing Decisions Checklist (DDD Crew)
 
-1. **Be Decision-Ready (Mental State & Inertia):**
-   - *Myopic Misery / Action Bias:* Are we deciding under incident stress or sprint panic just to do *something*?
-   - *Status Quo Bias:* Is high cognitive load pushing us to keep a broken boundary untouched without evaluating alternatives?
-2. **Broaden the Frame (Solution Space):**
-   - *Additive Bias (Subtraction Neglect):* Did we consider **removing** a layer, service, or rule instead of always adding a new one?
-   - *Functional Fixedness (Golden Hammer):* When hearing *"service"*, *"manager"*, or *"handler"*, did we examine what the concept actually *knows* and *does* instead of reaching for our default pattern?
-3. **Seek Independent Advice (True Diversity):**
-   - *Correlation Neglect:* Are we hearing 5 independent validations or 5 echoes of the same Slack thread / blog post?
-   - *Overconfidence & Authority Bias:* Would we ask the exact same skeptical questions if a junior teammate—rather than a senior architect or AI—proposed this? Did we examine strong dissenting views?
-4. **Test Assumptions Against Reality:**
-   - *Authority Bias (Tech Hype):* What problem was this pattern/tool originally designed to solve, and do we *actually* have that problem?
-   - *Illusion of Control:* What happens **when** (not *if*) this component fails or scales poorly in production?
-5. **Establish Simple Rules (Proportional Effort):**
-   - *Law of Triviality (Bikeshedding):* Is this a **Two-Way Door** (easily reversible)? If yes, delegate quickly instead of spending hours in group consensus; reserve deep ADR deliberation for **One-Way Doors**.
-   - *False Consensus Effect:* Did the *group* check assumptions explicitly with psychological safety to disagree, rather than assuming silence means agreement?
+The toolkit's premise (its own claim, citing Morewedge et al. and Soll, Milkman and Payne; not independently verified here): awareness alone does not remove bias, structured prompts inside the workflow help. Run it as a **team**, inside an existing ritual (design session, ADR review). Steps and bias tags:
+
+1. **Be Decision-Ready:** Myopic Misery, Status Quo Bias.
+2. **Broaden the Frame:** Additive Bias (consider removing), Functional Fixedness (golden hammer).
+3. **Seek Independent Advice:** Correlation Neglect, Overconfidence, Authority Bias.
+4. **Test Your Assumptions:** Authority Bias (what was this tool built for?), Illusion of Control (plan for when it fails).
+5. **Establish Simple Rules:** Law of Triviality (two-way door: decide fast; one-way door: deliberate), False Consensus.
+
+Questions per step, the ten-bias table and a paste-ready ADR block: [references/debiasing-checklist-in-depth.md](references/debiasing-checklist-in-depth.md). ADR structure and lifecycle: `adr-architecture`.
 
 ## Mistakes to Catch
 
-- **Forcing Tactical Aggregates Everywhere ("All-DDD Domain Model"):** Implementing heavy DDD Aggregate + Repository ceremony for Generic or Supporting CRUD modules, delaying delivery on the actual Core Domain.
-- **Building Generic Commodities In-House:** Spending top engineering bandwidth building custom auth, scheduling, or payment ledgers while the true Core differentiator stagnates.
-- **Solo Gut-Check Architecture Reviews:** Confusing team consensus (echoed enthusiasm in a design meeting) with independent verification, or skipping subtractive alternatives when refactoring complex monoliths.
+- Heavy aggregate and repository ceremony in Generic or Supporting CRUD modules while the Core stagnates.
+- Building commodities (auth, billing, notifications) in-house with Core-team capacity.
+- Mistaking an echoing design meeting or repeated blog posts for independent verification; never proposing a subtractive option.
+- Running the checklist alone, or on every trivial two-way decision.
 
 ## Quick Decision Checklist
 
-- [ ] Have I separated where competitive value lives (strategic) from how logic is coded (tactical)?
-- [ ] Is each subdomain classified as Core, Supporting or Generic, using differentiation and complexity?
-- [ ] Do I start simple (Transaction Script or Active Record) and use Aggregates only for complex invariants?
-- [ ] Will Generic subdomains be bought, adopted or outsourced instead of built in-house?
-- [ ] Did I consider removing a layer, service or rule, not only adding one?
-- [ ] Do I have independent advice rather than echoes, and did I test the pattern's original purpose?
-- [ ] Is this a Two-Way Door to decide quickly, or a One-Way Door that needs an ADR?
+- [ ] Strategic value (where) separated from implementation pattern (how)?
+- [ ] Each subdomain classified, with product input on differentiation?
+- [ ] Simplest fitting pattern chosen per context, with a named upgrade signal?
+- [ ] Generic subdomains bought or adopted rather than built?
+- [ ] A removal option and a failure plan considered?
+- [ ] Sources independent? Reversibility (one-way or two-way door) decided before choosing process weight?
 
 ## Deep references
 
-- [Subdomain roles and implementation patterns](references/subdomains-and-implementation-patterns.md) — read when classifying subdomains or choosing Transaction Script vs Domain Model
-- [Debiasing checklist in depth](references/debiasing-checklist-in-depth.md) — read when running the five-step check or pasting it into an ADR
+- [Subdomain roles and implementation patterns](references/subdomains-and-implementation-patterns.md): read when classifying subdomains, placing them on a chart or choosing Transaction Script vs Domain Model.
+- [Debiasing checklist in depth](references/debiasing-checklist-in-depth.md): read when running the five steps or pasting the check into an ADR.
+- [Trigger evals](references/trigger-evals.md): should-trigger and near-miss prompts.

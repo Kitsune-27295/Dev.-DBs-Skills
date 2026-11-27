@@ -1,11 +1,11 @@
 ---
 name: open-closed-principle
-description: "Deep dive on the Open-Closed Principle (OCP) and the Strategy pattern as its everyday mechanism: Meyer's original idea vs Martin's plugin-boundary reading, switch/if-chain to Strategy refactoring steps, strategy vs function parameter, selection at the composition point, plugin direction of dependencies, shotgun-surgery detection and when NOT to open a seam. Deep dive; for the overview see `pragmatic-solid-and-ssot`. Use when a new variant keeps forcing edits to tested core code, when replacing growing conditionals on a type/mode, or when deciding if a strategy or plugin is worth its cost."
+description: "Add behavior by adding code instead of editing tested code: the Open-Closed Principle as a seam against an expected axis of change (Meyer's original idea vs Martin's plugin-boundary reading), the Strategy pattern as its everyday mechanism, the conditional-to-Strategy refactoring, strategy vs plain function parameter, plugin dependency direction, and when NOT to open a seam. Deep dive; the overview is `pragmatic-solid-and-ssot`; wiring is `dependency-inversion-composition-root`, whole-system plugins are `microkernel-plugin-architecture`. Use when each new variant (provider, format, rule) forces edits to tested core code, when a growing switch on a type or mode needs replacing, or when deciding if a strategy or plugin is worth its cost."
 ---
 
 # Open-Closed Principle & Strategy
 
-One idea: **add behavior by adding code, not by editing code that already works.** The mechanism is a *seam*: stable policy talks to a small abstraction, and variants live behind it; the dependency arrows point from variants toward the core, never the reverse. Strategy is the workhorse; plugins are the same idea at deployable-unit scale. Sources and fetch outcomes: [references/sources.md](references/sources.md). Deep dive; the overview row for OCP lives in `pragmatic-solid-and-ssot`.
+One idea: **add behavior by adding code, not by editing code that already works.** The mechanism is a *seam*: stable policy talks to a small abstraction, and variants live behind it; the dependency arrows point from variants toward the core, never the reverse. Strategy is the workhorse; plugins are the same idea at deployable-unit scale. Sources, fetch outcomes and unadopted claims: [references/sources.md](references/sources.md). Deep dive; the overview row for OCP lives in `pragmatic-solid-and-ssot`.
 
 Boundaries with neighbors: *where the arrows point and who wires them* is `dependency-inversion-composition-root`; *which code belongs together by actor* is `single-responsibility-cohesion`; *one source for a fact* is `ssot-and-dry`; whole-system plugin shape is `microkernel-plugin-architecture` and ports/adapters is `hexagonal-architecture`; do not open seams speculatively: `kiss-yagni-aha`.
 
@@ -15,10 +15,10 @@ Boundaries with neighbors: *where the arrows point and who wires them* is `depen
 
 | Reading | Statement | Practical meaning |
 |---|---|---|
-| **Meyer (1988)** | A module is *open* if it can be extended, *closed* if others can depend on its stable interface | Historic: compiled libraries, approved specs |
+| **Meyer (1988)** | *Open* = still extendable (new fields, new functions); *closed* = stable and usable by other modules | Martin calls the wording dated: it assumes compiled modules and specs approved up front |
 | **Martin (2014)** | You should be able to extend a system's behavior without modifying it | New feature = new code; no recompile/redeploy of old modules; jars/DLLs/gems as isolatable features |
 
-Martin's evidence that this is not absurd: IDEs and editors accept plugins without being modified. Their design separates high-level policy from low-level detail and manages dependencies: plugin depends on core; the core does not know plugins exist. Treat "closed" as **closed against a *specific, expected* axis of change**, not against all change (inference: no module can be closed against every change). Details and diagnostics: [references/ocp-and-plugin-boundaries.md](references/ocp-and-plugin-boundaries.md).
+Martin's evidence that this is not absurd: IDEs and editors (Eclipse, IntelliJ, Vim, Emacs) accept plugins without being modified. A later "polymorphic OCP" (fixed interface, new implementations) is described by a secondary source, not by Martin's 2014 page; see the sources file. Their design separates high-level policy from low-level detail and manages dependencies: plugin depends on core; the core does not know plugins exist. Treat "closed" as **closed against a *specific, expected* axis of change**, not against all change (inference: no module can be closed against every change). Details and diagnostics: [references/ocp-and-plugin-boundaries.md](references/ocp-and-plugin-boundaries.md).
 
 ## 2. Strategy: the standard seam
 
@@ -85,6 +85,7 @@ def checkout(order, shipping: Shipping): return order.total + shipping.cost(orde
 
 ## Deep references
 
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description.
 - [OCP: Meyer, Martin and plugin boundaries](references/ocp-and-plugin-boundaries.md) — read when judging if a seam is warranted or designing plugin direction.
 - [Strategy pattern mechanics](references/strategy-pattern-mechanics.md) — read when implementing or reviewing a Strategy, or choosing between Strategy, State, Template Method, Decorator.
 - [Conditional-to-strategy recipes and review checklist](references/ocp-refactoring-recipes.md) — read when refactoring a live `switch` or reviewing a diff for OCP.

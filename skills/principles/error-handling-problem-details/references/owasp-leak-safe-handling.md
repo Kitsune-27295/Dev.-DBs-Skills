@@ -1,6 +1,6 @@
 # OWASP Leak-Safe Error Handling
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Error_Handling_Cheat_Sheet.html · https://www.rfc-editor.org/rfc/rfc9457.html · Last verified 2026-11-23
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Error_Handling_Cheat_Sheet.html · https://www.rfc-editor.org/rfc/rfc9457.html · Last verified 2026-11-27
 
 ## Why it matters (cheat sheet)
 
@@ -18,13 +18,13 @@ Error handling is part of application security. Attackers begin with reconnaissa
 | Stack | Mechanism |
 |---|---|
 | Java servlet | Global `<error-page>` for `java.lang.Exception` routed to an error page that logs, sets status 500 and an `X-ERROR` header, outputs generic JSON |
-| Spring MVC / Boot | `@RestControllerAdvice` extending `ResponseEntityExceptionHandler` with an `@ExceptionHandler(Exception)` returning a `ProblemDetail` (status 500, generic detail); Spring 6 supports RFC 7807-based problem details |
-| ASP.NET Core | `[ApiController]`/`[AllowAnonymous]` error controller reading `IExceptionHandlerFeature`, logging, returning generic JSON 500; developer exception page only in Development, otherwise `UseExceptionHandler` and generic `UseStatusCodePages` |
+| Spring MVC / Boot | `@RestControllerAdvice` class with an `@ExceptionHandler(Exception)` returning a `ProblemDetail` (status 500, generic detail); Spring 6 supports RFC 7807-based problem details |
+| ASP.NET Core | anonymous error controller accepting all verbs, reading `IExceptionHandlerFeature`, logging, returning generic JSON 500; developer exception page only in Development, otherwise `UseExceptionHandler` and generic `UseStatusCodePages` |
 | ASP.NET Web API (.NET Framework) | `ExceptionLogger` + `ExceptionHandler` returning generic JSON 500, registered through `config.Services.Replace`; `customErrors` set to `RemoteOnly` with a default redirect |
 
 Status rules (appendix): 4xx for client-caused errors (unauthorized access, oversized body, misbehaving client); 5xx for unforeseen server bugs; monitor 5xx rates because they often signal the application failing on certain inputs; status definitions in RFC 9110 section 15.
 
-Not on the page: a dedicated "what not to leak" list or testing section (testing is referenced to the OWASP WSTG improper-error-handling guide). The checklist below is **own synthesis** from the page's context plus RFC 9457's security notes.
+Not on the page (re-checked 2026-11-27): user enumeration, a dedicated "what not to leak" list or testing section (testing is referenced to the OWASP WSTG improper-error-handling guide). The checklist below is **own synthesis** from the page's context plus RFC 9457's security notes.
 
 ## Leak checklist (own synthesis)
 

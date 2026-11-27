@@ -1,11 +1,11 @@
 ---
 name: single-responsibility-cohesion
-description: "Deep dive on the Single Responsibility Principle as cohesion by reason to change (the stakeholder/actor who asks for it), including Parnas information hiding, separation of concerns, the Employee calculatePay/reportHours/save example, splitting recipes, change-axis and git co-change detection, and the Common Closure Principle (package-level SRP; background knowledge, source page unavailable). Deep dive; for the overview see `pragmatic-solid-and-ssot`. Use when a class or module is edited for unrelated requests, when splitting a god class, when deciding module or package boundaries, or when SRP is being misread as 'one tiny function per class'."
+description: "Decide where to cut a module by who asks for changes: the Single Responsibility Principle as cohesion by reason to change (the stakeholder, later called the actor), Parnas information hiding and separation of concerns as its lineage, a split recipe with a change-axis map and git co-change evidence, shared-helper hazards, and the Common Closure Principle for package boundaries (background knowledge, no readable primary page). Deep dive; the overview is `pragmatic-solid-and-ssot`; folder layout is `package-by-feature-component`, variants without edits are `open-closed-principle`. Use when a class or module is edited for unrelated requests, when splitting a god class, when drawing module or package boundaries, or when SRP is being misread as one tiny function per class."
 ---
 
 # Single Responsibility & Cohesion by Change Axis
 
-One idea: **gather together the things that change for the same reason, separate the things that change for different reasons** — and a "reason" is a *person or group who asks for the change*, not a count of methods. SRP is cohesion/coupling restated at module scale. Sources and fetch outcomes (including the two slugs and the unreachable CCP page): [references/sources.md](references/sources.md). Deep dive; for the overview row see `pragmatic-solid-and-ssot`.
+One idea: **gather together the things that change for the same reason, separate the things that change for different reasons** — and a "reason" is a *person or group who asks for the change*, not a count of methods. SRP is cohesion/coupling restated at module scale. Sources, fetch outcomes (the two slugs, the missing CCP page) and unadopted claims: [references/sources.md](references/sources.md). Deep dive; for the overview row see `pragmatic-solid-and-ssot`.
 
 Boundaries with neighbors: one fact, one home is `ssot-and-dry`; adding variants without edits is `open-closed-principle`; direction of dependencies and wiring is `dependency-inversion-composition-root`; where bounded contexts split is `ddd-domain-heuristics-debiasing`; feature-oriented layout is `package-by-feature-component` and `vertical-slice-architecture`; do not split before the pain is real: `kiss-yagni-aha`.
 
@@ -13,11 +13,11 @@ Boundaries with neighbors: one fact, one home is `ssot-and-dry`; adding variants
 
 ## 1. Definition that works
 
-Martin's article (read in full) reaches SRP through three ideas: Parnas (1972) said decompose by hiding decisions likely to change; Dijkstra named separation of concerns; coupling/cohesion work of the 70s-80s was consolidated into SRP in the late 1990s. His test: *what counts as a reason to change?* Bug fixes and refactorings are the programmer's concern, so they do not count; the real question is **who the program answers to**.
+Martin's article (8 May 2014, read in full) reaches SRP through three ideas: Parnas (1972) said decompose by hiding decisions likely to change, not by flowchart steps; Dijkstra, two years later, named separation of concerns; Constantine's coupling and cohesion of the 70s-80s were consolidated into SRP in the late 1990s. His test: *what counts as a reason to change?* Bug fixes and refactorings are the programmer's concern, so they do not count; the real question is **who the program answers to**.
 
 > Module-level rule (article): one business function, i.e. one person or tightly coupled group, as the source of requests to a module.
 
-Note on terminology: the word **"actor"** is the later book formulation; the 2014 article speaks of stakeholders/executives. Use "actor" as a handy label, knowing it is from background knowledge, not from that page.
+Note on terminology: the word **"actor"** (a group of stakeholders or users who require a change in the module) comes from Martin's later book *Clean Architecture*, per Wikipedia's account; I did not read the book. The 2014 article speaks of people, executives and business functions. Use "actor" as a handy label.
 
 ## 2. The canonical example, and what it teaches
 
@@ -55,7 +55,7 @@ The hazard to avoid is *shared helper code between actors* (e.g. `regular_hours(
 
 ## 5. Package scale: Common Closure Principle (CCP)
 
-CCP (Martin, package design; **not read from source** since the Fowler bliki page does not exist) is SRP for components: classes that change together for the same reasons and at the same times belong in the same package; classes that change at different times go elsewhere. Effect: a typical change touches one package, so releases and reviews are small. Practical rule: group by *change cadence/actor*, and compare with the reuse and coupling pressures of sibling principles. Treat as background knowledge. Details: [references/cohesion-and-common-closure.md](references/cohesion-and-common-closure.md).
+CCP (Martin's package design principles; **not read from a primary source**: the Fowler bliki URL is a 404, and Wikipedia's package-principles page only points to Martin's 1996 "Granularity" article) is SRP for components: classes that change together for the same reasons belong in one package; classes that change at different times go elsewhere, so a typical change touches one package. Treat as background knowledge. Details and the co-change measurement: [references/cohesion-and-common-closure.md](references/cohesion-and-common-closure.md). This skill owns CCP; `package-by-feature-component` points here.
 
 ## 6. Detection heuristics
 
@@ -88,6 +88,7 @@ CCP (Martin, package design; **not read from source** since the Fowler bliki pag
 
 ## Deep references
 
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description.
 - [SRP: actors and reasons to change](references/srp-actors-and-reasons-to-change.md) — read for the Employee walkthrough, Parnas/Dijkstra lineage and the split.
 - [Cohesion and the Common Closure Principle](references/cohesion-and-common-closure.md) — read when deciding package/module boundaries (CCP section is labeled background knowledge).
 - [SRP refactoring recipes and signals](references/srp-refactoring-recipes.md) — read when splitting a god class step by step.

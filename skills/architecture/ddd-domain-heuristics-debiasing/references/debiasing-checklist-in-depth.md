@@ -1,8 +1,8 @@
 # Debiasing Decisions Toolkit in Depth
 
-Sources: https://github.com/ddd-crew/debiasing-decisions-toolkit · Last verified 2026-11-23
+Sources: https://github.com/ddd-crew/debiasing-decisions-toolkit · Last verified 2026-11-27
 
-Premise (as stated by the toolkit): awareness of bias does not counter it; structured interventions embedded in the workflow do. It cites Morewedge et al. (targeted training reduces bias effect) and Soll, Milkman & Payne (HBR 2015, five-step framework) and extends that to software design and architecture. Treat these as the toolkit's claims, not independently verified. License CC BY-SA 4.0.
+Premise (as stated by the toolkit): awareness of bias does not counter it; structured interventions embedded in the workflow do. It cites Morewedge et al. (targeted training reduces bias effect) and Soll, Milkman & Payne (HBR 2015, five-step framework) and extends that to software design and architecture. Treat these as the toolkit's claims, not independently verified. License CC BY-SA 4.0 (attribution to Evelyn van Kelle and Kenny Baas-Schwegler; adaptations share alike). The Adams et al. Nature 2021 paper appears only in the toolkit's references list.
 
 ## The five steps and their questions
 

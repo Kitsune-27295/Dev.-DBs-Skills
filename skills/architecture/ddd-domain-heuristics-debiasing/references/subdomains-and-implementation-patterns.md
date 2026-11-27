@@ -1,6 +1,6 @@
 # Decoupled DDD: Subdomain Roles and Implementation Patterns
 
-Sources: https://vladikk.com/2016/04/05/tackling-complexity-ddd/ · https://github.com/ddd-crew/core-domain-charts · Last verified 2026-11-23
+Sources: https://vladikk.com/2016/04/05/tackling-complexity-ddd/ · https://github.com/ddd-crew/core-domain-charts · Last verified 2026-11-27
 
 ## Khononov's reframing: apply DDD to DDD
 
@@ -42,7 +42,7 @@ Steps:
 4. Score differentiation: how hard a competitor finds it to match, current vs potential advantage, brand damage from failures, Cynefin domain.
 5. Plot relatively and debate across disciplines.
 
-Pitfalls from the README: overloading one chart with several kinds of information; treating positions as exact; engineers or business working alone (each judges only one axis well).
+Pitfalls (README pitfalls not re-read in the 2026-11-27 summary; treat as unverified): overloading one chart; treating positions as exact; engineers or business working alone.
 
 ```text
 high differentiation, high complexity  -> Core: Domain Model / Event Sourcing, best people

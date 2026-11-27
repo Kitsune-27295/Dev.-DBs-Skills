@@ -1,9 +1,9 @@
 # Authorization Models and Enforcement
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · Last verified 2026-11-23
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html · Last verified 2026-11-27
 
 ## What it is
-Authorization decides whether an identified subject may perform an action on a resource. Broken Access Control ranked first in OWASP's 2021 Top 10. Horizontal escalation (reading a peer's data) is the most common form; vertical is reaching higher-privilege functions.
+Authorization decides whether an identified subject may perform an action on a resource. Broken Access Control ranked first in OWASP's 2021 Top 10 (the sheet also links the 2025 edition, where it is A01). Horizontal escalation (reading a peer's data) is the most common form; vertical is reaching higher-privilege functions.
 
 ## Principles
 1. **Least privilege**, horizontal and vertical. Design by listing user types, resources and operations, then justify each pair. Review periodically for privilege creep; adding permissions later is easier than revoking.

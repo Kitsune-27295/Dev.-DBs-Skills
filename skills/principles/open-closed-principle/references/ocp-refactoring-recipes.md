@@ -1,6 +1,6 @@
 # Conditional-to-Strategy Recipes and OCP Review Checklist
 
-Sources: https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html · https://refactoring.guru/design-patterns/strategy · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html · https://refactoring.guru/design-patterns/strategy · Last verified 2026-11-27
 Note: this file applies the two sources' ideas; the recipes, examples and thresholds are the author's own inference.
 
 ## Recipe A: single switch to strategy map
@@ -45,7 +45,7 @@ Fail startup on duplicate names or missing required plugins.
 | Question | Red flag |
 |---|---|
 | Did adding the feature edit an existing tested function? | Edit to a switch/if chain |
-| Did `core` gain an import of a provider/vendor module? | Reversed dependency |
+| Did `core` gain an import of a provider/vendor module? | Reversed dependency (`dependency-inversion-composition-root`) |
 | Did an interface gain a method that only one implementer uses? | Leaky seam |
 | Did a boolean or `mode` parameter appear? | Variant smuggled in as flag |
 | Is there exactly one implementation and no I/O? | Speculative seam: remove |

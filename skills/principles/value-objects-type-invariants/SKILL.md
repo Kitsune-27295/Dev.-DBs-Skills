@@ -1,6 +1,6 @@
 ---
 name: value-objects-type-invariants
-description: "Deep dive on designing Value Objects (equality by value, immutability, side-effect-free operations, aliasing bugs), the Money pattern (currency, minor units, rounding, allocation without losing cents) and modeling states with types so illegal states are unrepresentable (sum types, state-per-type, union instead of optional-field soup). Complements the overview in `defensive-domain-modeling`, which owns Parse-Don't-Validate. Use when replacing primitive obsession, designing Money/Range/Address types, adding equals/hashCode or immutability, splitting a record with flags and optional fields into per-state types, or reviewing business-rule encoding in a type system."
+description: "Design immutable Value Objects (equality by value, no side effects, aliasing bugs), the Money pattern (currency, minor units, one rounding point, allocation that conserves cents) and state-shaped types so illegal states cannot be built (unions, state-per-type instead of flags and optional fields). Parse-Don't-Validate and the overview live in `defensive-domain-modeling`; database constraints in `schema-and-constraints`. Use when replacing primitive obsession, designing Money, Range or Address types, adding equals or hashCode, splitting a record of flags and optionals into per-state types, or reviewing how a type system encodes business rules."
 ---
 
 # Value Objects & Type-Level Invariants
@@ -111,4 +111,5 @@ Patterns, anti-patterns and conversion recipes: [references/states-as-types.md](
 - [Value Object mechanics](references/value-object-mechanics.md) — when writing equality/immutability, deciding value vs entity, or building a Range type.
 - [Money, allocation and rounding](references/money-allocation-and-rounding.md) — when implementing or reviewing monetary arithmetic, tax/discount splits or multi-currency code.
 - [States as types](references/states-as-types.md) — when a record has flags/optionals, or a business rule says "A or B or both".
-- [Sources](references/sources.md) — fetch status per URL.
+- [Trigger evals](references/trigger-evals.md) — read when tuning this skill's description.
+- [Sources](references/sources.md) — fetch status per URL, reading limits, claims not adopted.

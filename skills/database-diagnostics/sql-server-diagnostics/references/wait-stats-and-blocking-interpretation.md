@@ -1,6 +1,6 @@
 # Wait Stats, I/O Latency and Blocking: How to Read the Output
 
-Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-os-wait-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-io-virtual-file-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-os-performance-counters-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/extended-events/use-the-system-health-session · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-os-wait-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-io-virtual-file-stats-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-os-performance-counters-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/extended-events/use-the-system-health-session · Last verified 2026-11-27
 
 Scripts covered: `waits/wait_stats`, `io/io_by_file`, `io/io_by_database`, `memory/memory_overview`, `deadlocks/deadlock_summary`. Version permission differences live in [sql2019-porting.md](sql2019-porting.md) and [version-differences-2019-2022-2025.md](version-differences-2019-2022-2025.md); this file is about reading results.
 
@@ -23,13 +23,13 @@ Counters reset on engine restart and on `DBCC SQLPERF ('sys.dm_os_wait_stats', C
 | `LCK_M_*` | data contention between queries; many modes (S, X, U, IX, SCH_M, range variants) | blocking exists; find the head blocker live, the DMV cannot name it |
 | `PAGEIOLATCH_*` | buffer being read from or written to disk | slow I/O or too little memory; cross-check `io/io_by_file` latency |
 | `PAGELATCH_*` | page latch, no I/O; `PAGELATCH_EX` last-page insert, `PAGELATCH_UP` on PFS/GAM/SGAM common with tempdb allocation | contention in memory, not disk; look at tempdb file count (`tempdb/tempdb_files`) |
-| `CXPACKET`, `CXCONSUMER` | parallel exchange; CXCONSUMER is normal consumer waiting | high CXPACKET: review cost threshold and MAXDOP |
-| `CXSYNC_PORT`, `CXSYNC_CONSUMER` | 2022 and later split exchange synchronization out of CXPACKET | do not compare CXPACKET totals across 2019 and 2022 |
+| `CXPACKET`, `CXCONSUMER` | parallel exchange; consumer threads moved to CXCONSUMER from 2016 SP2 and 2017 CU3 | high CXPACKET: review cost threshold and MAXDOP |
+| `CXSYNC_PORT`, `CXSYNC_CONSUMER` | from 2022, CXPACKET covers only producer threads; port open/close/sync and the consumer sync point have their own types | do not compare CXPACKET totals across 2019 and 2022 |
 | `ASYNC_NETWORK_IO` | client is slow to take results | often the application, not the server |
 | `HADR_SYNC_COMMIT` | expected on synchronous availability groups | normal; judge by size relative to commit volume |
 | `LOGBUFFER` | consistently high suggests log device cannot keep up | check `io_by_file` for the log file |
-| `LCK_M_S_XACT*` | optimized locking waits (2025; also listed for optimized locking generally) | real waits, kept by the script |
-| `HTBUILD_AGG/JOIN`, `HTDELETE_AGG/JOIN` | hash waits split by aggregate and join on 2025 | new names, not a new problem |
+| `LCK_M_S_XACT*` | waiting for a shared lock on an XACT resource when optimized locking is on (the entries carry no version note; optimized locking itself is a 2025 feature on What's New) | real waits, kept by the script |
+| `HTBUILD_AGG/JOIN`, `HTDELETE_AGG/JOIN` | the page lists these split types for Azure SQL Database, Synapse and Managed Instance on the 2025 or always-up-to-date policy; on-premises types are the unsuffixed `HTBUILD` and `HTDELETE` | the page does not say the split reaches the 2025 engine itself: expect either name and treat as renames, not a new problem |
 
 Many entries on the page are marked internal or unsupported: do not build rules on them.
 
@@ -56,4 +56,4 @@ The pack has no live-blocking script. Waits only show that blocking happened. To
 - Never recommend changing MAXDOP, cost threshold or file layout from one wait table; propose it as a hypothesis with the check that would confirm it.
 - For lock waits, say that blocking occurred and ask the owner to capture a live snapshot; do not invent the blocker.
 - State the latency rule you used and that it is a convention, not a Microsoft threshold.
-- When comparing versions, remember CXPACKET and hash-wait renames before concluding anything changed.
+- When comparing versions, remember the CXPACKET split and the hash-wait names before concluding anything changed.

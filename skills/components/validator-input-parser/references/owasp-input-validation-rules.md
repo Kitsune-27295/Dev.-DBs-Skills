@@ -1,6 +1,6 @@
 # OWASP Input Validation Rules
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html · Last verified 2026-11-23
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html · Last verified 2026-11-27
 
 ## Purpose and limits
 
@@ -8,7 +8,7 @@ Validation confirms input meets application requirements before use; it reduces 
 
 ## Strategy
 
-- **Syntactic:** expected type and format. **Semantic:** the value makes sense for the operation (booking end after start). CWE-20 covers both, including consistency between related fields.
+- **Syntactic:** expected type and format. **Semantic:** the value makes sense for the operation (booking end after start). Include consistency between related fields.
 - **Allowlist** over denylist: define what is accepted, reject the rest. Blocking apostrophes rejects valid names and does not make queries safe. Free-form comments can allow broad Unicode and limit only length.
 
 | Input kind | Rules |
@@ -21,15 +21,15 @@ Validation confirms input meets application requirements before use; it reduces 
 
 ## Implementation details
 
-- **Limit first:** request size limits before buffering; parser limits such as max nesting depth. A schema check after parsing cannot protect a parser that already exhausted resources (RFC 8259 lets implementations set limits).
-- **Use maintained parsers,** handle parse failures, validate before business logic or storage; harden XML/deserialization parsers (XXE, deserialization cheat sheets).
+- **Limit first:** request size limits before buffering; parser limits such as max nesting depth. A schema check after parsing cannot protect a parser that already exhausted resources.
+- **Use maintained parsers,** handle parse failures, validate before business logic or storage; handle parser hardening for risky formats through the matching OWASP cheat sheets.
 - **Type is not quantity:** converting text to an integer proves the type only.
 - **Decode once, per protocol,** before field rules; validate the representation actually used; avoid downstream re-decoding, which can invalidate earlier checks.
 - **Structured data:** use framework or schema validators. In JSON Schema, listing a property neither makes it required nor rejects unknown ones: configure `required` and additional properties explicitly. Apply to nested objects; set array item schemas and length limits. Reject clearly; do not proceed with partially validated data. Bind only intended fields (mass assignment).
 
 ## Unicode free text
 
-Agree on one encoding across components and reject malformed input. Preserve legitimate punctuation and scripts. If comparison needs normalization, define one policy and apply it consistently before validation, storage and comparison; compatibility normalization can erase meaningful distinctions (UAX #15). Normalization is not sanitization or output encoding.
+Agree on one encoding across components and reject malformed input. Preserve legitimate punctuation and scripts. If comparison needs normalization, define one policy and apply it consistently before validation, storage and comparison; compatibility normalization can erase meaningful distinctions. Normalization is not sanitization or output encoding.
 
 ## Regular expressions
 

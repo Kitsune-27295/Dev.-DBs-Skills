@@ -1,6 +1,6 @@
 # Comments and Docs Must Stand Alone at HEAD (Authoring-Session Leak Taxonomy)
 
-Sources: https://google.github.io/eng-practices/review/reviewer/looking-for.html · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/reviewer/looking-for.html · Last verified 2026-11-27
 
 Ownership: [comments-why-not-what.md](comments-why-not-what.md) (CMT) owns every comment rule (CM-01 to CM-06). This file adds only one rule, CM-07, and the taxonomy that makes it checkable. It does not restate what to write; it names what must not leak into the text. The taxonomy is the author's synthesis; ideas were taken from third-party agent-skill material read for ideas only (no text reused), and the position that task chatter and history belong in version control and the review tool is the one already recorded in `comments-why-not-what.md` from the Google review standard (the rest of the taxonomy is inference).
 

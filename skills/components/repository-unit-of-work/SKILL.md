@@ -1,11 +1,11 @@
 ---
 name: repository-unit-of-work
-description: "Design the persistence abstraction and transaction scope in DDD/CQRS services: one Repository per aggregate root (not per table), collection-like interfaces owned by the domain, Unit of Work as the single commit point, ORM contexts as built-in UoW, read-side queries bypassing repositories, in-memory fakes with contract tests. Use when adding or reviewing repositories, DbContext/session scoping, transaction boundaries, 'generic repository' debates, aggregate persistence, or when persistence details leak into domain code."
+description: "Decide how the domain loads and saves aggregates and where a transaction starts and ends: one Repository per aggregate root (not per table) with a domain-owned collection-like interface, one Unit of Work commit per use case issued by the application layer, ORM contexts as built-in UoW, reads served by query services, in-memory fakes proven by contract tests. Use when adding or reviewing repositories, DbContext or session scoping, transaction boundaries, generic-repository debates, or persistence details leaking into domain code; not for SQL tuning (query-performance), schema design (schema-and-constraints) or debugging a failing transaction (transaction-fix)."
 ---
 
 # Repository & Unit of Work
 
-One idea: **the domain talks to a collection-like abstraction of aggregates, and one Unit of Work decides when that in-memory work becomes a single transaction.** Everything else (SQL dialect, ORM, caching) is an adapter detail. Sources and retrieval status: [references/sources.md](references/sources.md).
+One idea: **the domain talks to a collection-like abstraction of aggregates, and one Unit of Work decides when that in-memory work becomes a single transaction.** Everything else (SQL dialect, ORM, caching) is an adapter detail. Sources, statuses and claims not adopted: [references/sources.md](references/sources.md).
 
 Boundary: this skill owns the persistence abstraction and transaction scope. SQL tuning is `query-performance`; schema and constraints are `schema-and-constraints`; diagnosing a broken transaction is `transaction-fix`; boundary data shapes and model translation are `dto-mapper-anti-corruption-layer`; command/query split itself is `cqrs-pattern`; port/adapter structure is `hexagonal-architecture` and `clean-architecture`.
 
@@ -18,7 +18,7 @@ Boundary: this skill owns the persistence abstraction and transaction scope. SQL
 | Repository | Mediates between domain and data mapping using a collection-like interface | `get/add/find_x` on aggregates; query logic lives in one place |
 | Unit of Work | Tracks what changed during a business transaction and writes it out, handling concurrency | One `commit` per use case; batched writes; one DB transaction |
 
-In .NET, EF Core's `DbContext` already is both; most ORMs (SQLAlchemy `Session`, Hibernate `Session`) behave the same. Wrap only for a real reason.
+Microsoft's guide states that EF's `DbContext` already implements both patterns (`SaveChanges` is the commit); other ORM sessions play a similar role (our general knowledge, not read here). Wrap only for a real reason.
 
 ## 2. Repository Rules
 
@@ -87,6 +87,8 @@ Queries change no state, so use query services or read models (plain SQL, projec
 - [ ] Did I check whether a repository is warranted at all?
 
 ## Deep references
+
+- [Trigger evals](references/trigger-evals.md) — when checking that this description fires on persistence-boundary work and not on its neighbors
 
 - [Repository pattern and aggregates](references/repository-pattern-and-aggregates.md) — definition, one-per-root rule, interface shape, repository vs DAL, trade-offs.
 - [Unit of Work and transaction scope](references/unit-of-work-and-transaction-scope.md) — what is tracked, commit mechanics, scope rules, failure modes.

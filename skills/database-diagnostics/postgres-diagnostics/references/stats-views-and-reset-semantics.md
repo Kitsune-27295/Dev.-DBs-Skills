@@ -1,15 +1,15 @@
 # Statistics Views and Reset Semantics
 
-Sources: https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/18/pgstatstatements.html, https://www.postgresql.org/docs/18/predefined-roles.html · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/18/pgstatstatements.html, https://www.postgresql.org/docs/18/predefined-roles.html · Last verified 2026-11-27
 
 Almost every script in this skill reads a cumulative statistics view. Whether its number means anything depends on when the counters last started from zero.
 
 ## How the counters live
 
-- Each backend collects counters locally and flushes them to shared memory when it goes idle, at most about once per second. A view can trail reality by a second or so; `pg_stat_activity` is the exception and is current.
+- Each backend collects counters locally and flushes them to shared memory just before going idle, no more often than once per second by default. A view can trail reality by a second or so; `pg_stat_activity` is the exception and is current.
 - Inside one transaction, repeated reads of a view return the same cached values (`stats_fetch_consistency = cache`, the default). A long `psql` session inside a transaction will not see new numbers: end the transaction or call `pg_stat_clear_snapshot()`.
 - A clean shutdown writes the counters to disk and restores them at start, a physical standby included. An immediate shutdown, a crash, a start from a base backup or point-in-time recovery resets all of them.
-- Most views carry `stats_reset`. `pg_stat_statements` has its own clock in `pg_stat_statements_info.stats_reset`, and each entry has `stats_since` (18 docs).
+- Most views carry `stats_reset`. `pg_stat_statements` has its own clock in `pg_stat_statements_info.stats_reset`, and each entry has `stats_since` (17 and later).
 - Non-superusers see other sessions' details as NULL; `pg_read_all_stats` lifts that. `pg_monitor` includes `pg_read_all_stats`, `pg_read_all_settings` and `pg_stat_scan_tables`, which is why one grant covers the scripts.
 
 ## Mapping to the skill's queries
@@ -27,7 +27,7 @@ Almost every script in this skill reads a cumulative statistics view. Whether it
 
 - **Zero is not proof.** An index with `idx_scan = 0` two days after a crash recovery has seen no representative traffic. Compare the reset time with uptime (`identity/server_identity`) before calling anything unused.
 - **Estimates.** `n_live_tup`, `n_dead_tup` and `n_mod_since_analyze` are documented as estimated; `pg_class.reltuples` is a planner estimate, and -1 means never analyzed (the page does not say from which version that convention applies).
-- **A scan counter can exceed the number of executed scans.** An `= ANY (array)` lookup or a B-tree skip scan (18) increments `idx_scan` per search, so the count says "used at least this much", not an exact query tally.
+- **`idx_scan` is a counter of index scans, not a query tally**; use it as "used at least this much".
 - **Replicas keep separate counters.** An index unused on the primary may serve a reporting replica.
 - **`pg_stat_statements` gaps.** Min/max times are zero until the first run after a min-max reset; planning columns stay zero unless `track_planning` is on; I/O times stay zero unless `track_io_timing` is on. When distinct statements exceed `pg_stat_statements.max`, the least-executed entries are dropped (`dealloc` in `pg_stat_statements_info`), so a rising `dealloc` means the top list is incomplete.
 - Queries that differ only in constants are merged into one entry with parameter markers, so `queryText` shows a pattern, not a real execution.

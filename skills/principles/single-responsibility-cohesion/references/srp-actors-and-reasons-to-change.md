@@ -1,19 +1,19 @@
 # SRP: Reasons to Change, Stakeholders and the Employee Example
 
-Sources: https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html (canonical slug; the `SingleResponsibilityPrinciple.html` slug returned 404) · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html (canonical slug; the `SingleResponsibilityPrinciple.html` slug returned 404) · Last verified 2026-11-27
 
 ## Lineage in the article
 
 1. **Parnas, 1972:** do not decompose a system by flowchart steps; design each module to hide a decision likely to change.
-2. **Dijkstra, two years later:** names "separation of concerns".
-3. **1970s-80s:** coupling and cohesion are developed.
-4. **Late 1990s:** Martin consolidates these into SRP; he says he may have borrowed the name from Meyer, unconfirmed.
+2. **Dijkstra, two years later** (the page gives no year; "On the role of scientific thought"): names "separation of concerns".
+3. **1970s-80s:** Constantine introduces coupling and cohesion; others expand them.
+4. **Late 1990s:** Martin consolidates these into SRP; he has a vague feeling he took the name from Meyer but could not confirm it.
 
-Statement: each module should have one reason to change. Martin then asks what a "reason to change" is. Bug fixes and refactorings are the programmer's responsibility and do not count; the useful question is **who the program answers to**.
+Statement: each module should have one reason to change. Martin then asks what a "reason to change" is. Bug fixes and refactorings are the programmer's responsibility, not the program's, and do not count; the useful question is **who the program answers to**.
 
 ## The "who"
 
-A company has a CEO and C-level officers: CFO (finance), COO (operations), CTO (technology). Each module should respond to requests from one business function, represented by one person or a tightly coupled group. The article does not use the word "actor"; that term comes from later writing (background knowledge) and is used in this skill as shorthand.
+A company has a CEO and C-level officers: CFO (finance), COO (operations), CTO (technology). Each module should respond to requests from one business function, represented by one person or a tightly coupled group. The article does not use the word "actor"; that term comes from his later book *Clean Architecture* (Wikipedia cites it as 2018 and defines an actor as a group of stakeholders or users requiring a change; not read here) and is used in this skill as shorthand.
 
 ## The Employee example
 
@@ -23,11 +23,11 @@ A company has a CEO and C-level officers: CFO (finance), COO (operations), CTO (
 | `reportHours()` | Operations, auditing | COO's organization |
 | `save()` | Technology, persistence | CTO's organization |
 
-The article's argument: a catastrophic error in each method reflects on a different executive, so each serves a different stakeholder; a footnote concedes the firing scenarios are hyperbole but organizations still care about different concerns.
+The article's argument: a catastrophic error in each method would implicate a different executive, so each serves a different stakeholder; a footnote concedes the talk of executives being fired is hyperbole.
 
 ## Why violating it hurts
 
-Changing one method can break another that a different stakeholder depends on. The harm is **trust**: people are upset when something they did not ask to change malfunctions (the mechanic who fixes the window and breaks the engine). Symptoms listed: SQL in JSPs, HTML generated inside computation modules, business rules that know the database schema.
+Changing one method can break another that a different stakeholder depends on. The harm is **trust**: people are upset when something they did not ask to change malfunctions (the article's mechanic who fixes the electric window and returns a car that will not start). Symptoms listed: SQL in JSPs, HTML generated inside computation modules, business rules that know the database schema.
 
 ## The remedy
 

@@ -7,10 +7,10 @@ below.
 
 ## How this was proven
 
-Every file was run on a throwaway container of its own version: PostgreSQL 16.16, 17.12 and 18.7 (93 runs, 0 failures), against a
+The author's own runs (no documentation page can confirm them; not re-run in the 2026-11-27 review). Every file was run on a throwaway container of its own version: PostgreSQL 16.16, 17.12 and 18.7 (93 runs, 0 failures), against a
 database with a foreign key without index, a duplicate index, an unused index, an invalid index, dead rows and
 `pg_stat_statements` loaded. A second pass ran them as a role holding only `pg_monitor`: everything passed except
-`security/hba_rules.sql`, which needs a superuser. Cross-version runs proved the differences below: the 16 scripts of
+`security/hba_rules.sql`, which needs a superuser (by default only superusers can read `pg_hba_file_rules`). Cross-version runs proved the differences below: the 16 scripts of
 `checkpoints/checkpoint_stats` and `queries/top_queries_reads` fail on 17 and 18; `io/io_overview` and `wal/wal_stats` fail only on 18
 (17 behaves like 16 there); `replication/replication_slots` runs everywhere but omits the 17+ columns. Nothing was run on 14, 15,
 on a standby, on a replica with traffic or on a busy server.
@@ -62,6 +62,8 @@ Scripts marked `db` describe the database you are connected to; run them in each
 | `wal/wal_stats.sql` | write and sync counters and times in `pg_stat_wal` | same as 16 | those columns are gone: use `pg_stat_io` |
 | `replication/replication_slots.sql` | `conflicting` | adds `inactive_since`, `invalidation_reason` | same columns; `invalidation_reason` adds `idle_timeout` (`idle_replication_slot_timeout`) |
 
+`conflicting` stays in 17 and 18; 17 adds `inactive_since`, `invalidation_reason`, `failover` and `synced`.
+
 The 16 `pg_stat_bgwriter` also has `buffers_backend` and `buffers_backend_fsync`; 17 removed both (see `pg_stat_io`), so the 17 and 18 scripts omit them.
 
 Every other file is identical across the three folders apart from the first comment line. After any edit run
@@ -70,10 +72,9 @@ this section does not name it.
 
 ## Reading the results
 
-- Counters (`pg_stat_*`, `pg_statio_*`) accumulate since the last statistics reset (`stats_reset` in the output). A restart
-  after a crash also resets them: compare with `startTime` from `identity/server_identity.sql`.
+- Counters accumulate since the last reset: how to read them is in `stats-views-and-reset-semantics.md`.
 - Query text, host names and role names appear in the output. Treat it as sensitive and keep it in the report folder.
-- `maintenance/sequence_exhaustion.sql` shows only sequences the role may read: `pg_monitor` alone can see no row for a sequence it
-  has no `USAGE` or `SELECT` on, so grant that on the sequences you need checked.
+- `maintenance/sequence_exhaustion.sql`: per the `pg_sequences` page, `last_value` reads NULL without `USAGE` or `SELECT` on the
+  sequence. Grant that on the sequences you need checked; how this script behaves without it was not re-run.
 - A least-privilege login: `GRANT pg_monitor TO <role>` covers every script but `hba_rules`. Superuser is not needed.
 - A result is evidence, not a verdict: say what it means for this server and what to check next.

@@ -1,6 +1,6 @@
 # Tell-Don't-Ask, Law of Demeter, CQS and Guard Clauses: Source Detail
 
-Sources: https://martinfowler.com/bliki/TellDontAsk.html · https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html · https://martinfowler.com/bliki/CommandQuerySeparation.html · https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html · https://wiki.c2.com/?LawOfDemeter (not readable, see below) · Last verified 2026-11-23
+Sources: https://martinfowler.com/bliki/TellDontAsk.html · https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html · https://martinfowler.com/bliki/CommandQuerySeparation.html · https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html · https://wiki.c2.com/?LawOfDemeter (not readable, see below; re-tried 2026-11-27, still only a JavaScript-required shell) · Last verified 2026-11-27
 
 ## Tell, Don't Ask (Fowler, 2013)
 - Idea: bundle data with the functions that use it; tell the object what to do instead of pulling its data out and deciding outside. Fowler's contrast: an "ask" monitor exposes value, limit and alarm for callers to compare; a "tell" monitor's `setValue` compares and warns internally.
@@ -17,10 +17,7 @@ Sources: https://martinfowler.com/bliki/TellDontAsk.html · https://www2.ccs.neu
 - Limit of this reading: the page does not list "preferred supplier" objects, and the C2 Wiki page (Nat Pryce on train wrecks versus fluent chains) could not be read: it returns only a "JavaScript required" shell to both WebFetch and curl. SKILL.md's Pryce-based exception is therefore not re-verified here (not read from source).
 
 ## Command-Query Separation (Fowler, 2005)
-- Queries return a result and do not change observable state; commands (Fowler prefers "modifiers") change state and return nothing. Return type usually signals the category: a convention, not a guarantee.
-- Payoff: queries can be called anywhere, in any order, added freely; modifiers need care.
-- Violation example: Java's iterator `next` returns an item and advances. Fowler would split it.
-- Meyer wants it absolute; Fowler accepts `pop` (returns and removes) as a useful exception and follows the rule "whenever I can". Only *observable* state counts, so compilers cannot detect it automatically; C++ `const` is the only marking he knows.
+Queries return a result and leave observable state alone; modifiers change state and return nothing. Fowler follows it whenever he can and accepts `pop` as an exception. Full treatment lives in `cqrs-pattern`.
 
 ## Guard clauses (refactoring.com catalog)
 The page is only a before/after example: three nested `if/else` blocks assigning to a `result` variable become three top-level early returns (`isDead`, `isSeparated`, `isRetired`) then the normal case. No motivation or mechanics text appears there, so the "special cases first, happy path last" guidance is the common reading, not page prose.
@@ -42,6 +39,5 @@ function payAmount(e: Employee): Money {
 ## How an agent should apply this
 - Move decisions to the owner only when the same ask-then-mutate sequence repeats or an invariant is at risk; leave plain read access alone.
 - Replace a 3+ getter chain over entities/services with one named method on the first object; leave chains over immutable values alone.
-- Check CQS at the method level: flag a query that mutates; tolerate a documented pop-like idiom.
 - Flatten nested conditionals into top-level early returns with one result per line.
 - Do not cite the C2 Wiki claims as verified; cite them as secondary.

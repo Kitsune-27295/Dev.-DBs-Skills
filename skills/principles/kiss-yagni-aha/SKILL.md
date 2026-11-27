@@ -1,6 +1,6 @@
 ---
 name: kiss-yagni-aha
-description: "Day-to-day, code-level decision procedure for simplicity and abstraction timing: KISS, small-scale YAGNI (presumptive parameters, fields, hooks), Rule of Three, the Wrong Abstraction (Sandi Metz) and AHA programming (Kent C. Dodds), with refactoring recipes (inline-and-reduce, duplication triage, differences-become-arguments) and detection heuristics (flag parameters, speculative generality). Deep dive that complements the compact overview in `pragmatic-solid-and-ssot`. Use when about to extract a helper or base class, adding a parameter or extension point 'for later', reviewing a shared function that grows boolean flags, or deciding whether to duplicate or unify code."
+description: "Decide, per edit, whether to build or abstract now: KISS ordering of constructs, small-scale YAGNI for parameters, fields, hooks and interfaces added for later, duplication triage with the Rule of Three as a default and not a law, Wrong Abstraction (Sandi Metz) recovery by inlining, and AHA (Kent C. Dodds) differences-become-arguments, plus smells such as flag parameters and speculative generality. Overview lives in `pragmatic-solid-and-ssot`, the YAGNI cost model in `yagni-evolutionary-architecture`, one-fact-one-home in `ssot-and-dry`. Use when about to extract a helper or base class, add a parameter or extension point for later, extend a shared function with another boolean flag, or choose between duplicating and unifying code."
 ---
 
 # KISS, YAGNI & AHA — Code-Level Decision Procedure
@@ -25,7 +25,7 @@ YAGNI targets **capabilities**, never malleability: tests, refactoring, small fu
 
 ## 2. KISS as a concrete ordering
 
-Pick the first construct that works, in this order. Move down only with a stated reason.
+Own ordering (synthesis, not from a cited source): pick the first construct that works, in this order. Move down only with a stated reason.
 
 1. Inline expression / local variable.
 2. Plain function with explicit parameters, returning a value.
@@ -107,4 +107,5 @@ Practical AHA loop: copy -> note how the copies differ -> wait for another real 
 - [Small-scale YAGNI procedure](references/small-scale-yagni-procedure.md) — when you are about to add a parameter, field, hook, or generic "just in case"; Fowler's presumptive-feature reasoning applied per edit.
 - [Wrong abstraction recovery](references/wrong-abstraction-recovery.md) — when a shared helper has grown flags/conditionals; Metz's sequence, sunk cost, and an executable inline-and-reduce recipe.
 - [AHA: differences become arguments](references/aha-differences-become-arguments.md) — when deciding whether and how to extract from copies; Dodds' guidance plus Rule of Three status.
+- [Trigger evals](references/trigger-evals.md) — read when tuning this skill's description or checking that a request belongs here.
 - [Sources](references/sources.md) — fetch status per URL (including the 404 for the Rule of Three page).

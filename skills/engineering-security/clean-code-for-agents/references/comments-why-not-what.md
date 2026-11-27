@@ -1,6 +1,6 @@
 # Comments: Why, Not What (the Single Home for Comment Rules)
 
-Sources: https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://docs.kernel.org/process/coding-style.html (ch. 8) · https://stackoverflow.blog/2021/12/23/best-practices-for-writing-code-comments/ · https://gist.github.com/bansalankit92/6119c4f7fabe11b7a174a99f5a7bb376 · https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md · Last verified 2026-11-24
+Sources: https://google.github.io/eng-practices/review/reviewer/looking-for.html · https://docs.kernel.org/process/coding-style.html (ch. 8) · https://stackoverflow.blog/2021/12/23/best-practices-for-writing-code-comments/ · https://gist.github.com/bansalankit92/6119c4f7fabe11b7a174a99f5a7bb376 · https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md · Last verified 2026-11-27
 
 All sources were read in full; text below is paraphrase (Google docs CC BY 3.0; kernel docs GPL, no copying).
 

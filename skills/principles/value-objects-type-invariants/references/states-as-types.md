@@ -1,6 +1,6 @@
 # States as Types: Making Illegal States Unrepresentable
 
-Sources: https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/ · Last verified 2026-11-23
+Sources: https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/ · Last verified 2026-11-27
 
 ## The worked example in the article
 
@@ -9,7 +9,7 @@ Business rule: a contact must have an email address, a postal address, or both.
 1. **Naive**: a `Contact` with required name, email and postal fields — too strict; it forces both.
 2. **Overcorrection**: both fields optional — the forbidden "neither" state becomes representable.
 3. **Redesign**: list the legal cases (email only, postal only, both) and encode them as a union with one case per legal state. The "neither" case does not exist, so it cannot be constructed.
-4. **Constructor**: a function creating a contact from an email string validates it and therefore returns an optional/result, not a bare contact.
+4. **Constructor**: a creation function validating an email string can fail, so it returns an optional/result (author's inference from the article's use of options).
 5. **Update**: updating the postal address must handle all three cases — email-only becomes both; postal-only is replaced; both keeps the email and replaces the postal address.
 6. The author warns that unsafe optional unwrapping (`.Value`) is for interactive experiments only; production code matches both cases.
 

@@ -1,8 +1,8 @@
 # Vendor Behind an Adapter: Ports and Partial Failure
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · https://alistair.cockburn.us/hexagonal-architecture/ · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · https://alistair.cockburn.us/hexagonal-architecture/ · Last verified 2026-11-27
 
-Abstracted from an internal integration procedure for an external data source; no vendor or product names are reused. The Azure ACL page was re-read for the translation, ownership and monitoring points.
+Abstracted from an internal integration procedure for an external data source; no vendor or product names are reused. The Azure ACL page (re-read 2026-11-27) supports the translation, ownership and monitoring points; the partial-failure rules are the author's method, not a cited standard.
 
 ## The rule
 A vendor lives behind an adapter at the edge; the domain knows ports. A port is an interface in the domain's own words, defined before any client code. If a port mentions the vendor's identifiers, enum integers or field names, the design has already leaked.

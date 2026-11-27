@@ -1,6 +1,6 @@
 # Session Management Lifecycle
 
-Sources: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html · Last verified 2026-11-23
+Sources: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html · Last verified 2026-11-27
 
 ## Core idea
 After login, the session ID is as powerful as the credential. Targeted attacks hit one privileged user; generic attacks hit anyone. Every control below shrinks the chance of guessing, stealing, fixing or replaying that ID.

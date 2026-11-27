@@ -1,10 +1,10 @@
 # Strategy Pattern Mechanics
 
-Sources: https://refactoring.guru/design-patterns/strategy · Last verified 2026-11-23
+Sources: https://refactoring.guru/design-patterns/strategy · Last verified 2026-11-27
 
 ## Intent and problem
 
-Strategy is a behavioral pattern: define a family of algorithms, put each in its own class, make them interchangeable. The source's motivating case is a navigation app that keeps adding route types (car, walking, public transport, cycling, tourist sights). Each addition enlarges the navigator class, changes to one algorithm risk breaking others, and teammates collide in merge conflicts. Real-world analogy: getting to the airport by bus, cab or bicycle depending on budget and time.
+Strategy is a behavioral pattern: define a family of algorithms, put each in its own class, make them interchangeable. The source's motivating case is a navigation app that keeps adding route types (car, walking, public transport, cycling, tourist sights). Each addition enlarges the navigator class, changes to one algorithm risk breaking others, and teammates collide in merge conflicts. 
 
 ## Structure
 
@@ -14,8 +14,6 @@ Strategy is a behavioral pattern: define a family of algorithms, put each in its
 | Strategy | Common interface declaring the method the context calls |
 | Concrete Strategy | One algorithm variant |
 | Client | Creates a concrete strategy, passes it to the context, may replace it at run time via a setter |
-
-Pseudocode in the source: `Strategy.execute(a, b)` with Add/Subtract/Multiply; context's `executeStrategy` delegates; the client picks by user input and calls `setStrategy`.
 
 ## Implementation steps (from the source)
 
@@ -42,14 +40,14 @@ Swap algorithm variants at run time; merge near-identical classes that differ in
 | Template Method | Inheritance, class-level, static; Strategy is composition, object-level, switchable at run time |
 | Decorator | Changes an object's outer behavior; Strategy changes its "guts" |
 | Command | Turns an operation into an object (queue, log, undo); Strategy = different ways of the same task |
-| Bridge, Adapter | Similar composition structure, different problems |
+| Bridge | Similar composition structure to State and Strategy, different problems |
 
 ## Design choices (partly inference)
 
 - **Stateless strategies** can be shared singletons; stateful ones need per-use instances.
 - **Data in, result out:** pass needed data as parameters; avoid handing the context itself (couples both ways).
 - **Function vs class:** one-method strategy + first-class functions = pass a function; use a class when the strategy has config or several collaborating methods.
-- **Selection:** map from key to strategy built at the composition root; unknown key fails fast at startup, not mid-request.
+- **Selection:** outside the context, at the composition root (`SKILL.md` section 2); an unknown key should fail at startup, not mid-request.
 - **Defaults:** supply a default strategy at construction so callers need no knowledge in the common case (mitigates "client must understand strategies").
 
 ```ts

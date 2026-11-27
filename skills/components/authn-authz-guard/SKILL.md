@@ -1,6 +1,6 @@
 ---
 name: authn-authz-guard
-description: "Design and review authentication, session management, OAuth 2.0 / OIDC flows (RFC 9700 Security BCP, RFC 6749) and authorization decisions (RBAC, ABAC, ReBAC, IDOR, deny-by-default). Covers password and MFA rules, cookie and session lifecycle, PKCE, redirect URI matching, sender-constrained and audience-restricted tokens, refresh token rotation, and centralized permission checks. Use when building or reviewing login, sessions, tokens, SSO, API access control, roles/permissions, or when a finding mentions fixation, token leakage, broken access control or IDOR."
+description: "Decide who a caller is, whether the session or token still proves it, and what that caller may do to this object: password and MFA rules, cookie and session lifecycle, OAuth 2.0 / OIDC per RFC 9700 and RFC 6749 (PKCE, exact redirect URIs, audience-restricted and sender-constrained tokens, refresh rotation), and central deny-by-default authorization (RBAC, ABAC, ReBAC, IDOR). Not a generic security review (security-audit) or moving trust off the client (never-trust-the-client). Use when building or reviewing login, sessions, tokens, SSO, API access control or roles, or when a finding mentions fixation, token leakage, broken access control or IDOR."
 ---
 
 # AuthN & AuthZ Guard
@@ -25,7 +25,7 @@ Never let a signal (IP, device fingerprint, "remember me" cookie) stand in for t
 
 - Passwords: min 8 with MFA, 15 without; allow 64+ chars and any Unicode; no composition rules; no scheduled rotation; screen against breached lists; never truncate; constant-time comparison.
 - Login, reset and registration respond identically (message, status, timing). Throttle per account, not per IP; keep recovery available during lockout.
-- Prefer MFA or passkeys (WebAuthn) over inventing risk scoring. Security questions are not an authenticator.
+- Prefer MFA or passkeys (WebAuthn) over inventing risk scoring (author judgment; the OWASP sheet only poses the score-to-action question). Security questions are not an authenticator.
 - Sensitive changes (password, email, payment target) require re-authentication, then session rotation.
 - Federation: OAuth is not login; use OIDC and validate `iss`, `aud`, signature, `exp`. Key accounts on `iss`+`sub`; never auto-link on email.
 
@@ -106,3 +106,4 @@ Details: [authorization models](references/authorization-models-and-enforcement.
 - [OAuth 2.0 Security BCP (RFC 9700)](references/oauth-security-bcp-rfc9700.md) — normative requirements and attack catalog.
 - [OAuth 2.0 core mechanics (RFC 6749)](references/oauth2-core-rfc6749-mechanics.md) — roles, grants, endpoints, token responses, security considerations.
 - [Dual-resolver parity and tenant session](references/dual-resolver-parity-and-tenant-session.md) — read when one access rule is implemented twice, or when tenant isolation relies on row-level security over pooled connections.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts with the expected skill.

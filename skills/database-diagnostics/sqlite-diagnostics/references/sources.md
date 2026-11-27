@@ -4,7 +4,7 @@
 
 This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below were used later, only to verify claims.
 
-Every URL below was checked as a verification source on 2026-11-24.
+Every URL below was re-fetched with WebFetch on 2026-11-27 (all returned content; summarized by a small model, not raw HTML).
 
 | Verification source | Retrieved status | What it confirms |
 |---|---|---|
@@ -17,7 +17,7 @@ Every URL below was checked as a verification source on 2026-11-24.
 | https://www.sqlite.org/fileformat2.html | 200 OK | Header offsets (freelist at 32/36, WAL bytes 18-19), freelist trunk/leaf layout, `sqlite_schema`, `sqlite_sequence`, `sqlite_stat1` format, ptrmap pages |
 | https://www.sqlite.org/compile.html | 200 OK (108 KB; the last ~8 KB were not read) | `SQLITE_ENABLE_DBSTAT_VTAB`, `SQLITE_DEFAULT_FOREIGN_KEYS`, `SQLITE_OMIT_*` pragma options, `sqlite_compileoption_used()` |
 | https://www.sqlite.org/releaselog/3_49_0.html | 200 OK | 3.49.0 dated 2025-02-06; no change to any pragma or dbstat used here |
-| https://www.sqlite.org/releaselog/3_51_0.html | 200 OK | `PRAGMA wal_checkpoint=NOOP`; POSIX-lock corruption resistance; carray/percentile off by default |
+| https://www.sqlite.org/releaselog/3_51_0.html | 200 OK | `PRAGMA wal_checkpoint=NOOP`; POSIX-lock corruption resistance (the earlier note that carray/percentile are off by default is withdrawn: changes.html says they are built into the amalgamation) |
 | https://www.sqlite.org/releaselog/3_53_0.html | 200 OK | 3.53.0 dated 2026-04-09; WAL-reset bug fix, `REINDEX EXPRESSIONS`; nothing on the pragmas used here |
 | https://www.sqlite.org/releaselog/3_53_4.html | 200 OK | 3.53.4 dated 2026-07-24, a patch release; same feature summary |
 | https://www.sqlite.org/changes.html | 200 OK (408 KB; only the first ~100 KB read, which covers 3.49.0 to 3.54.1) | Release list 3.49.0 to 3.54.1 and dates; 3.52.0 withdrawn |
@@ -32,3 +32,21 @@ Every URL below was checked as a verification source on 2026-11-24.
 - **Docs inconsistency:** `dbstat.html` lists `pagetype` as `'internal'` in the schema and example but `'interior'` in the column-meaning table. The page does not say which value is returned (resolved 2026-11-24: noted in the dbstat reference; confirm with `SELECT DISTINCT pagetype FROM dbstat`).
 - **Page details missing:** `dbstat.html` says nothing about cost or WAL behavior, and `autoinc.html` gives no reset procedure; the cost statements in the reference files are the skill author's inference.
 - `foreign_key_list` output columns (resolved 2026-11-24: confirmed by running `PRAGMA foreign_key_list` on SQLite 3.49.1 through Python's `sqlite3` module; the columns are `id`, `seq`, `table`, `from`, `to`, `on_update`, `on_delete`, `match`, so the script's use of `id`, `seq`, `from` is correct; `pragma.html` itself does not list them all).
+
+## Corrections on 2026-11-27
+
+- WAL-reset bug: `wal.html` says present from 3.7.0 to 3.51.2, fixed in 3.51.3 and later, backports 3.44.6 and 3.50.7, low risk; version reference updated.
+- `PRAGMA optimize` exists since 3.18.0 (enhanced in 3.46.0), not only since 3.46.0.
+- `sqlite_stat1` `stat` layout is not on `lang_analyze.html`; it stays attributed to `fileformat2.html` (header offsets 16, 18-19, 32, 36 re-confirmed there; the stat1 layout was not re-read).
+- `dbstat` `pagetype` internal versus interior inconsistency re-confirmed.
+
+## Claims not adopted
+
+- 3.50.2 avoiding checksum-less WAL frames after a savepoint rollback: not in the changes page; removed.
+- `integrity_check(table)` skipping unused regions and checking the freelist only for `sqlite_schema`: not confirmed; removed.
+- `VACUUM INTO` or `.backup` being safe on a read-only connection: still unconfirmed (author note).
+
+## Reading limits
+
+- The `.sql` scripts and the references README (including the `stricttables.html` 3.37.0 row) were not re-run or re-verified; the 3.49.1/3.53.4 test evidence is the author's.
+- `pragma.html` last 1,343 characters, `compile.html` last 8 KB and `changes.html` after 100 KB were not read.

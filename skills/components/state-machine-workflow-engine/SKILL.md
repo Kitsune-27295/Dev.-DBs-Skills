@@ -1,11 +1,11 @@
 ---
 name: state-machine-workflow-engine
-description: "Model entity lifecycles and workflows as explicit finite state machines and statecharts: State pattern (one class per state, context delegation), states/events/transitions, entry/exit and transition actions, guards, hierarchy (compound states), parallel regions, history, delayed transitions, and Stately/XState-style definitions. Use when an entity has a status field with scattered if/switch logic, when order/payment/document/approval workflows need legal-transition rules, or when choosing between a transition table, State pattern and an XState machine."
+description: "Replace a status field and scattered if/switch logic with one explicit model of legal states and transitions for a single entity or process: list states, events and the transition matrix, add pure guards and entry/exit/transition actions, use hierarchy and parallel regions instead of duplicated or cross-product states, and pick a transition table, the State pattern or an XState/Stately statechart. Use when an order, payment, document or approval lifecycle needs legal-transition rules, booleans combine into impossible states, or you must choose a machine implementation; not for cross-service sagas (saga-transactional-outbox-pattern) or event logs (event-sourcing-pattern)."
 ---
 
 # State Machine & Workflow Engine
 
-One idea: replace a bag of status flags and scattered conditionals with **one explicit model of which states exist and which events may move between them**; the machine can only occupy valid states, every transition is named, guarded and observable, and side effects hang off entry, exit and transition actions. Sources and claims: [references/sources.md](references/sources.md).
+One idea: replace a bag of status flags and scattered conditionals with **one explicit model of which states exist and which events may move between them**; the machine can only occupy valid states, every transition is named, guarded and observable, and side effects hang off entry, exit and transition actions. Sources, statuses and claims not adopted: [references/sources.md](references/sources.md).
 
 Boundary with neighbors: cross-service orchestration, compensation and the outbox belong to `saga-transactional-outbox-pattern` (the state machine owns the **local** transition model of one entity or process); storing transitions as an immutable event log is `event-sourcing-pattern`; type-level "illegal states unrepresentable" and sum types are `defensive-domain-modeling`; adding states without editing old ones echoes `open-closed-principle`; background execution of delayed or retried transitions is `background-worker-job-scheduler`; message-driven reactions are `event-driven-architecture`; avoid building a framework before need (`yagni-evolutionary-architecture`); draw diagrams with `mermaid`; test shapes in `testing-pyramid-and-shapes`.
 
@@ -109,6 +109,8 @@ Same model as a transition table in any language: `TABLE[state][event] -> {guard
 - [ ] Diagram kept beside the code (`mermaid`)?
 
 ## Deep references
+
+- [Trigger evals](references/trigger-evals.md) — when checking that this description fires on state-machine work and not on its neighbors
 
 - [FSM and Statechart Concepts](references/fsm-and-statechart-concepts.md) — when you need precise semantics: execution steps, hierarchy, parallel, history, delayed, guards
 - [State Pattern Implementation](references/state-pattern-implementation.md) — when refactoring conditionals into state classes or comparing with Strategy

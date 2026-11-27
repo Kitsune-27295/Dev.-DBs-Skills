@@ -1,6 +1,6 @@
 # Version Differences, 3.49 to 3.53
 
-Sources: https://www.sqlite.org/changes.html · https://www.sqlite.org/releaselog/3_49_0.html · https://www.sqlite.org/releaselog/3_51_0.html · https://www.sqlite.org/releaselog/3_53_0.html · https://www.sqlite.org/releaselog/3_53_4.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/compile.html · Last verified 2026-11-24
+Sources: https://www.sqlite.org/changes.html · https://www.sqlite.org/releaselog/3_49_0.html · https://www.sqlite.org/releaselog/3_51_0.html · https://www.sqlite.org/releaselog/3_53_0.html · https://www.sqlite.org/releaselog/3_53_4.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/compile.html · Last verified 2026-11-27
 
 ## Do the 3.53 pages exist?
 
@@ -15,13 +15,13 @@ Yes. The release list has 3.49.0 (2025-02-06) through 3.53.4 (2026-07-24), and a
 | partial `integrity_check(table)` | 3.33.0 | optional |
 | `table_list` | 3.37.0 | five schema scripts |
 | dbstat `aggregate` mode | 3.31.0 | optional |
-| `PRAGMA optimize` enhanced | 3.46.0 | none (owner action) |
+| `PRAGMA optimize` (exists since 3.18.0; enhanced) | 3.46.0 | none (owner action) |
 | `wal_checkpoint=NOOP` | 3.51.0 | none |
 
 ## What changed between 3.49 and 3.53 (official notes)
 
 - Nothing in the notes touches `integrity_check`, `quick_check`, `foreign_key_check`, `dbstat`, `table_list`, `ANALYZE`, `optimize` or the pragma table-valued functions. The README's claim that all 19 scripts pass unchanged on 3.49.1 and 3.53.4 is consistent with that (the README's test run itself is the author's evidence).
-- Relevant to health, not to the scripts: 3.50.2 avoids writing checksum-less WAL frames after a savepoint rollback; 3.51.0 hardens against applications that break POSIX locks with `close()`, and adds `wal_checkpoint=NOOP`; 3.51.3 and 3.53.0 fix a WAL-reset corruption bug (details are on `wal.html`, anchor `walresetbug`, not read here).
+- Relevant to health, not to the scripts: 3.51.0 hardens against applications that break POSIX locks with `close()`, and adds `wal_checkpoint=NOOP`; a WAL-reset corruption bug (present from 3.7.0 through 3.51.2; needs two or more connections writing or checkpointing at the same instant; low risk per the docs) is fixed in 3.51.3 and 3.53.0, with backports in 3.44.6 and 3.50.7.
 - 3.53.0 adds `REINDEX EXPRESSIONS` and self-healing for stale expression indexes. Relevant to `duplicate_indexes.sql`: that script already skips expression indexes because `index_xinfo` does not show the expression.
 - 3.53.0 changes default float-to-text rounding from 15 to 17 significant digits: textual output of `REAL` values (for example in a report) can differ between 3.49 and 3.53. Compare numbers, not strings.
 - 3.54.0 adds a `diskused()` extension and deprecates `sqlite3_analyzer`: a future alternative to dbstat reports, outside the tested range.
@@ -38,6 +38,6 @@ SELECT sqlite_version(), sqlite_compileoption_used('ENABLE_DBSTAT_VTAB');
 
 - Report the version from `engine_identity.sql` and compare against the table above before relying on a pragma.
 - Do not claim version-specific behavior for integrity or dbstat output; the notes show none.
-- Warn that a WAL-reset fix is in 3.51.3 and 3.53.0 or later; a 3.49 WAL database is worth an upgrade conversation with the owner.
+- Warn that the WAL-reset fix is in 3.51.3, 3.53.0 or later (or backports 3.44.6, 3.50.7); a 3.49 WAL database is worth an upgrade conversation with the owner.
 - Say plainly when a version was not tested (older than 3.49, newer than 3.53.4).
 - Leave upgrades and general audits to `database-audit`.

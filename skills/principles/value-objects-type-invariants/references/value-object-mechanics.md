@@ -1,6 +1,6 @@
 # Value Object Mechanics
 
-Sources: https://martinfowler.com/bliki/ValueObject.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/bliki/ValueObject.html · Last verified 2026-11-27
 
 ## Definition and contrast
 
@@ -31,19 +31,19 @@ class DateRange {
 Two variables share one mutable object; changing it through one changes the other (the article's Java date example: changing a shared date moved a retirement date). Remedies, in order of preference:
 
 1. **No setters; operations return new instances** (`range.extendTo(d)` returns a new range).
-2. Enforce with the language (final fields, frozen records, `Object.freeze`, C# readonly struct); the article notes a disciplined team can maintain immutability without freezing.
-3. Copy on assignment (value semantics, as with C# structs) where the language supports it.
+2. Enforce with the language (final fields, frozen records, `Object.freeze`, C# readonly struct); the article notes a class that only keeps data in a `_data` property is not strictly immutable and `freeze` is stronger enforcement.
+3. Copy on assignment (value semantics, as with C# structs), named in the article, where the language supports it.
 4. Defensive copies of mutable inputs (like `Date`) in constructors and getters.
 
-Immutability also helps reference objects (an order), but that does not turn them into value objects if equality uses their unique number.
+Immutability also suits reference objects (own inference), but that does not turn them into value objects if equality uses their unique number.
 
 ## Range as the learning exercise
 
-The article recommends building a Range class: the richer behavior (overlap, contains, merge, length) removes duplicated start/end logic scattered across callers. Value objects often become the focus of refactorings that simplify a codebase (article's claim). Own sketch of the payoff: callers stop comparing `start`/`end` by hand; the invariant `start <= end` is enforced once.
+The article suggests building a Range class to see how richer behavior removes repetitive handling of start and end attributes. The specific operations (overlap, contains, merge, length) and the claim that value objects often anchor simplifying refactorings were not re-confirmed on 2026-11-27 and are this skill's own sketch. Payoff: callers stop comparing `start`/`end` by hand; the invariant `start <= end` is enforced once.
 
 ## Replace primitives: when and how
 
-Benefits listed: explicitness, type checking, validation, preventing meaningless operations (arithmetic on IDs). Small candidates: points, money, ranges, phone numbers. Larger structures can be values too when they have no conceptual identity and are not shared by reference; functional languages default to this.
+Benefits listed: explicitness, type checking, validation, preventing meaningless operations (arithmetic on IDs). Small candidates: points, money, ranges, phone numbers. Larger structures can be values too when they have no conceptual identity and are not shared by reference (own inference; Clojure treating compound data as values by default is confirmed).
 
 Context decides: an address can be a plain value in one system and a linked reference hierarchy in a mapping system. Older J2EE literature used "value object" to mean DTO; do not confuse the two.
 

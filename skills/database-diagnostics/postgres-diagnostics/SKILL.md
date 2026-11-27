@@ -1,6 +1,6 @@
 ---
 name: postgres-diagnostics
-description: Use for a PostgreSQL health check built from ready, read-only diagnostic queries (31 scripts per version for 16, 17 and 18 - version and uptime, settings, extensions, database size and transaction-ID age, connections, long queries, blocking locks, top statements from pg_stat_statements, table and index size, dead rows and autovacuum, unused, duplicate, missing-foreign-key and invalid indexes, cache hit, checkpoints, WAL, replication and slots, archiver, roles, pg_hba rules, TLS, prepared transactions, sequences), proven on real servers of each version. Use it whenever someone asks to check, audit, tune or upgrade a Postgres server, mentions pg_stat views, bloat, wraparound, idle in transaction, replication lag or slow queries on Postgres, even without naming the scripts.
+description: Use when a PostgreSQL server (16, 17 or 18) needs a read-only health check from ready SELECT scripts, 31 per version: uptime and settings, connections and long queries, blocking locks, top statements, table and index bloat and dead rows, transaction-ID age, unused, duplicate, invalid and missing-foreign-key indexes, cache hit, checkpoints, WAL, replication slots, archiver, roles, pg_hba, TLS, prepared transactions and sequences. Not for tuning one slow query (query-performance), a cross-database audit (database-audit) or SQL Server and SQLite (their own diagnostics skills). Use when someone asks to check, audit or upgrade-review a Postgres server, or mentions pg_stat views, bloat, wraparound, idle in transaction, replication lag or slot growth.
 ---
 
 # PostgreSQL diagnostics (16, 17, 18)
@@ -55,6 +55,7 @@ References: `references/README.md` (index of the scripts, differences between ve
 - [Locks and activity interpretation](references/locks-and-activity-interpretation.md) — read for blocking, idle-in-transaction, replication lag and slot results.
 - [Index health queries explained](references/index-health-queries-explained.md) — read before proposing to drop, rebuild or add an index.
 - [Version differences 16, 17 and 18](references/version-differences-16-17-18.md) — read when a script fails or the server is not on the tested version.
-- [Sources](references/sources.md) — URLs checked and claims not confirmed.
+- [Sources](references/sources.md) — URLs checked, reading limits and claims not adopted.
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts for this skill's description.
 - [Lock modes, SKIP LOCKED, advisory locks and deadlocks](references/lock-modes-skip-locked-advisory-and-deadlocks.md) — read when a blocking or deadlock result needs the lock mechanics, or a queue claim is proposed.
 - [Connection limits, timeouts and pooling](references/connection-limits-and-pooling.md) — read when connection counts are high, idle-in-transaction appears, or a pooler is proposed.

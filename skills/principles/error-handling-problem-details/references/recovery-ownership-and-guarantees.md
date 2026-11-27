@@ -1,6 +1,6 @@
 # Recovery Ownership, Exception Guarantees and Visible Reporting
 
-Sources: https://en.wikipedia.org/wiki/Exception_safety · http://www.gotw.ca/gotw/059.htm · https://erlang.org/download/armstrong_thesis_2003.pdf · https://www.erlang.org/doc/system/sup_princ.html · https://en.wikipedia.org/wiki/Design_by_contract · Last verified 2026-11-24
+Sources: https://en.wikipedia.org/wiki/Exception_safety · http://www.gotw.ca/gotw/059.htm · https://erlang.org/download/armstrong_thesis_2003.pdf · https://www.erlang.org/doc/system/sup_princ.html · https://en.wikipedia.org/wiki/Design_by_contract · Last verified 2026-11-27
 
 Ideas drawn from a third-party skill read for ideas only, with no text reused, and checked against the originals below. Meyer's contract paper was reachable only as a scanned PDF, so the contract points rest on the Design by Contract overview, not on Meyer's text.
 
@@ -14,11 +14,11 @@ Catching an error limits how far it propagates; it does not undo what the failed
 
 If nobody can answer "who owns this state", do not continue as if nothing happened. Choose one of three exits: recover in the owner, stop the dependent work, or escalate to a supervisor that discards the damaged state and restarts it.
 
-Armstrong's thesis frames this as the "let some other process fix the error" philosophy: an error is what the programmer did not anticipate, so the failing unit stops and a supervisor, which holds the restart policy, decides what to do. The Erlang supervision docs show the mechanics: a supervisor starts, monitors and restarts children, with a restart strategy and a maximum restart intensity so a crash loop ends instead of spinning. Translate the idea, not the runtime: in other stacks a worker pool manager, job queue or process orchestrator plays the supervisor.
+Armstrong's thesis (section 4.3.1, re-read 2026-11-27) frames this as the "let some other process fix the error" philosophy: an error is what the programmer did not anticipate, so the failing unit stops and a supervisor, which holds the restart policy, decides what to do. The Erlang supervision docs show the mechanics: a supervisor starts, monitors and restarts children, with a restart strategy (default one_for_one) and a restart intensity and period (defaults 1 and 5 seconds) so a crash loop ends instead of spinning. Translate the idea, not the runtime: in other stacks a worker pool manager, job queue or process orchestrator plays the supervisor.
 
 ## 2. Exception-safety guarantees (state them)
 
-Abrahams' levels, as summarized in Sutter's GotW 59 and the Wikipedia article, apply to any operation that can fail midway:
+The levels named on the Wikipedia article (the Abrahams and Sutter attributions come from the GotW page, which could not be re-fetched on 2026-11-27), apply to any operation that can fail midway:
 
 | Guarantee | Meaning after a failure |
 |---|---|

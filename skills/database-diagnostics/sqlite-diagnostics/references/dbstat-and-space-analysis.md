@@ -1,6 +1,6 @@
 # dbstat and Space Analysis
 
-Sources: https://www.sqlite.org/dbstat.html · https://www.sqlite.org/fileformat2.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/compile.html · Last verified 2026-11-24
+Sources: https://www.sqlite.org/dbstat.html · https://www.sqlite.org/fileformat2.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/compile.html · Last verified 2026-11-27
 
 Maps to: `storage/object_sizes.sql`, `storage/file_size_and_free_space.sql`, `config/compile_options.sql`, `config/database_settings.sql` (auto_vacuum, page size).
 

@@ -1,6 +1,6 @@
 ---
 name: sqlite-diagnostics
-description: Use for a SQLite health check built from ready, read-only diagnostic queries (19 scripts - engine version and compile options, journal mode and connection settings, file size and free space, size per table and index, quick and full integrity check, foreign key violations, schema inventory, tables without primary key, risky column types, foreign keys without index, duplicate indexes, triggers, AUTOINCREMENT headroom, optimizer statistics), tested on SQLite 3.49 and 3.53. Use it whenever someone asks to check, audit, shrink or debug a SQLite file, mentions PRAGMA integrity_check, a database that is locked, corrupted, bloated or has orphan rows, or an app that uses SQLite in production, even without naming the scripts.
+description: Use when a SQLite file must be checked, audited, shrunk or debugged without changing it - corrupted, locked, bloated, orphan rows, PRAGMA integrity_check, or an app using SQLite in production. Runs 19 ready read-only SELECT scripts (version, journal mode, size and free space, integrity, foreign keys, schema risks, statistics), tested on SQLite 3.49 and 3.53. Not for slow-query tuning (query-performance), fixing constraints (schema-and-constraints), backups (backup-restore-drill) or other engines.
 ---
 
 # SQLite diagnostics
@@ -13,7 +13,7 @@ documents as free of side effects, so a diagnosis never changes the file. Cross-
 
 1. **Work on a copy.** Running against a live file is safe for the schema scripts, but the integrity and size scripts read every
    page and compete with the application for the lock. Make the copy from a read-only connection (`sqlite3 -readonly live.db
-   ".backup copy.db"`, or `VACUUM INTO 'copy.db'` on a connection opened as `file:live.db?mode=ro`, which writes only the new file (author note, not verified against docs: neither sqlite.org page states read-only behavior; test it);
+   ".backup copy.db"`, or `VACUUM INTO 'copy.db'` on a connection opened as `file:live.db?mode=ro`, which writes only the new file (author note, unverified: the docs do not say how either behaves on a read-only connection; test it);
    never a plain file copy of a WAL database in use), diagnose the copy, and say that you did.
 2. **Check the engine first:** `identity/engine_identity.sql`. Below 3.16 nothing here runs; below 3.37 the five `table_list`
    scripts need rewriting; the minimum versions are in `references/README.md`.
@@ -57,3 +57,4 @@ References: `references/README.md` (index, minimum versions, how this was proven
 - [dbstat and space analysis](references/dbstat-and-space-analysis.md) — read when dbstat is missing or file size and free pages need explaining.
 - [WAL, journal mode, statistics and counters](references/wal-journal-and-connection-health.md) — read for locked databases, WAL copies, sqlite_stat1 or AUTOINCREMENT.
 - [Version differences, 3.49 to 3.53](references/version-differences-3-49-to-3-53.md) — read before claiming a version-specific behavior.
+- [Trigger evals](references/trigger-evals.md) — read when changing the description.

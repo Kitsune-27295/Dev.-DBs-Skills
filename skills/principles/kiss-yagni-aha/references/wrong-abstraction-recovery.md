@@ -1,6 +1,6 @@
 # Wrong Abstraction: Formation and Recovery
 
-Sources: https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction · Last verified 2026-11-23
+Sources: https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction · Last verified 2026-11-27
 
 ## How a wrong abstraction forms (Metz's sequence)
 
@@ -9,7 +9,7 @@ Sources: https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction · Last veri
 3. Time passes; a new requirement almost fits the abstraction.
 4. Programmer B, respecting the existing abstraction, adds a parameter and a conditional for the difference.
 5. More requirements: more parameters, more conditionals, until the logic is hard to follow.
-6. A later developer inherits something painful to change and easy to break.
+6. A later developer inherits the tangle.
 
 Key point: the abstraction may have been **right when created**; it stops fitting when requirements diverge. The harm is in *keeping* it.
 
@@ -19,11 +19,13 @@ Existing code reads as proof it is necessary; it embodies effort already spent; 
 
 ## Recovery recipe
 
+The article gives three steps: inline the abstraction into every caller, keep in each caller only the code its arguments make live, delete the rest. Steps 4 and 5 below are this skill's extension.
+
 1. **Re-introduce duplication.** Inline the abstraction body into every caller (mechanical; keep tests green after each caller).
 2. **Specialize per caller.** Each caller knows which arguments it passed; use them to see which branches execute and which do not.
 3. **Delete** the dead branches and unused parameters in each inlined copy.
 4. **Remove** the old abstraction once no caller references it.
-5. **Observe.** Metz reports callers often turn out quite different and further features become easier. Re-extract only a real shared subset, later.
+5. **Observe.** The article says duplication can then be isolated again and new abstractions extracted; waiting before doing so is this skill's advice, not a claim from the page. Re-extract only a real shared subset.
 
 ## Mechanical example
 

@@ -1,6 +1,6 @@
 # Toggle Point Implementation Patterns
 
-Sources: https://martinfowler.com/articles/feature-toggles.html · https://openfeature.dev/docs/reference/intro/ · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/feature-toggles.html · https://openfeature.dev/docs/reference/intro/ · Last verified 2026-11-27
 
 Source claims are from the Fowler article; code and sizing advice are our illustrations.
 
@@ -32,7 +32,7 @@ Assignment must be **consistent per user**: derive from a stable ID, e.g. `hash(
 
 ## Pattern 6: kill switch (ops)
 
-Long-lived ops toggle behaving like a manual circuit breaker: reads from a runtime store, default = feature on (or safe degraded mode, decided per feature), flipped without deploy. Automatic tripping belongs to `circuit-breaker-retry-telemetry`.
+Long-lived ops toggle (our reading: a manual circuit breaker): reads from a runtime store, default = feature on (or safe degraded mode, decided per feature), flipped without deploy. Automatic tripping belongs to `circuit-breaker-retry-telemetry`.
 
 ## Pattern 7: removal-friendly structure
 
@@ -55,11 +55,3 @@ Use plain `if/else` for short-lived toggles; adopt Strategy/inversion for long-l
 ## Failure modes
 
 Flag evaluated in many places with inconsistent context (user sees new UI but old API); flag checked deep in a loop (performance, hidden coupling); evaluating once per request but caching globally (cohort leakage); both paths writing to the same data with different formats (use `parallel-change-expand-contract`).
-
-## How an agent should apply this
-
-- Evaluate the flag once per request/unit of work, at the wiring point, and pass the result or behavior down.
-- Use a named decision function; reject raw flag-key strings in business code.
-- Short-lived release flag: plain `if`; long-lived or multi-point: strategy with no-op.
-- Make both paths implement one interface so removal is deletion.
-- For cohorts, require a stable targeting key and do not edit running experiments.

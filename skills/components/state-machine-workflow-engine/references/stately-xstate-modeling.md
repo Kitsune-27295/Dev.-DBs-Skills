@@ -1,8 +1,8 @@
 # Stately and XState Modeling
 
-Sources: https://stately.ai/docs/state-machines-and-statecharts · https://statecharts.dev/what-is-a-statechart.html · Last verified 2026-11-23
+Sources: https://stately.ai/docs/state-machines-and-statecharts · https://stately.ai/docs/guards · https://stately.ai/docs/actions · https://stately.ai/docs/actors · https://statecharts.dev/what-is-a-statechart.html · Last verified 2026-11-27
 
-The Stately page is an introduction; it says guards, actions, history and actors are not covered there. Anything beyond that below is marked "general knowledge, not read from source".
+The intro page does not cover guards, actions, history or actors; those details come from the three XState pages named below.
 
 ## Definitions on the page
 
@@ -38,11 +38,12 @@ const dogMachine = createMachine({
 });
 ```
 
-## General knowledge, not read from source (verify against current XState docs)
+## XState v5 details (read 2026-11-27 from stately.ai/docs/guards, /actions, /actors)
 
-- Guards are named conditions on transitions; actions are named side effects supplied via the machine's implementation options; `actor`s run machines (`createActor`) and receive events with `send`.
-- Machine definitions are plain data: they can be serialized, visualized in Stately Studio and tested without running side effects (pure transition function).
-- Prefer named guards/actions so definitions stay serializable and diagrammable.
+- Guards: implement in `setup({ guards })` and reference by name (`guard: "isValid"`); objects `{ type, params }` pass parameters. The docs recommend pure, synchronous functions returning true or false; inline functions are for prototyping, named ones visualize better.
+- Actions: `entry` and `exit` on a state node, `actions` on a transition; each takes one action or an array. Implement named actions in `setup({ actions })`; override later with `machine.provide(...)`. Built-ins such as `assign` return action objects the machine interprets, so do not call them inside custom action functions.
+- Running: `createActor(machine)`, `actor.start()`, `actor.send({ type })`.
+- Not confirmed: serializability claims and a pure transition helper by name; verify before relying on them.
 
 ## Modeling workflow (our recommendation)
 
@@ -54,16 +55,8 @@ const dogMachine = createMachine({
 
 ## Trade-offs
 
-Pros: shared visual language with non-developers, impossible states found at design time, serializable definitions. Cons: runtime dependency; learning curve for hierarchy/actors; machines can be overused for trivial flows; storing and migrating persisted machine state across definition versions needs a plan (our inference).
+Pros: shared visual language with non-developers, impossible states found at design time. Cons: runtime dependency; learning curve for hierarchy/actors; machines can be overused for trivial flows; storing and migrating persisted machine state across definition versions needs a plan (our inference).
 
 ## Failure modes
 
 Modeling UI events instead of domain events; mixing domain lifecycle and presentation animations in one machine; unnamed inline guards/actions that cannot be inspected; changing state names without migrating persisted instances.
-
-## How an agent should apply this
-
-- Define the machine as data with named guards/actions; keep implementations in a separate map.
-- Name events as domain facts (`PAYMENT_CAPTURED`), states as phases.
-- Mark initial states for every compound and parallel region.
-- Version persisted machine snapshots and write a migration when renaming states.
-- Verify API details against current XState docs before coding; this skill did not read them.

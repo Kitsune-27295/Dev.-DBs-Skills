@@ -1,6 +1,6 @@
 ---
 name: defensive-domain-modeling
-description: "Model domains safely in code using Parse Don't Validate, Making Illegal States Unrepresentable, Value Objects, Tell Don't Ask, Law of Demeter, method-level CQS, Guard Clauses and Railway-Oriented Programming (Result/Either). Use when eliminating primitive obsession, shotgun parsing, train-wreck navigation or exception-heavy business flows inside the domain model. Not for validating untrusted request input at the edge (use validator-input-parser), HTTP error contracts (use error-handling-problem-details) or deep Value Object and Money design (use value-objects-type-invariants)."
+description: "Model the domain core so invalid states cannot exist: parse raw data into stronger types once, replace flag soup with unions, move invariants to the owning object (Tell Don't Ask, Law of Demeter), flatten nesting with guard clauses and compose fallible steps with Result. Fixes primitive obsession, shotgun parsing, train-wreck getter chains and exception-heavy flows. Not for request validation at the edge (`validator-input-parser`), the HTTP error contract (`error-handling-problem-details`), Value Object or Money detail (`value-objects-type-invariants`) or CQS/CQRS (`cqrs-pattern`). Use when designing or refactoring domain code for type-safe invariants."
 ---
 
 # Defensive Domain Modeling & Type-Safe Flows
@@ -27,7 +27,7 @@ From Alexis King (*Parse, Don't Validate*):
 
 ## 2. Make Illegal States Unrepresentable & Value Objects
 
-From Scott Wlaschin (*Designing with Types*) and Martin Fowler (*ValueObject*, *Primitive Obsession*):
+From Scott Wlaschin (*Designing with Types*, crediting Yaron Minsky for the phrase) and Martin Fowler (*ValueObject*):
 
 ### Sum Types / Discriminated Unions over Flag Soup
 - **Smell (illegal state representable):** `{ email: string; isVerified: boolean; verifiedAt?: Date; token?: string }` allows `{ isVerified: true, verifiedAt: undefined }` or verified states missing tokens.
@@ -37,33 +37,28 @@ From Scott Wlaschin (*Designing with Types*) and Martin Fowler (*ValueObject*, *
     | { kind: "unverified"; email: EmailAddress; verificationToken: Token }
     | { kind: "verified"; email: EmailAddress; verifiedAt: Instant };
   ```
-- **Single-case wrappers:** Wrap raw primitives (`CustomerId`, `EmailAddress`, `CurrencyCode`, `String50`) so `charge(userId, orderId)` cannot swap two `string` arguments at compile time.
-- **Legacy/dirty database records:** When reading unvalidated historical rows, model a separate choice state (e.g., `VerifiedEmail | UnverifiedEmail | LegacyMalformedEmail`) at the repository boundary rather than crashing on read or silently loosening domain invariants.
+- **Single-case wrappers:** Wrap raw primitives (`CustomerId`, `EmailAddress`, `CurrencyCode`) so `charge(userId, orderId)` cannot swap two `string` arguments at compile time (a common practice; the Wlaschin page read here shows validated `create` functions but not this technique itself).
+- **Legacy/dirty records (own advice, not from a cited source):** model a separate state such as `LegacyMalformedEmail` at the repository boundary instead of crashing on read or loosening the invariant.
 
-### Value Objects (`Money`, `DateRange`, `Quantity`)
-- **Structural equality:** Two Value Objects with identical field values are equal (`Money(10, "USD")` equals `Money(10, "USD")`), unlike Entities whose identity is an ID across mutations.
-- **Immutability:** Value Objects must be **immutable** — operations return a *new* Value Object (`money.add(other)`), eliminating **aliasing bugs** when two entities reference the same `Date` or `Address`.
-- **Self-validating construction:** Validate invariants inside the Value Object's factory/parser (`parseMoney`), so no invalid `Money` instance can exist anywhere in the domain. Remember type guarantees hold only in memory; still back them with SQL constraints (`schema-and-constraints`).
+### Value Objects
+Equality by value, immutability and self-validating construction are owned by `value-objects-type-invariants`; here they are only the tool for wrapping ids, emails and quantities. Fowler's page describes replacing common primitives with value objects (the term "primitive obsession" itself is not on that page). Type guarantees hold only in memory: back them with database constraints (`schema-and-constraints`).
 
 ---
 
 ## 3. Tell, Don't Ask & Law of Demeter (Behavioral Locality)
 
-From Martin Fowler (*TellDontAsk*) and Lieberherr & Holland (*Law of Demeter*, C2 Wiki):
+From Martin Fowler (*TellDontAsk*, who himself treats it as a stepping stone) and Lieberherr & Holland (*Law of Demeter*):
 
 | Principle | Core rule | Practical boundary / exception |
 |---|---|---|
 | **Tell, Don't Ask** | Co-locate invariants and state transitions with the data they govern (`order.cancel(reason)` instead of `if (order.status === "paid" && ...) { order.status = "cancelled"; ... }`) | **Do not become a "Getter Eradicator":** Querying read-only properties for UI views, reports, logs, or serialization DTOs is normal; what you forbid is *querying state only to make decisions and mutate the owner from outside* |
-| **Law of Demeter (Principle of Least Knowledge)** | Inside method `M` of object `O`, invoke methods **only** on: (1) `O` itself, (2) parameters of `M`, (3) objects instantiated inside `M`, (4) `O`'s direct component fields. Avoid *train wrecks* (`customer.getWallet().getBank().withdraw(amt)`) | **Fluency & Value/Collection exception (Nat Pryce):** Chaining `.map().filter()`, builder calls, or navigating pure immutable **Value Objects / DTOs** does *not* violate LoD; LoD prohibits reaching through service/entity collaborators to mutate or depend on deep structural chains |
+| **Law of Demeter (Principle of Least Knowledge)** | Class form: a method may send messages only to its own class, its argument classes, its immediate parts (stored fields or computed return types) and objects it creates. Avoid *train wrecks* (`customer.getWallet().getBank().withdraw(amt)`) | **Fluency exception (common reading, not verified here):** Chaining `.map().filter()`, builder calls, or navigating pure immutable **Value Objects / DTOs** does *not* violate LoD; LoD prohibits reaching through service/entity collaborators to mutate or depend on deep structural chains |
 
 ---
 
 ## 4. Method-Level CQS & Guard Clauses
 
-- **Command–Query Separation (Meyer / Fowler):**
-  - **Queries** return a result and produce **zero observable side effects** (safe to inspect, retry, or reorder in tests/debugging).
-  - **Commands** mutate state or emit effects and ideally return `void` (or a `Result<Receipt, DomainError>` acknowledgment), never disguising mutations inside read getters.
-  - Note: *Meyer's canonical rare exception* (e.g. `stack.pop()`) is an edge case; at application/module scale, keep mutations and reads cleanly separated (for architecture-level read/write stores, see `cqrs-pattern`).
+- **Command-Query Separation:** queries return a result without changing observable state; commands change state and return nothing. Fowler follows it "whenever I can" and keeps stack `pop` as a useful exception. Method-level rule, the CQRS ladder and the `pop` caveat are owned by `cqrs-pattern`.
 - **Guard Clauses over Nested Conditionals** (*Replace Nested Conditional with Guard Clauses*):
   Check failure/edge preconditions at the top of a function and return early (`if (!order.isPayable()) return err("ALREADY_PAID");`), leaving the main happy path flat at minimum indentation instead of deep nested `if/else` pyramids.
 
@@ -75,9 +70,9 @@ From Scott Wlaschin (*Railway Oriented Programming*):
 
 Model multi-step fallible use cases as a **two-track railway** (`Ok(value)` on the success track, `Err(error)` on the failure track), replacing ad-hoc `try/catch` and silent `null` returns with explicit composable error flows.
 
-Core adapters: `bind` chains the next fallible step and short-circuits on failure; `map` lifts a pure function; `tee` runs a side-effect step and passes the value on; `tryCatch` wraps throwing I/O at the boundary; `doubleMap` translates errors at the edge; `plus` runs independent field parsers and **accumulates all errors**. Combinator table, TypeScript sketch and pitfalls: `error-handling-problem-details` (`references/railway-result-composition.md`).
+Adapters (`bind`, `map`, `tee`, `tryCatch`, `doubleMap`, `plus`) and their TypeScript sketch are owned by `error-handling-problem-details` (`references/railway-result-composition.md`).
 
-**Crucial scoping rule (Wlaschin's warning):** Use Railway-Oriented Programming for sequential application workflows and boundary validation pipelines where explicit domain failures matter. **Do NOT wrap every tiny pure helper function in `Result<T, E>`** — pure math/transformations inside the core stay single-track (`A -> B`) and lift with `map` only when wired into the pipeline.
+**Scoping rule (the ROP page warns "don't take it to extremes"):** Use Railway-Oriented Programming for sequential application workflows and boundary validation pipelines where explicit domain failures matter. **Do NOT wrap every tiny pure helper function in `Result<T, E>`** — pure math/transformations inside the core stay single-track (`A -> B`) and lift with `map` only when wired into the pipeline.
 
 ---
 
@@ -94,14 +89,15 @@ Core adapters: `bind` chains the next fallible step and short-circuits on failur
 - [ ] Is untrusted input parsed into a stronger type at the edge, not just validated and discarded?
 - [ ] Could a union type replace this flag combination so illegal states cannot be represented?
 - [ ] Are raw primitives like ids, emails and money wrapped in self-validating, immutable Value Objects?
-- [ ] Do the type guarantees also have matching SQL constraints?
+- [ ] Do the type guarantees also have matching database constraints?
 - [ ] Does the owning object enforce its state transitions (Tell, Don't Ask) instead of callers chaining getters?
 - [ ] Do queries stay free of side effects, with commands kept separate?
 - [ ] Am I using Result pipelines only for fallible workflows, not wrapping every tiny pure helper?
-- [ ] Do independent field parsers accumulate all errors instead of stopping at the first?
+- [ ] Do independent field parsers accumulate all errors (mechanics in `error-handling-problem-details`)?
 
 ## Deep references
 
 - [Parse, Don't Validate: Mechanics and Limits](references/parse-dont-validate-mechanics.md) — read for head/NonEmpty reasoning, two-phase design, and the author's own caveats.
-- For worked union examples and Fowler Value Object mechanics read `value-objects-type-invariants` (`references/states-as-types.md`, `references/value-object-mechanics.md`).
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts.
+- For worked union examples and Value Object mechanics read `value-objects-type-invariants`.
 - [Tell-Don't-Ask, Law of Demeter, CQS and Guard Clauses: Source Detail](references/tell-dont-ask-demeter-cqs-guards.md) — read for what each source actually says, including Fowler's caveats.

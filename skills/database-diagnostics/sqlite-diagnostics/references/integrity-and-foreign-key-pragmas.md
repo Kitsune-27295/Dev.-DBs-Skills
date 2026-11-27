@@ -1,6 +1,6 @@
 # Integrity and Foreign Key Pragmas
 
-Sources: https://www.sqlite.org/pragma.html · https://www.sqlite.org/foreignkeys.html · https://www.sqlite.org/fileformat2.html · Last verified 2026-11-24
+Sources: https://www.sqlite.org/pragma.html · https://www.sqlite.org/foreignkeys.html · https://www.sqlite.org/fileformat2.html · Last verified 2026-11-27
 
 Maps to: `integrity/quick_check.sql`, `integrity/integrity_check.sql`, `integrity/foreign_key_violations.sql`, `schema/foreign_keys_without_index.sql`.
 
@@ -12,7 +12,7 @@ Maps to: `integrity/quick_check.sql`, `integrity/integrity_check.sql`, `integrit
 | `integrity_check` | same shape | full check, including every index against its table |
 | `foreign_key_check` | rows of (child table, rowid, parent table, fk id) | rowid is NULL for a WITHOUT ROWID child; fk id equals `id` in `foreign_key_list` |
 
-Both integrity pragmas take an optional number N (default 100, the cap on reported errors) or a table name. With a table name only that table and its indexes are examined, so unused file regions and pages shared across tables are not detected, and the freelist is checked only for `sqlite_schema`. `integrity_check` does **not** report foreign key problems: that is `foreign_key_check`'s job. Per the docs, `quick_check` runs in linear time and `integrity_check` in O(N log N) of the row count.
+Both integrity pragmas take an optional number N (default 100, the cap on reported errors) or a table name. A table name makes it a partial check (3.33.0+), not a whole-file verdict. `integrity_check` does **not** report foreign key problems: that is `foreign_key_check`'s job. Per the docs, `quick_check` runs in linear time and `integrity_check` in O(N log N) of the row count.
 
 ## Reading the output
 
@@ -28,7 +28,7 @@ Parent key columns must be a primary key or unique. Child columns need no index,
 ## Cost and safety
 
 - Read-only: all three pragmas are documented as having no side effects, hence usable as `pragma_*` table-valued functions since 3.16.0.
-- Cost (inference from the complexity above): `quick_check` is one pass; `integrity_check` is the heavy one. `foreign_key_check` is slow on big child tables with no index on the referencing column, because each child row triggers a parent lookup or the reverse.
+- Cost (inference from the documented O(N) and O(N log N)): `quick_check` is one pass; `integrity_check` is the heavy one. `foreign_key_check` is slow on big child tables with no index on the referencing column, because each child row triggers a parent lookup or the reverse.
 - They hold a read transaction: in a rollback-journal database a long check can delay a writer; in WAL mode it pins the WAL and delays checkpoints (see `wal-journal-and-connection-health.md`).
 
 ## Example

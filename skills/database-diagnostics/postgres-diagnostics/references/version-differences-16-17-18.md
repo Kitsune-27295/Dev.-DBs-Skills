@@ -1,20 +1,20 @@
 # Version Differences 16, 17 and 18
 
-Sources: https://www.postgresql.org/docs/release/16.0/, https://www.postgresql.org/docs/release/17.0/, https://www.postgresql.org/docs/release/18.0/, https://www.postgresql.org/docs/16/monitoring-stats.html, https://www.postgresql.org/docs/17/monitoring-stats.html, https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/16/pgstatstatements.html, https://www.postgresql.org/docs/18/pgstatstatements.html, https://www.postgresql.org/docs/16/view-pg-replication-slots.html, https://www.postgresql.org/docs/17/view-pg-replication-slots.html · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/release/16.0/, https://www.postgresql.org/docs/release/17.0/, https://www.postgresql.org/docs/release/18.0/, https://www.postgresql.org/docs/16/monitoring-stats.html, https://www.postgresql.org/docs/17/monitoring-stats.html, https://www.postgresql.org/docs/18/monitoring-stats.html, https://www.postgresql.org/docs/16/pgstatstatements.html, https://www.postgresql.org/docs/18/pgstatstatements.html, https://www.postgresql.org/docs/16/view-pg-replication-slots.html, https://www.postgresql.org/docs/17/view-pg-replication-slots.html · Last verified 2026-11-27
 
 This checks the five-file table in `references/README.md` against the documentation and adds changes that needed no script split.
 
-## The five differing scripts
+## Doc basis for the five differing scripts
 
-| Script | 16 | 17 | 18 | Doc basis |
-|---|---|---|---|---|
-| `checkpoints/checkpoint_stats` | counters in `pg_stat_bgwriter` | new `pg_stat_checkpointer` (`num_timed`, `num_requested`, `write_time`, `sync_time`, `buffers_written`, restartpoint columns) | adds `num_done` | 17 and 18 release notes |
-| `queries/top_queries_reads` | `blk_read_time` | `shared_blk_read_time` | same | 17 notes; 16 and 18 pg_stat_statements pages |
-| `io/io_overview` | `op_bytes` | `op_bytes` | `read_bytes`, `write_bytes`, `extend_bytes`; `op_bytes` removed (it always equalled the block size) | 18 notes |
-| `wal/wal_stats` | `wal_write`, `wal_sync` and times in `pg_stat_wal` | same | those four columns removed; WAL rows appear in `pg_stat_io`, timed by `track_wal_io_timing` | 18 notes |
-| `replication/replication_slots` | `conflicting` | adds `inactive_since`, `invalidation_reason` (and `failover`, `synced`) | same columns; `idle_timeout` becomes a possible reason | slot pages |
+The per-script table is `references/README.md` (the single owner). Checked 2026-11-27 against the pages above, all five rows hold:
 
-All five rows match the docs. Also in 17: `buffers_backend` and `buffers_backend_fsync` left `pg_stat_bgwriter` as redundant with `pg_stat_io`. The README table does not list this, but it is why the 16 checkpoint script reads a column that is gone later.
+- Checkpoints: 17 notes (`pg_stat_checkpointer` created, columns moved) and 18 notes (`num_done`).
+- Reads by statement: 17 notes (rename to `shared_blk_read_time`); the 16 and 18 `pg_stat_statements` pages.
+- I/O: 18 notes (`read_bytes`, `write_bytes`, `extend_bytes`; `op_bytes`, which always equalled the block size, removed).
+- WAL: 18 notes (`wal_write`, `wal_sync` and their times removed from `pg_stat_wal`; WAL rows in `pg_stat_io`, timed by `track_wal_io_timing`).
+- Slots: the 16, 17 and 18 slot pages. 16 has 16 columns including `conflicting`; 17 adds `inactive_since`, `invalidation_reason`, `failover`, `synced`; 18 adds the `idle_timeout` reason.
+
+Also in 17: `buffers_backend` and `buffers_backend_fsync` left `pg_stat_bgwriter` as redundant with `pg_stat_io`.
 
 ## Changes that matter for interpretation
 

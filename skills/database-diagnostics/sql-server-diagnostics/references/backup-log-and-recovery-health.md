@@ -1,6 +1,6 @@
 # Backup History, Log (VLF) and CHECKDB Evidence
 
-Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-tables/backupset-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql · https://learn.microsoft.com/en-us/sql/t-sql/functions/databasepropertyex-transact-sql · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/sql/relational-databases/system-tables/backupset-transact-sql · https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql · https://learn.microsoft.com/en-us/sql/t-sql/functions/databasepropertyex-transact-sql · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · Last verified 2026-11-27
 
 Scripts covered: `backup/backup_status`, `backup/backup_history`, `databases/vlf_counts`, `databases/database_inventory` (last good CHECKDB). Proving a restore actually works is `backup-restore-drill`; broader exposure and audit checks are `database-audit` and `database-exposure`. This file explains what the history tables can and cannot prove.
 

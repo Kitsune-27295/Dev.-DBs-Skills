@@ -1,12 +1,12 @@
 # Connection limits, timeouts and pooling
 
-Sources: https://www.postgresql.org/docs/current/runtime-config-connection.html · https://www.postgresql.org/docs/current/runtime-config-client.html · https://www.pgbouncer.org/features.html · Last verified 2026-11-24
+Sources: https://www.postgresql.org/docs/current/runtime-config-connection.html · https://www.postgresql.org/docs/current/runtime-config-client.html · https://www.pgbouncer.org/features.html · Last verified 2026-11-27
 
 Counting connections by state is the `connections_by_state` script; this file explains the settings behind the numbers.
 
 ## Limits
 
-`max_connections` is fixed at server start (default usually 100) and the server sizes shared resources from it, so raising it costs memory. `superuser_reserved_connections` (default 3) keeps slots for administrators; `reserved_connections` (default 0) can reserve slots for a privileged role. A standby needs the same or a higher `max_connections` than the primary. The page does not give a per-connection memory figure, so do not quote one. Inference: many application instances each opening a pool can exceed the limit together; add up all pool sizes.
+`max_connections` is fixed at server start (default typically 100, less if the kernel cannot support it) and the server sizes shared resources from it, so raising it costs memory. `superuser_reserved_connections` (default 3) keeps slots for administrators; `reserved_connections` (default 0, added in 16) can reserve slots for a privileged role. A standby needs the same or a higher `max_connections` than the primary. The page does not give a per-connection memory figure, so do not quote one. Inference: many application instances each opening a pool can exceed the limit together; add up all pool sizes.
 
 ## Timeouts that prevent trouble
 
@@ -26,7 +26,7 @@ SET lock_timeout = '2s';  -- before a risky ALTER, in that session only
 
 ## Pooling
 
-PostgreSQL itself has no pooler; an external one such as PgBouncer sits between. It has three modes: session (a server connection per client session, all features), transaction (assigned per transaction) and statement (autocommit only). In transaction mode its documentation lists features that do not work: `SET`/`RESET` session state, `LISTEN`, `WITH HOLD` cursors, SQL-level `PREPARE`/`DEALLOCATE`, temporary tables that persist and session-level advisory locks. Protocol-level prepared statements work only when `max_prepared_statements` is set above zero.
+PostgreSQL itself has no pooler; an external one such as PgBouncer sits between. It has three modes: session (a server connection per client session, all features), transaction (assigned per transaction) and statement (transaction mode that also forbids multi-statement transactions). In transaction mode its documentation lists features that do not work: `SET`/`RESET` session state, `LISTEN`, `WITH HOLD` cursors, SQL-level `PREPARE`/`DEALLOCATE`, `LOAD`, temporary tables with `ON COMMIT PRESERVE ROWS` or `DELETE ROWS` (`ON COMMIT DROP` ones work) and session-level advisory locks. Protocol-level prepared statements work only when `max_prepared_statements` is set above zero.
 
 ## How an agent should apply this
 

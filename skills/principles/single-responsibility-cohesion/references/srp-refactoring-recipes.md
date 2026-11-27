@@ -1,6 +1,6 @@
 # SRP Refactoring Recipes and Signals
 
-Sources: https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html · Last verified 2026-11-27
 Note: the article gives the principle and example; the stepwise recipes, tooling commands and thresholds below are the author's own inference.
 
 ## Recipe 1: actor map
@@ -43,8 +43,8 @@ A facade delegates to per-actor classes and contains no logic. Review rule: if t
 
 ```bash
 git log --follow --format='%an %s' -- path/File.java | head -40   # who/why it changes
-git log --name-only --pretty=format: -n 100 | sort | uniq -c | sort -rn | head
 ```
+Package-level co-change counting: `references/cohesion-and-common-closure.md`.
 - High churn file touched by many authors for different tickets: strong signal.
 - Large file with low churn and single owner: leave it.
 - Test setup needing many unrelated fakes: mixed responsibilities.

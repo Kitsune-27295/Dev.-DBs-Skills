@@ -1,11 +1,11 @@
 ---
 name: feature-flag-toggle-engine
-description: "Design and operate feature toggles: classify them (release, experiment, ops, permission) by longevity and dynamism, structure toggle point / router / configuration / context, keep decisions out of business code, test on/off combinations, control toggle debt with expiry and removal, and integrate through the vendor-neutral OpenFeature API (evaluation context, providers, hooks). Use when adding a flag, building a toggle router, planning a canary or A/B test, adding a kill switch, reviewing stale flags, or choosing a flag vendor abstraction."
+description: "Add, structure and retire feature flags without scattering them through the code: pick the toggle category (release, experiment, ops, permission) that fixes lifetime, owner and config home, isolate each decision in one toggle point behind a router, return a safe default, test on and off paths, schedule removal with an expiry, and keep the backend swappable through the OpenFeature API (context, providers, hooks). Use when adding a flag, canary, A/B test or kill switch, building a toggle router, reviewing stale flags, or choosing a flag vendor abstraction; not for schema migration (parallel-change-expand-contract), automatic trips (circuit-breaker-retry-telemetry) or authorization (authn-authz-guard)."
 ---
 
 # Feature Flag & Toggle Engine
 
-One idea: a feature toggle is **inventory with a carrying cost**; give each one a category (which fixes its lifetime, dynamism and owner), isolate its decision in one named place (**toggle point** asks a **router**, which reads **configuration** plus **context**), and schedule its removal when you create it. Application code talks to a vendor-neutral API (OpenFeature) so the flag backend stays swappable. Sources and claims: [references/sources.md](references/sources.md).
+One idea: a feature toggle is **inventory with a carrying cost**; give each one a category (which fixes its lifetime, dynamism and owner), isolate its decision in one named place (**toggle point** asks a **router**, which reads **configuration** plus **context**), and schedule its removal when you create it. Application code talks to a vendor-neutral API (OpenFeature) so the flag backend stays swappable. Sources, statuses and claims not adopted: [references/sources.md](references/sources.md).
 
 Boundary with neighbors: gradual schema/API migration without runtime flags is `parallel-change-expand-contract` (toggles may gate its switch-over step); resilience kill switches that trip automatically are `circuit-breaker-retry-telemetry`; per-user permission enforcement is `authn-authz-guard` (a permission toggle selects features, it does not replace authorization); throttling is `rate-limiter-throttler`; speculative flag-everything design is checked by `yagni-evolutionary-architecture`; test strategy is `testing-pyramid-and-shapes`; environment/config separation is `twelve-factor-cloud-native`.
 
@@ -20,7 +20,7 @@ Boundary with neighbors: gradual schema/API migration without runtime flags is `
 | **Ops** | Kill switch, load shedding, risky-feature back-off | Short; some permanent | Must change without a release | Runtime store / admin UI |
 | **Permission** | Premium tiers, alpha/beta, internal-first | Months to years | Per-request by identity | Entitlement system |
 
-A **canary** is a release toggle applied to a small, consistently assigned random cohort (for instance user ID modulo 100); permission toggles target a named group instead. A toggle that changes category (release becoming experiment) changes owner and config home. Details: [references/toggle-taxonomy-and-lifecycle.md](references/toggle-taxonomy-and-lifecycle.md).
+A **canary** is a release toggle applied to a small, consistently assigned random cohort (Fowler mentions about 1 percent, perhaps by user ID modulo); permission toggles target a named group instead. A toggle that changes category (release becoming experiment) changes owner and config home. Details: [references/toggle-taxonomy-and-lifecycle.md](references/toggle-taxonomy-and-lifecycle.md).
 
 ## 2. Anatomy: Point, Router, Configuration, Context
 
@@ -45,7 +45,7 @@ code path ──► toggle point ──► router.decide("newCheckout", ctx) ─
 | Distributed KV (etcd, Consul, ZooKeeper) / flag service | Ops/experiment/permission at runtime | Operate and monitor it |
 
 - Prefer **static configuration in source control** for release toggles: same artifact and config promoted across environments, history preserved, less testing.
-- Per-request overrides (cookie/header/query) let testers exercise production; **sign** them so end users cannot tamper.
+- Per-request overrides (cookie/header/query) let testers exercise production; Fowler names signing as one option against tampering by end users.
 - Expose current toggle state on a metadata endpoint like version info; store descriptions, owners and expiry per toggle.
 
 ## 4. OpenFeature: Vendor-Neutral API
@@ -79,7 +79,7 @@ Rules: default must be the **safe legacy behavior**; wrap the client behind your
 - Store an **expiry date**; add a "time bomb" (failing test or startup refusal after expiry) for release toggles.
 - Cap the number of live toggles; add one only by removing one.
 - Cleanup order: ship 100%, delete the off-path code, delete the config entry, delete the flag in the vendor.
-- Fowler cites Knight Capital as the cost of poor flag hygiene (reused flag, stale code path).
+- Fowler cites Knight Capital as a cautionary tale of flag mismanagement.
 
 Details: [references/toggle-taxonomy-and-lifecycle.md](references/toggle-taxonomy-and-lifecycle.md).
 
@@ -109,6 +109,8 @@ Details: [references/toggle-taxonomy-and-lifecycle.md](references/toggle-taxonom
 - [ ] Toggle state observable (metadata endpoint, logs via hooks)?
 
 ## Deep references
+
+- [Trigger evals](references/trigger-evals.md) — when checking that this description fires on flag work and not on its neighbors
 
 - [Toggle Taxonomy and Lifecycle](references/toggle-taxonomy-and-lifecycle.md) — when classifying a toggle, choosing config storage, testing combinations, or paying down debt
 - [OpenFeature API and Providers](references/openfeature-api-and-providers.md) — when wiring evaluation context, providers, hooks, defaults and errors

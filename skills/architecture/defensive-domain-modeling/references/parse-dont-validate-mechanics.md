@@ -1,6 +1,6 @@
 # Parse, Don't Validate: Mechanics and Limits
 
-Sources: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/ · Last verified 2026-11-23
+Sources: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/ · Last verified 2026-11-27
 
 ## Core definitions (from the post)
 - **Validation** inspects data and returns only pass/fail (or `void`); what it learned is discarded.

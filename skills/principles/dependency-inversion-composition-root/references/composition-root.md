@@ -1,6 +1,6 @@
 # The Composition Root
 
-Sources: https://blog.ploeh.dk/2011/07/28/CompositionRoot/ · https://martinfowler.com/articles/injection.html · Last verified 2026-11-23
+Sources: https://blog.ploeh.dk/2011/07/28/CompositionRoot/ · https://martinfowler.com/articles/injection.html · Last verified 2026-11-27
 
 ## Definition (Seemann, 2011)
 
@@ -18,12 +18,10 @@ Entry points named in the article: `Main` for console apps, `global.asax` plus a
 
 | Topic | Position |
 |---|---|
-| One root per process | Appropriate regardless of app complexity; composing early is not necessary, composing too early limits options |
-| Modules registering own types | Couples modules to the container and each other; prefer convention-based scanning of add-in folders (e.g. MEF) |
-| Several apps sharing components | Avoid copying registrations everywhere; but some duplication is acceptable, shared composition logic tends to diverge |
-| Libraries / SDKs | Do not compose their own dependencies; be DI-friendly, offer Facades or Abstract Factories |
+| One root per process | Enough regardless of app complexity; composing earlier only limits options |
+| Modules registering own types | Couples modules to the container and each other; configure modules from the root, or scan an add-in folder by convention |
+| Libraries / SDKs | No root; be DI-friendly and optionally offer Facades to keep the learning curve gentle |
 | Service Locator inside the root | Acceptable; anti-pattern only when application code queries it |
-| Hiding dependencies with `internal` | Treats a symptom; use encapsulation and trustworthy design |
 
 ## Anatomy
 

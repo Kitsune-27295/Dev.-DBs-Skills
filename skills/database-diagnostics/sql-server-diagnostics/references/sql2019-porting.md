@@ -40,7 +40,7 @@ when you extend the backup scripts for 2019.
 | Permission for `dm_os_sys_info`, `dm_os_process_memory`, `dm_os_volume_stats`, `dm_server_memory_dumps`, `dm_exec_plan_attributes` | `VIEW SERVER PERFORMANCE STATE` | `VIEW SERVER STATE` | grant the 2019 permission to the diagnostic login; a login created for 2022 will get empty or denied results |
 | Permission for `dm_server_services` | `VIEW SERVER SECURITY STATE` | `VIEW SERVER STATE` | same |
 | Permission for `dm_db_log_info` | `VIEW DATABASE PERFORMANCE STATE` | `VIEW SERVER STATE` | same |
-| VLF formula of `dm_db_log_info` | changed slightly in 2022 | earlier formula | compare VLF counts across versions with care |
+| VLF formula of `dm_db_log_info` | changed in 2022 (one VLF for a growth of at most 64 MB and above 1/8 of the log, was four) | earlier formula | compare VLF counts across versions with care |
 | Query Store | on by default for new databases | off by default | the pack does not read Query Store; do not assume plans are retained after a restart |
 | `sys.dm_os_volume_stats.incurs_seek_penalty` | not used | exists since 2019 | optional extra column for `disk/volume_space` |
 | Compatibility level | 160 | 150 | the scripts do not depend on it |
@@ -59,7 +59,7 @@ require VIEW SERVER STATE permission"). A hardened least-privilege login is the 
 
 ## 4. Lifecycle
 
-Microsoft's lifecycle page lists SQL Server 2019 as: start 2019-11-04, mainstream support ended 2025-03-01, extended support
+Microsoft's lifecycle page (re-read 2026-11-27) lists SQL Server 2019 as: start 2019-11-04, mainstream support ended 2025-03-01, extended support
 ends 2030-01-09. Check the page before quoting dates in a client document. (Author note, not verified against docs: CU32, 15.0.4430.1, 2025-02-27 was the latest CU when the port was written; the lifecycle page does not list it.)
 
 Sources: Microsoft Learn pages of each object, for example

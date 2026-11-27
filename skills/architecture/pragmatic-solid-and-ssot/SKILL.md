@@ -1,68 +1,55 @@
 ---
 name: pragmatic-solid-and-ssot
-description: "Apply SOLID pragmatically, without interface boilerplate: what each principle actually asks for, the Liskov and Interface Segregation rules this pack keeps here, the no-ceremony test (no IFoo for a single implementation), and pure-core design with thin I/O wrappers. Points to the owners for the rest: `ssot-and-dry` (DRY, Bounded Context limits), `kiss-yagni-aha` (Rule of Three, AHA), `single-responsibility-cohesion`, `open-closed-principle`, `dependency-inversion-composition-root`. Use when reviewing SOLID or interface overuse, checking a subtype or an interface for fit, or separating a pure core from I/O. Not for deciding whether to share or duplicate code (use ssot-and-dry) or when to abstract (use kiss-yagni-aha)."
+description: "One-page overview for applying SOLID without ceremony: what each principle actually asks for, the Liskov and Interface Segregation checks this pack keeps here, the no-ceremony test (no IFoo for a single implementation behind no I/O or test seam), and a pure core with thin I/O wrappers. Points to the owners of everything deeper: `ssot-and-dry` (DRY, Bounded Context limits), `kiss-yagni-aha` (Rule of Three, wrong abstraction), `single-responsibility-cohesion`, `open-closed-principle`, `dependency-inversion-composition-root`. Use when reviewing code for SOLID or interface overuse, checking whether a subtype or an interface fits its callers, or separating a pure core from I/O. Not for deciding whether to share or duplicate code (use `ssot-and-dry`) or when to abstract (use `kiss-yagni-aha`)."
 ---
 
-# Pragmatic SOLID, SSOT & Abstraction Discipline
+# Pragmatic SOLID & Abstraction Discipline
 
-One idea: treat **DRY** as eliminating duplicate *business knowledge*, not duplicate syntax — and treat every **abstraction** (shared helpers, base classes, `IFoo` interfaces) as carrying real coupling cost until **three** real cases share the same **reason to change** inside the same **Bounded Context**. For evolutionary cost models (the four YAGNI costs, Design Stamina, Sacrificial Architecture), see `yagni-evolutionary-architecture`; for strategic subdomain classification, see `ddd-domain-heuristics-debiasing`. Sources and claims: [references/sources.md](references/sources.md).
+One idea: treat every abstraction (shared helper, base class, `IFoo` interface) as carrying real coupling cost, and let each SOLID principle guide mid-level module structure instead of adding ceremony to trivial code. This is the overview; each principle's deep dive has one owner (see the Deep references). Sources and claims: [references/sources.md](references/sources.md).
 
----
+## 1. DRY and its limit (pointer)
 
-## 1. DRY as SSOT, and Where It Stops
+DRY means one authoritative representation of each piece of *knowledge* (the Pragmatic Programmer's wording), not removal of look-alike syntax; it applies inside a Bounded Context, and across contexts you keep local models and translate at the boundary. The acid test, the duplication kinds, coincidence tests and context-sharing rules live in `ssot-and-dry`; do not restate them here.
 
-DRY (*The Pragmatic Programmer*) is about duplication of **knowledge and intent**, not of code structure. Acid test: when one fact changes, do you edit several places or formats (code plus docs, schema plus type)? If yes, it is a real violation; derive or generate from one source. Lookalike code that answers to different rules (`validateAge` vs `validateQuantity`) is **coincidence**: keep it separate.
+## 2. SOLID pragmatically (what each principle means)
 
-DRY/SSOT applies *inside* a Bounded Context (Fowler). Never couple two contexts to one shared domain model just to save lines; keep local models and translate at the boundary (Mapper / Anti-Corruption Layer / DTO). The five duplication kinds, the Uniform Access Principle and the context-sharing table live in `ssot-and-dry`.
+Martin's *SOLID Relevance* (2020) argues the principles still guide how code is structured at module and component level; they are not a license for mechanical ceremony.
 
----
-
-## 2. SOLID Pragmatically (What Each Principle Actually Means)
-
-From Robert C. Martin (*SOLID Relevance*, *SRP*, *OCP*): SOLID principles guide mid-level module and component structure — not mechanical ceremony on trivial scripts.
-
-| Principle | Core rule (what it *means*) | Common misreading to reject |
+| Principle | Core rule | Misreading to reject |
 |---|---|---|
-| **S — Single Responsibility (SRP)** | Responsible to one, and only one, actor (stakeholder group); gather what changes for the same actor (`single-responsibility-cohesion`) | "A class/function must only do one tiny thing" (creates over-fragmented pass-through helpers — see `codebase-design`) |
-| **O — Open–Closed (OCP)** | Open for extension, closed for modification: add behavior via plugins/adapters/strategies, not edits to tested core policy (`open-closed-principle`) | Over-engineering speculative plugin factories for a single hardcoded implementation |
-| **L — Liskov Substitution (LSP)** | Subtypes/implementations must honor the caller's contract (no narrowed preconditions, weakened postconditions, unexpected exceptions, or no-op *Refused Bequest*) | Checking `if (obj instanceof SpecialCase)` at call sites or throwing `NotImplementedError` in an interface method |
-| **I — Interface Segregation (ISP)** | Clients should not depend on methods/fields they do not use (avoids unnecessary coupling, fat test mocks, and forced rebuild/redeploy) | Wrapping every concrete `UserService` in a 1-to-1 `IUserService` "for SOLID" |
-| **D — Dependency Inversion (DIP)** | High-level policy depends on abstractions it owns, not on DB/HTTP/framework drivers (`dependency-inversion-composition-root`, `clean-architecture`, `hexagonal-architecture`) | Inverting stable standard-library or pure value helpers |
+| **S** Single Responsibility | Group code that changes for the same reason, separate what changes for different reasons; the reason traces to one stakeholder group (`single-responsibility-cohesion`) | "A class or function must do one tiny thing": over-fragmented pass-through helpers (`codebase-design`) |
+| **O** Open-Closed | Change behavior by adding code behind a stable boundary instead of editing tested core policy (`open-closed-principle`) | Speculative plugin factories for one hard-coded implementation |
+| **L** Liskov Substitution | Callers must not be confused by any implementation of an interface; it concerns subtyping, including duck-typed implied interfaces, not only inheritance. Smell: `instanceof` checks at call sites, `NotImplementedError` in an interface method, or a no-op override (Refused Bequest) | Treating a shared base class as proof of substitutability |
+| **I** Interface Segregation | Keep interfaces small so clients do not depend on what they do not use; the cost is highest in statically typed, separately built code (an unused change can force a rebuild and redeploy) and lower, but not zero, in dynamic languages | Wrapping every concrete `UserService` in a 1-to-1 `IUserService` "for SOLID" |
+| **D** Dependency Inversion | Source dependencies point at abstractions the policy owns, especially across architectural boundaries such as database or HTTP (`dependency-inversion-composition-root`, `clean-architecture`, `hexagonal-architecture`) | Inverting stable standard-library or pure value helpers |
 
-**Anti-ceremony rule (Seam discipline; this is the skill's own guidance, not a claim of Martin's *Interface Considered Harmful*, which is a language-design dialogue about the Java/C# `interface` keyword):** Do **not** create boilerplate `IFoo` interfaces for a concrete `Foo` that has only one implementation and sits behind no I/O boundary or test seam. As `codebase-design` puts it: *"One adapter means a hypothetical seam; two adapters means a real one."* Dynamically typed or structurally typed languages (TypeScript, Python, Go implicit interfaces) often don't need upfront `interface` files at all until a second concrete implementation or external boundary test double exists.
+**No-ceremony rule (this skill's own guidance; Martin's *Interface Considered Harmful* is a language-design dialogue about the Java and C# `interface` keyword and says nothing about single-implementation interfaces or test seams):** do not create an `IFoo` for a concrete `Foo` with one implementation that sits behind no I/O boundary or test seam. `codebase-design` puts it as: one adapter is a hypothetical seam, two adapters a real one. Where typing is structural or dynamic (TypeScript, Go, Python), a boundary can be a type alias, protocol or function type declared by the consumer when the second implementation appears.
 
----
+## 3. Abstraction timing (pointer)
 
-## 3. Abstraction Timing: Rule of Three, Wrong Abstraction & AHA
+Do not extract on the second occurrence; check that the copies share an actor and a reason to change before unifying, and re-inline a shared helper that has grown mode flags. The Rule of Three, the Wrong Abstraction and AHA, with recovery steps, live in `kiss-yagni-aha`; the four costs of building ahead are in `yagni-evolutionary-architecture`.
 
-- **Rule of Three:** copy a second time, abstract only on the third real occurrence, and only if all three share the same actor and reason to change.
-- **AHA (Avoid Hasty Abstractions):** optimize for ease of change, not fewest lines.
-- **Wrong Abstraction (Metz):** duplication is far cheaper than the wrong abstraction. Never add another boolean flag to a shared helper; inline it back into each caller, delete the dead branches, and re-extract only a clean common subset later.
+## 4. KISS, pure core and thin I/O wrappers
 
-Recovery steps, smells and AHA recipes live in `kiss-yagni-aha`.
+From the Harvard Kempner handbook's design chapter, plus this skill's wording where marked:
 
----
-
-## 4. KISS, Pure Core & Thin I/O Wrappers
-
-Drawing on the *Harvard Kempner SWE Principles* handbook (KISS, pure core with thin I/O wrapper, default to functions and plain data over deep inheritance, specific error messages) plus this skill's own guidance; items marked *(skill wording)* are not named by that page:
-
-- **KISS:** pick the simplest construct that works (plain functions and data, composition before inheritance); the ordering is in `kiss-yagni-aha`.
-- **Functional Core / Imperative Shell:** Keep core calculations and transformations **pure** (deterministic, no I/O, no hidden globals, returning values instead of mutating shared state) and push I/O, retries, logging, and network calls to a **thin outer wrapper**. Pure functions are trivially testable without mocks (`tdd`, `codebase-design`).
-- **Fail fast with clarity *(skill wording; the handbook asks for specific, informative error messages)*:** Validate external inputs at boundaries (`defensive-domain-modeling`) and raise explicit contextual errors rather than swallowing exceptions or returning ambiguous defaults.
-
----
+- **KISS:** the simplest construct that works: plain functions and data containers, deep inheritance avoided (the page does not name "composition over inheritance"; that phrase is this skill's wording). Ordering lives in `kiss-yagni-aha`.
+- **Pure core, thin shell:** keep calculation pure (deterministic, no I/O, no hidden global state) and push file, network, logging and retries to a thin outer wrapper, with dependencies injected so tests can substitute doubles (`tdd`, `codebase-design`).
+- **Specific errors *(skill wording: the page asks for clear, specific error messages; it does not say "fail fast")*:** validate external input at the boundary (`defensive-domain-modeling`) and raise errors that name the offending value, instead of swallowing exceptions or returning ambiguous defaults.
 
 ## Quick Decision Checklist
 
-1. **Are two code blocks truly sharing the same business rule/actor, or are they merely coincidental syntax?** If coincidental or across different Bounded Contexts -> keep them separate.
-2. **Are there fewer than three callers, or are callers already passing mode flags?** If yes -> duplicate cleanly or re-inline the wrong abstraction; defer unifying.
-3. **Does this `interface` / port separate policy from a varying external I/O or test seam (2+ implementations/adapters)?** If it's 1-to-1 ceremony around pure domain code -> delete the indirection.
-4. **Can business logic be extracted as a pure function with thin I/O callers?** If yes -> separate policy from side effects rather than passing flags down the stack.
+1. Do these two blocks answer to the same rule and actor, or only look alike? If alike only, or in different contexts, keep them separate (`ssot-and-dry`).
+2. Are there fewer than three real callers, or do callers already pass mode flags? If so, duplicate cleanly or re-inline; defer unifying (`kiss-yagni-aha`).
+3. Does this interface separate policy from a varying I/O dependency or test seam with two or more implementations? If it is 1-to-1 ceremony around pure code, delete the indirection.
+4. Does any implementation make callers branch on its type or throw "not supported"? If so, the abstraction breaks Liskov: fix the contract, not the callers.
+5. Can the logic move into a pure function with a thin I/O caller? If so, separate policy from side effects.
 
 ## Deep references
 
-- [Martin SOLID primary-source notes](references/martin-solid-primary-source-notes.md) — read to cite SRP, OCP, LSP, ISP or DIP accurately and see where the skill wording goes beyond the posts.
-- For DRY duplication kinds and Bounded Context limits read `ssot-and-dry`; for Metz, Dodds and the YAGNI four costs read `kiss-yagni-aha` and `yagni-evolutionary-architecture`.
-- [Interface Considered Harmful: careful reading](references/interface-considered-harmful-reading.md) — read before citing the article against `IFoo` boilerplate; it is a language-design argument.
-- [Harvard Kempner design principles notes](references/harvard-kempner-design-principles-notes.md) — read for pure-core, thin-adapter and layering guidance with what the page does and does not say.
+- [Martin SOLID primary-source notes](references/martin-solid-primary-source-notes.md) — read to cite SRP, OCP, LSP, ISP or DIP accurately and see where this skill's wording goes beyond the posts.
+- [Interface Considered Harmful: careful reading](references/interface-considered-harmful-reading.md) — read before citing the article against `IFoo` boilerplate.
+- [Harvard Kempner design principles notes](references/harvard-kempner-design-principles-notes.md) — read for pure-core, thin-adapter and layering guidance and what the page does not say.
+- [Trigger evals](references/trigger-evals.md) — read when tuning the description.
+- [Sources](references/sources.md) — retrieved statuses, reading limits, claims not adopted.
+- Owners, not repeated here: `ssot-and-dry`, `kiss-yagni-aha`, `yagni-evolutionary-architecture`, `single-responsibility-cohesion`, `open-closed-principle`, `dependency-inversion-composition-root`.

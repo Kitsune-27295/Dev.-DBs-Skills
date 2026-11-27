@@ -1,14 +1,14 @@
 # Mapper Pattern and Translation Code
 
-Sources: https://martinfowler.com/eaaCatalog/mapper.html · https://martinfowler.com/eaaCatalog/dataTransferObject.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/eaaCatalog/mapper.html · https://martinfowler.com/eaaCatalog/dataTransferObject.html · Last verified 2026-11-27
 
 ## Definition
-Fowler's catalog entry (dated 2003) defines a Mapper as an object that sets up communication between two independent objects. The page is a short summary; the mechanics are in PoEAA ch. 18 (not read). Core idea: a separate object sits between two subsystems so neither knows about the other.
+Fowler's catalog entry defines a Mapper as an object that sets up communication between two independent objects. The page is a short summary; the mechanics are in PoEAA ch. 18 (not read). Core idea: a separate object sits between two subsystems so neither knows about the other.
 
 ## When Fowler says to use it
 - The two subsystems must interact but should stay unaware of each other.
 - You cannot modify one or both subsystems.
-- You can modify them, but do not want a dependency between them, or between them and the isolating object.
+- You can modify them, but do not want a dependency between them, or between them and the mapper itself.
 
 Note the generality: "Mapper" is a pattern family (data mapper, DTO assembler, message mapper), not one class shape. The specific object-relational variant is Data Mapper; see `repository-unit-of-work`.
 

@@ -1,6 +1,6 @@
 # Version Differences 2019, 2022 and 2025: What the Documentation Confirms
 
-Sources: https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2019 · https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2022 · https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2025 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2025 · plus the object pages listed in sources.md · Last verified 2026-11-24
+Sources: https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2019 · https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2022 · https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2025 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2022 · https://learn.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2025 · plus the object pages listed in sources.md · Last verified 2026-11-27
 
 This file does not repeat the per-folder script changes: see [sql2019-porting.md](sql2019-porting.md) and [sql2025-porting.md](sql2025-porting.md). It re-checks their claims against the pages and adds what affects reading results.
 
@@ -17,8 +17,8 @@ This file does not repeat the per-folder script changes: see [sql2019-porting.md
 | 2019 Query Store off by default, 2022 on for new databases | Confirmed on the Query Store page. |
 | 2025 XACT lock waits appear in wait stats | Confirmed on the wait stats page (optimized locking). |
 | 2019 lifecycle: start 2019-11-04, mainstream end 2025-03-01, extended end 2030-01-09 | Page shows 11/4/2019, 3/1/2025 06:59:59, 1/9/2030 06:59:59 (Pacific time, so these are UTC-style stamps of the next day; the dates match). The "CU32" statement is not on the page. |
-| 2025 optimized locking, tempdb space governance, ZSTD, vector indexes | Present on What's New 2025; vector indexes are labeled preview and need the `PREVIEW_FEATURES` database scoped configuration. |
-| Query Store for readable secondaries on by default (2025) | Stated on What's New 2025 and the Query Store page; What's New 2022 also lists a secondary-replica feature, see Claims. |
+| 2025 optimized locking, tempdb space governance, ZSTD, vector indexes | Present on What's New 2025 (re-read 2026-11-27); vector indexes are labeled preview and need the `PREVIEW_FEATURES` database scoped configuration. ZSTD syntax and the option value 3 are on the backup-compression page. |
+| Query Store for readable secondaries on by default (2025) | Stated on What's New 2025; the Query Store page marks it "Applies to SQL Server 2025"; What's New 2022 still lists it in its table, see Claims. |
 
 ## 2. Lifecycle (as listed on the pages)
 
@@ -28,17 +28,17 @@ This file does not repeat the per-folder script changes: see [sql2019-porting.md
 | 2022 | 2022-11-16 | 2028-01-12 | 2033-01-12 |
 | 2025 | 2025-11-18 | 2031-01-07 | 2036-01-07 |
 
-All use the Fixed lifecycle. Times on the pages are Pacific; the listed 06:59:59 stamps mean the end falls on the previous local day. As of 2026-11-24, 2019 is past mainstream support (extended support only): an audit finding if the instance holds sensitive data and has no extended-support plan.
+All use the Fixed lifecycle. Times on the pages are Pacific; the listed 06:59:59 stamps mean the end falls on the previous local day. As of 2026-11-27, 2019 is past mainstream support (extended support only): an audit finding if the instance holds sensitive data and has no extended-support plan.
 
 ## 3. Result-reading differences between versions
 
-- Waits: `CXPACKET` shrinks on 2022 (producers only) with `CXSYNC_PORT` and `CXSYNC_CONSUMER` added; 2025 splits hash waits into `HTBUILD_AGG`, `HTBUILD_JOIN`, `HTDELETE_AGG`, `HTDELETE_JOIN`. Wait stats before and after an upgrade are not directly comparable by name.
+- Waits: `CXPACKET` shrinks on 2022 (producers only) with `CXSYNC_PORT` and `CXSYNC_CONSUMER` added; the wait stats page lists `HTBUILD_AGG`, `HTBUILD_JOIN`, `HTDELETE_AGG`, `HTDELETE_JOIN` for Azure SQL and for Managed Instance on the 2025 or always-up-to-date policy, and the unsuffixed `HTBUILD` and `HTDELETE` for on-premises; it does not say which names the 2025 engine emits. Wait stats before and after an upgrade are not directly comparable by name.
 - Query Store: a 2019 database may have no history; a 2022 database created on 2022 usually has it; upgraded or restored databases keep their old setting.
 - Backups: no `compression_algorithm` or `last_valid_restore_time` columns on 2019; ZSTD on 2025 is documented as a new algorithm (whether `backupset` records it is not on the fetched `backupset` page, whose compatibility list stops at 160).
 - Permissions: a diagnostic login built for 2022 with the new granular permissions does not work on 2019; the reverse works. 2022 introduces fixed server roles such as `##MS_ServerPerformanceStateReader##` (2025 What's New mentions it as the replacement for a Purview action).
 - Log: VLF counts differ by growth rule; `vlf_encryptor_thumbprint` exists from 2019.
 - 2025 only: `IsOptimizedLockingOn`, `sys.vector_indexes` (preview), Resource Governor in Standard edition, ADR in tempdb.
-- Compatibility level: 150 (2019), 160 (2022), 170 (2025 per the porting file; the backupset page lists up to 160 only).
+- Compatibility level: 150 (2019), 160 (2022), 170 (2025; confirmed on the compatibility-level page, which lists 170 as the SQL Server 2025 level. The backupset page's list stops at 160).
 
 ## How an agent should apply this
 

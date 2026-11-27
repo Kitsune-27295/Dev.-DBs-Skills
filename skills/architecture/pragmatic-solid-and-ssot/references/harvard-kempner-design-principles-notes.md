@@ -1,8 +1,8 @@
 # Harvard Kempner Handbook: Design Principles for Research Code
 
-Sources: https://handbook.eng.kempnerinstitute.harvard.edu/s2_swe_for_research/software_design_principles.html · Last verified 2026-11-23
+Sources: https://handbook.eng.kempnerinstitute.harvard.edu/s2_swe_for_research/software_design_principles.html · Last verified 2026-11-27
 
-A Python-flavored chapter (section 6) that presents principles as defaults to be applied with judgment. It anchors SKILL.md section 5.
+A Python-flavored chapter (section 6, subsections 6.1 to 6.13) that presents principles as defaults to be applied with judgment. It anchors SKILL.md section 4.
 
 ## What the page covers
 
@@ -20,7 +20,7 @@ A Python-flavored chapter (section 6) that presents principles as defaults to be
 
 ## Mapping to the skill, with corrections
 
-| SKILL.md section 5 claim | What the page says |
+| SKILL.md section 4 claim | What the page says |
 |---|---|
 | Pure core, thin I/O wrapper | Yes (6.3, 6.12); the page frames it as a testability rule and a "can the core run in a notebook?" test |
 | Composition over inheritance | Not named; the page says avoid deep inheritance and default to functions plus data containers (6.10). Treat "composition over inheritance" as the skill's wording, supported only in spirit |

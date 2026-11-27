@@ -1,9 +1,9 @@
 # Anti-Corruption Layer (ACL)
 
-Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · Last verified 2026-11-23
+Sources: https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer · Last verified 2026-11-27
 
 ## Definition
-Microsoft's Azure Architecture Center (page updated 2026) describes the ACL as a facade or adapter layer between subsystems that do not share the same semantics. It translates requests from one subsystem to the other so outside dependencies do not limit the application's design. Eric Evans first described it in *Domain-Driven Design*. The trigger: legacy or third-party systems with convoluted schemas, obsolete APIs or different protocols force a new system to adopt those semantics and "corrupt" a clean design.
+Microsoft's Azure Architecture Center (page dated 2026-05-28, re-read 2026-11-27) describes the ACL as a facade or adapter layer between subsystems that do not share the same semantics. It translates requests from one subsystem to the other so outside dependencies do not limit the application's design. Eric Evans first described it in *Domain-Driven Design*. The trigger: legacy or third-party systems with convoluted schemas, obsolete APIs or different protocols force a new system to adopt those semantics and "corrupt" a clean design.
 
 ## Mechanics
 - Subsystem A always talks to the ACL in A's own model; the ACL talks to B in B's model; it holds all translation logic. Neither side learns the other's internals.
@@ -25,16 +25,10 @@ class LegacyBillingGateway(BillingPort):     # local port, domain vocabulary
 ```
 
 ## Considerations (from the page)
-- Adds latency and one more component to run, scale, monitor, release and configure.
-- Decide whether one ACL or several (different technologies/languages).
-- Maintain and monitor transaction and data consistency.
-- Decide scope: all traffic between the systems or only a subset.
-- Decide lifetime: permanent, or retired when migration ends.
-- Validate and sanitize at the boundary because trust levels differ.
-- Observability: correlation IDs and structured logs to diagnose translation failures.
+The operative list (latency, extra component, scope, lifetime, consistency, validation, observability) is rule set 5 in `SKILL.md`. Two page points not repeated there: decide whether one ACL or several are needed when the target spans technologies or languages, and the pattern also applies to legacy code inside a monolith, not only between services.
 
 ## When to use / avoid
-Use for multi-stage migrations needing integration with legacy, or when subsystems have different semantics but must communicate (strangler-style migration; see `parallel-change-expand-contract`). Avoid when semantics do not differ significantly: then keep the layer to pure translation and never place business rules or orchestration in it. Between contexts you own and that agree on a model, a plain shared contract or published language is cheaper (my inference; see `ddd-domain-heuristics-debiasing`).
+Use for multi-stage migrations needing integration with legacy, or when subsystems have different semantics but must communicate (strangler-style migration; see `parallel-change-expand-contract`). The page says it may not suit cases with no significant semantic difference; there, keep the layer to pure translation and never place business rules or orchestration in it. Between contexts you own and that agree on a model, a plain shared contract or published language is cheaper (my inference; see `ddd-domain-heuristics-debiasing`).
 
 ## Failure modes
 Business rules hiding inside the ACL; ACL that leaks foreign types into the domain; no tests with real legacy samples; leaving a "temporary" ACL undocumented and unowned; translating everything instead of the subset the domain needs; inconsistent state across a two-system write.

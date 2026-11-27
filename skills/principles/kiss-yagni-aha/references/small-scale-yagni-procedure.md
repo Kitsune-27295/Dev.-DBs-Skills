@@ -1,6 +1,6 @@
 # Small-Scale YAGNI Procedure
 
-Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-27
 
 ## What Fowler's article says (relevant to single edits)
 
@@ -9,7 +9,6 @@ Sources: https://martinfowler.com/bliki/Yagni.html · Last verified 2026-11-23
 - The argument applies at **small scale**: abstractions, parameters, fields, methods. Fowler himself does not extend a regex highlighter beyond what he needs and does not add fields or methods before use. Small decisions escape planning but add up to less complexity and faster urgent work.
 - Two practical techniques: (1) **imagine the later refactoring** and see that it is often cheap; (2) **cheap preparations** with no added complexity (his example: message lookup tables instead of inline strings, easing later translation).
 - Yagni is about capabilities, not malleability. It is only safe with refactoring, self-testing code and continuous delivery. It applies only when the speculative work adds complexity.
-- Failures of yagni exist but are memorable (availability bias in the author's words) and relatively rare.
 
 ## Per-edit procedure
 

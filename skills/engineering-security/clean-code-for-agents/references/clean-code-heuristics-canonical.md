@@ -1,6 +1,6 @@
 # Clean Code Heuristics (Canonical, Deduplicated)
 
-Sources: https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29 (summary of Robert C. Martin's book; no license visible) · https://github.com/victorcorcos/clean-code (MIT) · https://github.com/tahsinature/coding-principles (no license; default branch `master`, thin README plus per-principle pages) · Last verified 2026-11-24
+Sources: https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29 (summary of Robert C. Martin's book; no license visible) · https://github.com/victorcorcos/clean-code (MIT) · https://github.com/tahsinature/coding-principles (no license; default branch `master`, thin README plus per-principle pages) · Last verified 2026-11-27
 
 Abbreviations: G = wojteklu gist, V = victorcorcos repo, T = tahsinature repo. All three are secondary summaries of the same book, so agreement among them is shared lineage, not independent evidence (see `ssot-and-dry`: one fact, one owner). Each rule below is stated once with its source tags; the owner of the full discussion is named when a neighbor skill has it.
 

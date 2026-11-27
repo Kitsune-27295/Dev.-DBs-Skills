@@ -1,6 +1,6 @@
 # WAL, Journal Mode, Statistics and Counters
 
-Sources: https://www.sqlite.org/wal.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/lang_analyze.html · https://www.sqlite.org/autoinc.html · https://www.sqlite.org/fileformat2.html · https://www.sqlite.org/compile.html · Last verified 2026-11-24
+Sources: https://www.sqlite.org/wal.html · https://www.sqlite.org/pragma.html · https://www.sqlite.org/lang_analyze.html · https://www.sqlite.org/autoinc.html · https://www.sqlite.org/fileformat2.html · https://www.sqlite.org/compile.html · Last verified 2026-11-27
 
 Maps to: `config/database_settings.sql`, `identity/attached_databases.sql`, `config/extension_modules.sql`, `indexes/optimizer_statistics.sql`, `schema/autoincrement_headroom.sql`.
 
@@ -19,7 +19,7 @@ Maps to: `config/database_settings.sql`, `identity/attached_databases.sql`, `con
 
 ## Statistics: sqlite_stat1
 
-Exists only after `ANALYZE` or `PRAGMA optimize` ran. `stat` is a space-separated list: first number is the approximate row count; each later number is the average rows per distinct prefix of the index columns; last is 1 for a unique index. Trailing tokens (`sz=`, `unordered`, `noskipscan`) are normal. `idx` NULL means table-level row count. Statistics go stale silently as data changes. `PRAGMA optimize` (preferred since 3.46.0) and `analysis_limit` (3.32.0) change the file and are owner actions. `sqlite_stat4` appears only with `SQLITE_ENABLE_STAT4`, and a non-zero analysis limit prevents it.
+Exists only after `ANALYZE` or `PRAGMA optimize` ran. `stat` is a space-separated list: (layout from `fileformat2.html`; `lang_analyze.html` does not describe it) first number is the approximate row count; each later number is the average rows per distinct prefix of the index columns; last is 1 for a unique index. Trailing tokens (`sz=`, `unordered`, `noskipscan`) are normal. `idx` NULL means table-level row count. Statistics go stale silently as data changes. `PRAGMA optimize` (since 3.18.0, enhanced in 3.46.0) and `analysis_limit` (3.32.0) change the file and are owner actions. `sqlite_stat4` appears only with `SQLITE_ENABLE_STAT4`, and a non-zero analysis limit prevents it.
 
 ## AUTOINCREMENT headroom
 

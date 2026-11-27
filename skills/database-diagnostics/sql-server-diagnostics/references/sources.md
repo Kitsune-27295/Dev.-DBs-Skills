@@ -1,55 +1,59 @@
-# Sources — SQL Server Diagnostics
+# Sources: SQL Server Diagnostics
+
+Last verified 2026-11-27.
 
 ## Provenance
 
-This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below were used later, only to verify claims.
+This skill was not derived from official documentation. The author first wrote private DDL/SQL best-practice files for SQL Server 2022 (the author's own unpublished material, no public URL); the `sql-server-diagnostics` skill and its 2022 script set were created from them. The author then researched and created the SQL Server 2019 and 2025 ports; the PostgreSQL skill and the SQLite skill followed the same pattern. The official pages below are used only to verify claims, in the author's own words; no page text is copied.
 
-Every URL below was checked as a verification source on 2026-11-24.
+## Retrieved sources
 
-Retrieved with WebFetch (Firecrawl had no credits). "200 OK" means the page content was returned. Learn serves some DMV pages from `system-dynamic-management-objects/` while older links use `system-dynamic-management-views/`; both resolved to the same page. The "ver17" rendering was read, and it carries per-version "Applies to" and permission notes for 2019 and 2022.
+Every URL below was re-fetched with WebFetch on 2026-11-27 (Firecrawl had no credits); all returned 200 with page content. All paths start with `https://learn.microsoft.com/en-us/` and, for `sql/` pages, were read as `?view=sql-server-ver17` (it carries "Applies to" and permission notes for 2019 and 2022). Learn now serves DMV pages from `system-dynamic-management-objects/`; the old `-views/` path still resolved.
 
-All paths below start with `https://learn.microsoft.com/en-us/sql/` unless a full URL is given.
-
-| Verification source | Retrieved status | What it confirms |
+| Source (path) | Status | What it confirms |
 |---|---|---|
-| **Waits, I/O, memory counters** | | |
-| `relational-databases/system-dynamic-management-views/sys-dm-os-wait-stats-transact-sql?view=sql-server-ver17` | 200 OK; first 100000 of 156344 characters read (later wait-type entries not read) | Columns, reset by restart or `DBCC SQLPERF CLEAR`, signal wait, CXPACKET split in 2022, optimized-locking and 2025 hash waits; permissions by version |
-| `relational-databases/system-dynamic-management-views/sys-dm-io-virtual-file-stats-transact-sql?view=sql-server-ver17` | 200 OK | Latency columns, counters empty at service start, permissions by version |
-| `relational-databases/system-dynamic-management-views/sys-dm-os-performance-counters-transact-sql?view=sql-server-ver17` | 200 OK | Cumulative per-second counters, ratio and base counters, counters not persisted across restart |
-| **Deadlocks and blocking** | | |
-| `relational-databases/extended-events/use-the-system-health-session?view=sql-server-ver17` | 200 OK | What `system_health` records, file target size and retention |
-| **Indexes** | | |
-| `relational-databases/indexes/tune-nonclustered-missing-index-suggestions?view=sql-server-ver17` | 200 OK | Limits of missing-index suggestions, 600-group cap, reset events, column order rule |
-| `relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-group-stats-transact-sql?view=sql-server-ver17` | 200 OK | Column meanings, 600-row cap, not persisted, permissions |
-| `relational-databases/system-dynamic-management-views/sys-dm-db-index-usage-stats-transact-sql?view=sql-server-ver17` | 200 OK | Counter semantics, reset conditions, excluded index types, permissions |
-| **Queries and Query Store** | | |
-| `relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql?view=sql-server-ver17` | 200 OK | Units, plan-lifetime rule, offsets, `query_hash`, permissions by version |
-| `relational-databases/performance/monitoring-performance-by-using-the-query-store?view=sql-server-ver17` | 200 OK | Defaults per version, three stores, views, wait categories, 2025 secondary replicas |
-| `relational-databases/system-catalog-views/sys-query-store-runtime-stats-transact-sql?view=sql-server-ver17` | 200 OK | Units, `execution_type`, interval aggregation, permissions |
-| **Backup, log, database properties** | | |
-| `relational-databases/system-tables/backupset-transact-sql?view=sql-server-ver17` | 200 OK | `type` codes, LSN columns, copy-only, compression, 2022-only columns, history cleanup |
-| `relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql?view=sql-server-ver17` | 200 OK | VLF columns, 2022 formula note, permissions, 100-VLF example |
-| `t-sql/functions/databasepropertyex-transact-sql?view=sql-server-ver17` | 200 OK | `LastGoodCheckDbTime` rules and versions, `IsOptimizedLockingOn`, `Status` caveat |
-| **Lifecycle and what's new** | | |
-| `https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2019` | 200 OK | Support dates 2019 |
-| `https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2022` | 200 OK | Support dates 2022 |
-| `https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2025` | 200 OK | Support dates 2025 |
-| `sql-server/what-s-new-in-sql-server-2022?view=sql-server-ver16` | 200 OK (page served the ver17 rendering) | VLF growth rule, Query Store default, `last_valid_restore_time`, new server roles |
-| `sql-server/what-s-new-in-sql-server-2025?view=sql-server-ver17` | 200 OK | Optimized locking, tempdb governance, ZSTD, vector index (preview), deprecated features |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-os-wait-stats-transact-sql` | 200; first 100000 of 156344 characters read | Reset by restart or `DBCC SQLPERF CLEAR`, signal wait, CXPACKET/CXCONSUMER/CXSYNC split, LOGBUFFER, HADR_SYNC_COMMIT, XACT lock waits, hash wait types and their platforms, permissions by version |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-io-virtual-file-stats-transact-sql` | 200 | Stall columns, queued-stall meaning, counters start at service start, permissions by version |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-os-performance-counters-transact-sql` | 200 | Cumulative per-second counters, snapshot, ratio and base counter types, error 3409, not persisted across restart |
+| `sql/relational-databases/extended-events/use-the-system-health-session` | 200 | What `system_health` records, 15 s latch and 30 s lock thresholds, 4x5 MB files (10x100 MB on Standard and Enterprise); no event name given |
+| `sql/relational-databases/indexes/tune-nonclustered-missing-index-suggestions` | 200 | Limits list, 600-group cap, reset events, key-order rule, merge example |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-group-stats-transact-sql` | 200 | Columns, 600-row cap, not persisted, updated per execution, permissions |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-db-index-usage-stats-transact-sql` | 200 | Counter semantics, reset on start and detach, first-use row creation, excluded index types, permissions |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql` | 200 | Plan-lifetime rows, units and accuracy, offsets, `query_hash`, spill and grant columns, permissions |
+| `sql/relational-databases/performance/monitoring-performance-by-using-the-query-store` | 200 | Defaults per version, three stores, wait stats since 2017, secondary replicas "Applies to 2025", `master`/`tempdb` limit, DDL not captured, consistency check |
+| `sql/relational-databases/system-catalog-views/sys-database-query-store-options-transact-sql` | 200 | `desired_state_desc`, `actual_state_desc`, storage columns, `readonly_reason`, permissions |
+| `sql/relational-databases/system-catalog-views/sys-query-store-runtime-stats-transact-sql` | 200 | Units, `execution_type` 0/3/4, per-interval aggregation, DOP reporting quirk, permissions |
+| `sql/relational-databases/system-tables/backupset-transact-sql` | 200 (page dated 2024-02; compatibility list stops at 160) | `type` codes, copy-only, compression columns, 2022-only columns, `time_zone`, history cleanup |
+| `sql/relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql` | 200 | VLF columns, 2022 formula note, permissions by version, 100-VLF example |
+| `sql/t-sql/functions/databasepropertyex-transact-sql` | 200 | `LastGoodCheckDbTime` rules and versions, `IsOptimizedLockingOn` (2025), `Status` caveat |
+| `sql/relational-databases/backup-restore/backup-compression-sql-server` | 200 | ZSTD in 2025, `ALGORITHM = ZSTD`, server option value 3, ratio from `backupset` columns |
+| `sql/database-engine/breaking-changes-to-database-engine-features-in-sql-server-2025` | 200 | Linked server and replication encryption defaults, `trust_distributor_certificate`, log shipping monitor, Full-Text `index_version = 1` |
+| `sql/t-sql/statements/alter-database-transact-sql-compatibility-level` | 200 (output saved to a file, searched for "170") | 170 is the SQL Server 2025 level |
+| `sql/sql-server/what-s-new-in-sql-server-2022` | 200 (served the ver17 rendering) | VLF growth rule, Query Store on by default, `last_valid_restore_time`, new server roles, Query Store on secondary replicas listed |
+| `sql/sql-server/what-s-new-in-sql-server-2025` | 200 | Optimized locking, tempdb governance, ADR in tempdb, ZSTD, vector index (preview, `PREVIEW_FEATURES`), Resource Governor in Standard, Linux platforms, PBKDF2, discontinued and deprecated items |
+| `lifecycle/products/sql-server-2019` | 200 | Fixed policy; 2019-11-04, mainstream end 2025-03-01, extended end 2030-01-09 (Pacific time) |
+| `lifecycle/products/sql-server-2022` | 200 | 2022-11-16, 2028-01-12, 2033-01-12 |
+| `lifecycle/products/sql-server-2025` | 200 | 2025-11-18, 2031-01-07, 2036-01-07 |
 
-Pages named in the porting guides (breaking changes 2025, deprecated features 2025, compatibility level, `sys.databases`, `sys.vector_indexes`, linked servers, `sys.sql_logins`, backup compression) were not re-fetched in this pass; their claims remain as the porting guides state them.
+## Reading limits
 
-## Claims and caveats
+- The wait-stats page was read only up to character 100000 of 156344; later wait-type entries were not read.
+- Pages were read through a summarizing extractor; "no change found" on a very long page is weaker than on a short one.
+- The `.sql` scripts, `scripts/check_versions.py` and the `sql2019`, `sql2022` and `sql2025` folders were not edited, run or re-verified in this pass.
+- Pages named in the porting guides but not re-fetched on 2026-11-27: `deprecated-database-engine-features-in-sql-server-2025`, `sys-databases`, `sys-vector-indexes`, `linked-servers-database-engine`, `optimized-locking`, `sys-sql-logins`, `sys-dm-os-sys-info`, `sys.dm_exec_requests`, `sys.dm_os_waiting_tasks`. Their claims stand as the guides state them and carry the 2026-11-16 check date.
 
-- **CU32 on the lifecycle page.** `sql2019-porting.md` says the latest cumulative update shown was CU32 (15.0.4430.1). The 2019 lifecycle page read on 2026-11-24 lists no update. Unconfirmed; do not quote it. (resolved 2026-11-24: the CU claim is now an author note in `sql2019-porting.md`.)
-- **`LastGoodCheckDbTime` start version.** The porting file says 2016 SP2; the page says 2016 SP2, 2017 CU9, 2019 and later. No effect on 2019, 2022 or 2025. (resolved 2026-11-24: re-verified on the DATABASEPROPERTYEX page; `sql2019-porting.md` now says 2016 SP2 and 2017 CU9.)
-- **Query Store on secondary replicas.** What's New 2022 lists "Query Store on secondary replicas" in its 2022 table, while the Query Store page and What's New 2025 apply it to 2025 ("now on by default" in 2025). Status is uncertain: the Query Store page and What's New 2025 list it for 2025, What's New 2022 for 2022; no script here reads Query Store. (resolved 2026-11-24: porting and reference files now state the page-by-page status instead of a firm claim.)
-- **Missing-index cap.** Both the tuning page and the group-stats page say 600; some older community material says 500. The pages win.
-- **Missing-index rank formula.** The script divides the impact percentage by 100; the Microsoft example does not. Only the scale differs, not the order.
-- **`backup_status.sql` and copy-only fulls.** The script does not filter `is_copy_only`, so a copy-only full can count as "last full". Observed in the script text (author's reading), not a documentation claim. (resolved 2026-11-24: caveat documented in `SKILL.md`; script unchanged.)
-- **ZSTD in `backupset`.** The fetched `backupset` page (latest revision 2024) lists compatibility levels up to 160 and does not say ZSTD is recorded. Unconfirmed, as the porting file already states.
-- **Compatibility level 170.** Not on any page fetched here; kept as in `sql2025-porting.md`.
-- **`xml_deadlock_report` event name.** The `system_health` page says deadlocks and the deadlock graph are collected but does not name the event. Unconfirmed on the page, on every version.
-- **Latency and VLF thresholds.** Only the "above 100 VLFs" illustration is from Microsoft. Disk-latency rules of thumb and the 5 and 30 percent fragmentation bands are not on the pages read in this pass; they are convention.
-- **Real-instance evidence.** The statement that 11 scripts ran on a 17.0.4065.4 instance comes from the skill author's own test notes in `sql2025-porting.md`; it was not checked here. 2019 and 2022 pack behavior was not run in this pass either.
-- **Blocking.** No script reads live blocking; the blocking guidance in the references is from the wait-stats page only. `sys.dm_exec_requests` and `sys.dm_os_waiting_tasks` were not fetched.
+## Claims not adopted
+
+- **CU32 on the lifecycle page.** The 2019 page lists no update; the CU32 (15.0.4430.1) statement in `sql2019-porting.md` is an author note, not to be quoted.
+- **Hash wait names on the 2025 engine.** The wait-stats page ties `HTBUILD_AGG`, `HTBUILD_JOIN`, `HTDELETE_AGG`, `HTDELETE_JOIN` to Azure SQL, Synapse and Managed Instance policies and keeps unsuffixed types for on-premises. That the SQL Server 2025 engine splits them is not stated; the earlier claim was weakened.
+- **Windows Server 2025 support** for SQL Server 2025: not on any page read; removed from the 2025 guide.
+- **Password hash leading byte `0x03` and the RFC2898 label:** What's New 2025 only says PBKDF2 is the default; the `sys.sql_logins` page was not re-fetched.
+- **ZSTD recorded in `backupset`.** The `backupset` page lists compression algorithm only as introduced in 2022 with default `MS_XPRESS`; it does not say ZSTD appears. Unconfirmed.
+- **`xml_deadlock_report` event name.** The `system_health` page says deadlock graphs are collected but does not name the event. Unconfirmed on every version.
+- **Query Store on secondary replicas in 2022.** What's New 2022 still lists it; the Query Store page applies it to 2025. Treat 2025 as documented.
+- **Plan changes under compatibility level 170** (optional parameters, estimator): author's reading, not re-checked against the 160-to-170 differences table.
+- **Latency and VLF thresholds.** Only the "above 100 VLFs" illustration is Microsoft's. Disk-latency rules of thumb and the 5 and 30 percent fragmentation bands are convention; the physical-stats page was not read.
+- **Missing-index rank formula.** The script divides impact by 100; the Microsoft example does not. Only the scale differs, not the order.
+- **`backup_status.sql` and copy-only fulls.** Observed in the script text (author's reading), not a documentation claim; caveat kept in `SKILL.md`.
+- **Real-instance evidence.** The 11 scripts run on a 17.0.4065.4 instance come from the author's own test notes in `sql2025-porting.md`; not checked here. 2019 and 2022 pack behavior was not run either.
+- **Blocking.** No script reads live blocking; the guidance comes from the wait-stats page only.

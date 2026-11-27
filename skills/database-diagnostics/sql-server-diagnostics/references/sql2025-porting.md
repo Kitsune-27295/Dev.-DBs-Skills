@@ -1,7 +1,7 @@
 # Running the sql2022 pack on SQL Server 2025 (17.x)
 
 The folder `sql2025/` holds the 30 scripts of `sql2022/` plus one new script, adapted where Microsoft's documentation shows a
-change. Checked on 2026-11-16 against Microsoft Learn (URLs in section 4) and by running part of the pack on a real SQL Server
+change. Checked on 2026-11-16 against Microsoft Learn (URLs in section 4; the breaking-changes, What's New, compatibility-level and backup-compression pages re-read on 2026-11-27) and by running part of the pack on a real SQL Server
 2025 instance (build 17.0.4065.4, `SERVERPROPERTY('ProductMajorVersion')` = 17), read-only, as a login without server-state
 permission. 11 of 29 scripts ran (the two heavy ones, `index_fragmentation` and `deadlock_summary`, were not tried): `backup/backup_history`,
 `backup/backup_status`, `config/instance_configuration`, `databases/database_inventory` (with the new column),
@@ -42,13 +42,13 @@ These do not need a script edit but change how to read the results or what to ch
 | Replication | a remote distributor can fail after an upgrade when no trusted certificate is configured; the documented workaround is `trust_distributor_certificate` | `ha/ha_status.sql` (replication row) |
 | Log shipping | monitoring can break when the monitor is a remote 2025 instance and the others run an older version; `log_shipping_primary_databases` gains `primary_connection_options` and `monitor_connection_options` | `ha/ha_status.sql` |
 | Full-Text | legacy word breakers and filters are removed; existing indexes become `index_version = 1` and fail until rebuilt | `sys.fulltext_indexes` |
-| Password hashing | SQL logins use an iterated hash (RFC2898) from 2025; the hash starts with byte `0x03` | `security/sql_login_policy.sql` (no hash is read) |
-| Compatibility level | 170 is the 2025 default; it changes plans for optional parameters and the cardinality estimator | `databases/database_inventory.sql` (`compatibilityLevel`) |
+| Password hashing | What's New 2025 says PBKDF2 password hashes are on by default; the RFC2898 label and the leading byte `0x03` were not re-checked | `security/sql_login_policy.sql` (no hash is read) |
+| Compatibility level | 170 is the SQL Server 2025 level (compatibility-level page, re-read 2026-11-27); the plan changes for optional parameters and the cardinality estimator are the author's reading, not re-checked | `databases/database_inventory.sql` (`compatibilityLevel`) |
 | Optimized locking | new XACT lock waits (`LCK_M_S_XACT_READ`, `LCK_M_S_XACT_MODIFY`, `LCK_M_S_XACT`) can appear in `sys.dm_os_wait_stats`; they are real waits, so `waits/wait_stats.sql` leaves them in | `waits/wait_stats.sql` |
 | Tempdb governance | Resource Governor can cap tempdb use per workload group | `tempdb/tempdb_files.sql` shows files only; no limit check was added |
-| Query Store | readable secondary replicas: Query Store page and What's New 2025 say 2025, What's New 2022 also lists it; uncertain | the pack does not read Query Store |
-| Backup | ZSTD compression is available (`ALGORITHM = ZSTD`); `backup compression algorithm` accepts 3 | `backup/*`; whether `backupset` records ZSTD is not verified |
-| Windows hosts | Windows Server 2025 is supported; Linux adds Ubuntu 24.04 and Red Hat 10 | `identity/server_identity.sql` parses `@@VERSION`: read `hostDistribution` once |
+| Query Store | readable secondary replicas: documented for 2025 (Query Store page, What's New 2025); What's New 2022 also lists it | the pack does not read Query Store |
+| Backup | ZSTD compression is available (`WITH COMPRESSION (ALGORITHM = ZSTD)`); the `backup compression algorithm` server option accepts 3 (backup-compression page) | `backup/*`; whether `backupset` records ZSTD is not verified |
+| Linux hosts | Linux adds Ubuntu 24.04 and Red Hat 10 (What's New 2025); Windows Server 2025 support was not confirmed on any page read | `identity/server_identity.sql` parses `@@VERSION`: read `hostDistribution` once |
 | Removed products | Data Quality Services, Master Data Services and Synapse Link are discontinued | not read by the pack |
 | Fragmentation advice | still "reorganize above 5%, rebuild above 30%" | `indexes/index_fragmentation.sql` |
 

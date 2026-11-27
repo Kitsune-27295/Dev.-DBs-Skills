@@ -1,19 +1,19 @@
 # RFC 9457 Problem Details for HTTP APIs
 
-Sources: https://www.rfc-editor.org/rfc/rfc9457.html · Last verified 2026-11-23
+Sources: https://www.rfc-editor.org/rfc/rfc9457.html · Last verified 2026-11-27
 
 ## Scope
 
-Published July 2023 (Standards Track); obsoletes RFC 7807. Defines a machine-readable error body so APIs need not invent their own. JSON form `application/problem+json` (the canonical model, a JSON object); XML form `application/problem+xml`. A server may send these types even if the client did not list them in `Accept`.
+Published July 2023 (Proposed Standard); obsoletes RFC 7807. Defines a machine-readable error body so APIs need not invent their own. JSON form `application/problem+json` (the canonical model, a JSON object); XML form `application/problem+xml`. A server may send these types even if the client did not list them in `Accept`.
 
 ## Standard members (members with a wrong-typed value are ignored)
 
 | Member | Semantics |
 |---|---|
-| `type` | URI reference identifying the problem type; absent means `about:blank`. Consumers must not automatically dereference it. Absolute URIs recommended. Ideally resolves to human documentation |
+| `type` | URI reference identifying the problem type; absent means `about:blank`. Consumers SHOULD NOT automatically dereference it. Absolute URIs recommended. Ideally resolves to human documentation |
 | `status` | The HTTP status code number; advisory only; generators must send the same code on the wire. Intermediaries may change the real status, so generic HTTP software generally ignores this member |
-| `title` | Short summary of the problem **type**; stays constant across occurrences except for localization |
-| `detail` | Explanation specific to **this occurrence**, aimed at helping the client fix the problem; not a debugging aid; consumers must not parse it |
+| `title` | Short summary of the problem **type**; SHOULD NOT change across occurrences except for localization |
+| `detail` | Explanation specific to **this occurrence**, aimed at helping the client fix the problem; helps the client correct the problem (not a debugging aid); consumers SHOULD NOT parse it |
 | `instance` | URI reference for the occurrence; may or may not be dereferenceable |
 
 `about:blank` adds no semantics beyond the HTTP status; its title should match the standard status phrase.
@@ -22,7 +22,7 @@ Published July 2023 (Standards Track); obsoletes RFC 7807. Defines a machine-rea
 
 - A problem type may define extra members (the RFC's examples: `balance` and `accounts` for an out-of-credit problem; an `errors` array for validation where each entry carries a JSON Pointer to the field).
 - Clients must ignore extensions they do not recognize; this gives forward compatibility.
-- Naming advice: start with a letter, only letters/digits/underscore, at least three characters. XML extension names must be valid XML Names.
+- Naming advice (SHOULD-level in the RFC): start with a letter, only letters/digits/underscore, at least three characters. XML extension names must be valid XML Names.
 
 ## Defining a problem type (checklist)
 

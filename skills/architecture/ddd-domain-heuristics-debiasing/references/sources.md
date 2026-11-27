@@ -1,14 +1,18 @@
 # Sources for the ddd-domain-heuristics-debiasing skill
 
-Retrieved 2026-11-22 via Firecrawl (`firecrawl_scrape`). Statements below summarize Vlad Khononov's strategic/tactical decoupling model and DDD Crew's open-source toolkits, separating normative design heuristics from empirical behavioral research claims.
+Every URL below was re-checked on 2026-11-27 with WebFetch (first authored 2026-11-22 via a scraper). Statements summarize the sources in the skill's own words.
 
-| # | Source | What the skill takes from it |
-|---|---|---|
-| 1 | Vlad Khononov, "Tackling Complexity in the Heart of Domain-Driven Design" (2016-04-05), https://vladikk.com/2016/04/05/tackling-complexity-ddd/ | Decoupling DDD itself into **Core Domain** (Ubiquitous Language), **Supporting Subdomain** (Bounded Contexts keeping language unambiguous), and **Generic Subdomain** (Domain Implementation patterns: **Transaction Script**, **Active Record**, **Domain Model**, **Event-Sourced Domain Model**); widening DDD applicability to simple/growing domains without mandatory tactical Aggregate ceremony. |
-| 2 | DDD Crew (`ddd-crew/core-domain-charts`), *Core Domain Charts*, https://github.com/ddd-crew/core-domain-charts | Strategic 2D charting of subdomains/Bounded Contexts along **Business Differentiation** vs. **Complexity** (separating essential domain, accidental technical, and operational complexity); cross-discipline alignment (product gauges differentiation, engineers gauge complexity); adapting the Y-axis to plan **Architecture Migration** sequences and align with Team Topologies Context Maps. |
-| 3 | DDD Crew (`ddd-crew/debiasing-decisions-toolkit`), *Debiasing Decisions Toolkit* (Evelyn van Kelle, Gien Verschatse, Kenny Baas-Schwegler), https://github.com/ddd-crew/debiasing-decisions-toolkit | **The Five-Step Debiasing Checklist** (**Be Decision-Ready**, **Broaden the Frame**, **Seek Independent Advice**, **Test Your Assumptions**, **Establish Simple Rules**); the **10 Cognitive Biases Reference** (**Myopic Misery**, **Status Quo Bias**, **Additive Bias**, **Functional Fixedness**, **Overconfidence Bias**, **Correlation Neglect**, **Authority Bias**, **Illusion of Control**, **Law of Triviality**, **False Consensus Effect**); ADR debiasing snippet; core heuristic (*"When 'this just feels right' appears — ask if it is a genuinely good decision or a bias in disguise"*). |
+| # | Source | Retrieved status | What the skill takes from it |
+|---|---|---|---|
+| 1 | Vlad Khononov, "Tackling Complexity in the Heart of Domain-Driven Design" (2016-04-05), https://vladikk.com/2016/04/05/tackling-complexity-ddd/ | 200 OK, claims confirmed | Ubiquitous Language as core, Bounded Contexts as supporting, implementation patterns as generic; the four named patterns; pattern fits complexity and can change later. No per-pattern thresholds in the article. |
+| 2 | DDD Crew, Core Domain Charts, https://github.com/ddd-crew/core-domain-charts | 200 OK | Differentiation vs complexity chart; portfolio, Team Topologies and migration variants; three complexity kinds; clue lists. No quadrant names, no build/buy advice. License text inconsistent (page says CC BY 4.0, sidebar CC-BY-SA-4.0). |
+| 3 | DDD Crew, Debiasing Decisions Toolkit, https://github.com/ddd-crew/debiasing-decisions-toolkit | 200 OK | Five steps, ten biases and their step placement, ADR snippet, two-way-door question, CC BY-SA 4.0. Author surname spelled inconsistently on the page. |
 
-## Notes on Claims & Citations
+## Reading limits
+Pages were read through a summarizing fetch tool, not verbatim. The README pitfall list of the charts repo was not re-confirmed. This skill has no scripts.
 
-- **Behavioral Debiasing Evidence (`*claim*`):** Source 3 attributes the finding that *awareness alone does not counter bias, whereas structured behavioral interventions embedded in workflows reduce bias* to Morewedge et al. and Soll, Milkman & Payne (*Outsmart Your Own Biases*, HBR, 2015), alongside Adams et al. (*Nature*, 2021) for Additive Bias / Subtraction Neglect (`*claim*`). Treat the checklist as a practical team facilitation safeguard rather than an infallible guarantee.
-- **Overlap Distinction:** This skill focuses on strategic subdomain classification (Core/Supporting/Generic), tactical pattern selection inside Bounded Contexts, and cognitive debiasing; for ADR file structure and lifecycle governance, pair with `adr-architecture`.
+## Claims not adopted as fact
+- Quadrant labels and build/buy sourcing per quadrant (inference, marked as such in the skill).
+- Pattern-to-complexity thresholds and upgrade signals (own heuristic).
+- Effectiveness of debiasing (Morewedge et al.; Soll, Milkman and Payne; Adams et al.): the toolkit's claims, papers not read.
+- Pattern definitions beyond the four names (general Fowler knowledge, not read from the article).

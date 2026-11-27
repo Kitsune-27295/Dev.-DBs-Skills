@@ -1,6 +1,6 @@
 # Dependency Injection Forms and Trade-offs
 
-Sources: https://martinfowler.com/articles/injection.html · Last verified 2026-11-23
+Sources: https://martinfowler.com/articles/injection.html · Last verified 2026-11-27
 
 ## The running problem
 
@@ -23,7 +23,7 @@ Sources: https://martinfowler.com/articles/injection.html · Last verified 2026-
 | Multiple construction routes | Awkward | Fine |
 | Inheritance chains | Problematic | Fine |
 
-Advice: begin with constructors; use setters when those problems bite; if a setter must only run at creation, name it `initFoo`; support both when building a container. Interface injection is the most invasive and rarely chosen.
+Advice: begin with constructors; use setters when those problems bite; if a setter must only run at creation, name it `initFoo`. Interface injection is the most invasive: it needs many interfaces, so it is acceptable only for a small set a container requires (Avalon) and lightweight containers favor constructor and setter injection. Spring-style frameworks tend to prefer setters. (The earlier line "support both when building a container" was not re-confirmed on 2026-11-27 and is dropped.)
 
 ## Injection vs Service Locator, short form
 
@@ -33,7 +33,6 @@ Both break the concrete dependency; difference is *provided* vs *asked for*. Inj
 
 - Files help when deployments differ; XML was typical.
 - Code is clearer for simple apps and for conditional assembly (builder class).
-- Fowler criticizes per-component config formats that multiply files to keep in sync.
 - Provide a programmatic API first; layer file config on top.
 - **Separate configuration from use** is the central principle, parallel to separating interface from implementation.
 

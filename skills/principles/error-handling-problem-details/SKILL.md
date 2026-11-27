@@ -1,6 +1,6 @@
 ---
 name: error-handling-problem-details
-description: "Deep dive on error handling as a contract: error taxonomy (client vs server, expected vs unexpected), the HTTP error contract with RFC 9457 Problem Details (type/status/title/detail/instance, extension members, application/problem+json, validation errors, security), Result-vs-exceptions trade-offs, Railway-Oriented Programming composition (bind, map, tee, tryCatch, plus), and OWASP leak-safe handling (global handler, generic client message, detailed server log). Complements `defensive-domain-modeling` (domain modeling) and `circuit-breaker-retry-telemetry`. Use when designing an API error format, writing a global exception handler, choosing Result vs throw, composing fallible steps, or reviewing error responses for information leakage."
+description: "Design errors as a contract: classify failures as expected (typed Result values) or unexpected (exceptions caught once by a global handler), shape HTTP error bodies with RFC 9457 Problem Details, keep stack traces and internals out of responses (OWASP), and compose fallible steps in a Railway-Oriented pipeline. Owns the combinators (bind, map, tee, tryCatch, plus) and recovery ownership. Not for domain type modeling (`defensive-domain-modeling`), request validation mechanics (`validator-input-parser`) or retries and breakers (`circuit-breaker-retry-telemetry`). Use when designing an API error format, writing a global exception handler, choosing Result vs throw or reviewing error responses for leakage."
 ---
 
 # Error Handling: Problem Details, Result Pipelines & Leak-Safe Responses
@@ -30,12 +30,12 @@ Media types: `application/problem+json` (and `application/problem+xml`). A serve
 
 | Member | Meaning | Rule of thumb |
 |---|---|---|
-| `type` | URI reference naming the **problem type** | Absolute URI you control; stable; documented; defaults to `about:blank`; clients must not auto-dereference |
-| `status` | HTTP status as a number | Advisory; must equal the real response status |
-| `title` | Short human summary of the **type** | Same for every occurrence (except localization) |
-| `detail` | Explanation of **this occurrence**, to help the client fix it | Not for debugging; do not parse it; never internals |
+| `type` | URI reference naming the **problem type** | Absolute URI you control; stable; documented; defaults to `about:blank`; consumers SHOULD NOT auto-dereference |
+| `status` | HTTP status as a number | Advisory; generators MUST send the same code as the HTTP status |
+| `title` | Short human summary of the **type** | SHOULD NOT change between occurrences (except localization) |
+| `detail` | Explanation of **this occurrence**, to help the client fix it | Helps the client fix the problem; consumers SHOULD NOT parse it; never internals |
 | `instance` | URI reference for this occurrence | Optional; correlates with logs (e.g. a trace id URI) |
-| extensions | Extra members defined by the problem type | Names: start with a letter, letters/digits/underscore, 3+ chars; clients ignore unknown ones |
+| extensions | Extra members defined by the problem type | Names SHOULD start with a letter, use letters/digits/underscore, 3+ chars; clients MUST ignore unknown ones |
 
 Example:
 
@@ -80,7 +80,7 @@ Decision: return `Result` from **use-case/domain functions whose failure is part
 
 ## 5. Railway-Oriented Programming composition
 
-Model each step as a **switch**: one input, a two-case output (success or failure). Failure is sticky: once on the failure track, later steps are skipped. Core adapters (from the series): `bind` runs the next switch on success only; `map` lifts a plain function; `tee` runs side-effect-only functions and passes input through; `tryCatch` converts exceptions into failures; `doubleMap` acts on both tracks (e.g. logging); `plus`/`&&&` runs validators in parallel and **accumulates** errors. The error type must be **the same all the way along**; map errors at stage boundaries. The author cautions against taking ROP to extremes (it is a template for consistency, not a mandate for every function).
+Model each step as a **switch**: one input, a two-case output (success or failure). Failure is sticky: once on the failure track, later steps are skipped. Core adapters (landing page: bind, Kleisli, map, tee, `&&&`; part 2 of the recipe adds tryCatch, doubleMap, plus): `bind` runs the next switch on success only; `map` lifts a plain function; `tee` runs side-effect-only functions and passes input through; `tryCatch` converts exceptions into failures; `doubleMap` acts on both tracks (e.g. logging); `plus`/`&&&` runs validators in parallel and **accumulates** errors. The error type must be **the same all the way along**; map errors at stage boundaries. The author warns "don't take it to extremes"; guard clauses (`defensive-domain-modeling`) are often clearer when only one or two steps can fail.
 
 Details, TypeScript implementation sketch, accumulating validation, mapping Result to Problem Details: [references/railway-result-composition.md](references/railway-result-composition.md).
 
@@ -120,4 +120,5 @@ Unknown/unexpected exceptions go through the global handler to `{ type: "about:b
 - [OWASP leak-safe handling](references/owasp-leak-safe-handling.md) — when writing a global handler or auditing error responses for information leakage.
 - [Railway Result composition](references/railway-result-composition.md) — when composing fallible steps, accumulating validation errors, or choosing Result vs exceptions.
 - [Recovery ownership and guarantees](references/recovery-ownership-and-guarantees.md) — when deciding who recovers from a failure, which state guarantee holds, or how to report unknown outcomes.
+- [Trigger evals](references/trigger-evals.md) — should-trigger and near-miss prompts.
 - [Sources](references/sources.md) — fetch status per URL.

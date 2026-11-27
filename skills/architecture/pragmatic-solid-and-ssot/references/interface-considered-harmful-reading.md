@@ -1,6 +1,6 @@
 # "Interface Considered Harmful": A Careful Reading
 
-Sources: https://blog.cleancoder.com/uncle-bob/2015/01/08/InterfaceConsideredHarmful.html · Last verified 2026-11-23
+Sources: https://blog.cleancoder.com/uncle-bob/2015/01/08/InterfaceConsideredHarmful.html · Last verified 2026-11-27
 
 ## What the article is
 

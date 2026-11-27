@@ -1,6 +1,6 @@
 ---
 name: validator-input-parser
-description: "Validate and parse untrusted input at trust boundaries: parse-don't-validate at the edge, OWASP input validation (allowlists, syntactic vs semantic checks, size and depth limits, safe regex/ReDoS, file uploads, Host headers), schema-library usage, and the Notification pattern for collecting all errors instead of throwing on the first. Use when designing request/webhook/queue/CLI input handling, reviewing validation code, choosing where validation lives, or returning multi-error validation responses."
+description: "Turn untrusted input into a proven typed value at the trust boundary: size limits, decode once, schema-library parsing, allowlist plus syntactic and semantic checks, safe regex, uploads and Host headers (OWASP), and a Notification that collects every error instead of throwing on the first. Not for type-level modeling (defensive-domain-modeling), the error envelope (error-handling-problem-details) or DTO translation (dto-mapper-anti-corruption-layer). Use when designing request, webhook, queue or CLI input handling, reviewing validation code, deciding where validation lives, or returning multi-error validation responses."
 ---
 
 # Validator & Input Parser at Trust Boundaries
@@ -24,7 +24,7 @@ Boundary with neighbors: type-level modeling (Value Objects, sum types, `Result`
 
 ## 2. The Pipeline (do it in this order)
 
-1. **Authenticate/authorize first when cheap**, so anonymous callers cannot make you burn parse resources (authorization stays a separate control: a valid ID is not permission).
+1. **Authenticate/authorize first when cheap** (author judgment, not an OWASP step), so anonymous callers cannot make you burn parse resources; authorization stays a separate control: a valid ID is not permission.
 2. **Limit size** before buffering: max body bytes, max JSON nesting depth, max array length, max string length.
 3. **Decode once** per the protocol (charset, URL/percent, base64); validate the representation that will actually be used; never decode again downstream.
 4. **Parse structurally** with a maintained parser/schema library; unknown fields rejected or explicitly stripped; required fields explicit.
@@ -110,3 +110,4 @@ Guard clauses stop checks that depend on a failed prerequisite. Combine with par
 
 - [OWASP Input Validation Rules](references/owasp-input-validation-rules.md) — when writing or reviewing concrete validation rules, regex, uploads, headers, Unicode
 - [Notification Pattern and Error Collection](references/notification-pattern-error-collection.md) — when returning multiple errors or refactoring throw-on-first validation
+- [Trigger evals](references/trigger-evals.md) — three should-trigger and three near-miss prompts with the expected skill

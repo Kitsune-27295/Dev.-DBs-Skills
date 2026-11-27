@@ -1,6 +1,6 @@
 # Code Smells in Agent-Generated Code
 
-Sources: https://refactoring.guru/refactoring/smells · https://refactoring.guru/refactoring/catalog · https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · Last verified 2026-11-24
+Sources: https://refactoring.guru/refactoring/smells · https://refactoring.guru/refactoring/catalog · https://grugbrain.dev/ · https://github.com/joshuadavidthomas/agent-skills/blob/main/grug-brained-dev/SKILL.md · Last verified 2026-11-27
 
 Refactoring.Guru content is "all rights reserved" (footer, 2014-2026); this file only uses its taxonomy names and its own paraphrases. The smells page gives group-level summaries; per-smell wording below is my own. Which smells LLM output shows most is my inference from the grug agent skill's observations and general experience, not a measured statistic.
 

@@ -1,6 +1,6 @@
 # Power of 10 and TigerStyle: Which Rules Transfer to Ordinary Application Code
 
-Sources: https://web.eecs.umich.edu/~imarkov/10rules.pdf (Holzmann, IEEE Computer, June 2006; read in full) · https://en.wikipedia.org/wiki/The_Power_of_10:_Rules_for_Developing_Safety-Critical_Code (rule list cross-checked) · https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md (raw, read in full) · Last verified 2026-11-24
+Sources: https://web.eecs.umich.edu/~imarkov/10rules.pdf (Holzmann, IEEE Computer, June 2006; read in full) · https://en.wikipedia.org/wiki/The_Power_of_10:_Rules_for_Developing_Safety-Critical_Code (rule list cross-checked) · https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md (raw, read in full) · Last verified 2026-11-27
 
 Context: Power of 10 targets safety-critical C and says so; its rules were picked to be machine-checkable. TigerStyle (TigerBeetle, written in Zig) builds on them for a financial database with design goals ordered safety, performance, developer experience. Neither is a general-purpose standard. Own judgment is marked "(inference)".
 
@@ -14,7 +14,7 @@ Context: Power of 10 targets safety-critical C and says so; its rules were picke
 | 4. Function fits one printed page (about 60 lines) | P10 | Yes as a heuristic (FN-03) | TigerStyle makes it a hard limit of 70 lines; the kernel gives screens, not a number (FN-02). Numbers are conventions; which one to cite is decided in CF-09 |
 | 5. At least two assertions per function | P10, TigerStyle | Partly | Assert real invariants and impossible states; never pad to hit a count, and never use an assertion for expected errors |
 | 6. Smallest possible scope for data | P10, TigerStyle | Yes | Declare near first use; do not reuse a variable for two meanings |
-| 7. Check return values; validate parameters | P10; TigerStyle "all errors must be handled" | Yes, with judgment | P10 itself calls it the most violated and allows an explicit ignore with a reason |
+| 7. Check return values; validate parameters | P10; TigerStyle "all errors must be handled" | Yes, with judgment | P10 itself calls it possibly the most frequently violated rule, and allows an explicit ignore with a reason |
 | 8. Restrict the preprocessor | P10 | Language-specific | Analog: avoid heavy metaprogramming, macros, and many feature flags (inference) |
 | 9. Restrict pointers; no function pointers | P10 | No | C-specific; do not ban callbacks or higher-order functions in app code |
 | 10. Strict compiler warnings, zero warnings, static analysis daily | P10, TigerStyle | Yes | Use the project's linter, type checker and formatter at their strict settings, from the first commit |
