@@ -1,6 +1,6 @@
 {
   "name": "dev-dbs-skills",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "MCP server and portable skill pack for 131 software architecture, engineering workflow, security, and database skills.",
   "type": "module",
   "bin": {
