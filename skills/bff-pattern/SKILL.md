@@ -1,6 +1,6 @@
 ---
 name: bff-pattern
-description: Use when designing, reviewing, or refactoring a Backend for Frontend (BFF) or API Gateway layer in front of downstream services — tailoring an edge API per client experience (Desktop Web, Mobile iOS/Android, Voice/IoT, Third-Party API), aggregating chatty microservice calls, and aligning BFF ownership with the frontend team. Gives Sam Newman's BFF rules, BFF vs General-Purpose API Gateway distinction, team ownership invariants, and common mistakes.
+description: "Design, review or refactor a Backend for Frontend (BFF): tailor an edge API per client experience (Desktop Web, Mobile iOS/Android, Voice/IoT, Third-Party API), aggregate chatty microservice calls and align BFF ownership with the frontend team. Gives Sam Newman's BFF rules, BFF versus general-purpose API gateway distinction, team ownership invariants and common mistakes. Use when each client type needs its own API shape or when a shared gateway is turning into a bottleneck for frontend teams. Not for one shared edge entry doing TLS, auth, throttling and retries (use api-gateway-reverse-proxy)."
 ---
 
 # BFF (Backend for Frontend) Pattern
@@ -53,6 +53,16 @@ One idea: instead of forcing every client (desktop web, mobile iOS/Android, smar
 - **Serializing downstream calls (`await A; await B; await C`):** Calling 4 independent downstream microservices sequentially instead of concurrently (`Promise.all` / `Task.WhenAll`), summing their latencies on every request.
 - **All-or-nothing cascading failure:** Letting a timeout in a secondary downstream service (`Reviews` or `AvatarService`) crash the entire BFF response instead of degrading gracefully.
 - **Sharing a heavy "BFF Common Business Library" that forces lockstep deployments:** Coupling all BFFs back together through a shared library that requires every BFF to redeploy simultaneously.
+
+## Quick Decision Checklist
+
+- [ ] Does the app have more than one distinct client experience, or fine-grained downstream services, to justify a BFF?
+- [ ] Is there one BFF per user experience, owned by the frontend team that builds it?
+- [ ] Is the BFF limited to presentation adaptation and aggregation, with no domain rules or primary database?
+- [ ] Are TLS, WAF, global rate limiting and token validation kept in the upstream gateway, not each BFF?
+- [ ] Are downstream calls made in parallel with timeouts, circuit breakers and graceful degradation?
+- [ ] Am I accepting small duplication across BFFs instead of merging them into a shared BFF or business library?
+- [ ] Do BFF consumer-driven contract tests run in the downstream service's CI?
 
 ## Deep references
 

@@ -56,6 +56,16 @@ One idea: extend Bertrand Meyer's method-level **Command Query Separation (CQS)*
 - **Ignoring projection lag in the UI:** Redirecting the user immediately after a Command to a screen that queries an eventually consistent Read Model without showing the pending state or version check, making the user think their save failed.
 - **Duplicating authorization rules inconsistently:** Enforcing tenant/role security on Commands while forgetting row-level tenant filters on the raw SQL Query projections (`security-audit`).
 
+## Quick Decision Checklist
+
+- [ ] Is there real read/write asymmetry or domain complexity in this Bounded Context, or is it simple CRUD?
+- [ ] Am I applying CQRS in this one Bounded Context only, not across the whole system?
+- [ ] Do Commands return only an acknowledgment, and do Queries never mutate state?
+- [ ] Do Queries project straight from the database instead of loading Domain Aggregates?
+- [ ] Am I starting with Single-Store CQRS, with a measured reason before going Dual-Store?
+- [ ] If Dual-Store, does the UI handle projection lag with an ID, version or pending state?
+- [ ] Do Query projections enforce the same tenant and role filters as Commands?
+
 ## Deep references
 
 - [From CQS to CQRS: Fowler cautions](references/cqs-to-cqrs-fowler-cautions.md) — before recommending CQRS at all

@@ -1,6 +1,6 @@
 ---
 name: package-by-feature-component
-description: Use when organizing or refactoring folder, package, and module structures in a codebase — replacing horizontal Package by Layer (controllers/, services/, repositories/) with Package by Feature or Simon Brown's Package by Component, applying the Common Closure Principle (CCP), and enforcing package-private / internal encapsulation.
+description: "Organize or refactor folder, package and module structure: replace horizontal Package by Layer (controllers/, services/, repositories/) with Package by Feature or Simon Brown's Package by Component, apply the Common Closure Principle (CCP) and enforce package-private or internal encapsulation. Use when a folder tree is grouped by technical layer and changes keep touching many folders. Not for one-file-per-request slices with CQRS and no shared services (use vertical-slice-architecture), naming the repo so it announces its domain (use screaming-architecture) or monorepo root layout (use repository-root-monorepo-architecture)."
 ---
 
 # Package by Feature & Package by Component (vs. Package by Layer)
@@ -52,6 +52,16 @@ One idea: stop grouping files by technical stereotype (`controllers/`, `services
 - **"Fake Package by Feature" (Horizontal layers at the root, feature folders only inside `controllers/`):** Putting `controllers/orders/` at the top while still keeping a monolithic shared `services/` and `models/` folder where everything is `public`. Move the whole vertical stack into `orders/`.
 - **Leaving everything `public` / exported inside a feature folder:** Moving files into `features/orders/` but exporting the internal repository and DB row helpers from `index.ts` so `features/shipping/` still calls `OrderRepository` directly.
 - **Cross-feature spaghetti imports:** `features/checkout/` importing private DTOs or handlers from `features/cart/`. Communicate across features only via a narrow public component facade or in-process domain events.
+
+## Quick Decision Checklist
+
+- [ ] Is code grouped by what changes together, not by technical stereotype?
+- [ ] Would a change to one feature open a single folder?
+- [ ] Did I choose Package by Feature or by Component based on UI/driver coupling?
+- [ ] Are repositories and internal helpers private to their package?
+- [ ] Are catch-all folders (utils, helpers, common) removed or pushed into their feature?
+- [ ] Do features talk only through a narrow public facade or domain events?
+- [ ] Is there an import-boundary check in CI?
 
 ## Deep references
 

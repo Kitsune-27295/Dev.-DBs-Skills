@@ -68,6 +68,16 @@ Ask two questions about the sentence or page you are writing:
 | Explanation hiding inside a Tutorial | A newcomer trying to run their first command is hit with 6 paragraphs explaining why the engine uses SQLite FTS5 instead of BM25 | Move the "Why" to `explanation/` |
 | Vague headings | Headings like `Webhooks` or `Database` that don't signal which quadrant the page belongs to | Name by quadrant: `Tutorial: Build your first webhook`, `How to rotate webhook secrets`, `Webhook payload reference`, `Why webhooks use at-least-once delivery` |
 
+## Quick Decision Checklist
+
+- [ ] Did I decide if this page serves action or cognition, and study or work, before writing?
+- [ ] Does this page belong to exactly one quadrant: Tutorial, How-to, Reference or Explanation?
+- [ ] Is the Tutorial a single paved path with no branching choices or lectures?
+- [ ] Does the How-to start from a real goal and link to Reference instead of listing every parameter?
+- [ ] Is Reference neutral, structured like the product, and free of instructions or design debate?
+- [ ] Is any contaminating block moved to its own quadrant page with a one-line link?
+- [ ] Does the heading signal its quadrant instead of a vague noun like Webhooks?
+
 ## Deep references
 
 - [Four forms, map and compass](references/four-forms-map-and-compass.md) — read when classifying or splitting documentation pages

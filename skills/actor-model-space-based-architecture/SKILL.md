@@ -60,6 +60,16 @@ One idea: eliminate shared mutable state, lock contention, and central database 
 - **Unbounded Actor Mailboxes:** Allowing a fast producer to enqueue millions of messages into a slow actor's unbounded mailbox until the node crashes with an Out-Of-Memory error. Always use bounded mailboxes or backpressure streams.
 - **Using Space-Based Architecture with a huge dataset that cannot fit in RAM:** SBA requires active working-set partitions to reside in the distributed in-memory data grid; if the hot working set exceeds cluster memory budgets and thrashes to disk, SBA loses its core advantage.
 
+## Quick Decision Checklist
+
+- [ ] Are all messages between actors deeply immutable, with no shared mutable state or locks across actors?
+- [ ] Is every blocking call (sync I/O, sleeps, heavy CPU) kept out of the actor message handler?
+- [ ] Is there one actor per fine-grained entity rather than a single "God Actor" or manager?
+- [ ] Are domain validation errors returned as replies, with only unexpected faults left to supervision?
+- [ ] Are mailboxes bounded or backpressured, and are synchronous actor-to-actor call cycles avoided?
+- [ ] Are list or search screens served from a read database instead of querying all actors?
+- [ ] For SBA, are writes asynchronous write-behind with at least 2 replicas, and does the hot set fit in RAM?
+
 ## Deep references
 
 - [Akka actor model: messaging and supervision](references/akka-supervision-and-failure-model.md) — when designing actor protocols and deciding domain errors vs supervised faults

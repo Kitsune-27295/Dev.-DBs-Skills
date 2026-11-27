@@ -1,6 +1,6 @@
 ---
 name: cross-layer-value-trace
-description: "Trace a wrong, missing, stale or disputed value hop by hop from its source of truth to the screen (source or collector, service or domain, API or router, backend-for-frontend, client cache, UI), asking four questions at each hop: value, absence, freshness, failure. Works in the direction of the data, records evidence per hop, finds the first hop where the truth is lost, and hands the fix to the right skill. Use when a number on screen is wrong, empty, stale or differs between screens, an empty result looks healthy, or each layer passes review but the composition lies."
+description: "Trace a wrong, missing, stale or disputed value hop by hop from its source of truth to the screen (source or collector, service or domain, API or router, backend-for-frontend, client cache, UI), asking four questions at each hop: value, absence, freshness, failure. Works in the direction of the data, records evidence per hop, finds the first hop where the truth is lost, and hands the fix to the right skill. Use when a number on screen is wrong, empty, stale or differs between screens, an empty result looks healthy, or each layer passes review but the composition lies. Not for crashes, exceptions or slowness (use diagnosing-bugs)."
 ---
 
 # Cross-Layer Value Trace

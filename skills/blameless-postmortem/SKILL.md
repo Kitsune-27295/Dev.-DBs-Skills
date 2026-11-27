@@ -1,6 +1,6 @@
 ---
 name: blameless-postmortem
-description: "Write a blameless incident postmortem an agent or team can trust: impact quantified from sources, a timeline where every entry names its source, known cause kept apart from assumed cause, trigger versus contributing factors, what went well, where we got lucky, follow-ups each with one owner and a date, [PENDING VALIDATION] markers for anything unproven, and no secrets or personal data copied from logs. Systems, signals and decisions are described, never a person named as the cause. Use when something broke and has been mitigated, when an outage ended, when data was lost or a guard failed, or when asked for a post-mortem, an incident write-up or 'what went wrong'."
+description: "Write a blameless incident postmortem an agent or team can trust: impact quantified from sources, a timeline where every entry names its source, known cause kept apart from assumed cause, trigger versus contributing factors, what went well, where we got lucky, follow-ups each with one owner and a date, [PENDING VALIDATION] markers for anything unproven, and no secrets or personal data copied from logs. Systems, signals and decisions are described, never a person named as the cause. Use when something broke and has been mitigated, an outage ended, data was lost or a guard failed. Not for a routine retrospective on a coding session (use retro)."
 ---
 
 # Blameless Postmortem

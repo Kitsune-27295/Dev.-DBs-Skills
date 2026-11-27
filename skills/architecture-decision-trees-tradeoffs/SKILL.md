@@ -75,6 +75,14 @@ Practice or peer-review decisions with concrete constraints (*Ted Neward / Neal 
 - **Treating Kubernetes as Default Greenfield Compute:** Paying AKS cluster management and multi-node operational overhead when PaaS web hosting or serverless containers satisfy every actual SLA.
 - **Evaluating Only Happy-Path Functional Requirements:** Choosing compute and style without mapping explicit failure modes, regional SLA limits, or team operational skills.
 
+## Quick Decision Checklist
+
+- [ ] Did I name the top 3-5 driving -ilities and the exact requirement that forces each?
+- [ ] Did I decide how many architectural quanta exist before choosing monolith or distributed?
+- [ ] Does the partitioning axis match the axis along which changes actually occur?
+- [ ] Did I weigh team size and ACID needs instead of picking a style by star rating alone?
+- [ ] Is Kubernetes justified, or would PaaS or serverless containers meet every SLA?
+
 ## Deep references
 
 - [Architecture styles as constraints](references/architecture-styles-as-constraints.md) — when comparing N-tier, queue-worker, microservices, event-driven, big data/compute

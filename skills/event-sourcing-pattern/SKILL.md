@@ -60,6 +60,17 @@ One idea: instead of overwriting the current state of an entity in place (CRUD),
 - **Storing raw unencrypted GDPR PII inside immutable events:** Putting raw names/emails in an immutable event store with no crypto-shredding or external reference strategy when "right to erasure" applies.
 - **Recording external query results only by calling the external system live:** As Fowler notes, if domain logic depends on an external tax or exchange-rate lookup, record the returned rate *inside the event payload* when the command executes so future replays remain 100% deterministic without calling the external service again.
 
+## Quick Decision Checklist
+
+- [ ] Does this domain need an audit trail, temporal queries or retroactive correction, rather than plain CRUD?
+- [ ] Am I correcting history with a compensating event, never an UPDATE or DELETE of a committed one?
+- [ ] Is apply free of validation, clock reads, random ids and external calls?
+- [ ] Does every append check expectedVersion against a unique (stream_id, version) constraint?
+- [ ] Are external side effects suppressed during replay, with external lookup results stored in the event payload?
+- [ ] Are streams short and bounded, with versioned events and upcasters for schema changes?
+- [ ] Are queries served by CQRS projections, with PII kept out of raw events?
+- [ ] Are public integration events separate from internal storage events?
+
 ## Deep references
 
 - [Replay semantics: external effects, reversal and code changes](references/replay-external-effects-and-code-changes.md) — read when designing replays, gateways, retroactive fixes or temporal rules.

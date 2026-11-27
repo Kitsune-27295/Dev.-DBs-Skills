@@ -1,6 +1,6 @@
 ---
 name: integration-tests
-description: Use to cover an application's critical flows (signup, login, checkout, payment webhooks, anything touching money, permission or another user's data) with route-level integration tests against a real test database, written from behavior sentences the human approves first. Also the home of the test golden rule (never delete, skip or loosen a test to make it pass).
+description: "Cover an application's critical flows (signup, login, checkout, payment webhooks, anything touching money, permission or another user's data) with route-level integration tests against a real test database, written from behavior sentences the human approves first. Also the home of the test golden rule (never delete, skip or loosen a test to make it pass). Use when an app has no tests on the flows that matter or you must choose which flows to cover. Not for driving a red-green-refactor loop on a new feature (use tdd), browser end-to-end suites (use playwright-qa-orchestrator) or flaky CI runs (use ci-test-reliability)."
 ---
 
 # Integration tests
@@ -45,6 +45,16 @@ Without them an agent changes one place, breaks another far away, and the custom
 Never delete, skip, or loosen a test to make it pass. If a test looks wrong, stop and ask. Business rules do not bend to turn a run green. Avoid rewriting passing tests while refactoring: a test that already covers a rule is the cheapest guard you have. Never mock the database or the rule under test. Add a negative cross-tenant test (user B asks for user A's object and gets nothing); if a calculation needs the database to be tested, the logic is in the wrong layer (see the tenant-isolation reference). **Never connect tests to a production database**; RLS and policy tests are only valid against a real database.
 
 When an agent changes code, run the test command; green means carry on, red means read the failure and fix the code.
+
+## Quick Decision Checklist
+
+- [ ] Did I list the critical flows by reading the project?
+- [ ] Do the sentences cover happy path, errors, repetition, limits and improper access?
+- [ ] Did I show the sentences and get the human's approval before writing tests?
+- [ ] Is the test database separate from production, with only external services mocked?
+- [ ] Are concurrent cases fired at the same instant, with a cross-tenant negative test?
+- [ ] Does a test that fails on a real bug stay failing and go to the bug list?
+- [ ] Am I avoiding deleting, skipping or loosening any test to get green?
 
 ## Deep references
 

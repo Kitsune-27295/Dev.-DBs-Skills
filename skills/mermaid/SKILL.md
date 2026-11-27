@@ -1,6 +1,6 @@
 ---
 name: mermaid
-description: "Architect, generate, validate, repair, and improve syntax-correct Mermaid diagrams (flowchart, sequence, class, ER, state, C4, architecture, gantt, timeline, mindmap and more) from requirements or from code. Use whenever a system, flow, schema, lifecycle, or hierarchy is clearer visually than in prose, or when an existing diagram fails to render or needs a better layout."
+description: "Generate, validate, repair and improve syntax-correct Mermaid diagrams (flowchart, sequence, class, ER, state, C4, architecture, gantt, timeline, mindmap and more) from requirements or from code, and fix diagrams that fail to render or need a better layout. Use whenever a flow, schema, lifecycle or hierarchy is clearer visually than in prose. Not for deciding which C4 levels, boxes and relationships to show (use c4-model-architecture); use this skill only for the Mermaid syntax and rendering of that diagram."
 ---
 # Mermaid Diagram Engineering
 
@@ -135,6 +135,16 @@ Run the strongest check available, and state explicitly what ran:
 
 - **Semantic preservation when editing/repairing:** Never change diagram type (`erDiagram` -> `flowchart`), never drop nodes/participants/edges/cardinality markers, and never reorder sequence messages. When improving layout or styling, verify node and edge counts match the original. Fix parser errors minimally at the first failing line, then re-validate.
 - **When NOT to use a diagram:** Use a Markdown table or bullet list instead whenever there are fewer than 3 relationships, when data is a shallow flat hierarchy, or when exact numerical/configuration values matter more than topology.
+
+## Quick Decision Checklist
+
+- [ ] Did I pick the diagram type for the need instead of defaulting to flowchart?
+- [ ] Did I list every entity and relationship first, reading real files for code input?
+- [ ] Is there zero ASCII art, with labels quoted when they hold punctuation or spaces?
+- [ ] Would a table or prose be shorter, for fewer than 3 relationships?
+- [ ] Is the diagram one idea, split before it passes roughly 25-30 nodes?
+- [ ] Did I validate it, and say whether a real parser ran or only the manual checklist?
+- [ ] On repair, did I fix the first error only, keeping type, nodes, edges and message order?
 
 ## Deep references
 - [Parsing rules, frontmatter, looks, and layouts](references/parsing-config-looks-and-layouts.md) — when config is silently ignored, ELK vs Dagre options, theme/look pinning.

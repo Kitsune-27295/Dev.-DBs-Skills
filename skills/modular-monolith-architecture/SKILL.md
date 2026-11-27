@@ -56,6 +56,16 @@ One idea: deploy the application as a **single runtime unit**, but partition its
 - **Sharing a single global DI container without module scopes:** Allowing any developer to `@Autowired` / inject `PaymentsRepository` directly inside `MeetingsHandler`.
 - **In-memory fire-and-forget events without an Outbox:** Publishing cross-module events in memory after a DB commit without persisting them in the same transaction — losing events if the process crashes mid-flight.
 
+## Quick Decision Checklist
+
+- [ ] Are modules vertical Bounded Contexts, with internals hidden behind a thin public facade?
+- [ ] Does each module own its schema, with no cross-module joins, shared tables or foreign keys?
+- [ ] Do modules exchange only primitives and contract DTOs, never domain or ORM entities?
+- [ ] Are cross-module events published through a transactional Outbox, not in-memory fire-and-forget?
+- [ ] Is there a shared global domain folder? Each context should own its own representation.
+- [ ] Is there an architecture test in CI failing on cycles and leaked internal types?
+- [ ] Is this really one deployable, and not a case that needs independent runtimes or deploys (microservices)?
+
 ## Deep references
 
 - [DDD reference implementation](references/modular-monolith-ddd-reference-implementation.md) — full-autonomy module rules, outbox/inbox, testing

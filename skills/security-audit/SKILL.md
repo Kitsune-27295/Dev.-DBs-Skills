@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Use to audit a codebase, especially AI-generated or vibe-coded, for the five most common SaaS security flaws - missing tenant or owner isolation, permissions enforced only in the browser, IDOR, hardcoded or leaked keys (including git history), and unsanitized input (XSS). Read-only; detects the stack first, reports verified findings with file:line, lists what is correct, and drafts ready-to-paste issues.
+description: "Audit a codebase, especially AI-generated or vibe-coded, for the five most common SaaS security flaws: missing tenant or owner isolation, permissions enforced only in the browser, IDOR, hardcoded or leaked keys (including git history), and unsanitized input (XSS). Read-only; detects the stack first, reports verified findings with file:line, lists what is correct and drafts ready-to-paste issues. Use when asked for a security review or pre-launch check of an app. Not for moving client-side business rules to the server (use never-trust-the-client), database exposure (use database-exposure), designing login or OAuth (use authn-authz-guard), design-time threats (use threat-modeling) or one scanner alert (use vulnerability-triage)."
 ---
 
 # Security audit (five flaws, any stack)
@@ -56,6 +56,17 @@ Tool output feeds the audit; it does not replace the five-class review.
 ## Diff review mode (a pull request or local diff)
 
 When the target is a change, not the whole repository, ask: does this diff introduce, widen or remove a security control? Classify the changed files by risk first (authentication, authorization, queries and tenant scoping, new entry points and rendering of user data get deep reading; docs, tests and styling get a skim), then open the code around each change, because the usual flaw is a check that is **missing** from the diff. Run only the five classes and the extra checks the diff touches, report issues introduced by the change separately from pre-existing ones, mark anything unverifiable, and keep exploit details out of public comments. Checks and output shape: [references/diff-review-mode.md](references/diff-review-mode.md). Rating and routing a finding: `vulnerability-triage`; a design-level change: `threat-modeling`; style and correctness: `code-review`.
+
+## Quick Decision Checklist
+
+- [ ] Have I detected the stack first and marked classes that do not apply as not applicable?
+- [ ] Is this read-only on the project, with writes limited to the report folder?
+- [ ] Do I cover all five classes, not a generic "find vulnerabilities" pass?
+- [ ] Did I walk every route handler for ownership checks rather than a sample?
+- [ ] Does the server re-check every permission that the front end hides?
+- [ ] Did I search git history and the front-end bundle for keys, and require revocation?
+- [ ] Is each finding verified in real code with file, lines, snippet and severity, and unverifiable items marked "not verified"?
+- [ ] Did I also record what is correct?
 
 ## Deep references
 

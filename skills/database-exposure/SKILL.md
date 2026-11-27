@@ -29,6 +29,16 @@ UpGuard's blog (23 September 2026) reported 16,326 Supabase databases exposing r
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the open door").
 
+## Quick Decision Checklist
+
+- [ ] Did I name every opening of the database port, with the file or setting that causes it?
+- [ ] Is the service key absent from client code, public variables and git history?
+- [ ] Did I list secrets already published that must be rotated?
+- [ ] Can I explain in plain words who can read, insert, update and delete in each table?
+- [ ] Did I flag open rules such as using (true), allow read, write: if true or security switched off?
+- [ ] Is this pass report-only, with each fix a separate migration awaiting the owner's OK?
+- [ ] Am I avoiding disabling any existing protection just to make something work?
+
 ## Deep references
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own

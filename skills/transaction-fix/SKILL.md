@@ -1,6 +1,6 @@
 ---
 name: transaction-fix
-description: Use when one user action writes to more than one table or step (create an order and take stock, charge and grant access, transfer between accounts) and a failure in the middle can leave half-done data. Finds each multi-write operation, wraps it in a database transaction so it is all or nothing, keeps external calls outside the transaction, and proves it with a forced-failure test.
+description: "Make a user action that writes to more than one table or step (create an order and take stock, charge and grant access, transfer between accounts) all-or-nothing, so a failure in the middle cannot leave half-done data. Finds each multi-write operation, wraps it in a database transaction, keeps external calls outside the transaction and proves it with a forced-failure test. Use when a failure between writes leaves partial data. Not for concurrent requests on one value (use race-condition-fix), repeated delivery of one event (use idempotency-fix) or consistency across services (use saga-transactional-outbox-pattern)."
 ---
 
 # Transaction fix (all or nothing)
@@ -25,6 +25,16 @@ A transaction makes several writes behave as one: either every write lands or no
 - Show the list from step 1 before editing anything.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the half-saved order"). The external-call rule is from the handout; the commit-then-call and record-intent patterns and "keep reads inside" are this skill's own practice, not from a source.
+
+## Quick Decision Checklist
+
+- [ ] Have I listed every multi-write operation with file:line and write order before editing anything?
+- [ ] Have I stated the business rule that must hold afterwards, in one sentence?
+- [ ] Is there a failing test that forces an error after the first write and asserts nothing was written?
+- [ ] Are all the writes, plus the reads that decide the outcome, inside one transaction with rollback?
+- [ ] Are external calls (email, payment, webhook) kept outside the transaction?
+- [ ] Does the error still reach the caller after rollback, rather than being swallowed?
+- [ ] Is any step rollback cannot undo named with how it is compensated, and is this a different problem from a race or duplicate event?
 
 ## Deep references
 

@@ -1,6 +1,6 @@
 ---
 name: sql-server-audit
-description: "Method for auditing a SQL Server instance or database so the verdict is something a professional would sign - scope and business inputs first, read-only evidence before opinion, one finding per issue with severity and confidence, popular myths rejected, coverage gaps reported instead of read as healthy, and a prioritized report whose fixes are proposed scripts that are never run. Covers configuration, backups and restores, integrity checks, indexes and statistics, waits and blocking, security, and HA/DR. Use when asked to audit, health-check or review a SQL Server, to judge pasted sp_Blitz or DMV output, or to turn collector results into a ranked remediation plan."
+description: "Audit a SQL Server instance or database so the verdict is something a professional would sign: scope and business inputs first, read-only evidence before opinion, one finding per issue with severity and confidence, popular myths rejected, coverage gaps reported instead of read as healthy, and a prioritized report whose fixes are proposed scripts that are never run. Covers configuration, backups and restores, integrity checks, indexes and statistics, waits and blocking, security and HA/DR. Use when asked for a signed-off audit, to judge pasted sp_Blitz or DMV output, or to turn collector results into a ranked remediation plan. Not for running the ready-made read-only query scripts (use sql-server-diagnostics) or an app-level database audit across seven fundamentals (use database-audit)."
 ---
 
 # SQL Server audit (method)

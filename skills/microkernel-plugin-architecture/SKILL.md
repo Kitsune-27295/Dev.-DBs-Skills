@@ -58,6 +58,17 @@ One idea: separate a **minimal, stable Core System** (the microkernel that owns 
 - **No timeout or circuit breaker around plug-in calls:** Letting one synchronous plug-in enter an infinite loop or hang on network I/O and freeze the entire Core System.
 - **Leaking handles across reload/unload cycles:** Failing to enforce a `dispose()` contract so hot-reloading plug-ins leaks event listeners, memory, or child processes until the host OOMs.
 
+## Quick Decision Checklist
+
+- [ ] Do the plug-ins stay mutually independent, with no plug-in importing or depending on another?
+- [ ] Does every plug-in implement the same standard interface, with no per-plug-in branches in the Core?
+- [ ] Can a new plug-in be added with zero source changes to the Core?
+- [ ] Is the plug-in interface versioned and treated as an immutable public contract?
+- [ ] Is isolation matched to trust: untrusted plug-ins sandboxed with permissions, timeouts and memory caps?
+- [ ] Is every plug-in call wrapped in a timeout or circuit breaker, with dispose() enforced on unload?
+- [ ] Do plug-ins keep state in their own store, never the Core's tables?
+- [ ] Do I need an open plug-in ecosystem, or would a simple Strategy pattern do for 2-3 variants?
+
 ## Deep references
 
 - [Microkernel principles, partitioning and extensions](references/microkernel-principles-and-partitioning.md) — read when designing the core/plug-in contract, registry, per-domain interfaces or distributed plug-ins.

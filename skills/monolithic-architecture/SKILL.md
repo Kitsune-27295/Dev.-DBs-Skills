@@ -56,6 +56,16 @@ One idea: build, package, and deploy the application's behavior as a **single au
 - **Manual or fragile deployments:** Letting the build/test suite grow so slow that teams fear deploying the monolith. Keep tests fast and deployments automated.
 - **Trying to decompose a tangled monolith overnight:** If a monolith has no internal module boundaries, extracting microservices directly will create a distributed big ball of mud. Refactor to a `modular-monolith-architecture` first.
 
+## Quick Decision Checklist
+
+- [ ] Am I starting as a single deployment unit, avoiding the Microservice Premium until it is earned?
+- [ ] Are modules separated internally (layers or feature slices) so it is not a big ball of mud?
+- [ ] Is the process stateless, with sessions, uploads and caches kept outside local memory?
+- [ ] Am I using native ACID transactions instead of Sagas for cross-feature changes?
+- [ ] Did I try query tuning, caching and horizontal replicas before splitting anything?
+- [ ] Is a split justified for one specific workload, extracting only that edge?
+- [ ] Is the CI/CD pipeline fast and automated, with tests against a real test database?
+
 ## Deep references
 
 - [Monolith First evolution paths](references/monolith-first-evolution-paths.md) — arguments, evolution options and counter-argument for greenfield decisions

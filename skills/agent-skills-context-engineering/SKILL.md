@@ -1,6 +1,6 @@
 ---
 name: agent-skills-context-engineering
-description: Use when designing portable Agent Skills (agentskills.io specification, progressive disclosure, Microsoft Agent Framework SkillsProvider/MCP skill:// integration), engineering finite LLM context windows (context rot mitigation, Goldilocks system prompts, just-in-time retrieval, compaction, structured note-taking, sub-agent isolation), or designing outer coding-agent harnesses (feedforward Guides vs. feedback Sensors, Computational vs. Inferential controls).
+description: "Design the structure of portable Agent Skills (agentskills.io specification, progressive disclosure, Microsoft Agent Framework SkillsProvider and MCP skill:// integration), engineer finite LLM context windows (context rot mitigation, Goldilocks system prompts, just-in-time retrieval, compaction, structured note-taking, sub-agent isolation) and design outer coding-agent harnesses (feedforward Guides versus feedback Sensors, Computational versus Inferential controls). Use when deciding how skills, context budget or a harness should be organized. Not for the procedure of writing, testing and packaging one skill or tuning its description (use skill-creation-workflow) or for choosing model and effort (use model-effort-routing)."
 ---
 
 # Agent Skills, Context Engineering & Harness Design
@@ -73,6 +73,15 @@ Build trust in non-deterministic coding agents through a cybernetic steering loo
 - **Unsafe Skill Runtime Execution:** Treating third-party `SKILL.md` instructions or bundled scripts as trusted input without sandboxing, approval gates, or MCP integrity boundaries.
 - **Unbounded History in Multi-Hour Tasks:** Allowing 50k tokens of raw tool logs to accumulate without tool-result clearing, structured notes, compaction, or sub-agent delegation.
 
+
+## Quick Decision Checklist
+
+- [ ] Does the SKILL.md carry only what must load up front, with detail left in on-demand references?
+- [ ] Is the body under 500 lines, and does the description state both what it does and when to trigger?
+- [ ] Is every feedforward Guide paired with a fast computational Sensor that catches violations?
+- [ ] Are third-party skills and bundled scripts sandboxed or approved before they run?
+- [ ] For a long task, are old tool results cleared, notes kept, or work delegated to a clean sub-agent?
+- [ ] Are AI-generated green tests anchored by specs, fixtures, contract tests or human review?
 
 ## Deep references
 

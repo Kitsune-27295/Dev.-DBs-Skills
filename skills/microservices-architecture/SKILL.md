@@ -58,6 +58,16 @@ One idea: structure an application as a suite of **independently deployable, loo
 - **Missing Idempotency on Consumers:** Assuming a message broker delivers events "exactly once." Brokers deliver *at-least-once*; every event consumer and Saga step must be idempotent (`idempotency-fix`).
 - **Breaking API changes without versioning:** Modifying or removing a field in a REST/gRPC response or event payload without backward compatibility or contract tests.
 
+## Quick Decision Checklist
+
+- [ ] Are subdomain boundaries stable, and was a monolith-first start considered?
+- [ ] Are the prerequisites in place: CI/CD, provisioning, centralized logs, tracing and monitoring?
+- [ ] Can each service deploy independently without a lockstep release?
+- [ ] Does each service own its private database, with no shared tables?
+- [ ] Are long synchronous call chains avoided, with timeouts, retries and circuit breakers on remote calls?
+- [ ] Do cross-service writes use Sagas, with an Outbox for events and idempotent consumers?
+- [ ] Are Consumer-Driven Contract tests gating every pipeline?
+
 ## Deep references
 
 - [Fowler and Lewis: the nine characteristics in depth](references/fowler-lewis-nine-characteristics.md) — read when judging whether a design is really microservices or a distributed monolith.

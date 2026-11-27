@@ -1,6 +1,6 @@
 ---
 name: query-performance
-description: Use when pages or queries get slow as data grows, or before launch on a relational database - find the five most used queries, read their plans with EXPLAIN ANALYZE, add the missing indexes (including on foreign keys), replace queries inside loops, offset pagination and functions wrapped around indexed columns, and measure before and after. Use after the schema is right and the data is big enough to matter.
+description: "Speed up slow relational queries as data grows, or before launch: find the five most used queries, read their plans with EXPLAIN ANALYZE, add the missing indexes (including on foreign keys), replace queries inside loops, offset pagination and functions wrapped around indexed columns, and measure before and after. Use when queries slow down as data grows, after the schema is right. Not for a whole-server health check (use postgres-diagnostics), end-to-end page or job slowness (use application-performance) or a usage-priced database bill (use database-cost-guard)."
 ---
 
 # Query performance
@@ -30,6 +30,16 @@ Measure first, change one thing, measure again. An index that is never used stil
 - The statistics in the lesson (a large drop in milliseconds on millions of orders) are the author's claims in the source video, not measured here.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the slow page").
+
+## Quick Decision Checklist
+
+- [ ] Have I identified the five most used queries, plus any the owner calls slow, with file:line and SQL?
+- [ ] Did I measure with EXPLAIN ANALYZE on a realistic development copy, not production?
+- [ ] Do joined and deleted foreign key columns have indexes?
+- [ ] Did I check for N+1 loops, OFFSET pagination and functions wrapped around indexed columns?
+- [ ] Is each index justified by a measured query, given that it slows writes?
+- [ ] Am I applying one fix at a time, using CREATE INDEX CONCURRENTLY in its own non-transactional migration?
+- [ ] Did I measure again and report before and after, without rewriting business logic unasked?
 
 ## Deep references
 

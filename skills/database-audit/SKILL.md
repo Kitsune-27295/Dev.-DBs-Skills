@@ -45,6 +45,16 @@ Default to a relational database, **Postgres**, for anything with money, users, 
 
 Source: the handout of the second database lesson of mano deyvin (audit prompt, run order and "which database" note).
 
+## Quick Decision Checklist
+
+- [ ] Is this read-only, writing only DB-AUDIT.md and running no query against production?
+- [ ] Have I stated the engine, host, ORM, migration tool and connection origin without printing secrets?
+- [ ] Did I check all seven areas, marking any that do not apply as not applicable?
+- [ ] Does each finding carry a risk rating and a file:line or setting that proves it?
+- [ ] Does the run order start with exposure, then backups, then cost, and end with query performance?
+- [ ] Do I cite a source or omit third-party statistics from the lesson?
+- [ ] Will each fix wait for the owner's OK, with no data migration done by this skill?
+
 ## Deep references
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own

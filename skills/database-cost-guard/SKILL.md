@@ -24,6 +24,16 @@ A usage-priced database is a taxi meter: it does not know your code entered a lo
 
 Source: the handout of the second database lesson of mano deyvin (prompt "end-of-month scare").
 
+## Quick Decision Checklist
+
+- [ ] Do I know the billing model: fixed per instance, or per read, write and traffic?
+- [ ] Have I listed every query in a loop, real-time listener, offset pagination and unlimited query, each with file:line?
+- [ ] Did I estimate reads per user per day, and the cost at 10 times the users, showing the arithmetic?
+- [ ] Did I propose the simplest fix for each: JOIN or IN, narrower listener, cursor, row limit?
+- [ ] Is there a limit that really cuts at the provider, beyond a budget alert, or did I say plainly there is none?
+- [ ] Have I shown the list and plan before changing any file?
+- [ ] Am I leaving the database, provider and business rules unchanged?
+
 ## Deep references
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own

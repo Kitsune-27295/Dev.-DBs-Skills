@@ -42,6 +42,16 @@ One idea: build applications designed from day one to run as **portable, scalabl
 - Multi-environment microservice systems requiring seamless horizontal autoscaling.
 - Any application practicing Continuous Integration and Continuous Deployment (CI/CD).
 
+## Quick Decision Checklist
+
+- [ ] Is configuration in the environment, with no hardcoded credentials or per-environment files in Git?
+- [ ] Are processes stateless and share-nothing, with no user session state in process memory?
+- [ ] Are backing services treated as attached resources, and build, release and run kept separate?
+- [ ] Does the app handle SIGTERM with fast startup and graceful shutdown?
+- [ ] Do logs go to stdout as event streams, and admin tasks like migrations run as one-off processes?
+- [ ] Is dev kept as close to prod as possible, with no SQLite in dev and PostgreSQL in prod?
+- [ ] Is a new variable classified (secret, deploy config, local, code constant), with browser-prefixed variables treated as public?
+
 ## Deep references
 
 - [Factor mechanics and anti-patterns](references/factor-mechanics-and-anti-patterns.md) — read when auditing config, processes, releases, shutdown, logs or parity

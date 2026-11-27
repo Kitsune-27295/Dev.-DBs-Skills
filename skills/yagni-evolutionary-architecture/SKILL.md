@@ -49,6 +49,16 @@ Even when building speculative code feels "cheap right now", every presumptive f
 - **Building Unrequested Distributed Infrastructure ("100x on Day 1"):** Adopting Kubernetes, Kafka, Event Sourcing, and 12 microservices for an unproven domain instead of a modular `monolithic-architecture` ready to evolve.
 - **Stagnant Codebases Where Nothing Is Ever Deleted:** Growing code monotonically with abandoned flags, unused interfaces, and backward-compatibility shims because nobody dares remove obsolete paths.
 
+## Quick Decision Checklist
+
+- [ ] Does a live caller use this hook, flag or abstraction today, or should I delete or defer it?
+- [ ] Did I imagine the refactoring from the simple version, and is it cheap enough to defer?
+- [ ] Am I keeping tests, CI, refactoring and clean module boundaries rather than calling that YAGNI?
+- [ ] Is the up-front prep nearly zero complexity while preventing large rework?
+- [ ] Am I waiting for real variations before generalizing a single requirement?
+- [ ] Am I avoiding day-one distributed infrastructure in favor of a modular monolith?
+- [ ] Am I designing for about 10x current needs, not 100x, with decisions kept reversible?
+
 ## Deep references
 
 - [YAGNI costs and boundaries](references/yagni-costs-and-boundaries.md) — when rejecting or defending speculative features and abstractions

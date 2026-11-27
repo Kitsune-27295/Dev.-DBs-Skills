@@ -37,6 +37,16 @@ The database has its own audit and run order (exposure, backups, usage cost, tra
 
 `AUDIT.md` at the project root: one table per step (finding, risk high/medium/low, file and line, suggested fix) and, at the top, the **five highest risks** in order. Anything not verifiable says "not verified" and why, never a guess. End with which of the five fix skills to run first and why.
 
+## Quick Decision Checklist
+
+- [ ] Am I keeping this audit read-only: no project file changed, no migration run, nothing installed?
+- [ ] Am I on a separate branch, with each fix skill's plan read before accepting it?
+- [ ] Is every new migration reviewed by a human before it runs?
+- [ ] Is only one process working on the codebase at a time?
+- [ ] Am I avoiding deleting, skipping or loosening any test to get green?
+- [ ] Am I following the run order: tests, client trust, races and idempotency, then refactor?
+- [ ] Does AUDIT.md list the five highest risks and mark unverifiable items as not verified?
+
 ## Deep references
 
 - [Sources](references/sources.md) — what the video, handout and cited pages contributed, plus caveats

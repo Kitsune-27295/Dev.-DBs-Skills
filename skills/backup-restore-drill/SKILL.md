@@ -24,6 +24,16 @@ A backup you have never restored is a hope, not a backup. The lesson's example i
 
 Source: the handout of the second database lesson of mano deyvin (prompt "backup that comes back"); the GitLab postmortem is cited there.
 
+## Quick Decision Checklist
+
+- [ ] Have I written down what backups exist, how often, where, and how far back they can return?
+- [ ] Does the backup copy live outside the server that holds the database?
+- [ ] Are the main tables' row counts stored next to each dump?
+- [ ] Does the restore go into a separate database, never into production?
+- [ ] Is the database password kept out of the script (environment variable or secret store)?
+- [ ] Is the restore test scheduled rather than run once?
+- [ ] Have I shown the plan first, leaving scheduling to the owner and running nothing against production?
+
 ## Deep references
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own

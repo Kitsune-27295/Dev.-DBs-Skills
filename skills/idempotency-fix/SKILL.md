@@ -1,6 +1,6 @@
 ---
 name: idempotency-fix
-description: Use when a webhook, payment endpoint or any retried operation must have one effect no matter how many times it arrives (duplicate emails, credit added twice, double subscription, repeated calls to third-party APIs), or when auditing webhook handlers and charge calls. Adds signature verification, a processed-events table, idempotency keys and tests that send the same event twice and at the same time.
+description: "Make a webhook, payment endpoint or any retried operation have one effect no matter how many times the same event arrives (duplicate emails, credit added twice, double subscription, repeated calls to third-party APIs); also audits webhook handlers and charge calls. Adds signature verification, a processed-events table, idempotency keys and tests that send the same event twice and at the same time. Use when a retry, redelivery or double click repeats an effect. Not for different users racing for a limited resource (use race-condition-fix) or a failure midway through several writes (use transaction-fix)."
 ---
 
 # Idempotency fix
@@ -30,6 +30,17 @@ An in-process flag or variable is not shared between requests and dies with the 
 - Never change amounts, prices or billing rules.
 - Never use personal data (email, tax id) as an idempotency key.
 - The unique constraint is the guard; the concurrent test proves it. Two simultaneous inserts of one id must leave one row, which is the same mechanism as in `race-condition-fix`.
+
+## Quick Decision Checklist
+
+- [ ] Did I inventory every webhook and every endpoint that charges, enables a plan, credits or sends email, with file:line?
+- [ ] Is the webhook signature verified against the raw body before any processing?
+- [ ] Is the event id saved in a processed-events table with a unique key, and a repeat answered 200 and stopped?
+- [ ] Am I fetching current state from the gateway instead of relying on arrival order?
+- [ ] Do my own outbound gateway calls send an idempotency key reused on every retry?
+- [ ] Do my create endpoints accept an Idempotency-Key header and return the same response on repeats?
+- [ ] Is there a test sending the same event twice, and twice concurrently?
+- [ ] Is the new table a migration a human reviews, with no personal data used as a key?
 
 ## Deep references
 

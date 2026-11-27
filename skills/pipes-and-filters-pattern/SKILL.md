@@ -56,6 +56,16 @@ One idea: decompose a complex, multi-step data-processing task into a sequence o
 - **Unbounded in-memory pipes (No Backpressure):** Reading 10 GB of source records into an unbounded in-memory array/channel before a slow downstream filter can drain it, crashing the process with an Out-Of-Memory error.
 - **Blocking the entire pipe on one malformed record:** Throwing an unhandled exception on a bad record without a Dead-Letter Pipe, causing the queue consumer to retry the same poison message infinitely and halt all subsequent data.
 
+## Quick Decision Checklist
+
+- [ ] Are filters ignorant of their neighbors, bound only to their input and output envelopes?
+- [ ] Is each filter stateless and idempotent, safe if a message arrives twice?
+- [ ] Is the envelope an explicit, versioned contract, with Claim-Check for large payloads?
+- [ ] Are in-process pipes used by default, with queues only for a measured bottleneck needing independent scaling?
+- [ ] Is every pipe bounded for backpressure, with poison messages routed to a dead-letter sink?
+- [ ] Do filters pass state in the message, not through shared mutable database state?
+- [ ] Does the work fit a progressive data transformation, rather than a conversation between steps?
+
 ## Deep references
 
 - [Distributed pipeline design issues](references/distributed-pipeline-design-issues.md) — when splitting filters across hosts/queues: idempotency, ordering, backpressure, claim check

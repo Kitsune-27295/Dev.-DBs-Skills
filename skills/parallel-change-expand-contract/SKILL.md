@@ -60,6 +60,16 @@ flowchart TD
 3. **Synchronous bulk backfill in production:** Locking millions of rows in a single transaction causes database deadlocks and timeouts. Always backfill in small, throttled batches (e.g., 500 rows per batch).
 4. **Skipping rollback planning:** Dual-writing allows you to safely rollback to Phase 1 code if Phase 2 introduces critical bugs.
 
+## Quick Decision Checklist
+
+- [ ] Is the breaking change split into Expand, Transition and Contract across separate deployments?
+- [ ] Is the new column or field nullable or defaulted in the Expand phase?
+- [ ] Does the Transition phase write to both representations and read from the new one?
+- [ ] Is the backfill done in small, throttled batches rather than one bulk transaction?
+- [ ] Do I have a rollback plan relying on dual-writing?
+- [ ] Have I verified zero queries touch the legacy field before dropping it?
+- [ ] Are all app instances running Phase 3 code before the old column is dropped?
+
 ## Deep references
 
 - [Parallel change phases and variants](references/parallel-change-phases-and-variants.md) — code/API refactoring, feature flags, branch by abstraction, caveats

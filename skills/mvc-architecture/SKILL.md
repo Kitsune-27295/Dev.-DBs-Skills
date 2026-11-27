@@ -55,6 +55,16 @@ One idea: enforce **Separated Presentation** — divide user-interface interacti
 - **Coupling Domain Entities directly to Form Inputs (Mass Assignment):** Binding raw HTTP request bodies directly onto persistence models instead of validating through an input DTO or command object in the Controller.
 - **Polluting the Domain Model with UI concerns:** Adding CSS class names, localized display strings, or pagination widget state to core domain entities instead of using a ViewModel / Presentation Model.
 
+## Quick Decision Checklist
+
+- [ ] Does the Model import no controllers, views, HTML helpers, session objects or UI components?
+- [ ] Do business rules and state transitions live in the Model, not in the Controller?
+- [ ] Are Views read-only projections with no queries, state mutation or business rules?
+- [ ] Is screen-specific state kept in a ViewModel or Presenter instead of domain entities?
+- [ ] Are Views humble, with branching and formatting pushed into fast unit-testable objects?
+- [ ] Is request input validated through a DTO or command object rather than bound to persistence models?
+- [ ] Did I build and unit-test the Model first, with a thin Controller after?
+
 ## Deep references
 
 - [MVC lineage and Separated Presentation](references/mvc-lineage-and-separated-presentation.md) — read when checking the model/view/controller dependency direction or comparing GUI architecture styles.

@@ -1,6 +1,6 @@
 ---
 name: defensive-domain-modeling
-description: "Model domains safely in code using Parse Don't Validate, Making Illegal States Unrepresentable, Value Objects, Tell Don't Ask, Law of Demeter, method-level CQS, Guard Clauses, and Railway-Oriented Programming (Result/Either). Use when eliminating primitive obsession, shotgun parsing, train-wreck navigation, or exception-heavy business flows."
+description: "Model domains safely in code using Parse Don't Validate, Making Illegal States Unrepresentable, Value Objects, Tell Don't Ask, Law of Demeter, method-level CQS, Guard Clauses and Railway-Oriented Programming (Result/Either). Use when eliminating primitive obsession, shotgun parsing, train-wreck navigation or exception-heavy business flows inside the domain model. Not for validating untrusted request input at the edge (use validator-input-parser), HTTP error contracts (use error-handling-problem-details) or deep Value Object and Money design (use value-objects-type-invariants)."
 ---
 
 # Defensive Domain Modeling & Type-Safe Flows
@@ -95,6 +95,17 @@ Model multi-step fallible use cases as a **two-track railway** (`Ok(value)` on t
 3. **External callers computing totals/state transitions via `obj.setX(obj.getY()...)`** → Move logic onto the owning entity/module (*Tell, Don't Ask*) or use pure Value Object methods.
 4. **3–4 chained getters (`a.getB().getC().updateD()`)** → Add a single intention-revealing method on `a` (preserving Value Object/collection fluency).
 5. **Deeply nested `try { if { if { ... } } }` blocks** → Flatten preconditions with Guard Clauses and chain workflow steps cleanly via `Result` (`bind`/`map`/`tee`).
+
+## Quick Decision Checklist
+
+- [ ] Is untrusted input parsed into a stronger type at the edge, not just validated and discarded?
+- [ ] Could a union type replace this flag combination so illegal states cannot be represented?
+- [ ] Are raw primitives like ids, emails and money wrapped in self-validating, immutable Value Objects?
+- [ ] Do the type guarantees also have matching SQL constraints?
+- [ ] Does the owning object enforce its state transitions (Tell, Don't Ask) instead of callers chaining getters?
+- [ ] Do queries stay free of side effects, with commands kept separate?
+- [ ] Am I using Result pipelines only for fallible workflows, not wrapping every tiny pure helper?
+- [ ] Do independent field parsers accumulate all errors instead of stopping at the first?
 
 ## Deep references
 

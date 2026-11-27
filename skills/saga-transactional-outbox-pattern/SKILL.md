@@ -64,6 +64,17 @@ One idea: when a business transaction spans multiple databases or a database plu
 - **Forgetting Semantic Locks (Dirty Reads):** Letting a user cancel or withdraw funds that were temporarily credited by Step 1 of an in-flight Saga that later rolls back at Step 3.
 - **Unbounded Outbox table growth:** Never archiving or deleting published Outbox rows (`published_at IS NOT NULL`), causing the Outbox polling query to slow down as the table hits tens of millions of rows.
 
+## Quick Decision Checklist
+
+- [ ] Do the writes span services or a broker, rather than one database that a local ACID transaction covers?
+- [ ] Are outbound events inserted into an Outbox in the same local transaction, with no dual write?
+- [ ] Does every consumer track processed message IDs, or is it naturally idempotent?
+- [ ] Are Saga steps ordered as compensatable first, then the Pivot, then retriable steps?
+- [ ] Does every compensatable step have a tested, idempotent compensating transaction?
+- [ ] Are Semantic Locks or other countermeasures in place for the lack of isolation?
+- [ ] Do I use Orchestration for 4+ services, branching rollbacks or timeouts?
+- [ ] Does the participant handle Compensate arriving before DoAction, and is the Outbox cleaned up?
+
 ## Deep references
 
 - [Saga anomalies and countermeasures](references/saga-anomalies-and-countermeasures.md) — read when classifying saga steps (compensable/pivot/retryable) or choosing isolation countermeasures.

@@ -57,6 +57,15 @@ One idea: treat architecture diagrams like **Google Maps for your code** — def
 - **Bidirectional unlabelled arrows (`A <---> B`):** Hides who initiates the connection, what protocol is used, and whether the coupling is synchronous RPC or asynchronous pub/sub.
 - **Unexplained color coding and acronyms:** Using 7 pastel colors with no Legend/Key and unexplained internal project code names.
 
+## Quick Decision Checklist
+
+- [ ] Does each diagram stay at one level, with no Components on a Context diagram?
+- [ ] Does every box show name, type/technology and a short description?
+- [ ] Is every arrow unidirectional and labeled with intent and protocol?
+- [ ] Does the diagram have a title, scope and legend?
+- [ ] Is each database or message broker drawn as its own Container node?
+- [ ] Am I drawing Level 3 or 4 only where the structure is not obvious, and keeping diagrams as code?
+
 ## Deep references
 
 - [C4 abstractions and levels](references/c4-abstractions-and-levels.md) — when deciding what is a container and which levels to draw

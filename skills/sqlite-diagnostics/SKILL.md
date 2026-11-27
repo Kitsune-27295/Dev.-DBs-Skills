@@ -38,8 +38,21 @@ documents as free of side effects, so a diagnosis never changes the file. Cross-
 
 References: `references/README.md` (index, minimum versions, how this was proven).
 
+## Quick Decision Checklist
+
+- [ ] Am I working on a copy made from a read-only connection, not a plain file copy of a live WAL database?
+- [ ] Did I check the engine version first, since minimum versions gate the scripts?
+- [ ] Did I run in order: identity and config, quick_check, schema, then storage?
+- [ ] If quick_check fails, did I stop and report, since the rest is unreliable?
+- [ ] Did I run integrity_check only when quick_check passes and corruption is still suspected, or before a migration?
+- [ ] Am I avoiding every pragma that writes, proposing it for the owner instead?
+- [ ] Do I treat zero rows as nothing found, not healthy, and a missing sqlite_stat1 or dbstat as an absent feature?
+- [ ] Did I compare this connection's settings (foreign_keys is OFF by default) with the application's open-time settings?
+
 ## Deep references
 
+- [Query pack index](references/README.md) — read to pick the script that answers a question.
+- [Sources](references/sources.md) — read for URL status and claims not adopted.
 - [Integrity and foreign key pragmas](references/integrity-and-foreign-key-pragmas.md) — read when interpreting quick_check, integrity_check or foreign_key_check output.
 - [dbstat and space analysis](references/dbstat-and-space-analysis.md) — read when dbstat is missing or file size and free pages need explaining.
 - [WAL, journal mode, statistics and counters](references/wal-journal-and-connection-health.md) — read for locked databases, WAL copies, sqlite_stat1 or AUTOINCREMENT.

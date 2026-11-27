@@ -69,6 +69,17 @@ Always climb one rung at a time and stop at the first rung that meets your evalu
 - **Unbounded Agent Loops and Context Bloat:** Letting an agent retry a failing search 20 times or inject 100 KB of raw HTML/JSON into its conversation history until latency, cost, and accuracy collapse.
 
 
+## Quick Decision Checklist
+
+- [ ] Have I stopped at the lowest complexity rung that meets the evaluation metrics?
+- [ ] If the step sequence is known in advance, am I writing a Workflow in code instead of an Agent?
+- [ ] Does multi-agent or Agentic RAG earn its latency and cost over Standard RAG or a prompt chain?
+- [ ] Does retrieval use hybrid search (BM25 + vector + reranker), especially for exact identifiers?
+- [ ] Are tenant and access filters enforced as hard pre-filters on the index query, not in the prompt?
+- [ ] Is every agent loop bounded by max iterations, timeouts, cost budgets and confirmation gates?
+- [ ] Are tools few, task-oriented and clearly described, with concise errors and capped output?
+- [ ] Have I evaluated retrieval first, then tool selection, groundedness, and latency and cost?
+
 ## Deep references
 
 - [Workflow Patterns and Tool (ACI) Design](references/workflow-patterns-and-tool-interface-design.md) — read when choosing among chaining/routing/parallel/orchestrator/evaluator patterns or designing retrieval tool signatures.

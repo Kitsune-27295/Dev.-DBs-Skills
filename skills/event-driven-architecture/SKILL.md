@@ -60,6 +60,17 @@ One idea: decouple **event producers** from **event consumers** through asynchro
 - **Breaking event schemas in place:** Renaming or deleting fields in a published event payload without versioning or upcasting, crashing downstream consumers.
 - **Unbounded callback storms on thin Event Notifications:** Emitting a thin notification to 20 subscribers who all immediately fire synchronous HTTP `GET` requests back to the producer at the exact same millisecond (fix with Event-Carried State Transfer).
 
+## Quick Decision Checklist
+
+- [ ] Have I named the pattern: Event Notification, Event-Carried State Transfer, or an explicit Command?
+- [ ] Is each event a past-tense fact, not a disguised command that depends on a specific receiver?
+- [ ] Did I choose Pub/Sub or Event Streaming deliberately, not confusing it with competing consumers?
+- [ ] Is publishing done through a Transactional Outbox instead of a dual write?
+- [ ] Is every consumer idempotent, given at-least-once delivery?
+- [ ] Does each event carry correlation and causation IDs plus a version, with a DLQ for failures?
+- [ ] Are event schemas versioned rather than changed in place?
+- [ ] Is a Saga or Command needed because the producer cares about the outcome?
+
 ## Deep references
 
 - [Fowler four event patterns](references/fowler-four-event-patterns.md) — before naming or choosing an event-driven pattern

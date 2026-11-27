@@ -71,8 +71,19 @@ Worth it: long-lived system, several kinds of client (CLI, web, agent tools), te
 
 Map the six areas to the rules above and follow `AGENTS.md`: `src/domain` (pure), `src/ports` (inbound and outbound interfaces plus the runtime locator), `src/application` (use cases), `src/adapters` (driven, one family per folder, no cross-family imports), `src/drivers` (CLI, MCP, HTTP; never import `src/adapters`), `src/bootstrap` (the only wiring root). The strict check lives in the architecture test; run it before finishing any structural change.
 
+## Quick Decision Checklist
+
+- [ ] Does the hexagon depend on nothing but the language runtime (no driver, HTTP, node:fs, framework or SDK)?
+- [ ] Are ports shaped by the use case's need, not by the database or other technology?
+- [ ] Do business rules live in the hexagon rather than in a driver adapter?
+- [ ] Do adapters avoid importing each other, with only the composition root wiring concrete adapters?
+- [ ] Is each use case tested first against in-memory fakes of the driven ports?
+- [ ] Is an architecture test (import graph scan) guarding the dependency rules?
+- [ ] Is the system long-lived with several clients or changing tech, and not a small fixed-tech CRUD?
+
 ## Deep references
 
+- [Sources](references/sources.md) — read for URL status and claims not adopted.
 - [Ports and Adapters: conceptual model](references/ports-and-adapters-conceptual-model.md) — read when classifying actors, naming ports, or settling port granularity and composition-root duties.
 - [Implementation order and testing strategy](references/implementation-order-and-testing-strategy.md) — read when planning the build sequence, test levels, contract tests or architecture tests.
 - [Use cases, command objects and dependency inversion](references/use-cases-ports-and-dependency-inversion.md) — read when writing a use case, its input and output ports, or deciding where logic lives.

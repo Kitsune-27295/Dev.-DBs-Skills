@@ -1,6 +1,6 @@
 ---
 name: adr-architecture
-description: Use when authoring, reviewing, superseding, or governing Architecture Decision Records (ADRs) — capturing Architecturally Significant Requirements (ASRs) using Michael Nygard's template, MADR, or Y-statements, maintaining an immutable decision log in Git, and avoiding blind acceptance or blind reversal of past decisions.
+description: "Author, review, supersede or govern Architecture Decision Records (ADRs): capture Architecturally Significant Requirements (ASRs) using Michael Nygard's template, MADR or Y-statements, keep an immutable decision log in Git, and avoid blind acceptance or blind reversal of past decisions. Use when a significant technical decision must be recorded, reviewed or superseded, or when judging whether an old ADR still holds. Not for the project glossary or ADR notes captured while sharpening domain terms in conversation (use domain-modeling) or for choosing between styles and technologies (use architecture-decision-trees-tradeoffs)."
 ---
 
 # Architecture Decision Records (ADRs)
@@ -75,6 +75,16 @@ We will **[explicit action]**, because **[core rationale tied to the forces abov
 - **Retroactive justification ("Resume-Driven ADR"):** Picking a complex technology first (e.g., Kubernetes + Kafka for a 10-user internal tool) and writing fake straw-man alternatives to justify it.
 - **Modifying an Accepted ADR in place when reversing a decision:** Deleting the old rationale erases why the team tried the first approach — causing a future team to repeat the exact same mistake 18 months later.
 - **Orphan Decisions with zero verification:** Writing an ADR saying *"Domain layer must never import Infrastructure"* without adding an architecture import test (`clean-architecture`, `hexagonal-architecture`) to enforce it in CI.
+
+## Quick Decision Checklist
+
+- [ ] Is this decision architecturally significant, not a lint-enforced style rule or an hour-long refactor?
+- [ ] Does the ADR cover exactly one decision, with the forces and at least two considered options?
+- [ ] Does it say why each rejected alternative lost, with no straw-man options?
+- [ ] Are the negative consequences and trade-offs listed, not only benefits?
+- [ ] If reversing a decision, am I writing a new ADR and linking the old one as Superseded, not editing the Accepted one?
+- [ ] Does Compliance / Verification name an automated check, so the ADR is not shelfware?
+- [ ] Is the ADR short (1-2 pages), in docs/adr/, and reviewed in the same PR as the change?
 
 ## Deep references
 

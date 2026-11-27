@@ -56,6 +56,16 @@ One idea: stop coupling code horizontally across technical layers (`Controllers/
 - **Sharing DTOs or Validators across distinct slices:** Reusing `OrderDto` across `CreateOrder`, `UpdateOrder`, and `GetOrderDetails`, so a field added for one screen breaks or exposes data on another (`never-trust-the-client`).
 - **Procedural God Handlers (skipping the refactoring step):** Bogard explicitly warns that VSA requires recognizing code smells — when business rules get tangled inside a handler, push them into rich Domain Entities instead of leaving procedural spaghetti.
 
+## Quick Decision Checklist
+
+- [ ] Does each feature live in one slice, with coupling kept inside the slice?
+- [ ] Do slices avoid calling other slices' handlers or importing their DTOs?
+- [ ] Am I avoiding pass-through interfaces that exist only to satisfy a layer rule?
+- [ ] Did I pick the pattern per slice: direct projection for queries, transaction script for simple commands?
+- [ ] Am I accepting some duplication instead of a wrong shared abstraction?
+- [ ] Is cross-cutting plumbing in pipeline behaviors or middleware?
+- [ ] Did I push tangled business rules into domain entities instead of a God handler?
+
 ## Deep references
 
 - [Bogard's slice principles and trade-offs](references/bogard-slice-principles-and-tradeoffs.md) — when justifying slices over layers or checking team fit

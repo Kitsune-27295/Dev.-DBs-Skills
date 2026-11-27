@@ -61,6 +61,17 @@ One idea: extend the vertical decomposition of microservices all the way to the 
 - **Putting business logic inside the shared Design System:** Turning the UI component library into a backdoor monolith where domain rules require coordinated upgrades across all teams.
 - **Unbounded bundle duplication (Framework Anarchy):** Shipping three different versions of React, Lodash, and Moment.js on the same page without monitoring payload weight and Core Web Vitals.
 
+## Quick Decision Checklist
+
+- [ ] Is each slice a vertical business domain owned end-to-end, not a horizontal widget?
+- [ ] Can each micro-frontend deploy to production without rebuilding the Container or other teams?
+- [ ] Have I avoided build-time npm integration where independent release velocity is the goal?
+- [ ] Do micro-frontends communicate only via URL, attributes or DOM events, with no shared global state store?
+- [ ] Is CSS namespaced or isolated per team?
+- [ ] Is one UI stack standardized, with shared runtime dependencies externalized?
+- [ ] Does the shared Design System hold only visual primitives with zero business logic?
+- [ ] Do 3+ teams justify the overhead, or would a modular SPA monolith do?
+
 ## Deep references
 
 - [Integration approaches and trade-offs](references/integration-approaches-trade-offs.md) — choosing how to compose micro frontends

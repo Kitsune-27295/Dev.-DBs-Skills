@@ -78,6 +78,17 @@ stateDiagram-v2
 - **Unbounded metric cardinality in OpenTelemetry:** Attaching `trace_id`, `order_id`, or full URLs with query strings as metric labels explodes time-series storage costs; keep high-cardinality IDs in Traces and Logs only.
 - **Paging on every single retried transient error:** Logging attempt #1 of a successful 2-attempt retry as `ERROR` creates alert fatigue; reserve `ERROR` for exhausted retries or Open circuits.
 
+## Quick Decision Checklist
+
+- [ ] Do retries apply only to idempotent operations and transient faults (not 400/401/403/404)?
+- [ ] Do retries use capped exponential backoff with jitter?
+- [ ] Is retrying done at a single layer, so inner hops fail fast and amplification is avoided?
+- [ ] Is the nesting Fallback, then Retry, then Circuit Breaker, then per-attempt Timeout and Bulkhead?
+- [ ] Does Retry abort immediately when the Circuit Breaker is Open?
+- [ ] Are breakers and bulkheads partitioned by failure domain, with tight per-attempt timeouts?
+- [ ] Are metric attributes low-cardinality, with IDs kept in traces and logs only?
+- [ ] Is ERROR logged only for exhausted retries or Open circuits, not for each retried blip?
+
 ## Deep references
 
 - [Circuit breaker state machine and tuning](references/circuit-breaker-state-machine-and-tuning.md) — when setting thresholds, Open duration, probes, per-partition breakers

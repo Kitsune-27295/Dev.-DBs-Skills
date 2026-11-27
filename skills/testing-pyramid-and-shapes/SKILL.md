@@ -58,6 +58,14 @@ flowchart TD
 3. **Microservice Fleets & Distributed APIs:** **Testing Honeycomb**. Focus primarily on integration and contract testing between service boundaries, minimizing fragile cross-service end-to-end tests.
 
 
+## Quick Decision Checklist
+
+- [ ] Did I match the shape to the architecture: Pyramid, Trophy or Honeycomb?
+- [ ] For a rich-domain monolith, are fast unit tests the base with minimal smoke E2E?
+- [ ] For a web SPA or full-stack app, is integration the bulk, supported by static typing?
+- [ ] For microservices, do integration and contract tests dominate over fragile cross-service E2E?
+- [ ] Am I avoiding the ice cream cone of few unit tests and a bloated, flaky E2E suite?
+
 ## Deep references
 
 - [The Practical Test Pyramid, Layer by Layer](references/practical-pyramid-layer-by-layer.md) — read when deciding what belongs in unit, integration, contract, UI or E2E tests.

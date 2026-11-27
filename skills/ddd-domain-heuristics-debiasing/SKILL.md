@@ -63,6 +63,16 @@ Research shows **knowing about biases does not eliminate them** (`*claim*`: More
 - **Building Generic Commodities In-House:** Spending top engineering bandwidth building custom auth, scheduling, or payment ledgers while the true Core differentiator stagnates.
 - **Solo Gut-Check Architecture Reviews:** Confusing team consensus (echoed enthusiasm in a design meeting) with independent verification, or skipping subtractive alternatives when refactoring complex monoliths.
 
+## Quick Decision Checklist
+
+- [ ] Have I separated where competitive value lives (strategic) from how logic is coded (tactical)?
+- [ ] Is each subdomain classified as Core, Supporting or Generic, using differentiation and complexity?
+- [ ] Do I start simple (Transaction Script or Active Record) and use Aggregates only for complex invariants?
+- [ ] Will Generic subdomains be bought, adopted or outsourced instead of built in-house?
+- [ ] Did I consider removing a layer, service or rule, not only adding one?
+- [ ] Do I have independent advice rather than echoes, and did I test the pattern's original purpose?
+- [ ] Is this a Two-Way Door to decide quickly, or a One-Way Door that needs an ADR?
+
 ## Deep references
 
 - [Subdomain roles and implementation patterns](references/subdomains-and-implementation-patterns.md) — read when classifying subdomains or choosing Transaction Script vs Domain Model

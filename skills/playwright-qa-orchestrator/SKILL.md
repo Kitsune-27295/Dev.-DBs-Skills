@@ -1,6 +1,6 @@
 ---
 name: playwright-qa-orchestrator
-description: "Orchestrate evidence-based QA automation for any web app with Playwright: discover the project, analyze requirements and risk, plan and write tests, run only what is relevant, classify every failure before editing, and report with proof. Harness-neutral and stack-agnostic; delegates to Playwright Test Agents when present, else Playwright CLI or MCP, else plain @playwright/test. Enforces zero-cheating rules (no deleted assertions, no blanket skips, no arbitrary timeouts, no unrun pass claims). Use when testing features, validating PRs, diagnosing failed Playwright tests, auditing web app quality, or setting up or healing E2E suites."
+description: "Orchestrate evidence-based QA automation for any web app with Playwright: discover the project, analyze requirements and risk, plan and write tests, run only what is relevant, classify every failure before editing, and report with proof. Harness-neutral and stack-agnostic; delegates to Playwright Test Agents when present, else Playwright CLI or MCP, else plain @playwright/test. Enforces zero-cheating rules (no deleted assertions, no blanket skips, no arbitrary timeouts, no unrun pass claims). Use when testing features in the browser, validating PRs, diagnosing failed Playwright tests, or setting up or healing E2E suites. Not for intermittent CI failures caused by ports, clocks or shared state (use ci-test-reliability) or backend route tests (use integration-tests)."
 ---
 
 # Playwright QA Orchestrator

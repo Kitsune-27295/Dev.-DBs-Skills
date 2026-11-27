@@ -70,6 +70,16 @@ Keep sections concise ("just enough" documentation); link to C4 diagrams (`c4-mo
 - **Validating OpenAPI 3.1+ with the outer `schema/` instead of `schema-base/`:** As the OpenAPI Initiative notes, the plain `schema/YYYY-MM-DD` validates only the outer OAS structure and ignores errors inside `Schema Objects`; use `schema-base/YYYY-MM-DD` to validate the JSON Schema definitions too.
 - **Filling all 12 arc42 chapters with boilerplate text on day one:** Leaving template help text or writing 50 pages of filler. Write "just enough" in the sections that matter and expand as decisions are made.
 
+## Quick Decision Checklist
+
+- [ ] Are schemas kept in openapi.yaml / asyncapi.yaml and linked, not copied into prose tables?
+- [ ] Is the style right: OpenAPI for HTTP request-response, AsyncAPI 3.x for events, queues and WebSockets?
+- [ ] Is the OpenAPI 3.1+ spec validated with schema-base, not the outer schema?
+- [ ] Does CI lint the specs and fail on breaking changes or implementation drift?
+- [ ] Is the operational prose written: connection lifecycle, auth handshake, reconnection, error frames, ordering, backpressure?
+- [ ] Did I fill goals, constraints, context, strategy and glossary first, instead of boilerplate in all 12 sections?
+- [ ] Do the arc42 sections link to C4 diagrams, ADRs and contract files, with a link check in CI?
+
 ## Deep references
 
 - [arc42 sections and just-enough docs](references/arc42-sections-and-just-enough-docs.md) — read when deciding which of the 12 sections to write and how C4 and ADRs fit.

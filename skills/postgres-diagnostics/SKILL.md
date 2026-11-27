@@ -36,8 +36,20 @@ Postgres tool box under it, and `query-performance` is the generic method behind
 
 References: `references/README.md` (index of the scripts, differences between versions, how this was proven).
 
+## Quick Decision Checklist
+
+- [ ] Did I check the server version and pick the matching pg16, pg17 or pg18 folder?
+- [ ] Did I choose scripts for the question from the references table?
+- [ ] Am I using the least privilege that works (pg_monitor) and psql with ON_ERROR_STOP?
+- [ ] Has the owner approved the script list before I query production?
+- [ ] Am I avoiding any server change, only proposing the statement for the owner to run?
+- [ ] Did a missing pg_stat_statements become a finding rather than something I install?
+- [ ] Do I read counters since stats_reset and treat zero rows as nothing found, not healthy?
+- [ ] Is the output kept out of external services?
+
 ## Deep references
 
+- [Query pack index](references/README.md) — read to pick the script that answers a question, per version folder.
 - [Statistics views and reset semantics](references/stats-views-and-reset-semantics.md) — read before trusting any counter-based finding (unused index, scans, statements).
 - [Vacuum, bloat and wraparound concepts](references/vacuum-bloat-and-wraparound-concepts.md) — read when dead rows, autovacuum lag or transaction-ID age appears.
 - [Locks and activity interpretation](references/locks-and-activity-interpretation.md) — read for blocking, idle-in-transaction, replication lag and slot results.

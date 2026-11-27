@@ -56,6 +56,17 @@ Automate the Dependency Rule with an architecture test (e.g., `NetArchTest`, `Ar
 - **Anemic Use Cases + Smart Controllers:** Putting orchestration and business validation inside the Web Controller while the Use Case only delegates to a Repository.
 - **Over-abstracting trivial internal helpers:** Creating a Port/Adapter boundary for deterministic in-memory helpers (like date math or string formatting) that are not external agencies.
 
+## Quick Decision Checklist
+
+- [ ] Do all source dependencies point inward, with no outer name used in an inner circle?
+- [ ] Does the Use Case own the port interface that the outer adapter implements?
+- [ ] Do only simple DTOs cross boundaries, never ORM rows or raw HTTP request objects?
+- [ ] Are web frameworks, ORMs and vendor SDKs confined to the outermost ring?
+- [ ] Is business validation in the Use Case, not in the Controller?
+- [ ] Do controllers return Response DTOs or Presenters, not raw domain entities?
+- [ ] Does an architecture test fail CI when an inner circle imports an outer one?
+- [ ] Does this system have enough business policy to be worth the circles, and is the new port a real external agency?
+
 ## Deep references
 
 - [The Dependency Rule and Boundary Crossing](references/dependency-rule-and-boundary-crossing.md) — read when enforcing the rule or designing ports and presenters.

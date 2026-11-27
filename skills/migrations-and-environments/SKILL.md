@@ -1,6 +1,6 @@
 ---
 name: migrations-and-environments
-description: Use to put database changes under version control and separate development from production - a migration tool with numbered files, a baseline for the existing schema, a drift check, separate environment variables and databases per environment, and an application user with least privilege. Use when someone edits the schema by hand, when development and production share a database, or before the first real user.
+description: "Put database changes under version control and separate development from production: a migration tool with numbered files, a baseline for the existing schema, a drift check, separate environment variables and databases per environment, and an application user with least privilege. Use when someone edits the schema by hand, when development and production share a database, or before the first real user. Not for rolling out a breaking rename or type change with zero downtime (use parallel-change-expand-contract) or reviewing the schema design itself (use schema-and-constraints)."
 ---
 
 # Migrations and environments
@@ -27,6 +27,16 @@ Two rules: every schema change is a numbered file in the repository, and a comma
 - Backups are `backup-restore-drill`; tests of migrations use a throwaway database, see `integration-tests`.
 
 Source: the handout of the second database lesson of mano deyvin (prompt "migrations and separate environments").
+
+## Quick Decision Checklist
+
+- [ ] Is every schema change a numbered file, with the migration tool named or the simplest one proposed?
+- [ ] Do I know which databases exist and whether any two share a database or credential?
+- [ ] Have I compared the live schema with the migration files and reported every drift?
+- [ ] Do scripts and examples default to the development database, with production a separate explicit step?
+- [ ] Does the app user have only the grants it needs, with migrations under a separate owner-level credential?
+- [ ] Am I leaving migrations against production to the owner and never editing an applied migration?
+- [ ] Will I avoid dropping live-only objects without the owner's OK, and show the plan first?
 
 ## Deep references
 

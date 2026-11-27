@@ -56,6 +56,17 @@ One idea: build systems out of **managed third-party backend services (BaaS)** a
 - **Opening a new DB connection or SDK client inside the handler on every invocation:** Exhausts sockets and adds latency. Instantiate clients at module scope so warm invocations reuse them.
 - **Locking business logic inside the vendor handler:** Mixing AWS/Azure event structures and vendor SDK calls directly into domain rules so the logic cannot be tested locally or moved to a container.
 
+## Quick Decision Checklist
+
+- [ ] Is the function stateless, with any state that must survive held in an external managed store?
+- [ ] Is the handler a thin adapter calling pure domain code that runs locally without the cloud?
+- [ ] Are SDK clients and DB pools created at module scope, not inside the handler per invocation?
+- [ ] Is database connection exhaustion handled with a data API, DynamoDB or a connection proxy?
+- [ ] Is every event-triggered function idempotent, with a DLQ or failure destination?
+- [ ] Does each function have its own least-privilege role, with concurrency and budget caps?
+- [ ] Does any function call another synchronously, or write back to its own trigger source?
+- [ ] Does the workload suit serverless: bursty traffic, not steady 24/7 compute or cold-start-sensitive latency?
+
 ## Deep references
 
 - [BaaS, FaaS and trade-offs](references/baas-faas-tradeoffs.md) — when judging whether serverless fits and what limits apply

@@ -1,6 +1,6 @@
 ---
 name: race-condition-fix
-description: Use to find and fix race conditions in code that reads a value, decides, then writes it back (stock, coupons, balances, credits, seats, invites, counters, any limited resource), or when duplicate orders, negative stock or a coupon used twice show up. Fixes in the database, in a fixed order of preference, and proves each fix with a simultaneous-request test.
+description: "Find and fix race conditions in code that reads a value, decides, then writes it back (stock, coupons, balances, credits, seats, invites, counters, any limited resource), so two simultaneous requests cannot both win: negative stock, a coupon used twice, overbooked seats, duplicate orders. Fixes in the database, in a fixed order of preference, and proves each fix with a simultaneous-request test. Use when concurrent requests break a limit or counter. Not for the same event or retry delivered several times (use idempotency-fix) or a half-finished multi-table write (use transaction-fix)."
 ---
 
 # Race-condition fix
@@ -31,6 +31,17 @@ Duplicate orders, negative stock, a coupon or invite redeemed more than once, a 
 ## Source
 
 Martin Kleppmann, "How to do distributed locking": the storage service that holds the data must check a monotonically increasing fencing token and reject lower ones, and for correctness locks he recommends a database with reasonable transactional guarantees. Using a unique key, conditional UPDATE or row lock for the same job is this skill's own application of that idea (from the handout).
+
+## Quick Decision Checklist
+
+- [ ] Did I find every read-check-write path on a limited resource, each with file:line?
+- [ ] Did I state per hit what happens if two identical requests arrive in the same millisecond?
+- [ ] Am I trying the fixes in order: unique constraint, atomic conditional statement, then row-lock transaction?
+- [ ] After an atomic UPDATE, am I checking affected rows to detect that the resource is gone?
+- [ ] Is the database enough, with no Redis, queue, in-memory lock or cache added?
+- [ ] Is there a test firing two simultaneous requests that asserts exactly one has effect?
+- [ ] Have I shown the list and plan first, with migrations reviewed by a human?
+- [ ] Am I reporting existing duplicates and proposing cleanup instead of deleting them?
 
 ## Deep references
 

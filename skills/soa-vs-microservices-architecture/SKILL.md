@@ -57,6 +57,16 @@ One idea: both SOA and Microservices decompose software into network-accessible 
 - **The Canonical Data Model Bottleneck:** Forcing Billing, Shipping, Marketing, and Support to agree on one giant 300-field `EnterpriseOrder` schema instead of letting each Bounded Context model only the fields relevant to its role.
 - **Synchronous request chaining across Enterprise Services:** Chaining 5 synchronous SOA services over an ESB so a slowdown in one legacy system exhausts thread pools across the entire enterprise.
 
+## Quick Decision Checklist
+
+- [ ] Is the need heterogeneous enterprise integration (SOA) or an agile product with autonomous teams (microservices)?
+- [ ] Is business logic kept out of the ESB, gateway routing rules and proprietary transformation scripts?
+- [ ] Am I avoiding a company-wide canonical data model in favor of per-context contracts?
+- [ ] Does every table have a single owning service, with shared databases untangled first?
+- [ ] Are legacy endpoints wrapped in an Anti-Corruption Layer, migrating incrementally rather than big bang?
+- [ ] Do my microservices truly deploy independently, or are they SOA in microservice clothing?
+- [ ] Are long synchronous chains across services avoided?
+
 ## Deep references
 
 - [SOA vs microservices comparison dimensions](references/soa-vs-microservices-comparison-dimensions.md) — when comparing scope, data, communication and governance

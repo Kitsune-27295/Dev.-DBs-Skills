@@ -38,8 +38,20 @@ References (read only the one you need):
 - `references/sql2019-porting.md`: what changes on 2019 (permissions, defaults, lifecycle).
 - `references/sql2025-porting.md`: what changes on 2025 (breaking changes, new objects, defaults).
 
+## Quick Decision Checklist
+
+- [ ] Did I identify the SQL Server version first and pick the matching script folder and porting guide?
+- [ ] Have I chosen scripts for the question, running medium and heavy ones only with the owner's OK?
+- [ ] Am I running one script at a time with a login that has the right permissions?
+- [ ] Did I compare counters with sqlStartTime before judging waits, I/O or index results?
+- [ ] Is empty output reported as "nothing found" rather than "healthy"?
+- [ ] Am I leaving instance changes (sp_configure, ALTER, DBCC repair, rebuilds) to the owner?
+- [ ] Do I say "not run on <version>" for anything not covered, and keep output out of external services?
+
 ## Deep references
 
+- [Porting to SQL Server 2019](references/sql2019-porting.md) — read before running the pack on 15.x.
+- [Porting to SQL Server 2025](references/sql2025-porting.md) — read before running the pack on 17.x.
 - [Wait stats, I/O and blocking](references/wait-stats-and-blocking-interpretation.md) — read when interpreting waits, latency, counters or deadlock evidence.
 - [Index DMVs and reset rules](references/index-dmvs-and-reset-semantics.md) — read before reporting missing or unused indexes.
 - [Top queries and Query Store](references/query-store-and-plan-regression.md) — read when cached top queries are not enough or plans regress.

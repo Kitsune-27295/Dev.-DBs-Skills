@@ -31,6 +31,16 @@ Why it matters: a disorganized file confuses the agent as it confuses a person. 
 - Order of work in a larger cleanup: tests first, so the separation is protected; separation last. See `fundamentals-audit` for the full order.
 - Integration-level characterization is preferred over unit tests with mocks; see `integration-tests`.
 
+## Quick Decision Checklist
+
+- [ ] Is every block of the file mapped to one drawer: UI, business rules, or data and services?
+- [ ] Does the target structure follow the project's existing pattern, with no new framework or library, and the owner's OK?
+- [ ] Do characterization tests for the main flows pass on the untouched file before I move anything?
+- [ ] Is each step small, keeping public names and leaving the app working?
+- [ ] Do I run the tests after every step, undoing the step (not editing the test) when red?
+- [ ] Is any bug I find going on a separate list instead of being fixed in flight?
+- [ ] Am I leaving routes, public props and database columns un-renamed?
+
 ## Deep references
 
 - [Sources](references/sources.md) — provenance and the Lost-in-the-Middle caveat

@@ -78,6 +78,16 @@ repo-root/
 - **Sharing a mutable "God Package" (`packages/shared-everything`) across all monorepo apps:** Forces every app to rebuild and redeploy on every commit. Keep shared `packages/*` narrow, cohesive, and versioned/layered cleanly.
 - **Over-nesting a 300-line tool into 12 directories (`cmd/`, `pkg/`, `internal/controllers/`, `internal/services/`, `internal/models/`):** Start flat and split only when flatness causes real friction.
 
+## Quick Decision Checklist
+
+- [ ] Am I using the simplest flat layout that fits now, without scaffolding empty directories?
+- [ ] Did I weigh coupling, security boundaries and tooling investment before choosing monorepo or polyrepo?
+- [ ] Is the repository root limited to universal project contracts and entrypoints?
+- [ ] In a monorepo, do apps import packages but never the reverse, with no circular dependencies?
+- [ ] Is CI affected-only, and does CODEOWNERS cover every app and package?
+- [ ] Am I avoiding a pkg/ wrapper, a God shared package and one-file utils folders?
+- [ ] Are tests co-located with the code they test?
+
 ## Deep references
 
 - [Go layout: start flat](references/go-layout-start-flat.md) — when scaffolding directories or Go modules

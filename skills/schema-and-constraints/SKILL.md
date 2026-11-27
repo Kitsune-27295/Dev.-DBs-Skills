@@ -25,6 +25,17 @@ Application code has bugs; a constraint does not forget. The goal is that the da
 
 Source: the handout of the second database lesson of mano deyvin (prompt "the schema that refuses bad data"); the `money` type, timestamp and foreign-key points were checked against the PostgreSQL wiki and documentation; the `float` rule is this skill's own.
 
+## Quick Decision Checklist
+
+- [ ] Did I list every table with its keys, types and constraints before proposing anything?
+- [ ] Is any money stored as float or double? Use numeric or integer cents instead.
+- [ ] Is any moment-in-time stored as timestamp without zone where timestamptz is needed?
+- [ ] Does every code-side validation have an equivalent constraint: foreign key, not null, unique, check?
+- [ ] Did I count rows that already break each rule, with a read-only query, before proposing it?
+- [ ] Is each migration one rule, with a way back and a plan for the offending rows?
+- [ ] Am I avoiding deleting data to make a constraint pass, and avoiding any run against production?
+- [ ] Did I add an index on the referencing column separately, since a foreign key does not create one?
+
 ## Deep references
 
 - [Sources and caveats](references/sources.md) — when you must check which claims were verified and which are the lesson's own

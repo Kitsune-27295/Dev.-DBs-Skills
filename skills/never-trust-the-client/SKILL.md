@@ -1,6 +1,6 @@
 ---
 name: never-trust-the-client
-description: Use to move business rules from the browser or app to the server and to lock down what the client can see or hold, when a price, discount, permission, admin role or plan limit is computed in the front end, when secrets may ship in client bundles, or when database access policies (row-level security) look loose. Report first, then one fix at a time with the owner's OK.
+description: "Move business rules from the browser or app to the server and lock down what the client can see or hold, when a price, discount, permission, admin role or plan limit is computed in the front end, or secrets may ship in client bundles. Report first, then one fix at a time with the owner's OK. Use when logic that must be trusted runs on the client. Not for a full read-only security sweep (use security-audit) or for who can read each table, open ports and row-level security policies (use database-exposure)."
 ---
 
 # Never trust the client
@@ -26,6 +26,17 @@ description: Use to move business rules from the browser or app to the server an
 - Never switch off an existing protection to "make it work".
 - No prompt fixes everything: the owner knows the intended behavior, the agent does not.
 - Policy and RLS tests only count against a real database (local or a dedicated test project), never production; see `integration-tests`.
+
+## Quick Decision Checklist
+
+- [ ] Did I do the report pass first, with nothing altered?
+- [ ] Are prices, discounts, permissions and limits recomputed on the server, ignoring client-sent values?
+- [ ] Is every browser-exposed variable classified as public by design or secret, and the published secrets marked for rotation?
+- [ ] Does every listing filter by the authenticated user in the query, and every by-id access check ownership?
+- [ ] Is all user input validated, sanitized and limited, with output escaped and uploads checked?
+- [ ] Do access policies give each user only their own rows, in a separate migration?
+- [ ] Am I applying fixes one at a time with approval, never switching off an existing protection?
+- [ ] Do policy tests run against a real non-production database?
 
 ## Deep references
 

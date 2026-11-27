@@ -57,6 +57,15 @@ One idea: just as the blueprints of a library scream **"Library"** (reading room
 - **Generic CRUD naming (`OrderManager`, `DataHelper`, `ProcessService`):** Using vague technical nouns instead of the exact business use-case verbs spoken by domain experts.
 - **Confusing "Screaming Architecture" with ignoring Clean/Hexagonal boundaries:** Screaming Architecture does not mean dumping SQL and HTML into a folder just because the folder is named `billing/`. It means the top-level organization screams `billing/`, while keeping delivery (HTTP/UI) and persistence (DB) decoupled from the `billing` use cases and entities.
 
+## Quick Decision Checklist
+
+- [ ] Would a stranger guess the product's domain from the top-level source tree?
+- [ ] Are top-level folders named after domain concepts and use cases, not controllers or services?
+- [ ] Are use cases named in business verbs instead of generic CRUD or Manager names?
+- [ ] Can use-case tests run without the web server, database or framework?
+- [ ] Is any framework-required directory kept a thin driver layer calling into the core?
+- [ ] Am I keeping Clean/Hexagonal boundaries rather than dumping SQL and HTML into a domain folder?
+
 ## Deep references
 
 - [Screaming architecture argument](references/screaming-architecture-argument.md) — read when judging what a repo layout communicates

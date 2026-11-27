@@ -60,6 +60,16 @@ Enforce rule 1 automatically with an import-graph check (`dependency-cruiser`, `
 - **Upward or circular imports:** Data Access importing a DTO, request context, or error formatter defined in the Presentation layer.
 - **Chatty cross-tier calls:** Making fine-grained synchronous calls in a loop across physical tiers instead of batching or using coarse-grained contracts / asynchronous queues.
 
+## Quick Decision Checklist
+
+- [ ] Do dependencies point strictly downward, with no lower layer importing from a higher one?
+- [ ] Am I defaulting to strict (closed) layers and opening one only deliberately?
+- [ ] Have I kept layers separate from tiers, adding a network hop only when explicitly required?
+- [ ] Are database entities and raw rows kept out of view templates and HTTP serialization?
+- [ ] Are controllers thin, with validation, pricing and permissions in the Business layer?
+- [ ] Is an import-graph check enforcing the downward rule in CI?
+- [ ] Is the Business layer more than a pass-through sinkhole, and are cross-tier calls coarse-grained?
+
 ## Deep references
 - [Layers, tiers, and communication models](references/layers-tiers-and-communication-models.md) — strict vs relaxed tiers, Azure best practices, VM reference deployment, challenges checklist.
 - [Choosing a style, topologies, and erosion](references/style-fit-topologies-and-erosion.md) — when N-tier fits vs other styles, MVC vs three-tier, monolith scaling, big ball of mud.
