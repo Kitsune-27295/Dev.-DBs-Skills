@@ -1,6 +1,6 @@
 {
   "name": "dev-dbs-skills",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "MCP server and portable skill pack for 131 software architecture, engineering workflow, security, and database skills.",
   "type": "module",
   "bin": {
@@ -24,6 +24,7 @@
     "src/",
     "skills/",
     "MANIFEST.sha256",
+    ".claude-plugin/",
     "NOTICE.md",
     "README.md",
     "install_skills.py",

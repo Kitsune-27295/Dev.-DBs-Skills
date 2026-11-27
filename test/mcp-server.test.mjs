@@ -246,3 +246,26 @@ test("bin/mcp-server.mjs handles JSON-RPC over real stdio", async () => {
   assert.equal(lines[2].id, 3);
   assert.equal(lines[2].error.code, -32601);
 });
+
+test("Category layout: catalog reports categories, installs are flat, duplicate names are rejected", async () => {
+  const { loadCatalog, installSkills, checkSkillsFolder } = await import("../src/mcp-core.mjs");
+  const hex = loadCatalog(PACK_ROOT).find((s) => s.name === "hexagonal-architecture");
+  assert.equal(hex.category, "architecture");
+  assert.equal(hex.path, "skills/architecture/hexagonal-architecture");
+
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "dev-dbs-layout-"));
+  try {
+    const res = installSkills(PACK_ROOT, { targetDir: tmpDir, skills: ["hexagonal-architecture", "tdd"] });
+    assert.equal(res.ok, true, res.problems.join("; "));
+    assert.ok(fs.existsSync(path.join(tmpDir, "hexagonal-architecture", "SKILL.md")));
+    assert.ok(fs.existsSync(path.join(tmpDir, "tdd", "SKILL.md")));
+    assert.ok(!fs.existsSync(path.join(tmpDir, "architecture")));
+
+    fs.mkdirSync(path.join(tmpDir, "extra"));
+    fs.cpSync(path.join(tmpDir, "tdd"), path.join(tmpDir, "extra", "tdd"), { recursive: true });
+    const check = checkSkillsFolder(PACK_ROOT, tmpDir, { strictCrossRefs: false });
+    assert.ok(check.problems.some((p) => p.startsWith("tdd: skill name used by more than one folder")));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});

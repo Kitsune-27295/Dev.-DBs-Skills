@@ -2,7 +2,11 @@
 """Check that a folder of skills is intact. Standard library only; reads nothing outside the folder you pass.
 
     python check_skills.py <skills folder>          # e.g. skills, .claude/skills or ~/.claude/skills
+    python check_skills.py --write-manifest         # maintainers: rewrite MANIFEST.sha256 from skills/
 
+Skill folders are found one or two levels deep, so both the pack layout (`skills/<category>/<name>/`) and a flat
+installed folder (`<name>/`) work; a skill name must be unique across categories. When the folder is this pack's own
+`skills/`, every category folder must also be listed in `.claude-plugin/marketplace.json`.
 For every `<folder>/SKILL.md` it checks: front matter present, `name` equal to the folder name and a valid name,
 a non-empty `description` (at most 1024 characters), every relative Markdown link resolving inside the skill folder,
 and every mention of another skill of this pack (in backticks) naming a skill that is installed. Exit code 1 on error.
@@ -10,6 +14,8 @@ and every mention of another skill of this pack (in backticks) naming a skill th
 
 from __future__ import annotations
 
+import hashlib
+import json
 import pathlib
 import re
 import sys
@@ -108,11 +114,54 @@ def front_matter(text: str) -> dict[str, str] | None:
     return fields
 
 
+PACK_DIR = pathlib.Path(__file__).resolve().parent
+
+
+def skill_folders(root: pathlib.Path) -> tuple[list[pathlib.Path], list[str]]:
+    """Skill folders one or two levels below root (a folder with SKILL.md is not searched further), and repeated names."""
+    found: list[pathlib.Path] = []
+    seen: set[str] = set()
+    duplicates: list[str] = []
+
+    def visit(folder: pathlib.Path, depth: int) -> None:
+        for child in sorted(p for p in folder.iterdir() if p.is_dir()):
+            if (child / "SKILL.md").is_file():
+                if child.name in seen:
+                    duplicates.append(child.name)
+                else:
+                    seen.add(child.name)
+                    found.append(child)
+            elif depth < 2:
+                visit(child, depth + 1)
+
+    if root.is_dir():
+        visit(root, 1)
+    return sorted(found, key=lambda p: p.name), duplicates
+
+
+def marketplace_problems(root: pathlib.Path) -> list[str]:
+    """Every category folder of the pack must be a plugin source in .claude-plugin/marketplace.json."""
+    market = PACK_DIR / ".claude-plugin" / "marketplace.json"
+    if root.resolve() != (PACK_DIR / "skills").resolve() or not market.is_file():
+        return []
+    listed = {s for plugin in json.loads(market.read_text(encoding="utf-8")).get("plugins", []) for s in plugin.get("skills", [])}
+    categories = sorted(p.name for p in root.iterdir() if p.is_dir() and not (p / "SKILL.md").is_file())
+    return [f"marketplace.json: category `{c}` is not listed as ./skills/{c}" for c in categories if f"./skills/{c}" not in listed]
+
+
+def write_manifest() -> int:
+    files = sorted((p for p in (PACK_DIR / "skills").rglob("*") if p.is_file()), key=lambda p: p.relative_to(PACK_DIR).as_posix().lower())
+    lines = [f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.relative_to(PACK_DIR).as_posix()}" for p in files]
+    (PACK_DIR / "MANIFEST.sha256").write_bytes(("\n".join(lines) + "\n").encode())
+    print(f"MANIFEST.sha256: {len(lines)} file(s)")
+    return 0
+
+
 def check(root: pathlib.Path) -> list[str]:
-    problems: list[str] = []
-    skills = sorted(p for p in root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()) if root.is_dir() else []
+    skills, duplicates = skill_folders(root)
     if not skills:
         return [f"{root}: no skill folders (a folder with a SKILL.md) found"]
+    problems = [f"{name}: skill name used by more than one folder" for name in duplicates] + marketplace_problems(root)
     installed = {p.name for p in skills}
     for folder in skills:
         text = (folder / "SKILL.md").read_text(encoding="utf-8")
@@ -135,7 +184,7 @@ def check(root: pathlib.Path) -> list[str]:
                 if re.match(r"^[a-z][a-z0-9+.-]*:", target):
                     continue  # a URL
                 if not (md.parent / target).resolve().exists():
-                    problems.append(f"{md.relative_to(root).as_posix()}: link `{target}` does not resolve")
+                    problems.append(f"{folder.name}/{md.relative_to(folder).as_posix()}: link `{target}` does not resolve")
         for mention in sorted(set(BACKTICK.findall(text)) & set(PACK) - {folder.name}):
             if mention not in installed:
                 problems.append(f"{where}: refers to `{mention}`, which is not installed here")
@@ -143,6 +192,8 @@ def check(root: pathlib.Path) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
+    if argv == ["--write-manifest"]:
+        return write_manifest()
     if len(argv) != 1:
         print(__doc__)
         return 2
@@ -150,7 +201,7 @@ def main(argv: list[str]) -> int:
     problems = check(root)
     for line in problems:
         print(f"  [FAIL] {line}")
-    count = len([p for p in root.iterdir() if p.is_dir() and (p / 'SKILL.md').is_file()]) if root.is_dir() else 0
+    count = len(skill_folders(root)[0])
     print(f"{'OK' if not problems else 'FAILED'}: {count} skill(s) checked in {root}")
     return 1 if problems else 0
 

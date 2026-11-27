@@ -1,0 +1,101 @@
+{
+  "name": "dev-dbs-skills",
+  "owner": {
+    "name": "Kitsune-27295",
+    "url": "https://github.com/Kitsune-27295"
+  },
+  "metadata": {
+    "description": "Dev.-DBs-Skills: agent skills for software architecture, engineering fundamentals, security and databases, one plugin per category.",
+    "version": "2.0.0"
+  },
+  "plugins": [
+    {
+      "name": "dev-dbs-all",
+      "description": "Every skill of the pack, all categories.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/pillars",
+        "./skills/architecture",
+        "./skills/components",
+        "./skills/principles",
+        "./skills/cloud-native-ai",
+        "./skills/documentation",
+        "./skills/workflow-mattpocock",
+        "./skills/engineering-security",
+        "./skills/databases",
+        "./skills/database-diagnostics"
+      ]
+    },
+    {
+      "name": "dev-dbs-pillars",
+      "description": "Start-of-task protocol: skill-orchestrator and model-effort-routing.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/pillars"]
+    },
+    {
+      "name": "dev-dbs-architecture",
+      "description": "Architectural styles and design: hexagonal, clean, layered, modular monolith, microservices, event-driven, CQRS, sagas and more.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/architecture"]
+    },
+    {
+      "name": "dev-dbs-components",
+      "description": "Software components: routing, gateways, middleware, caching, workers, rate limiting, auth guards, repositories, validators, feature flags, state machines, email.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/components"]
+    },
+    {
+      "name": "dev-dbs-principles",
+      "description": "Fundamental principles in depth: SSOT and DRY, SRP, OCP, dependency inversion, KISS/YAGNI, value objects, error handling.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/principles"]
+    },
+    {
+      "name": "dev-dbs-cloud-native-ai",
+      "description": "Cloud-native, resilience, evolution and AI agents: 12-factor, circuit breakers, agentic RAG, context and harness engineering, multi-agent coordination, skill creation.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/cloud-native-ai"]
+    },
+    {
+      "name": "dev-dbs-documentation",
+      "description": "Documentation, diagrams and contracts: ADRs, arc42 with OpenAPI/AsyncAPI, C4, Diataxis, Mermaid.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/documentation"]
+    },
+    {
+      "name": "dev-dbs-workflow-mattpocock",
+      "description": "Engineering workflow from Matt Pocock's MIT pack: grilling, spec, tickets, implement, TDD, triage, handoff and more.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/workflow-mattpocock"]
+    },
+    {
+      "name": "dev-dbs-engineering-security",
+      "description": "Engineering fundamentals and security: audits, code review, testing, performance, dependencies, supply chain, vulnerability triage, threat modeling.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/engineering-security"]
+    },
+    {
+      "name": "dev-dbs-databases",
+      "description": "Databases and governance: schema, migrations, query performance, exposure, cost, backups, SQL Server audit.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/databases"]
+    },
+    {
+      "name": "dev-dbs-database-diagnostics",
+      "description": "Read-only diagnostic query packs for PostgreSQL, SQL Server and SQLite in production.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/database-diagnostics"]
+    }
+  ]
+}

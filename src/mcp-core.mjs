@@ -81,27 +81,56 @@ function mapsEqual(a, b) {
 }
 
 /**
+ * Find every skill folder (a folder holding SKILL.md) one or two levels below `root`, so both the
+ * pack's category layout (`skills/<category>/<name>/`) and a flat installed folder (`<name>/`) work.
+ * A folder that holds SKILL.md is a skill and is not searched further. Returns entries sorted by name
+ * plus the names found more than once (skill names must be unique across categories).
+ */
+export function findSkillFolders(root) {
+  const entries = [];
+  const duplicates = [];
+  const seen = new Set();
+  if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) return { entries, duplicates };
+  const visit = (dir, depth) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const full = path.join(dir, entry.name);
+      if (fs.existsSync(path.join(full, "SKILL.md"))) {
+        if (seen.has(entry.name)) duplicates.push(entry.name);
+        else {
+          seen.add(entry.name);
+          entries.push({ name: entry.name, dir: full, category: depth === 2 ? path.basename(dir) : null });
+        }
+      } else if (depth < 2) {
+        visit(full, depth + 1);
+      }
+    }
+  };
+  visit(root, 1);
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  return { entries, duplicates };
+}
+
+function skillFolderMap(packRoot) {
+  return new Map(findSkillFolders(path.join(packRoot, "skills")).entries.map((e) => [e.name, e]));
+}
+
+/**
  * Load lightweight skill metadata for every skill under `<packRoot>/skills`.
  */
 export function loadCatalog(packRoot) {
   const skillsDir = path.join(packRoot, "skills");
-  if (!fs.existsSync(skillsDir)) return [];
-
   const skills = [];
-  for (const entry of fs.readdirSync(skillsDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const skillDir = path.join(skillsDir, entry.name);
-    const skillMd = path.join(skillDir, "SKILL.md");
-    if (!fs.existsSync(skillMd)) continue;
-
-    const raw = fs.readFileSync(skillMd, "utf8");
+  for (const { name, dir, category } of findSkillFolders(skillsDir).entries) {
+    const raw = fs.readFileSync(path.join(dir, "SKILL.md"), "utf8");
     const fm = parseFrontmatter(raw) || {};
-    const files = listFilesRecursive(skillDir);
     skills.push({
-      name: fm.name || entry.name,
+      name: fm.name || name,
       description: fm.description || "",
-      uri: `skill://${entry.name}/SKILL.md`,
-      files,
+      category,
+      path: path.relative(packRoot, dir).split(path.sep).join("/"),
+      uri: `skill://${name}/SKILL.md`,
+      files: listFilesRecursive(dir),
     });
   }
   return skills.sort((a, b) => a.name.localeCompare(b.name));
@@ -122,7 +151,7 @@ export function searchSkills(packRoot, query, limit = 15) {
   for (const skill of catalog) {
     const nameLower = skill.name.toLowerCase();
     const descLower = skill.description.toLowerCase();
-    const bodyLower = fs.readFileSync(path.join(packRoot, "skills", skill.name, "SKILL.md"), "utf8").toLowerCase();
+    const bodyLower = fs.readFileSync(path.join(packRoot, skill.path, "SKILL.md"), "utf8").toLowerCase();
 
     let score = 0;
     for (const term of terms) {
@@ -143,10 +172,11 @@ function assertSafeSkillFile(packRoot, name, relPath) {
   if (!SKILL_NAME_RE.test(String(name || ""))) {
     throw new Error(`Invalid skill name: ${name}`);
   }
-  const skillDir = path.resolve(packRoot, "skills", name);
-  if (!fs.existsSync(skillDir) || !fs.statSync(skillDir).isDirectory()) {
+  const found = skillFolderMap(packRoot).get(name);
+  if (!found) {
     throw new Error(`Skill not found: ${name}`);
   }
+  const skillDir = path.resolve(found.dir);
   const normalizedRel = String(relPath || "SKILL.md").replace(/\\/g, "/");
   const resolved = path.resolve(skillDir, normalizedRel);
   if (resolved !== skillDir && !resolved.startsWith(skillDir + path.sep)) {
@@ -267,6 +297,7 @@ export function installSkills(packRoot, { targetDir, scope = "project", agent = 
 
   const catalog = loadCatalog(packRoot);
   const catalogNames = new Set(catalog.map((s) => s.name));
+  const folders = skillFolderMap(packRoot);
   const requestedAll = !skills || skills.length === 0 || (skills.length === 1 && skills[0] === "*");
   const selectedNames = requestedAll ? catalog.map((s) => s.name) : [...new Set(skills)];
 
@@ -284,7 +315,8 @@ export function installSkills(packRoot, { targetDir, scope = "project", agent = 
   const skippedSet = new Set();
 
   for (const name of selectedNames) {
-    const src = path.join(sourceRoot, name);
+    // Installs are always flat (`<target>/<name>/`): hosts discover skills one level deep.
+    const src = folders.get(name).dir;
     const dest = path.join(target, name);
     const exists = fs.existsSync(dest);
 
@@ -311,10 +343,13 @@ export function installSkills(packRoot, { targetDir, scope = "project", agent = 
   const problems = [];
   if (!dryRun) {
     const selectedSet = new Set(selectedNames);
+    const relDirs = selectedNames
+      .filter((name) => !skippedSet.has(name))
+      .map((name) => [name, path.relative(packRoot, folders.get(name).dir).split(path.sep).join("/") + "/"]);
     for (const { digest, rel } of loadManifest(packRoot)) {
-      const skillName = rel.split("/")[1];
-      if (!selectedSet.has(skillName) || skippedSet.has(skillName)) continue;
-      const copyPath = path.join(target, rel.slice("skills/".length));
+      const hit = relDirs.find(([, prefix]) => rel.startsWith(prefix));
+      if (!hit || !selectedSet.has(hit[0])) continue;
+      const copyPath = path.join(target, hit[0], rel.slice(hit[1].length));
       if (!fs.existsSync(copyPath) || sha256File(copyPath) !== digest) {
         problems.push(`${rel}: SHA-256 verification failed after copying`);
       }
@@ -344,11 +379,9 @@ export function checkSkillsFolder(packRoot, targetDir, { strictCrossRefs } = {})
   }
 
   const packNames = new Set(loadCatalog(packRoot).map((s) => s.name));
-  const folders = fs
-    .readdirSync(root, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && fs.existsSync(path.join(root, e.name, "SKILL.md")))
-    .map((e) => e.name)
-    .sort((a, b) => a.localeCompare(b));
+  const { entries: found, duplicates } = findSkillFolders(root);
+  const folders = found.map((e) => e.name);
+  const folderDir = new Map(found.map((e) => [e.name, e.dir]));
 
   if (folders.length === 0) {
     return { ok: false, root, checkedCount: 0, problems: [`${root}: no skill folders with SKILL.md found`], warnings: [] };
@@ -356,11 +389,11 @@ export function checkSkillsFolder(packRoot, targetDir, { strictCrossRefs } = {})
 
   const enforceCrossRefs = strictCrossRefs ?? (!targetDir || folders.length >= packNames.size);
   const installedSet = new Set(folders);
-  const problems = [];
+  const problems = duplicates.map((name) => `${name}: skill name used by more than one folder`);
   const warnings = [];
 
   for (const name of folders) {
-    const folderPath = path.join(root, name);
+    const folderPath = folderDir.get(name);
     const skillMdPath = path.join(folderPath, "SKILL.md");
     const text = fs.readFileSync(skillMdPath, "utf8");
     const fm = parseFrontmatter(text);

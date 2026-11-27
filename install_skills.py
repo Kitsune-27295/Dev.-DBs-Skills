@@ -6,7 +6,8 @@
     python install_skills.py --target PATH      # any skills folder
     add --dry-run to see what would happen, --force to overwrite a skill that already exists and differs
 
-Existing skills with other names are never touched. A skill that exists and differs is skipped unless you pass --force.
+Skills are copied flat (`<skills folder>/<name>/`) whatever their category folder in the pack, because hosts discover
+skills one level deep. Existing skills with other names are never touched. A skill that exists and differs is skipped unless you pass --force.
 After copying, every installed file is compared with MANIFEST.sha256 of the pack. On Linux and macOS use `python3` if `python`
 is not found. Exit code 1 when a file could not be installed or verified.
 """
@@ -18,6 +19,8 @@ import hashlib
 import pathlib
 import shutil
 import sys
+
+from check_skills import skill_folders
 
 PACK_DIR = pathlib.Path(__file__).resolve().parent
 SOURCE = PACK_DIR / "skills"
@@ -59,7 +62,8 @@ def main(argv: list[str]) -> int:
     problems: list[str] = []
     skipped: set[str] = set()
     installed = 0
-    for skill in sorted(p for p in SOURCE.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()):
+    skills = skill_folders(SOURCE)[0]
+    for skill in skills:
         dest = target / skill.name
         if dest.exists() and tree_hashes(dest) == tree_hashes(skill):
             print(f"  up to date  {skill.name}")
@@ -77,11 +81,13 @@ def main(argv: list[str]) -> int:
         installed += 1
     if not args.dry_run:
         manifest = PACK_DIR / "MANIFEST.sha256"
+        prefixes = {skill.relative_to(PACK_DIR).as_posix() + "/": skill.name for skill in skills if skill.name not in skipped}
         for line in manifest.read_text(encoding="utf-8").splitlines() if manifest.is_file() else []:
             digest, _, name = line.partition("  ")
-            if not name.startswith("skills/") or name.split("/")[1] in skipped:
+            prefix = next((p for p in prefixes if name.startswith(p)), None)
+            if prefix is None:
                 continue
-            copy = target / name[len("skills/"):]
+            copy = target / prefixes[prefix] / name[len(prefix):]
             if copy.is_file() and sha(copy) != digest:
                 problems.append(f"{name}: differs from the pack after copying")
     for line in problems:
